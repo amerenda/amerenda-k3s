@@ -1,0 +1,5 @@
+kubectl create namespace home-automation
+kubectl -n home-automation create secret generic eufy-ws-secret \
+  --from-literal=EUFY_EMAIL='amerenda89@gmail.com' \
+  --from-literal=EUFY_PASSWORD='CHANGE_ME' \
+  --from-literal=EUFY_COUNTRY='US'
