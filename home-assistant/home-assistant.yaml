@@ -1,4 +1,3 @@
-# homeassistant.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,72 +13,133 @@ spec:
       labels:
         app: homeassistant
     spec:
-      securityContext:
-        fsGroup: 1000
+      # --- Init step: install HACS into /config on your PVC ---
       containers:
-      - name: homeassistant
-        image: ghcr.io/home-assistant/home-assistant:stable
-        ports:
-        - containerPort: 8123
-        env:
-        - name: TZ
-          value: America/New_York
-        securityContext:
-          runAsUser: 1000
-          runAsGroup: 1000
-        volumeMounts:
-        - name: config
-          mountPath: /config
+        - name: homeassistant
+          image: ghcr.io/home-assistant/home-assistant:stable
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "2"
+          ports:
+            - name: http
+              containerPort: 8123
+          env:
+            - name: TZ
+              value: "America/New_York"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","kill -TERM 1 && sleep 5"]
       volumes:
-      - name: config
-        persistentVolumeClaim:
-          claimName: homeassistant-config
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: pv-ha-config-rpi5-0
-spec:
-  capacity:
-    storage: 10Gi
-  volumeMode: Filesystem
-  accessModes: ["ReadWriteOnce"]
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-rpi5
-  local:
-    path: /mnt/k8s/homeassistant/config
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: kubernetes.io/hostname
-          operator: In
-          values: ["rpi5-0"]
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: homeassistant-config
-  namespace: home-assistant
-spec:
-  accessModes: ["ReadWriteOnce"]
-  resources:
-    requests:
-      storage: 10Gi
-  storageClassName: local-rpi5
-  volumeMode: Filesystem
+        - name: config
+          persistentVolumeClaim:
+            claimName: homeassistant-config
+      initContainers:
+        - name: install-hacs
+          image: alpine:3.20
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: HACS_VERSION
+              value: "latest"  # or pin to e.g. "v2.0.5" for reproducibility
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -euo pipefail
+              apk add --no-cache curl unzip findutils coreutils
+
+              CONFIG_DIR="/config"
+              CC_DIR="${CONFIG_DIR}/custom_components"
+              HACS_DIR="${CC_DIR}/hacs"
+              TMPDIR="$(mktemp -d)"
+              mkdir -p "${CC_DIR}"
+
+              # Choose release asset
+              if [ "${HACS_VERSION}" = "latest" ]; then
+                URL="https://github.com/hacs/integration/releases/latest/download/hacs.zip"
+              else
+                URL="https://github.com/hacs/integration/releases/download/${HACS_VERSION}/hacs.zip"
+              fi
+              echo "Downloading HACS from ${URL}"
+              curl -fsSL "${URL}" -o "${TMPDIR}/hacs.zip"
+
+              echo "Unzipping to ${TMPDIR}"
+              unzip -q -o "${TMPDIR}/hacs.zip" -d "${TMPDIR}"
+
+              # Try to locate the component source directory
+              SRC="$(find "${TMPDIR}" -type d -path '*/custom_components/hacs' | head -n1 || true)"
+
+              if [ -z "${SRC}" ]; then
+                # Maybe archive root or single top-level dir
+                if [ -f "${TMPDIR}/manifest.json" ]; then
+                  SRC="${TMPDIR}"
+                else
+                  TOPDIRS="$(find "${TMPDIR}" -mindepth 1 -maxdepth 1 -type d)"
+                  if [ "$(printf "%s\n" ${TOPDIRS} | wc -l | tr -d ' ')" = "1" ]; then
+                    ONLYDIR="$(printf "%s\n" ${TOPDIRS})"
+                    if [ -f "${ONLYDIR}/manifest.json" ]; then
+                      SRC="${ONLYDIR}"
+                    fi
+                  fi
+                fi
+              fi
+
+              if [ -z "${SRC}" ]; then
+                echo "ERROR: Could not determine HACS source directory in the archive." >&2
+                echo "Archive preview (depth 2):" >&2
+                find "${TMPDIR}" -maxdepth 2 -mindepth 1 -print | sed 's/^/  /' >&2
+                exit 1
+              fi
+
+              if [ ! -f "${SRC}/manifest.json" ]; then
+                echo "ERROR: Selected SRC (${SRC}) does not contain manifest.json" >&2
+                exit 1
+              fi
+
+              echo "Installing HACS from ${SRC} to ${HACS_DIR}"
+              rm -rf "${HACS_DIR}.bak"
+              if [ -d "${HACS_DIR}" ]; then
+                mv "${HACS_DIR}" "${HACS_DIR}.bak"
+              fi
+              mkdir -p "${CC_DIR}"
+              cp -a "${SRC}/." "${HACS_DIR}/"
+
+              VER="${HACS_VERSION}"
+              if [ -f "${HACS_DIR}/manifest.json" ]; then
+                VLINE="$(grep -oE '"version"\s*:\s*"[^"]+"' "${HACS_DIR}/manifest.json" || true)"
+                if [ -n "${VLINE}" ]; then VER="$(echo "${VLINE}" | sed -E 's/.*\"([^"]+)\".*/\1/')"; fi
+              fi
+              echo "${VER:-unknown}" > "${HACS_DIR}/.installed_version"
+
+              echo "HACS installed to ${HACS_DIR} (version: $(cat "${HACS_DIR}/.installed_version" || echo unknown))"
+              rm -rf "${TMPDIR}"
+          volumeMounts:
+            - name: config
+              mountPath: /config
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: homeassistant
   namespace: home-assistant
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: home.amer.home,ha.amer.home,homeassistant.amer.home,ha.amer.local,home.amer.local
+    external-dns.alpha.kubernetes.io/ttl: "300"
 spec:
   type: LoadBalancer
-  ports:
-  - port: 8123
-    targetPort: 8123
+  externalTrafficPolicy: Local
+  loadBalancerIP: 10.100.20.140
   selector:
     app: homeassistant
-
-
+  ports:
+    - port: 8123
+      protocol: TCP
+      targetPort: 8123

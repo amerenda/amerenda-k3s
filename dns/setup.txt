@@ -1,4 +1,9 @@
 envsubst < bind9-tsig-secret.yaml.template | kubectl apply -f -
 
+kubectl apply -f bind9.yaml
+
 envsubst < values.yaml.template > values.yaml
+helm upgrade --install external-dns external-dns/external-dns \
+  -n kube-system -f values.yaml
+rm values.yaml
 
