@@ -34,6 +34,12 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
+            - name: config-files
+              mountPath: /config/configuration.yaml
+              subPath: configuration.yaml
+            - name: secrets
+              mountPath: /config/secrets.yaml
+              subPath: secrets.yaml
           lifecycle:
             preStop:
               exec:
@@ -42,6 +48,12 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: homeassistant-config
+        - name: config-files
+          configMap:
+            name: homeassistant-config
+        - name: secrets
+          secret:
+            secretName: homeassistant-secrets
       initContainers:
         - name: install-hacs
           image: alpine:3.20
