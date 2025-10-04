@@ -1,0 +1,58 @@
+# Human Detection Automation
+# Updates the "Event Image" on the home page dashboard when a human is detected
+
+- alias: "Human Detected - Living Room"
+  description: "Updates event image when human detected in living room"
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.living_room_human
+      to: 'on'
+      for:
+        seconds: 2
+  action:
+    - service: camera.snapshot
+      target:
+        device_id: add2baf8e9746e2f87ff5acfdc9d5541
+      data:
+        filename: '/config/www/event_image.jpg'
+    - service: input_text.set_value
+      entity_id: input_text.event_image_timestamp
+      data:
+        value: '{{ now().strftime("%Y-%m-%d %H:%M:%S") }}'
+    - service: input_text.set_value
+      entity_id: input_text.event_image_location
+      data:
+        value: 'Living Room'
+    - service: notify.persistent_notification
+      data:
+        title: 'Human Detected in Living Room'
+        message: 'Human detected in living room at {{ now().strftime("%H:%M:%S") }}'
+        notification_id: 'human_detected_living_room_{{ now().timestamp() }}'
+
+- alias: "Human Detected - Bedroom"
+  description: "Updates event image when human detected in bedroom"
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.bedroom_human
+      to: 'on'
+      for:
+        seconds: 2
+  action:
+    - service: camera.snapshot
+      target:
+        device_id: cee1fb8e14d6c17e39b45beb672f677c
+      data:
+        filename: '/config/www/event_image.jpg'
+    - service: input_text.set_value
+      entity_id: input_text.event_image_timestamp
+      data:
+        value: '{{ now().strftime("%Y-%m-%d %H:%M:%S") }}'
+    - service: input_text.set_value
+      entity_id: input_text.event_image_location
+      data:
+        value: 'Bedroom'
+    - service: notify.persistent_notification
+      data:
+        title: 'Human Detected in Bedroom'
+        message: 'Human detected in bedroom at {{ now().strftime("%H:%M:%S") }}'
+        notification_id: 'human_detected_bedroom_{{ now().timestamp() }}'

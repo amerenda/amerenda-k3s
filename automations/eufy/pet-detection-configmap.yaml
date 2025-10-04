@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: eufy-pet-detection-automation
+  namespace: home-assistant
+data:
+  pet-detection-automation.yaml: |
+    # Pet Detection Automation
+    # Sends push notification with image preview when a pet is detected
+
+    - alias: "Pet Detected - Push Notification"
+      description: "Sends push notification with image when pet is detected"
+      trigger:
+        - platform: state
+          entity_id: 
+            - binary_sensor.living_room_pet
+            - binary_sensor.bedroom_pet
+            - binary_sensor.front_door_pet
+            - binary_sensor.back_door_pet
+          to: 'on'
+          for:
+            seconds: 2
+      action:
+        - service: camera.snapshot
+          entity_id: 
+            - camera.living_room
+            - camera.bedroom
+            - camera.front_door
+            - camera.back_door
+          data:
+            filename: "/config/www/pet_detection_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"
+        - service: notify.mobile_app_your_phone
+          data:
+            title: "🐾 Pet Detected!"
+            message: "Pet detected in {{ trigger.entity_id.split('.')[1].replace('_', ' ').title() }} at {{ now().strftime('%H:%M:%S') }}"
+            data:
+              image: "/config/www/pet_detection_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"
+              url: "/config/www/pet_detection_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"
+              actions:
+                - action: "VIEW_IMAGE"
+                  title: "View Image"
+                - action: "DISMISS"
+                  title: "Dismiss"
+              tag: "pet_detection_{{ now().timestamp() }}"
+              priority: "high"
+              sound: "default"
+              vibration: true
+        - service: input_text.set_value
+          entity_id: input_text.last_pet_detection
+          data:
+            value: "{{ now().strftime('%Y-%m-%d %H:%M:%S') }} - {{ trigger.entity_id.split('.')[1].replace('_', ' ').title() }}"
+        - service: system_log.write
+          data:
+            message: "Pet detected: {{ trigger.entity_id }} at {{ now() }}"
+            level: info
+
+    - alias: "Pet Detection - Cleanup Old Images"
+      description: "Cleans up old pet detection images to save space"
+      trigger:
+        - platform: time
+          at: "02:00:00"
+      action:
+        - service: shell_command.cleanup_pet_images
+          data: {}

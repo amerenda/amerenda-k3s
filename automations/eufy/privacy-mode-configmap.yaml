@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: eufy-privacy-mode-automation
+  namespace: home-assistant
+data:
+  privacy-mode-automation.yaml: |
+    # Privacy Mode Automation
+    # Disables cameras when phone is detected at home
+
+    - alias: "Privacy Mode - Enable When Phone Home"
+      description: "Enables privacy mode when phone is detected at home"
+      trigger:
+        - platform: state
+          entity_id: device_tracker.your_phone
+          to: 'home'
+          for:
+            minutes: 1
+      action:
+        - service: input_boolean.turn_on
+          entity_id: input_boolean.privacy_mode
+        - service: eufy_security.set_privacy_mode
+          entity_id: 
+            - camera.living_room
+            - camera.bedroom
+            - camera.front_door
+            - camera.back_door
+          data:
+            privacy_mode: true
+        - service: notify.persistent_notification
+          data:
+            title: "Privacy Mode Enabled"
+            message: "Cameras disabled - Phone detected at home"
+            notification_id: "privacy_mode_enabled"
+        - service: system_log.write
+          data:
+            message: "Privacy mode enabled - Phone detected at home"
+            level: info
+
+    - alias: "Privacy Mode - Disable When Phone Away"
+      description: "Disables privacy mode when phone leaves home"
+      trigger:
+        - platform: state
+          entity_id: device_tracker.your_phone
+          to: 'not_home'
+          for:
+            minutes: 2
+      action:
+        - service: input_boolean.turn_off
+          entity_id: input_boolean.privacy_mode
+        - service: eufy_security.set_privacy_mode
+          entity_id: 
+            - camera.living_room
+            - camera.bedroom
+            - camera.front_door
+            - camera.back_door
+          data:
+            privacy_mode: false
+        - service: notify.persistent_notification
+          data:
+            title: "Privacy Mode Disabled"
+            message: "Cameras enabled - Phone left home"
+            notification_id: "privacy_mode_disabled"
+        - service: system_log.write
+          data:
+            message: "Privacy mode disabled - Phone left home"
+            level: info
+
+    - alias: "Privacy Mode - Manual Override"
+      description: "Allows manual control of privacy mode"
+      trigger:
+        - platform: state
+          entity_id: input_boolean.privacy_mode
+      action:
+        - service: eufy_security.set_privacy_mode
+          entity_id: 
+            - camera.living_room
+            - camera.bedroom
+            - camera.front_door
+            - camera.back_door
+          data:
+            privacy_mode: "{{ is_state('input_boolean.privacy_mode', 'on') }}"
+        - service: notify.persistent_notification
+          data:
+            title: "Privacy Mode {{ 'Enabled' if is_state('input_boolean.privacy_mode', 'on') else 'Disabled' }}"
+            message: "Privacy mode {{ 'enabled' if is_state('input_boolean.privacy_mode', 'on') else 'disabled' }} manually"
+            notification_id: "privacy_mode_manual"

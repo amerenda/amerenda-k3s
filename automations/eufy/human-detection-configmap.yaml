@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: eufy-human-detection-automation
+  namespace: home-assistant
+data:
+  human-detection-automation.yaml: |
+    # Human Detection Automation
+    # Updates the "Event Image" on the home page dashboard when a human is detected
+
+    - alias: "Human Detected - Update Event Image"
+      description: "Updates the event image on dashboard when human is detected"
+      trigger:
+        - platform: state
+          entity_id: 
+            - binary_sensor.living_room_human
+            - binary_sensor.bedroom_human
+            - binary_sensor.front_door_human
+            - binary_sensor.back_door_human
+          to: 'on'
+          for:
+            seconds: 2
+      condition:
+        - condition: state
+          entity_id: binary_sensor.living_room_human
+          state: 'on'
+        - condition: state
+          entity_id: binary_sensor.bedroom_human
+          state: 'on'
+        - condition: state
+          entity_id: binary_sensor.front_door_human
+          state: 'on'
+        - condition: state
+          entity_id: binary_sensor.back_door_human
+          state: 'on'
+      action:
+        - service: camera.snapshot
+          entity_id: 
+            - camera.living_room
+            - camera.bedroom
+            - camera.front_door
+            - camera.back_door
+          data:
+            filename: "/config/www/event_image.jpg"
+        - service: input_text.set_value
+          entity_id: input_text.event_image_timestamp
+          data:
+            value: "{{ now().strftime('%Y-%m-%d %H:%M:%S') }}"
+        - service: input_text.set_value
+          entity_id: input_text.event_image_location
+          data:
+            value: "{{ trigger.entity_id.split('.')[1].replace('_', ' ').title() }}"
+        - service: notify.persistent_notification
+          data:
+            title: "Human Detected"
+            message: "Human detected in {{ trigger.entity_id.split('.')[1].replace('_', ' ').title() }} at {{ now().strftime('%H:%M:%S') }}"
+            notification_id: "human_detected_{{ now().timestamp() }}"
+
+    - alias: "Human Detection - Log Event"
+      description: "Logs human detection events for debugging"
+      trigger:
+        - platform: state
+          entity_id: 
+            - binary_sensor.living_room_human
+            - binary_sensor.bedroom_human
+            - binary_sensor.front_door_human
+            - binary_sensor.back_door_human
+          to: 'on'
+      action:
+        - service: system_log.write
+          data:
+            message: "Human detected: {{ trigger.entity_id }} at {{ now() }}"
+            level: info

@@ -37,9 +37,21 @@ spec:
             - name: config-files
               mountPath: /config/configuration.yaml
               subPath: configuration.yaml
-            - name: secrets
-              mountPath: /config/secrets.yaml
-              subPath: secrets.yaml
+            - name: eufy-human-detection
+              mountPath: /config/automations/human-detection-automation.yaml
+              subPath: human-detection-automation.yaml
+            - name: eufy-pet-detection
+              mountPath: /config/automations/pet-detection-automation.yaml
+              subPath: pet-detection-automation.yaml
+            - name: eufy-privacy-mode
+              mountPath: /config/automations/privacy-mode-automation.yaml
+              subPath: privacy-mode-automation.yaml
+            - name: eufy-helper-entities
+              mountPath: /config/automations/helper-entities.yaml
+              subPath: helper-entities.yaml
+            - name: eufy-dashboard-cards
+              mountPath: /config/automations/dashboard-cards.yaml
+              subPath: dashboard-cards.yaml
           lifecycle:
             preStop:
               exec:
@@ -51,9 +63,21 @@ spec:
         - name: config-files
           configMap:
             name: homeassistant-config
-        - name: secrets
-          secret:
-            secretName: homeassistant-secrets
+        - name: eufy-human-detection
+          configMap:
+            name: eufy-human-detection-automation
+        - name: eufy-pet-detection
+          configMap:
+            name: eufy-pet-detection-automation
+        - name: eufy-privacy-mode
+          configMap:
+            name: eufy-privacy-mode-automation
+        - name: eufy-helper-entities
+          configMap:
+            name: eufy-helper-entities
+        - name: eufy-dashboard-cards
+          configMap:
+            name: eufy-dashboard-cards
       initContainers:
         - name: install-hacs
           image: alpine:3.20

@@ -1,0 +1,59 @@
+# Pet Detection Automation
+# Sends push notification with image preview when a pet is detected
+
+- alias: "Pet Detected - Living Room"
+  description: "Sends notification when pet detected in living room"
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.living_room_pet
+      to: 'on'
+      for:
+        seconds: 2
+  action:
+    - service: camera.snapshot
+      target:
+        device_id: add2baf8e9746e2f87ff5acfdc9d5541
+      data:
+        filename: '/config/www/pet_detection_living_room_{{ now().strftime("%Y%m%d_%H%M%S") }}.jpg'
+    - service: notify.persistent_notification
+      data:
+        title: '🐾 Pet Detected in Living Room!'
+        message: 'Pet detected in living room at {{ now().strftime("%H:%M:%S") }}'
+        notification_id: 'pet_detected_living_room_{{ now().timestamp() }}'
+    - service: input_text.set_value
+      entity_id: input_text.last_pet_detection
+      data:
+        value: '{{ now().strftime("%Y-%m-%d %H:%M:%S") }} - Living Room'
+
+- alias: "Pet Detected - Bedroom"
+  description: "Sends notification when pet detected in bedroom"
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.bedroom_pet
+      to: 'on'
+      for:
+        seconds: 2
+  action:
+    - service: camera.snapshot
+      target:
+        device_id: cee1fb8e14d6c17e39b45beb672f677c
+      data:
+        filename: '/config/www/pet_detection_bedroom_{{ now().strftime("%Y%m%d_%H%M%S") }}.jpg'
+    - service: notify.persistent_notification
+      data:
+        title: '🐾 Pet Detected in Bedroom!'
+        message: 'Pet detected in bedroom at {{ now().strftime("%H:%M:%S") }}'
+        notification_id: 'pet_detected_bedroom_{{ now().timestamp() }}'
+    - service: input_text.set_value
+      entity_id: input_text.last_pet_detection
+      data:
+        value: '{{ now().strftime("%Y-%m-%d %H:%M:%S") }} - Bedroom'
+
+- alias: "Pet Detection - Cleanup Old Images"
+  description: "Cleans up old pet detection images to save space"
+  trigger:
+    - platform: time
+      at: "02:00:00"
+  action:
+    - service: shell_command.cleanup_pet_images
+      data: {}

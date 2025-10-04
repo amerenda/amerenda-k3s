@@ -40,11 +40,11 @@ spec:
               mountPath: /data
           # Keeps the container healthy/restarts if WS stops
           livenessProbe:
-            httpGet:
-              path: /health
+            tcpSocket:
               port: 3000
-            initialDelaySeconds: 20
-            periodSeconds: 20
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 10
       volumes:
         - name: data
           persistentVolumeClaim:

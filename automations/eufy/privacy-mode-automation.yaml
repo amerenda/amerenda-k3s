@@ -1,0 +1,64 @@
+# Privacy Mode Automation
+# Disables cameras when phone is detected at home
+
+- alias: "Privacy Mode - Enable When Phone Home"
+  description: "Enables privacy mode when phone is detected at home"
+  trigger:
+    - device_id: 801683f6c351e0bd86eddb0afb35c3ba
+      domain: device_tracker
+      entity_id: 7db75340c748455abcacf61c9c0803f3
+      type: enters
+      trigger: device
+      zone: zone.home
+  action:
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.privacy_mode
+    - service: switch.turn_off
+      entity_id: 
+        - switch.bedroom_camera_enabled
+        - switch.living_room_camera_enabled
+    - service: notify.persistent_notification
+      data:
+        title: "Privacy Mode Enabled"
+        message: "Cameras disabled - You are home"
+    - service: system_log.write
+      data:
+        message: "Privacy mode enabled - Phone detected at home"
+        level: info
+
+- alias: "Privacy Mode - Disable When Phone Away"
+  description: "Disables privacy mode when phone leaves home"
+  trigger:
+    - device_id: 801683f6c351e0bd86eddb0afb35c3ba
+      domain: device_tracker
+      entity_id: 7db75340c748455abcacf61c9c0803f3
+      type: leaves
+      trigger: device
+      zone: zone.home
+  action:
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.privacy_mode
+    - service: switch.turn_on
+      entity_id: 
+        - switch.bedroom_camera_enabled
+        - switch.living_room_camera_enabled
+    - service: notify.persistent_notification
+      data:
+        title: "Privacy Mode Disabled"
+        message: "Cameras enabled - Phone left home"
+    - service: system_log.write
+      data:
+        message: "Privacy mode disabled - Phone left home"
+        level: info
+
+- alias: "Privacy Mode - Manual Override"
+  description: "Allows manual control of privacy mode"
+  trigger:
+    - platform: state
+      entity_id: input_boolean.privacy_mode
+  action:
+    - service: notify.persistent_notification
+      data:
+        title: "Privacy Mode {{ 'Enabled' if is_state('input_boolean.privacy_mode', 'on') else 'Disabled' }}"
+        message: "Privacy mode {{ 'enabled' if is_state('input_boolean.privacy_mode', 'on') else 'disabled' }} manually"
+        notification_id: "privacy_mode_manual"

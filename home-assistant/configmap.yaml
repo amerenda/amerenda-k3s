@@ -12,6 +12,33 @@ data:
 
     default_config:
    
+    # Stream component for better camera performance
+    stream:
+      ll_hls: true
+      part_duration: 0.75
+      segment_duration: 6
+    
+    # Helper entities for Eufy automations
+    input_text:
+      event_image_timestamp:
+        name: "Event Image Timestamp"
+        initial: "Never"
+      event_image_location:
+        name: "Event Image Location"
+        initial: "None"
+      last_pet_detection:
+        name: "Last Pet Detection"
+        initial: "Never"
+
+    input_boolean:
+      privacy_mode:
+        name: "Privacy Mode"
+        initial: false
+        icon: mdi:eye-off
+
+    shell_command:
+      cleanup_pet_images: "find /config/www -name 'pet_detection_*.jpg' -mtime +7 -delete"
+    
     # Load frontend themes from the themes folder
     frontend:
       themes: !include_dir_merge_named themes

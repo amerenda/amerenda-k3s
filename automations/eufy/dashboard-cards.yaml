@@ -1,0 +1,53 @@
+# Dashboard Cards for Eufy Automations
+# Add these to your Home Assistant dashboard
+
+# Event Image Card
+- type: picture
+  entity: input_text.event_image_timestamp
+  image: /config/www/event_image.jpg
+  title: "Latest Event"
+  show_state: true
+  state_text: "{{ states('input_text.event_image_location') }} - {{ states('input_text.event_image_timestamp') }}"
+
+# Privacy Mode Toggle
+- type: entities
+  title: "Privacy Controls"
+  entities:
+    - input_boolean.privacy_mode
+    - input_text.last_pet_detection
+
+# Camera Status
+- type: entities
+  title: "Camera Status"
+  entities:
+    - camera.living_room
+    - camera.bedroom
+    - camera.front_door
+    - camera.back_door
+
+# Motion Sensors
+- type: entities
+  title: "Motion Detection"
+  entities:
+    - binary_sensor.living_room_motion
+    - binary_sensor.bedroom_motion
+    - binary_sensor.front_door_motion
+    - binary_sensor.back_door_motion
+
+# Human Detection
+- type: entities
+  title: "Human Detection"
+  entities:
+    - binary_sensor.living_room_human
+    - binary_sensor.bedroom_human
+    - binary_sensor.front_door_human
+    - binary_sensor.back_door_human
+
+# Pet Detection
+- type: entities
+  title: "Pet Detection"
+  entities:
+    - binary_sensor.living_room_pet
+    - binary_sensor.bedroom_pet
+    - binary_sensor.front_door_pet
+    - binary_sensor.back_door_pet

@@ -1,0 +1,27 @@
+# Helper Entities for Eufy Automations
+# These need to be added to your Home Assistant configuration
+
+# Input Text entities for event tracking
+input_text:
+  event_image_timestamp:
+    name: "Event Image Timestamp"
+    initial: "Never"
+  event_image_location:
+    name: "Event Image Location"
+    initial: "None"
+  last_pet_detection:
+    name: "Last Pet Detection"
+    initial: "Never"
+
+# Input Boolean for privacy mode
+input_boolean:
+  privacy_mode:
+    name: "Privacy Mode"
+    initial: false
+    icon: mdi:eye-off
+
+# Shell commands for cleanup
+shell_command:
+  cleanup_pet_images:
+    command: "find /config/www -name 'pet_detection_*.jpg' -mtime +7 -delete"
+    timeout: 30
