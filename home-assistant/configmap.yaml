@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homeassistant-config
+  namespace: home-assistant
+data:
+  configuration.yaml: |
+    # configuration.yaml
+    homeassistant:
+      name: Home
+      country: US
+
+    # EufyHome (official) — uses secrets.yaml for creds
+    eufy:
+      username: !secret eufy_username
+      password: !secret eufy_password
+
+    # ---- (other HA config below) ----
+    default_config:
+   
+    # Load frontend themes from the themes folder
+    frontend:
+      themes: !include_dir_merge_named themes
+   
+    automation: !include automations.yaml
+    script: !include scripts.yaml
+    scene: !include scenes.yaml
