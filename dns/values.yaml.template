@@ -1,0 +1,26 @@
+provider: rfc2136
+policy: sync
+registry: txt
+logLevel: info
+
+# Your authoritative server (Bind) LoadBalancer IP
+rfc2136:
+  host: 10.100.20.241
+  port: 53
+  zone: merenda.home.arpa
+  tsigKeyname: externaldns-key.
+  tsigSecret: "${EXTERNAL_DNS_SECRET_KEY}"
+  tsigSecretAlg: hmac-sha256
+
+# Only manage this zone
+domainFilters:
+  - merenda.home.arpa
+
+# Sources to watch for records
+sources:
+  - service
+  - ingress
+
+# For MetalLB LoadBalancer Services on-prem
+txtOwnerId: k3s-home
+interval: 1m

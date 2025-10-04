@@ -1,0 +1,4 @@
+envsubst < bind9-tsig-secret.yaml.template | kubectl apply -f -
+
+envsubst < values.yaml.template > values.yaml
+

@@ -1,0 +1,102 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dns
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bind9-config
+  namespace: dns
+data:
+  named.conf: |
+    options {
+      directory "/var/cache/bind";
+      listen-on port 53 { any; };
+      allow-query { any; };
+      recursion no;
+    };
+
+    key "externaldns-key." {
+      algorithm hmac-sha256;
+      secret "<KEY_BASE64>";
+    };
+
+    zone "merenda.home.arpa" IN {
+      type master;
+      file "/var/lib/bind/merenda.home.arpa.zone";
+      allow-update { key "externaldns-key."; };
+    };
+  merenda.home.arpa.zone: |
+    $TTL 300
+    @   IN SOA ns1.merenda.home.arpa. hostmaster.merenda.home.arpa. (
+            2025100401 ; serial
+            60         ; refresh
+            30         ; retry
+            604800     ; expire
+            60 )       ; minimum
+        IN NS ns1.merenda.home.arpa.
+    ns1 IN A 10.100.20.241
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bind9
+  namespace: dns
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: bind9 } }
+  template:
+    metadata: { labels: { app: bind9 } }
+    spec:
+      containers:
+      - name: bind9
+        image: internetsystemsconsortium/bind9:9.18
+        ports:
+        - containerPort: 53
+          name: dns-tcp
+          protocol: TCP
+        - containerPort: 53
+          name: dns-udp
+          protocol: UDP
+        volumeMounts:
+        - name: conf
+          mountPath: /etc/bind
+        - name: zones
+          mountPath: /var/lib/bind
+        env:
+        - name: BIND9_USER
+          value: "bind"
+      volumes:
+      - name: conf
+        configMap:
+          name: bind9-config
+          items:
+          - key: named.conf
+            path: named.conf
+      - name: zones
+        configMap:
+          name: bind9-config
+          items:
+          - key: merenda.home.arpa.zone
+            path: merenda.home.arpa.zone
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bind9
+  namespace: dns
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 10.100.20.241
+  selector: { app: bind9 }
+  ports:
+  - name: dns-udp
+    port: 53
+    targetPort: 53
+    protocol: UDP
+  - name: dns-tcp
+    port: 53
+    targetPort: 53
+    protocol: TCP
+
