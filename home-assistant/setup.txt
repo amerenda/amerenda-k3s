@@ -1,0 +1,12 @@
+kubectl -n home-assistant apply -f - <<YAML
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ha-config
+  namespace: home-assistant
+data:
+  configuration.yaml: |
+$(sed 's/^/    /' configuration.yaml)
+YAML
+
+kubectl -n home-assistant rollout restart deploy/homeassistant

@@ -1,0 +1,12 @@
+# configuration.yaml
+homeassistant:
+  name: Home
+  country: US
+
+# EufyHome (official) — uses secrets.yaml for creds
+eufy:
+  username: !secret eufy_username
+  password: !secret eufy_password
+
+# ---- (other HA config below) ----
+default_config:

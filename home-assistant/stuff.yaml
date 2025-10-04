@@ -1,0 +1,19 @@
+---
+# StorageClass for local static PVs
+---
+# PVC (cleaned for deployment)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: homeassistant-config
+  namespace: home-assistant
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: local-rpi5
+  volumeMode: Filesystem
+  volumeName: pv-ha-config-rpi5-0
+---
