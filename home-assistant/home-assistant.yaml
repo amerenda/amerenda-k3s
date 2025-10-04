@@ -62,7 +62,7 @@ spec:
             # Pin to a specific release (recommended). Example: "2.0.5" or "v2.0.5".
             # "latest" works too, but pinning avoids surprises.
             - name: HACS_VERSION
-              value: "latest"
+              value: "2.0.5"
           command:
             - /bin/sh
             - -c
