@@ -24,10 +24,9 @@ serviceWeb:
 
 persistentVolumeClaim:
   enabled: true
-  storageClass: local-path
-  accessModes: [ReadWriteOnce]
-  size: 1Gi
-
+  storageClass: longhorn
+  accessModes: [ReadWriteMany]
+  size: 10Gi
 
 # Forward ONLY your internal zones to BIND; everything else to public resolvers
 dnsmasq:
