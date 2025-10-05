@@ -1,7 +1,3 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: tailscale
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -49,7 +45,7 @@ metadata:
   name: tailscale
   namespace: tailscale
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: tailscale
@@ -59,22 +55,48 @@ spec:
         app: tailscale
     spec:
       serviceAccountName: tailscale
+      nodeSelector:
+        tailscale: "enabled"
+      # Anti-affinity to prefer pods run on different nodes (commented out for now)
+      # affinity:
+      #   podAntiAffinity:
+      #     preferredDuringSchedulingIgnoredDuringExecution:
+      #     - weight: 100
+      #       podAffinityTerm:
+      #         labelSelector:
+      #           matchExpressions:
+      #           - key: app
+      #             operator: In
+      #             values:
+      #             - tailscale
+      #         topologyKey: kubernetes.io/hostname
+      # Tolerations for tainted nodes
+      tolerations:
+      - key: "node-purpose"
+        operator: "Equal"
+        value: "restricted"
+        effect: "NoSchedule"
       containers:
       - name: tailscale
         image: tailscale/tailscale:latest
         env:
+        - name: TS_FORCE_REAUTH
+          value: "true"
         - name: TS_AUTH_ONCE
           value: "true"
         - name: TS_STATE_DIR
           value: "/var/lib/tailscale"
         - name: TS_USERSPACE
-          value: "false"
+          value: "true"
         - name: TS_ACCEPT_DNS
           value: "true"
         - name: TS_EXTRA_ARGS
           value: "--advertise-routes=10.100.20.0/24"
-        - name: TS_KUBE_SECRET
-          value: "tailscale"
+        - name: TS_AUTHKEY
+          valueFrom:
+            secretKeyRef:
+              name: tailscale-auth-key
+              key: authkey
         - name: POD_NAME
           valueFrom:
             fieldRef:
@@ -83,6 +105,15 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.uid
+        command: ["/bin/sh"]
+        args: 
+        - "-c"
+        - |
+          export TS_HOSTNAME="tailscale-${POD_NAME}"
+          tailscaled --state=kube:tailscale --statedir=/var/lib/tailscale --tun=userspace-networking &
+          sleep 2
+          tailscale up --authkey="${TS_AUTHKEY}" --hostname="${TS_HOSTNAME}" --advertise-routes=10.100.20.0/24
+          wait
         volumeMounts:
         - name: tailscale-state
           mountPath: /var/lib/tailscale
@@ -94,6 +125,13 @@ spec:
             - NET_ADMIN
             - SYS_MODULE
           privileged: true
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
       volumes:
       - name: tailscale-state
         emptyDir: {}
