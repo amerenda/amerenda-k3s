@@ -11,11 +11,11 @@ echo "🚀 Setting up Eufy automations with ConfigMaps..."
 
 # Apply all ConfigMaps
 echo "📦 Applying ConfigMaps..."
-kubectl apply -f "$AUTOMATION_DIR/human-detection-configmap.yaml"
-kubectl apply -f "$AUTOMATION_DIR/pet-detection-configmap.yaml"
-kubectl apply -f "$AUTOMATION_DIR/privacy-mode-configmap.yaml"
-kubectl apply -f "$AUTOMATION_DIR/helper-entities-configmap.yaml"
-kubectl apply -f "$AUTOMATION_DIR/dashboard-cards-configmap.yaml"
+kubectl apply -f "$AUTOMATION_DIR/.configmaps/human-detection-configmap.yaml"
+kubectl apply -f "$AUTOMATION_DIR/.configmaps/pet-detection-configmap.yaml"
+kubectl apply -f "$AUTOMATION_DIR/.configmaps/privacy-mode-configmap.yaml"
+kubectl apply -f "$AUTOMATION_DIR/.configmaps/helper-entities-configmap.yaml"
+kubectl apply -f "$AUTOMATION_DIR/.configmaps/dashboard-cards-configmap.yaml"
 
 echo "✅ ConfigMaps applied successfully!"
 

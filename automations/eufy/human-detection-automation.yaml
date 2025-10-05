@@ -5,7 +5,9 @@
   description: "Updates event image when human detected in living room"
   trigger:
     - platform: state
-      entity_id: binary_sensor.living_room_human
+      entity_id: 
+        - camera.living_room
+        - select.living_room_motion_detection_type
       to: 'on'
       for:
         seconds: 2
@@ -23,17 +25,21 @@
       entity_id: input_text.event_image_location
       data:
         value: 'Living Room'
-    - service: notify.persistent_notification
+    - service: notify.mobile_app_pixel_9_pro_xl
       data:
-        title: 'Human Detected in Living Room'
+        title: '👤 Human Detected in Living Room'
         message: 'Human detected in living room at {{ now().strftime("%H:%M:%S") }}'
-        notification_id: 'human_detected_living_room_{{ now().timestamp() }}'
+        data:
+          channel: 'Human Detection'
+          importance: 'high'
 
 - alias: "Human Detected - Bedroom"
   description: "Updates event image when human detected in bedroom"
   trigger:
     - platform: state
-      entity_id: binary_sensor.bedroom_human
+      entity_id: 
+        - camera.bedroom
+        - select.bedroom_motion_detection_type
       to: 'on'
       for:
         seconds: 2
@@ -51,8 +57,10 @@
       entity_id: input_text.event_image_location
       data:
         value: 'Bedroom'
-    - service: notify.persistent_notification
+    - service: notify.mobile_app_pixel_9_pro_xl
       data:
-        title: 'Human Detected in Bedroom'
+        title: '👤 Human Detected in Bedroom'
         message: 'Human detected in bedroom at {{ now().strftime("%H:%M:%S") }}'
-        notification_id: 'human_detected_bedroom_{{ now().timestamp() }}'
+        data:
+          channel: 'Human Detection'
+          importance: 'high'

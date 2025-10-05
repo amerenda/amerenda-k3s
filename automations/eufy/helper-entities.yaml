@@ -13,7 +13,7 @@ input_text:
     name: "Last Pet Detection"
     initial: "Never"
 
-# Input Boolean for privacy mode
+# Input Boolean for privacy mode toggle
 input_boolean:
   privacy_mode:
     name: "Privacy Mode"

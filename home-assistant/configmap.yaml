@@ -18,7 +18,7 @@ data:
       part_duration: 0.75
       segment_duration: 6
     
-    # Helper entities for Eufy automations
+    # Event tracking helpers (for dashboard display)
     input_text:
       event_image_timestamp:
         name: "Event Image Timestamp"
@@ -26,16 +26,8 @@ data:
       event_image_location:
         name: "Event Image Location"
         initial: "None"
-      last_pet_detection:
-        name: "Last Pet Detection"
-        initial: "Never"
 
-    input_boolean:
-      privacy_mode:
-        name: "Privacy Mode"
-        initial: false
-        icon: mdi:eye-off
-
+    # Shell command for cleanup
     shell_command:
       cleanup_pet_images: "find /config/www -name 'pet_detection_*.jpg' -mtime +7 -delete"
     

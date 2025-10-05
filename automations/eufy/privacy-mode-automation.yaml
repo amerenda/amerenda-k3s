@@ -1,8 +1,8 @@
-# Privacy Mode Automation
+# Camera Control Automation
 # Disables cameras when phone is detected at home
 
-- alias: "Privacy Mode - Enable When Phone Home"
-  description: "Enables privacy mode when phone is detected at home"
+- alias: "Cameras Off When Home"
+  description: "Disables cameras when phone is detected at home"
   trigger:
     - device_id: 801683f6c351e0bd86eddb0afb35c3ba
       domain: device_tracker
@@ -11,23 +11,25 @@
       trigger: device
       zone: zone.home
   action:
-    - service: input_boolean.turn_on
-      entity_id: input_boolean.privacy_mode
     - service: switch.turn_off
-      entity_id: 
-        - switch.bedroom_camera_enabled
-        - switch.living_room_camera_enabled
-    - service: notify.persistent_notification
+      target:
+        device_id:
+        - add2baf8e9746e2f87ff5acfdc9d5541
+        - cee1fb8e14d6c17e39b45beb672f677c
+    - service: notify.mobile_app_pixel_9_pro_xl
       data:
-        title: "Privacy Mode Enabled"
-        message: "Cameras disabled - You are home"
+        title: "📹 Cameras Disabled"
+        message: "Cameras turned off - You are home"
+        data:
+          channel: "Camera Control"
+          importance: "high"
     - service: system_log.write
       data:
-        message: "Privacy mode enabled - Phone detected at home"
+        message: "Cameras disabled - Phone detected at home"
         level: info
 
-- alias: "Privacy Mode - Disable When Phone Away"
-  description: "Disables privacy mode when phone leaves home"
+- alias: "Cameras On When Away"
+  description: "Enables cameras when phone leaves home"
   trigger:
     - device_id: 801683f6c351e0bd86eddb0afb35c3ba
       domain: device_tracker
@@ -36,29 +38,65 @@
       trigger: device
       zone: zone.home
   action:
-    - service: input_boolean.turn_off
-      entity_id: input_boolean.privacy_mode
     - service: switch.turn_on
-      entity_id: 
-        - switch.bedroom_camera_enabled
-        - switch.living_room_camera_enabled
-    - service: notify.persistent_notification
+      target:
+        device_id:
+        - add2baf8e9746e2f87ff5acfdc9d5541
+        - cee1fb8e14d6c17e39b45beb672f677c
+    - service: notify.mobile_app_pixel_9_pro_xl
       data:
-        title: "Privacy Mode Disabled"
-        message: "Cameras enabled - Phone left home"
+        title: "📹 Cameras Enabled"
+        message: "Cameras turned on - You left home"
+        data:
+          channel: "Camera Control"
+          importance: "high"
     - service: system_log.write
       data:
-        message: "Privacy mode disabled - Phone left home"
+        message: "Cameras enabled - Phone left home"
         level: info
 
-- alias: "Privacy Mode - Manual Override"
-  description: "Allows manual control of privacy mode"
+- alias: "Privacy Mode Toggle"
+  id: privacy_mode_toggle
+  description: "Manual toggle to disable/enable all cameras"
   trigger:
     - platform: state
       entity_id: input_boolean.privacy_mode
   action:
-    - service: notify.persistent_notification
-      data:
-        title: "Privacy Mode {{ 'Enabled' if is_state('input_boolean.privacy_mode', 'on') else 'Disabled' }}"
-        message: "Privacy mode {{ 'enabled' if is_state('input_boolean.privacy_mode', 'on') else 'disabled' }} manually"
-        notification_id: "privacy_mode_manual"
+    - if:
+        - condition: state
+          entity_id: input_boolean.privacy_mode
+          state: 'on'
+      then:
+        - service: switch.turn_off
+          target:
+            device_id:
+            - add2baf8e9746e2f87ff5acfdc9d5541
+            - cee1fb8e14d6c17e39b45beb672f677c
+        - service: notify.mobile_app_pixel_9_pro_xl
+          data:
+            title: "🔒 Privacy Mode Enabled"
+            message: "All cameras disabled manually"
+            data:
+              channel: "Camera Control"
+              importance: "high"
+        - service: system_log.write
+          data:
+            message: "Privacy mode enabled - All cameras disabled manually"
+            level: info
+      else:
+        - service: switch.turn_on
+          target:
+            device_id:
+            - add2baf8e9746e2f87ff5acfdc9d5541
+            - cee1fb8e14d6c17e39b45beb672f677c
+        - service: notify.mobile_app_pixel_9_pro_xl
+          data:
+            title: "🔓 Privacy Mode Disabled"
+            message: "All cameras enabled manually"
+            data:
+              channel: "Camera Control"
+              importance: "high"
+        - service: system_log.write
+          data:
+            message: "Privacy mode disabled - All cameras enabled manually"
+            level: info
