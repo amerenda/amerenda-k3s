@@ -1,4 +1,5 @@
 # --- Pi-hole on K3s for your LAN ---
+
 admin:
   existingSecret: "pihole-admin"
   passwordKey: "password"
@@ -26,6 +27,7 @@ persistentVolumeClaim:
   storageClass: local-path
   accessModes: [ReadWriteOnce]
   size: 1Gi
+
 
 # Forward ONLY your internal zones to BIND; everything else to public resolvers
 dnsmasq:

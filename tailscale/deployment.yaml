@@ -57,25 +57,24 @@ spec:
       serviceAccountName: tailscale
       nodeSelector:
         tailscale: "enabled"
-      # Anti-affinity to prefer pods run on different nodes (commented out for now)
-      # affinity:
-      #   podAntiAffinity:
-      #     preferredDuringSchedulingIgnoredDuringExecution:
-      #     - weight: 100
-      #       podAffinityTerm:
-      #         labelSelector:
-      #           matchExpressions:
-      #           - key: app
-      #             operator: In
-      #             values:
-      #             - tailscale
-      #         topologyKey: kubernetes.io/hostname
-      # Tolerations for tainted nodes
-      tolerations:
-      - key: "node-purpose"
-        operator: "Equal"
-        value: "restricted"
-        effect: "NoSchedule"
+      # Node affinity to prefer rpi5-1 over archlinux
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - rpi5-1
+          - weight: 50
+            preference:
+              matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - rpi5-0
       containers:
       - name: tailscale
         image: tailscale/tailscale:latest
