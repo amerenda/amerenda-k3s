@@ -35,11 +35,18 @@ dnsmasq:
     - server=/merenda.home.arpa/10.100.20.241
 
 # Pi-hole upstreams (used for non-internal domains)
-# (Semicolon-separated string, as expected by the container)
+# Using Cloudflare DoH for upstream DNS
 extraEnvVars:
-  PIHOLE_DNS_: "1.1.1.1;1.0.0.1"
   DNSMASQ_LISTENING: "all"
   TZ: "America/New_York"
+  FTLCONF_LOCAL_IPV4: "10.100.20.240"
+
+# Enable DoH (DNS over HTTPS) for upstream DNS
+doh:
+  enabled: true
+  pullPolicy: Always
+  envVars:
+    DOH_UPSTREAM: "https://1.1.1.1/dns-query"
 
 # Optional: small resource bounds
 resources:
