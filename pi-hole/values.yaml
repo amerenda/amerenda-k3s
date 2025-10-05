@@ -40,6 +40,8 @@ extraEnvVars:
   DNSMASQ_LISTENING: "all"
   TZ: "America/New_York"
   FTLCONF_LOCAL_IPV4: "10.100.20.240"
+  # Additional upstream DNS for reliability
+  PIHOLE_DNS_: "1.1.1.1;1.0.0.1;8.8.8.8;8.8.4.4"
 
 # Enable DoH (DNS over HTTPS) for upstream DNS
 doh:
