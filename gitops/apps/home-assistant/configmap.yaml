@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homeassistant-config
+  namespace: home-assistant
+data:
+  configuration.yaml: |
+    # configuration.yaml
+    homeassistant:
+      name: Home
+      country: US
+
+    default_config:
+   
+    # Stream component for better camera performance
+    stream:
+      ll_hls: true
+      part_duration: 0.75
+      segment_duration: 6
+    
+    # Event tracking helpers (for dashboard display)
+    input_text:
+      event_image_timestamp:
+        name: "Event Image Timestamp"
+        initial: "Never"
+      event_image_location:
+        name: "Event Image Location"
+        initial: "None"
+
+    # Shell command for cleanup
+    shell_command:
+      cleanup_pet_images: "find /config/www -name 'pet_detection_*.jpg' -mtime +7 -delete"
+    
+    # Load frontend themes from the themes folder
+    frontend:
+      themes: !include_dir_merge_named themes
+   
+    automation: !include automations.yaml
+    script: !include scripts.yaml
+    scene: !include scenes.yaml
