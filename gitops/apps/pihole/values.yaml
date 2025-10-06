@@ -1,0 +1,66 @@
+# --- Pi-hole on K3s for your LAN ---
+
+admin:
+  existingSecret: "pihole-admin"
+  passwordKey: "password"
+
+serviceDns:
+  type: LoadBalancer
+  loadBalancerIP: 10.100.20.240
+  annotations:
+    metallb.universe.tf/allow-shared-ip: "pihole"
+  externalTrafficPolicy: Local
+  port: 53
+
+serviceWeb:
+  type: LoadBalancer
+  loadBalancerIP: 10.100.20.242
+  annotations:
+    metallb.universe.tf/allow-shared-ip: "pihole"
+    external-dns.alpha.kubernetes.io/hostname: pihole.amer.local,pi.amer.local,pi-hole.amer.local
+    external-dns.alpha.kubernetes.io/ttl: "300"
+  externalTrafficPolicy: Cluster
+  port: 80
+
+persistentVolumeClaim:
+  enabled: true
+  storageClass: longhorn
+  accessModes: [ReadWriteMany]
+  size: 10Gi
+
+# Forward ONLY your internal zones to BIND; everything else to public resolvers
+dnsmasq:
+  upstreamServers:
+    - server=/amer.local/10.100.20.241
+    - server=/amer.home/10.100.20.241
+    - server=/merenda.home.arpa/10.100.20.241
+
+# Pi-hole upstreams (used for non-internal domains)
+# Using Cloudflare DoH for upstream DNS
+extraEnvVars:
+  DNSMASQ_LISTENING: "all"
+  TZ: "America/New_York"
+  FTLCONF_LOCAL_IPV4: "10.100.20.240"
+  # Additional upstream DNS for reliability
+  PIHOLE_DNS_: "1.1.1.1;1.0.0.1;8.8.8.8;8.8.4.4"
+
+# Enable DoH (DNS over HTTPS) for upstream DNS
+doh:
+  enabled: true
+  pullPolicy: Always
+  envVars:
+    DOH_UPSTREAM: "https://1.1.1.1/dns-query"
+
+# Optional: small resource bounds
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 300m
+    memory: 384Mi
+
+
+
+
+# Cloudflare for everything else

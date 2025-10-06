@@ -1,0 +1,68 @@
+# eufy-ws-deploy.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eufy-security-ws
+  namespace: home-automation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eufy-security-ws
+  template:
+    metadata:
+      labels:
+        app: eufy-security-ws
+    spec:
+      containers:
+        - name: eufy-security-ws
+          image: bropat/eufy-security-ws:latest
+          ports:
+            - containerPort: 3000  # HTTP (status/REST)
+            - containerPort: 3001  # WebSocket (what HA uses)
+          env:
+            - name: USERNAME
+              valueFrom:
+                secretKeyRef: { name: eufy-ws-secret, key: EUFY_EMAIL }
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef: { name: eufy-ws-secret, key: EUFY_PASSWORD }
+            - name: COUNTRY
+              valueFrom:
+                secretKeyRef: { name: eufy-ws-secret, key: EUFY_COUNTRY }
+            # Helpful in some networks; leave unset unless you need them:
+            # - name: TRUSTED_DEVICE_NAME
+            #   value: "k3s-eufy"
+            # - name: LANGUAGE
+            #   value: "en"
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          # Keeps the container healthy/restarts if WS stops
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 10
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: eufy-ws-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eufy-security-ws
+  namespace: home-automation
+spec:
+  selector:
+    app: eufy-security-ws
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+    - name: ws
+      port: 3001
+      targetPort: 3001
+  type: ClusterIP

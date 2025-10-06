@@ -16,4 +16,7 @@ metadata:
 spec:
   ipAddressPools:
   - local-dns-pool
+  nodeSelectors:
+  - matchLabels:
+      kubernetes.io/hostname: rpi5-0
 

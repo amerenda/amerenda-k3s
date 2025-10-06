@@ -1,11 +1,10 @@
-# homeassistant.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: homeassistant
   namespace: home-assistant
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: homeassistant
@@ -14,72 +13,218 @@ spec:
       labels:
         app: homeassistant
     spec:
-      securityContext:
-        fsGroup: 1000
+      # --- Init step: install HACS into /config on your PVC ---
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - homeassistant
+              topologyKey: kubernetes.io/hostname
       containers:
-      - name: homeassistant
-        image: ghcr.io/home-assistant/home-assistant:stable
-        ports:
-        - containerPort: 8123
-        env:
-        - name: TZ
-          value: America/New_York
-        securityContext:
-          runAsUser: 1000
-          runAsGroup: 1000
-        volumeMounts:
-        - name: config
-          mountPath: /config
+        - name: homeassistant
+          image: ghcr.io/home-assistant/home-assistant:stable
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "2"
+          ports:
+            - name: http
+              containerPort: 8123
+          env:
+            - name: TZ
+              value: "America/New_York"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: config-files
+              mountPath: /config/configuration.yaml
+              subPath: configuration.yaml
+            - name: eufy-human-detection
+              mountPath: /config/automations/human-detection-automation.yaml
+              subPath: human-detection-automation.yaml
+            - name: eufy-pet-detection
+              mountPath: /config/automations/pet-detection-automation.yaml
+              subPath: pet-detection-automation.yaml
+            - name: eufy-privacy-mode
+              mountPath: /config/automations/privacy-mode-automation.yaml
+              subPath: privacy-mode-automation.yaml
+            - name: eufy-helper-entities
+              mountPath: /config/automations/helper-entities.yaml
+              subPath: helper-entities.yaml
+            - name: eufy-dashboard-cards
+              mountPath: /config/automations/dashboard-cards.yaml
+              subPath: dashboard-cards.yaml
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","kill -TERM 1 && sleep 5"]
       volumes:
-      - name: config
-        persistentVolumeClaim:
-          claimName: homeassistant-config
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: pv-ha-config-rpi5-0
-spec:
-  capacity:
-    storage: 10Gi
-  volumeMode: Filesystem
-  accessModes: ["ReadWriteOnce"]
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-rpi5
-  local:
-    path: /mnt/k8s/homeassistant/config
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: kubernetes.io/hostname
-          operator: In
-          values: ["rpi5-0"]
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: homeassistant-config
-  namespace: home-assistant
-spec:
-  accessModes: ["ReadWriteOnce"]
-  resources:
-    requests:
-      storage: 10Gi
-  storageClassName: local-rpi5
-  volumeMode: Filesystem
+        - name: config
+          persistentVolumeClaim:
+            claimName: homeassistant-config
+        - name: config-files
+          configMap:
+            name: homeassistant-config
+        - name: eufy-human-detection
+          configMap:
+            name: eufy-human-detection-automation
+        - name: eufy-pet-detection
+          configMap:
+            name: eufy-pet-detection-automation
+        - name: eufy-privacy-mode
+          configMap:
+            name: eufy-privacy-mode-automation
+        - name: eufy-helper-entities
+          configMap:
+            name: eufy-helper-entities
+        - name: eufy-dashboard-cards
+          configMap:
+            name: eufy-dashboard-cards
+      initContainers:
+        - name: install-hacs
+          image: alpine:3.20
+          imagePullPolicy: IfNotPresent
+          env:
+            # Pin to a specific release (recommended). Example: "2.0.5" or "v2.0.5".
+            # "latest" works too, but pinning avoids surprises.
+            - name: HACS_VERSION
+              value: "2.0.5"
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -euo pipefail
+              apk add --no-cache curl unzip findutils coreutils
+
+              CONFIG_DIR="/config"
+              CC_DIR="${CONFIG_DIR}/custom_components"
+              HACS_DST="${CC_DIR}/hacs"
+              HACS_FE_DST="${CC_DIR}/hacs_frontend"
+              TMPDIR="$(mktemp -d)"
+              mkdir -p "${CC_DIR}"
+
+              # --- Download the RELEASE asset (contains built hacs_frontend python pkg) ---
+              if [ "${HACS_VERSION}" = "latest" ]; then
+                URL="https://github.com/hacs/integration/releases/latest/download/hacs.zip"
+              else
+                # try with and without 'v' prefix
+                URL="https://github.com/hacs/integration/releases/download/${HACS_VERSION}/hacs.zip"
+                if ! curl -fsI "${URL}" >/dev/null 2>&1; then
+                  NV="${HACS_VERSION#v}"
+                  URL="https://github.com/hacs/integration/releases/download/v${NV}/hacs.zip"
+                fi
+              fi
+
+              echo "Downloading HACS release asset: ${URL}"
+              ASSET="${TMPDIR}/hacs.zip"
+              curl -fsSL "${URL}" -o "${ASSET}"
+
+              echo "Unzipping to ${TMPDIR}"
+              unzip -q -o "${ASSET}" -d "${TMPDIR}"
+
+               # --- Locate BACKEND payload ---
+               # 1) Check root directory first
+               SRC_BACKEND=""
+               if [ -f "${TMPDIR}/manifest.json" ] && [ -f "${TMPDIR}/config_flow.py" ]; then
+                 SRC_BACKEND="${TMPDIR}"
+               else
+                 # 2) Flat layout: component files are at some dir root (has manifest.json + config_flow.py)
+                 CANDIDATES="$(find "${TMPDIR}" -mindepth 1 -maxdepth 2 -type d)"
+                 for d in $CANDIDATES; do
+                   if [ -f "${d}/manifest.json" ] && [ -f "${d}/config_flow.py" ]; then
+                     SRC_BACKEND="${d}"
+                     break
+                   fi
+                 done
+               fi
+
+               # 2) Classic layout: .../custom_components/hacs (fallback)
+               if [ -z "${SRC_BACKEND}" ]; then
+                 SRC_BACKEND="$(find "${TMPDIR}" -type d -path '*/custom_components/hacs' | head -n1 || true)"
+               fi
+
+              if [ -z "${SRC_BACKEND}" ]; then
+                echo "ERROR: Could not locate HACS backend (manifest.json + config_flow.py) in asset." >&2
+                find "${TMPDIR}" -maxdepth 2 -mindepth 1 -print | sed 's/^/  /' >&2
+                exit 1
+              fi
+
+               echo "Installing backend from ${SRC_BACKEND} -> ${HACS_DST}"
+               rm -rf "${HACS_DST}.bak"
+               if [ -d "${HACS_DST}" ]; then mv "${HACS_DST}" "${HACS_DST}.bak"; fi
+               mkdir -p "${HACS_DST}"
+               
+               # Copy all files from source to destination
+               # Exclude the hacs_frontend directory as it should be handled separately
+               find "${SRC_BACKEND}" -maxdepth 1 -type f -exec cp {} "${HACS_DST}/" \;
+               find "${SRC_BACKEND}" -maxdepth 1 -type d ! -name "hacs_frontend" ! -path "${SRC_BACKEND}" -exec cp -r {} "${HACS_DST}/" \;
+
+               # --- Locate FRONTEND python package (hacs_frontend) in the asset ---
+               SRC_FE="$(find "${TMPDIR}" -type d -name 'hacs_frontend' | head -n1 || true)"
+               if [ -n "${SRC_FE}" ]; then
+                 # Must be a python package (have __init__.py). Some assets already include it.
+                 if [ -f "${SRC_FE}/__init__.py" ]; then
+                   # Install frontend inside the hacs directory
+                   HACS_FE_DST="${HACS_DST}/hacs_frontend"
+                   echo "Installing frontend from ${SRC_FE} -> ${HACS_FE_DST}"
+                   rm -rf "${HACS_FE_DST}.bak"
+                   if [ -d "${HACS_FE_DST}" ]; then mv "${HACS_FE_DST}" "${HACS_FE_DST}.bak"; fi
+                   mkdir -p "${HACS_FE_DST}"
+                   cp -a "${SRC_FE}/." "${HACS_FE_DST}/"
+                 else
+                   echo "WARNING: Found 'hacs_frontend' without __init__.py; skipping copy (likely source repo, not release)."
+                 fi
+               else
+                 echo "NOTE: No 'hacs_frontend' package found in asset; HA will install it via manifest requirements if needed."
+               fi
+
+              # Clean pyc caches
+              find "${CC_DIR}" -type d -name '__pycache__' -exec rm -rf {} +
+
+              # Version breadcrumb (best-effort)
+              VER="unknown"
+              if [ -f "${HACS_DST}/manifest.json" ]; then
+                VLINE="$(grep -oE '"version"\s*:\s*"[^"]+"' "${HACS_DST}/manifest.json" || true)"
+                if [ -n "${VLINE}" ]; then VER="$(echo "${VLINE}" | sed -E 's/.*"([^"]+)".*/\1/')"; fi
+              fi
+              echo "${VER}" > "${HACS_DST}/.installed_version"
+
+               echo "HACS backend installed: $(cat "${HACS_DST}/.installed_version" || echo unknown)"
+               [ -d "${HACS_DST}/hacs_frontend" ] && echo "HACS frontend installed (python pkg present)."
+               
+               # Clean up backup directories
+               rm -rf "${HACS_DST}.bak" "${HACS_DST}/hacs_frontend.bak" 2>/dev/null || true
+               
+               rm -rf "${TMPDIR}"
+          volumeMounts:
+            - name: config
+              mountPath: /config
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: homeassistant
   namespace: home-assistant
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: home.amer.home,ha.amer.home,homeassistant.amer.home,ha.amer.local,home.amer.local
+    external-dns.alpha.kubernetes.io/ttl: "300"
 spec:
   type: LoadBalancer
-  ports:
-  - port: 8123
-    targetPort: 8123
+  externalTrafficPolicy: Local
+  loadBalancerIP: 10.100.20.140
   selector:
     app: homeassistant
-
-
+  ports:
+    - port: 8123
+      protocol: TCP
+      targetPort: 8123

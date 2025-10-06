@@ -1,0 +1,9 @@
+kubectl create namespace pihole
+helm repo add mojo2600 https://mojo2600.github.io/pihole-kubernetes/
+helm repo update
+
+kubectl -n pihole create secret generic pihole-admin \
+  --from-literal=password='PASSWORD_HERE'
+
+helm upgrade --install pihole mojo2600/pihole \
+  -n pihole -f values.yaml
