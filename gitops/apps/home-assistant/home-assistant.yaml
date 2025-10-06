@@ -1,0 +1,132 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homeassistant
+  namespace: home-assistant
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: homeassistant
+  template:
+    metadata:
+      labels:
+        app: homeassistant
+    spec:
+      # --- Init step: install HACS into /config on your PVC ---
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - homeassistant
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - name: homeassistant
+          image: ghcr.io/home-assistant/home-assistant:stable
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "2"
+          ports:
+            - name: http
+              containerPort: 8123
+          env:
+            - name: TZ
+              value: "America/New_York"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: config-files
+              mountPath: /config/configuration.yaml
+              subPath: configuration.yaml
+            - name: eufy-human-detection
+              mountPath: /config/automations/human-detection-automation.yaml
+              subPath: human-detection-automation.yaml
+            - name: eufy-pet-detection
+              mountPath: /config/automations/pet-detection-automation.yaml
+              subPath: pet-detection-automation.yaml
+            - name: eufy-privacy-mode
+              mountPath: /config/automations/privacy-mode-automation.yaml
+              subPath: privacy-mode-automation.yaml
+            - name: eufy-helper-entities
+              mountPath: /config/automations/helper-entities.yaml
+              subPath: helper-entities.yaml
+            - name: eufy-dashboard-cards
+              mountPath: /config/automations/dashboard-cards.yaml
+              subPath: dashboard-cards.yaml
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","kill -TERM 1 && sleep 5"]
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: homeassistant-config
+        - name: config-files
+          configMap:
+            name: homeassistant-config
+        - name: eufy-human-detection
+          configMap:
+            name: eufy-human-detection-automation
+        - name: eufy-pet-detection
+          configMap:
+            name: eufy-pet-detection-automation
+        - name: eufy-privacy-mode
+          configMap:
+            name: eufy-privacy-mode-automation
+        - name: eufy-helper-entities
+          configMap:
+            name: eufy-helper-entities
+        - name: eufy-dashboard-cards
+          configMap:
+            name: eufy-dashboard-cards
+      initContainers:
+        - name: install-hacs-disabled
+          image: alpine:3.20
+          imagePullPolicy: IfNotPresent
+          env:
+            # Pin to a specific release (recommended). Example: "2.0.5" or "v2.0.5".
+            # "latest" works too, but pinning avoids surprises.
+            - name: HACS_VERSION
+              value: "2.0.5"
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "HACS installation disabled for troubleshooting"
+              CONFIG_DIR="/config"
+              CC_DIR="${CONFIG_DIR}/custom_components"
+              mkdir -p "${CC_DIR}"
+              echo "Custom components directory created"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: homeassistant
+  namespace: home-assistant
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: home.amer.home,ha.amer.home,homeassistant.amer.home,ha.amer.local,home.amer.local
+    external-dns.alpha.kubernetes.io/ttl: "300"
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  loadBalancerIP: 10.100.20.140
+  selector:
+    app: homeassistant
+  ports:
+    - port: 8123
+      protocol: TCP
+      targetPort: 8123

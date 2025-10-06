@@ -1,0 +1,167 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dns
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bind9-config
+  namespace: dns
+data:
+  named.conf: |
+    options {
+      directory "/var/cache/bind";
+      listen-on port 53 { any; };
+      allow-query { any; };
+      recursion no;
+      # optional hardening:
+      # allow-transfer { none; };
+      # allow-query-cache { none; };
+    };
+
+    include "/etc/bind/keys/key.conf";
+
+    zone "merenda.home.arpa" IN {
+      type master;
+      file "/var/cache/bind/merenda.home.arpa.db";
+      allow-update { key "externaldns-key."; };
+    };
+
+    zone "amer.local" IN {
+      type master;
+      file "/var/cache/bind/amer.local.db";
+      allow-update { key "externaldns-key."; };
+    };
+
+    zone "amer.home" IN {
+      type master;
+      file "/var/cache/bind/amer.home.db";
+      allow-update { key "externaldns-key."; };
+    };
+
+    zone "20.100.10.in-addr.arpa" IN {
+      type master;
+      file "/var/cache/bind/20.100.10.in-addr.arpa.db";
+      allow-update { key "externaldns-key."; };
+    };
+  merenda.home.arpa.zone: |
+    $TTL 300
+    @   IN SOA ns1.merenda.home.arpa. hostmaster.merenda.home.arpa. (2025100401 60 30 604800 60)
+        IN NS ns1.merenda.home.arpa.
+    ns1 IN A 10.100.20.241
+  amer.local.zone: |
+    $TTL 300
+    @   IN SOA ns1.amer.local. hostmaster.amer.local. (2025100401 60 30 604800 60)
+        IN NS ns1.amer.local.
+    ns1 IN A 10.100.20.241
+  amer.home.zone: |
+    $TTL 300
+    @   IN SOA ns1.amer.home. hostmaster.amer.home. (2025100401 60 30 604800 60)
+        IN NS ns1.amer.home.
+    ns1 IN A 10.100.20.241
+  20.100.10.in-addr.arpa.zone: |
+    $TTL 300
+    @   IN SOA ns1.merenda.home.arpa. hostmaster.merenda.home.arpa. (2025100401 60 30 604800 60)
+        IN NS ns1.merenda.home.arpa.
+    241 IN PTR ns1.merenda.home.arpa.
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bind9
+  namespace: dns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bind9
+  template:
+    metadata:
+      labels:
+        app: bind9
+    spec:
+      initContainers:
+      - name: init-zones
+        image: busybox
+        command: ["/bin/sh","-c"]
+        args:
+          - >
+            set -e;
+            mkdir -p /cache;
+            for f in /config/*.zone; do
+              base="$(basename "$f" .zone)";
+              [ -f "/cache/${base}.db" ] || cp "$f" "/cache/${base}.db";
+            done;
+        volumeMounts:
+        - name: zones
+          mountPath: /config
+        - name: cache
+          mountPath: /cache
+      containers:
+      - name: bind9
+        image: ubuntu/bind9:latest
+        ports:
+        - name: dns-tcp
+          containerPort: 53
+          protocol: TCP
+        - name: dns-udp
+          containerPort: 53
+          protocol: UDP
+        volumeMounts:
+        - name: conf
+          mountPath: /etc/bind
+        - name: zones
+          mountPath: /var/lib/bind
+        - name: cache
+          mountPath: /var/cache/bind
+        - name: tsig
+          mountPath: /etc/bind/keys
+        livenessProbe:
+          tcpSocket: { port: 53 }
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket: { port: 53 }
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: conf
+        configMap:
+          name: bind9-config
+          items:
+          - key: named.conf
+            path: named.conf
+      - name: zones
+        configMap:
+          name: bind9-config
+          items:
+          - { key: merenda.home.arpa.zone,           path: merenda.home.arpa.zone }
+          - { key: amer.local.zone,                  path: amer.local.zone }
+          - { key: amer.home.zone,                   path: amer.home.zone }
+          - { key: 20.100.10.in-addr.arpa.zone,      path: 20.100.10.in-addr.arpa.zone }
+      - name: cache
+        emptyDir: {}
+      - name: tsig
+        secret:
+          secretName: bind9-tsig
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bind9
+  namespace: dns
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 10.100.20.241
+  selector:
+    app: bind9
+  ports:
+  - name: dns-udp
+    port: 53
+    targetPort: 53
+    protocol: UDP
+  - name: dns-tcp
+    port: 53
+    targetPort: 53
+    protocol: TCP
