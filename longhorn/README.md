@@ -17,6 +17,9 @@ Longhorn provides distributed block storage with built-in replication, making it
 ## Files
 
 - `setup-longhorn.sh`: Installation script
+- `longhorn-ui-lb.yaml`: LoadBalancer service for Longhorn UI
+- `longhorn-config.yaml`: Longhorn configuration settings
+- `apply-node-labels.sh`: Script to configure node labels
 - `README.md`: This documentation
 
 ## Quick Start
@@ -27,11 +30,24 @@ Longhorn provides distributed block storage with built-in replication, making it
    ./setup-longhorn.sh
    ```
 
-2. **Access the UI**:
+2. **Configure node labels**:
    ```bash
-   kubectl port-forward -n longhorn-system svc/longhorn-frontend 8080:80
+   chmod +x apply-node-labels.sh
+   ./apply-node-labels.sh
    ```
-   Then open http://localhost:8080 in your browser
+
+3. **Apply Longhorn settings**:
+   ```bash
+   kubectl apply -f longhorn-config.yaml
+   ```
+
+4. **Access the UI**:
+   - **LoadBalancer (Recommended)**: http://longhorn.amer.local or http://longhorn.amer.home (IP: 10.100.20.243)
+   - **Port-Forward (Alternative)**:
+     ```bash
+     kubectl port-forward -n longhorn-system svc/longhorn-frontend 8080:80
+     ```
+     Then open http://localhost:8080 in your browser
 
 3. **Update your applications** to use the `longhorn` storage class:
    ```yaml
