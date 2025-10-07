@@ -103,21 +103,19 @@ spec:
             - /bin/sh
             - -c
             - |
-              set -euo pipefail
-              apk add --no-cache curl unzip findutils coreutils
-
+              set -e
+              apk add --no-cache curl unzip
+              
               CONFIG_DIR="/config"
               CC_DIR="${CONFIG_DIR}/custom_components"
               HACS_DST="${CC_DIR}/hacs"
-              HACS_FE_DST="${CC_DIR}/hacs_frontend"
               TMPDIR="$(mktemp -d)"
               mkdir -p "${CC_DIR}"
 
-              # --- Download the RELEASE asset (contains built hacs_frontend python pkg) ---
+              # Download HACS
               if [ "${HACS_VERSION}" = "latest" ]; then
                 URL="https://github.com/hacs/integration/releases/latest/download/hacs.zip"
               else
-                # try with and without 'v' prefix
                 URL="https://github.com/hacs/integration/releases/download/${HACS_VERSION}/hacs.zip"
                 if ! curl -fsI "${URL}" >/dev/null 2>&1; then
                   NV="${HACS_VERSION#v}"
@@ -125,87 +123,54 @@ spec:
                 fi
               fi
 
-              echo "Downloading HACS release asset: ${URL}"
-              ASSET="${TMPDIR}/hacs.zip"
-              curl -fsSL "${URL}" -o "${ASSET}"
+              echo "Downloading HACS: ${URL}"
+              curl -fsSL "${URL}" -o "${TMPDIR}/hacs.zip"
+              unzip -q "${TMPDIR}/hacs.zip" -d "${TMPDIR}"
 
-              echo "Unzipping to ${TMPDIR}"
-              unzip -q -o "${ASSET}" -d "${TMPDIR}"
+              # Find the hacs directory in the extracted files
+              HACS_SRC=""
+              # Check if files are directly in TMPDIR
+              if [ -f "${TMPDIR}/manifest.json" ] && [ -f "${TMPDIR}/config_flow.py" ]; then
+                HACS_SRC="${TMPDIR}"
+              else
+                # Look in subdirectories
+                for dir in "${TMPDIR}"/*; do
+                  if [ -d "$dir" ] && [ -f "$dir/manifest.json" ] && [ -f "$dir/config_flow.py" ]; then
+                    HACS_SRC="$dir"
+                    break
+                  fi
+                done
+              fi
 
-               # --- Locate BACKEND payload ---
-               # 1) Check root directory first
-               SRC_BACKEND=""
-               if [ -f "${TMPDIR}/manifest.json" ] && [ -f "${TMPDIR}/config_flow.py" ]; then
-                 SRC_BACKEND="${TMPDIR}"
-               else
-                 # 2) Flat layout: component files are at some dir root (has manifest.json + config_flow.py)
-                 CANDIDATES="$(find "${TMPDIR}" -mindepth 1 -maxdepth 2 -type d)"
-                 for d in $CANDIDATES; do
-                   if [ -f "${d}/manifest.json" ] && [ -f "${d}/config_flow.py" ]; then
-                     SRC_BACKEND="${d}"
-                     break
-                   fi
-                 done
-               fi
-
-               # 2) Classic layout: .../custom_components/hacs (fallback)
-               if [ -z "${SRC_BACKEND}" ]; then
-                 SRC_BACKEND="$(find "${TMPDIR}" -type d -path '*/custom_components/hacs' | head -n1 || true)"
-               fi
-
-              if [ -z "${SRC_BACKEND}" ]; then
-                echo "ERROR: Could not locate HACS backend (manifest.json + config_flow.py) in asset." >&2
-                find "${TMPDIR}" -maxdepth 2 -mindepth 1 -print | sed 's/^/  /' >&2
+              if [ -z "$HACS_SRC" ]; then
+                echo "ERROR: Could not find HACS source directory"
+                echo "Contents of ${TMPDIR}:"
+                ls -la "${TMPDIR}"
                 exit 1
               fi
 
-               echo "Installing backend from ${SRC_BACKEND} -> ${HACS_DST}"
-               rm -rf "${HACS_DST}.bak"
-               if [ -d "${HACS_DST}" ]; then mv "${HACS_DST}" "${HACS_DST}.bak"; fi
-               mkdir -p "${HACS_DST}"
-               
-               # Copy all files from source to destination
-               # Exclude the hacs_frontend directory as it should be handled separately
-               find "${SRC_BACKEND}" -maxdepth 1 -type f -exec cp {} "${HACS_DST}/" \;
-               find "${SRC_BACKEND}" -maxdepth 1 -type d ! -name "hacs_frontend" ! -path "${SRC_BACKEND}" -exec cp -r {} "${HACS_DST}/" \;
-
-               # --- Locate FRONTEND python package (hacs_frontend) in the asset ---
-               SRC_FE="$(find "${TMPDIR}" -type d -name 'hacs_frontend' | head -n1 || true)"
-               if [ -n "${SRC_FE}" ]; then
-                 # Must be a python package (have __init__.py). Some assets already include it.
-                 if [ -f "${SRC_FE}/__init__.py" ]; then
-                   # Install frontend inside the hacs directory
-                   HACS_FE_DST="${HACS_DST}/hacs_frontend"
-                   echo "Installing frontend from ${SRC_FE} -> ${HACS_FE_DST}"
-                   rm -rf "${HACS_FE_DST}.bak"
-                   if [ -d "${HACS_FE_DST}" ]; then mv "${HACS_FE_DST}" "${HACS_FE_DST}.bak"; fi
-                   mkdir -p "${HACS_FE_DST}"
-                   cp -a "${SRC_FE}/." "${HACS_FE_DST}/"
-                 else
-                   echo "WARNING: Found 'hacs_frontend' without __init__.py; skipping copy (likely source repo, not release)."
-                 fi
-               else
-                 echo "NOTE: No 'hacs_frontend' package found in asset; HA will install it via manifest requirements if needed."
-               fi
-
-              # Clean pyc caches
-              find "${CC_DIR}" -type d -name '__pycache__' -exec rm -rf {} +
-
-              # Version breadcrumb (best-effort)
-              VER="unknown"
+              echo "Installing HACS from $HACS_SRC to $HACS_DST"
+              
+              # Completely clean install - force remove entire custom_components directory
+              rm -rf "${CC_DIR}" 2>/dev/null || true
+              # Use find to remove stubborn files
+              find "${CC_DIR}" -type f -delete 2>/dev/null || true
+              find "${CC_DIR}" -type d -empty -delete 2>/dev/null || true
+              rm -rf "${CC_DIR}" 2>/dev/null || true
+              mkdir -p "${CC_DIR}"
+              
+              # Copy all files and directories from source
+              cp -r "${HACS_SRC}"/* "${HACS_DST}/" 2>/dev/null || true
+              
+              # Create version file
               if [ -f "${HACS_DST}/manifest.json" ]; then
-                VLINE="$(grep -oE '"version"\s*:\s*"[^"]+"' "${HACS_DST}/manifest.json" || true)"
-                if [ -n "${VLINE}" ]; then VER="$(echo "${VLINE}" | sed -E 's/.*"([^"]+)".*/\1/')"; fi
+                VER=$(grep -o '"version"[[:space:]]*:[[:space:]]*"[^"]*"' "${HACS_DST}/manifest.json" | sed 's/.*"\([^"]*\)".*/\1/')
+                echo "$VER" > "${HACS_DST}/.installed_version"
+                echo "HACS $VER installed successfully"
               fi
-              echo "${VER}" > "${HACS_DST}/.installed_version"
-
-               echo "HACS backend installed: $(cat "${HACS_DST}/.installed_version" || echo unknown)"
-               [ -d "${HACS_DST}/hacs_frontend" ] && echo "HACS frontend installed (python pkg present)."
-               
-               # Clean up backup directories
-               rm -rf "${HACS_DST}.bak" "${HACS_DST}/hacs_frontend.bak" 2>/dev/null || true
-               
-               rm -rf "${TMPDIR}"
+              
+              # Cleanup
+              rm -rf "${TMPDIR}"
           volumeMounts:
             - name: config
               mountPath: /config
