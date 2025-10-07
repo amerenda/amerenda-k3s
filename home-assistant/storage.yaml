@@ -5,31 +5,8 @@ metadata:
   namespace: home-assistant
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 10Gi
-  storageClassName: local-rpi5
-  volumeName: pv-ha-config-rpi5-0
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: pv-ha-config-rpi5-0
-spec:
-  capacity:
-    storage: 10Gi
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-rpi5
-  local:
-    path: /mnt/local/homeassistant/config
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - rpi5-0
+  storageClassName: longhorn
