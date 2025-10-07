@@ -1,0 +1,304 @@
+# External Secrets Operator Helm Chart Values
+# This file contains the configuration for the External Secrets Operator
+
+# Global configuration
+global:
+  # Image registry and repository
+  imageRegistry: ""
+  imagePullSecrets: []
+
+# External Secrets Operator configuration
+externalSecrets:
+  # Enable or disable the operator
+  enabled: true
+  
+  # Image configuration
+  image:
+    repository: external-secrets/external-secrets
+    tag: "v0.9.11"
+    pullPolicy: IfNotPresent
+  
+  # Service account configuration
+  serviceAccount:
+    create: true
+    annotations: {}
+    name: ""
+  
+  # RBAC configuration
+  rbac:
+    create: true
+  
+  # Security context
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 65534
+    runAsGroup: 65534
+    fsGroup: 65534
+  
+  # Pod security context
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 65534
+    runAsGroup: 65534
+    fsGroup: 65534
+  
+  # Resources
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  
+  # Node selector
+  nodeSelector: {}
+  
+  # Tolerations
+  tolerations: []
+  
+  # Affinity
+  affinity: {}
+  
+  # Pod annotations
+  podAnnotations: {}
+  
+  # Pod labels
+  podLabels: {}
+  
+  # Environment variables
+  env: []
+  
+  # Command line arguments
+  args: []
+  
+  # Liveness probe
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: 8081
+    initialDelaySeconds: 15
+    periodSeconds: 20
+    timeoutSeconds: 5
+    failureThreshold: 3
+  
+  # Readiness probe
+  readinessProbe:
+    httpGet:
+      path: /readyz
+      port: 8081
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+    annotations: {}
+    labels: {}
+  
+  # Service monitor for Prometheus
+  serviceMonitor:
+    enabled: false
+    namespace: ""
+    interval: 30s
+    scrapeTimeout: 10s
+    labels: {}
+    annotations: {}
+  
+  # Webhook configuration
+  webhook:
+    port: 9443
+    hostNetwork: false
+    service:
+      type: ClusterIP
+      port: 443
+      targetPort: 9443
+      annotations: {}
+      labels: {}
+    certManager:
+      enabled: false
+      issuer: ""
+      duration: ""
+    certSecretName: ""
+    caBundle: ""
+  
+  # CRD management
+  crds:
+    create: true
+    keep: false
+  
+  # Logging configuration
+  logLevel: info
+  logFormat: json
+  
+  # Leader election
+  leaderElection:
+    enabled: true
+    leaseDuration: 15s
+    renewDeadline: 10s
+    retryPeriod: 2s
+  
+  # Concurrency
+  concurrentReconciles: 1
+  
+  # Requeue interval
+  requeueInterval: 5m
+  
+  # Metrics
+  metrics:
+    enabled: true
+    port: 8080
+    path: /metrics
+  
+  # Health check
+  health:
+    enabled: true
+    port: 8081
+    path: /healthz
+  
+  # Readiness check
+  readiness:
+    enabled: true
+    port: 8081
+    path: /readyz
+
+# Cert manager configuration (if using cert-manager for webhook certificates)
+certManager:
+  enabled: false
+  issuer: ""
+  duration: ""
+
+# Additional labels for all resources
+labels: {}
+
+# Additional annotations for all resources
+annotations: {}
+
+# Priority class name
+priorityClassName: ""
+
+# Pod disruption budget
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+  maxUnavailable: ""
+
+# Network policy
+networkPolicy:
+  enabled: false
+  ingress: []
+  egress: []
+
+# Pod security policy
+podSecurityPolicy:
+  enabled: false
+  annotations: {}
+  rules: []
+
+# Security context constraints (OpenShift)
+securityContextConstraints:
+  enabled: false
+  name: ""
+  annotations: {}
+  rules: []
+
+# Bitwarden SDK Server Configuration
+# Enable the Bitwarden SDK Server for Bitwarden Secrets Manager integration
+bitwardenSdkServer:
+  enabled: true
+  
+  # Image configuration
+  image:
+    repository: bitwarden/sdk-server
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  
+  # Service account
+  serviceAccount:
+    create: true
+    annotations: {}
+    name: ""
+  
+  # RBAC
+  rbac:
+    create: true
+  
+  # Security context
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 65534
+    runAsGroup: 65534
+    fsGroup: 65534
+  
+  # Pod security context
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 65534
+    runAsGroup: 65534
+    fsGroup: 65534
+  
+  # Resources
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  
+  # Service configuration
+  service:
+    type: ClusterIP
+    port: 9998
+    targetPort: 9998
+    annotations: {}
+    labels: {}
+  
+  # TLS configuration
+  tls:
+    enabled: true
+    secretName: bitwarden-tls-certs
+    certManager:
+      enabled: false
+      issuer: ""
+  
+  # Environment variables
+  env: []
+  
+  # Node selector
+  nodeSelector: {}
+  
+  # Tolerations
+  tolerations: []
+  
+  # Affinity
+  affinity: {}
+  
+  # Pod annotations
+  podAnnotations: {}
+  
+  # Pod labels
+  podLabels: {}
+  
+  # Health checks
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 9998
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 9998
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3

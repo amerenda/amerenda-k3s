@@ -69,7 +69,7 @@ spec:
 
 ---
 # Infrastructure: External Secrets Operator
-# TODO: Update path if your external-secrets manifests are in a different location
+# Deploys External Secrets Operator using Helm chart with custom values
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -85,7 +85,7 @@ spec:
     path: gitops/infra/external-secrets
   destination:
     server: https://kubernetes.default.svc
-    namespace: external-secrets
+    namespace: default
   syncPolicy:
     automated:
       prune: true
