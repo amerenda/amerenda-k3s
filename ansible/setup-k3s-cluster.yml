@@ -42,7 +42,7 @@
     
     # Longhorn storage configuration
     # Set to false to exclude this node from Longhorn storage
-    longhorn_storage_enabled: "{{ longhorn_storage_enabled | default(true) | bool }}"
+    enable_longhorn_storage: "{{ (longhorn_storage_enabled | default(true)) | bool }}"
 
   pre_tasks:
     - name: Check if SSH private key exists
@@ -555,21 +555,21 @@
       shell: |
         kubectl label node {{ inventory_hostname }} longhorn.io/storage=true --overwrite
       delegate_to: localhost
-      when: longhorn_storage_enabled
+      when: enable_longhorn_storage
       tags: [k3s, labels, longhorn, storage-gate]
 
     - name: Remove Longhorn storage gate label from controller node
       shell: |
         kubectl label node {{ inventory_hostname }} longhorn.io/storage- || true
       delegate_to: localhost
-      when: not longhorn_storage_enabled
+      when: not enable_longhorn_storage
       tags: [k3s, labels, longhorn, storage-gate]
 
     - name: Add storage preference label to controller nodes
       shell: |
         kubectl label node {{ inventory_hostname }} longhorn.io/storage-preference=false --overwrite
       delegate_to: localhost
-      when: longhorn_storage_enabled
+      when: enable_longhorn_storage
       tags: [k3s, labels, longhorn, storage-preference]
 
 - name: Setup Longhorn Storage Node
@@ -582,6 +582,10 @@
     k3s_version: "v1.33.5+k3s1"
     k3s_server_ip: "{{ hostvars[groups['controllers'][0]]['ansible_host'] }}"
     replace_cluster_bool: "{{ (replace_cluster | default(false)) | bool }}"
+    
+    # Longhorn storage configuration
+    # Set to false to exclude this node from Longhorn storage
+    enable_longhorn_storage: "{{ (longhorn_storage_enabled | default(true)) | bool }}"
 
   pre_tasks:
     - name: Check if k3s agent is already running
@@ -626,6 +630,13 @@
       when: replace_cluster_bool and (k3s_token is not defined or k3s_token == "")
 
   tasks:
+    - name: Debug group variables
+      debug:
+        msg: |
+          longhorn_taints: {{ longhorn_taints | default('undefined') }}
+          longhorn_labels: {{ longhorn_labels | default('undefined') }}
+          longhorn_storage_enabled: {{ longhorn_storage_enabled | default('undefined') }}
+      tags: [debug]
     - name: Resize root filesystem to use all available space
       shell: |
         echo "Resizing filesystem to use all available space..."
@@ -773,21 +784,21 @@
       shell: |
         kubectl label node {{ inventory_hostname }} longhorn.io/storage=true --overwrite
       delegate_to: "{{ groups['controllers'][0] }}"
-      when: k3s_installed.stat.exists and longhorn_storage_enabled
+      when: k3s_installed.stat.exists and enable_longhorn_storage
       tags: [k3s, labels, longhorn, storage-gate]
 
     - name: Add storage preference label to storage node
       shell: |
         kubectl label node {{ inventory_hostname }} longhorn.io/storage-preference=true --overwrite
       delegate_to: "{{ groups['controllers'][0] }}"
-      when: k3s_installed.stat.exists and longhorn_storage_enabled
+      when: k3s_installed.stat.exists and enable_longhorn_storage
       tags: [k3s, labels, longhorn, storage-preference]
 
     - name: Remove Longhorn storage labels from node
       shell: |
         kubectl label node {{ inventory_hostname }} {{ item | replace('=', '-') }} || true
       delegate_to: "{{ groups['controllers'][0] }}"
-      when: k3s_installed.stat.exists and not longhorn_storage_enabled
+      when: k3s_installed.stat.exists and not enable_longhorn_storage
       loop: "{{ longhorn_labels }}"
       tags: [k3s, labels, longhorn]
 
@@ -795,7 +806,7 @@
       shell: |
         kubectl taint node {{ inventory_hostname }} {{ item }} --overwrite
       delegate_to: "{{ groups['controllers'][0] }}"
-      when: k3s_installed.stat.exists and longhorn_storage_enabled
+      when: k3s_installed.stat.exists and enable_longhorn_storage
       loop: "{{ longhorn_taints }}"
       tags: [k3s, taints]
 
@@ -803,7 +814,7 @@
       shell: |
         kubectl taint node {{ inventory_hostname }} {{ item | replace(':', '-:') }} --overwrite || true
       delegate_to: "{{ groups['controllers'][0] }}"
-      when: k3s_installed.stat.exists and not longhorn_storage_enabled
+      when: k3s_installed.stat.exists and not enable_longhorn_storage
       loop: "{{ longhorn_taints }}"
       tags: [k3s, taints]
 
