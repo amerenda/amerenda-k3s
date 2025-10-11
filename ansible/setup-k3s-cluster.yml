@@ -551,27 +551,25 @@
       when: is_first_controller
       tags: [argocd, reminder]
 
-    - name: Add Longhorn storage labels to controller node
+    - name: Add Longhorn storage gate label to controller node
       shell: |
-        kubectl label node {{ inventory_hostname }} {{ item }} --overwrite
+        kubectl label node {{ inventory_hostname }} longhorn.io/storage=true --overwrite
       delegate_to: localhost
       when: longhorn_storage_enabled
-      loop: "{{ longhorn_labels }}"
-      tags: [k3s, labels, longhorn]
+      tags: [k3s, labels, longhorn, storage-gate]
 
-    - name: Remove Longhorn storage labels from controller node
+    - name: Remove Longhorn storage gate label from controller node
       shell: |
-        kubectl label node {{ inventory_hostname }} {{ item | replace('=', '-') }} || true
+        kubectl label node {{ inventory_hostname }} longhorn.io/storage- || true
       delegate_to: localhost
       when: not longhorn_storage_enabled
-      loop: "{{ longhorn_labels }}"
-      tags: [k3s, labels, longhorn]
+      tags: [k3s, labels, longhorn, storage-gate]
 
     - name: Add storage preference label to controller nodes
       shell: |
         kubectl label node {{ inventory_hostname }} longhorn.io/storage-preference=false --overwrite
       delegate_to: localhost
-      when: not longhorn_storage_enabled
+      when: longhorn_storage_enabled
       tags: [k3s, labels, longhorn, storage-preference]
 
 - name: Setup Longhorn Storage Node
@@ -771,13 +769,12 @@
         timeout: 300
       tags: [k3s, wait]
 
-    - name: Add Longhorn storage labels to node
+    - name: Add Longhorn storage gate label to storage node
       shell: |
-        kubectl label node {{ inventory_hostname }} {{ item }} --overwrite
+        kubectl label node {{ inventory_hostname }} longhorn.io/storage=true --overwrite
       delegate_to: "{{ groups['controllers'][0] }}"
       when: k3s_installed.stat.exists and longhorn_storage_enabled
-      loop: "{{ longhorn_labels }}"
-      tags: [k3s, labels, longhorn]
+      tags: [k3s, labels, longhorn, storage-gate]
 
     - name: Add storage preference label to storage node
       shell: |

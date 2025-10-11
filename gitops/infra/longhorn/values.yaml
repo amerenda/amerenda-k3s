@@ -89,7 +89,7 @@ longhorn:
         cpu: 200m
         memory: 256Mi
         
-  # Longhorn settings for multi-node Pi cluster with storage preference
+  # Longhorn settings for two-tier storage system
   settings:
     default-replica-count: "2"
     system-managed-components-node-selector: "longhorn.io/storage-preference=true"
@@ -98,9 +98,9 @@ longhorn:
     concurrent-automatic-engine-upgrade-per-node-limit: "1"
     disable-scheduling-on-cordoned-node: "true"
     node-drain-policy: "block-if-contains-last-replica"
-    # Allow all nodes to store data, but prefer storage nodes
-    create-default-disk-labeled-nodes: "true"
-    # Prefer replicas on storage nodes (rpi3-0)
+    # Storage gate - only nodes with longhorn.io/storage=true can store data
+    create-default-disk-labeled-nodes: "false"
+    # Prefer replicas on storage preference nodes (rpi3-0)
     replica-soft-anti-affinity: "false"
     replica-hard-anti-affinity: "false"
 
@@ -153,9 +153,9 @@ extraManifests:
               kubectl patch settings.longhorn.io taint-toleration \
                 --type merge -p '{"value": "longhorn.io/storage=true:NoSchedule,longhorn.io/storage=true:NoExecute"}' || echo "Setting already configured"
               
-              # Allow all nodes to store data, but prefer storage nodes
+              # Configure storage gate - only nodes with longhorn.io/storage=true can store data
               kubectl patch settings.longhorn.io create-default-disk-labeled-nodes \
-                --type merge -p '{"value": "true"}' || echo "Setting already configured"
+                --type merge -p '{"value": "false"}' || echo "Setting already configured"
               
               # Apply storage optimization settings
               kubectl patch settings.longhorn.io storage-minimal-available-percentage \
@@ -170,12 +170,14 @@ extraManifests:
               kubectl patch settings.longhorn.io node-drain-policy \
                 --type merge -p '{"value": "block-if-contains-last-replica"}' || echo "Setting already configured"
               
-              # Verify storage preference configuration
-              echo "Verifying storage preference configuration..."
-              kubectl get settings.longhorn.io create-default-disk-labeled-nodes -o jsonpath='{.value}' || echo "Storage preference setting not found"
+              # Verify two-tier storage configuration
+              echo "Verifying two-tier storage configuration..."
+              kubectl get settings.longhorn.io create-default-disk-labeled-nodes -o jsonpath='{.value}' || echo "Storage gate setting not found"
               
               echo "Longhorn settings applied successfully!"
-              echo "Storage preference: All nodes can store data, but rpi3-0 (longhorn.io/storage-preference=true) is preferred"
+              echo "Two-tier storage system:"
+              echo "  - Storage gate: Only nodes with longhorn.io/storage=true can store data"
+              echo "  - Storage preference: Nodes with longhorn.io/storage-preference=true are preferred"
           restartPolicy: OnFailure
       backoffLimit: 3
   - apiVersion: v1
