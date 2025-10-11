@@ -2,6 +2,17 @@
 
 This directory contains the GitOps manifests managed by ArgoCD for your k3s cluster. All infrastructure and applications are defined here and automatically deployed.
 
+## 🚀 Deployment Order (Sync Waves)
+
+Applications are deployed in a specific order using ArgoCD sync waves:
+
+- **Wave 0**: Flannel CNI (critical for networking)
+- **Wave 1**: cert-manager (TLS certificates)  
+- **Wave 2**: External Secrets (secret management)
+- **Wave 3**: Longhorn (storage, needs secrets)
+- **Wave 4**: DNS (needs TSIG secrets)
+- **Wave 5**: Applications (Home Assistant, Pi-hole, Tailscale)
+
 ## 📁 Directory Structure
 
 ```

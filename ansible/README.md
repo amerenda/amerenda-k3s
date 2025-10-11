@@ -45,6 +45,8 @@ ansible-playbook -i inventory.ini post-k3s-setup.yml
 - **ArgoCD Installation**: Installs ArgoCD via Helm
 - **GitOps Bootstrap**: Applies root-app.yaml to start GitOps workflow
 - **kubeconfig Management**: Copies and configures kubeconfig locally
+- **Longhorn Storage**: Automatically labels nodes for Longhorn storage
+- **open-iscsi**: Installs required dependencies for Longhorn
 
 ### `post-k3s-setup.yml` - Post-Installation Configuration
 - **Node Taints**: Applies storage-only taints to designated nodes
@@ -70,6 +72,20 @@ ansible/
 ```
 
 ## ⚙️ Configuration
+
+### Longhorn Storage Control
+Control which nodes participate in Longhorn storage:
+
+```bash
+# Include all nodes in storage (default)
+ansible-playbook -i inventory.ini setup-k3s-cluster.yml
+
+# Exclude specific node from storage
+ansible-playbook -i inventory.ini setup-k3s-cluster.yml -e longhorn_storage_enabled=false --limit rpi5-0
+
+# Exclude all controllers from storage
+ansible-playbook -i inventory.ini setup-k3s-cluster.yml -e longhorn_storage_enabled=false --limit controllers
+```
 
 ### Inventory Setup
 Edit `inventory.ini` with your Pi IP addresses:
