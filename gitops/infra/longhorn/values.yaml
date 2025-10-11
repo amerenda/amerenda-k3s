@@ -24,16 +24,6 @@ longhorn:
       longhorn.io/storage: "true"
     
   # Enable Longhorn UI
-  ui:
-    enabled: true
-    replicas: 1
-    service:
-      type: LoadBalancer
-      annotations:
-        external-dns.alpha.kubernetes.io/hostname: longhorn.amer.home
-        external-dns.alpha.kubernetes.io/ttl: "300"
-      loadBalancerIP: 10.100.20.243
-    # Tolerate storage taints to run on rpi3-0
     tolerations:
       - key: "longhorn.io/storage"
         operator: "Equal"
@@ -219,3 +209,11 @@ extraManifests:
     - kind: ServiceAccount
       name: longhorn-settings-applier
       namespace: default
+
+  service:
+    ui:
+      service:
+        type: LoadBalancer
+        annotations:
+          external-dns.alpha.kubernetes.io/hostname: longhorn.amer.home
+          external-dns.alpha.kubernetes.io/ttl: "300"
