@@ -7,7 +7,7 @@ A complete k3s Kubernetes cluster setup for Raspberry Pi with GitOps automation 
 - **k3s HA Cluster**: Multi-controller setup with etcd backend
 - **GitOps**: ArgoCD manages all deployments from Git
 - **Storage**: Longhorn distributed storage with automated backups
-- **Networking**: MetalLB load balancer, Tailscale VPN, Pi-hole DNS
+- **Networking**: Flannel CNI, MetalLB load balancer, Tailscale VPN, Pi-hole DNS
 - **Home Automation**: Home Assistant with Eufy integrations
 - **Secrets Management**: External Secrets Operator with Bitwarden
 
@@ -62,10 +62,19 @@ A complete k3s Kubernetes cluster setup for Raspberry Pi with GitOps automation 
 
 ## 🔧 What Gets Deployed
 
+### Deployment Order (Sync Waves)
+- **Wave 0**: Flannel CNI (critical for networking)
+- **Wave 1**: cert-manager (TLS certificates)
+- **Wave 2**: External Secrets (secret management)
+- **Wave 3**: Longhorn (storage, needs secrets)
+- **Wave 4**: DNS (needs TSIG secrets)
+- **Wave 5**: Applications (Home Assistant, Pi-hole, Tailscale)
+
 ### Infrastructure
 - **k3s**: Lightweight Kubernetes with etcd HA
 - **ArgoCD**: GitOps continuous delivery
-- **Longhorn**: Distributed block storage with GCS backups
+- **Flannel**: Container Network Interface (CNI) for pod networking
+- **Longhorn**: Distributed block storage with GCS backups (requires open-iscsi)
 - **External Secrets**: Bitwarden integration for secrets
 - **MetalLB**: Load balancer for services
 - **cert-manager**: TLS certificate management
@@ -115,6 +124,27 @@ git push
 - Regular automated backups to GCS
 
 ## 🆘 Troubleshooting
+
+### Common Issues
+
+**Longhorn Pods Crashing**
+- **Symptom**: `longhorn-manager` pods in CrashLoopBackOff
+- **Cause**: Missing `open-iscsi` package on nodes
+- **Fix**: Install open-iscsi on affected nodes:
+  ```bash
+  sudo apt update && sudo apt install -y open-iscsi
+  kubectl delete pod <failing-pod-name>
+  ```
+
+**Network Issues (ContainerCreating pods)**
+- **Symptom**: Pods stuck in ContainerCreating state
+- **Cause**: Missing Flannel CNI daemonset
+- **Fix**: Flannel is deployed via GitOps in sync-wave 0. Check ArgoCD applications.
+
+**External Secrets Not Working**
+- **Symptom**: `ClusterSecretStore not found` or TLS errors
+- **Cause**: Missing Bitwarden credentials or TLS certificate issues
+- **Fix**: Ensure `bitwarden-credentials` secret is applied and TLS certificates are valid.
 
 See individual component READMEs in each directory for specific troubleshooting guides.
 

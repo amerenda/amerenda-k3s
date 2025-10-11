@@ -274,6 +274,7 @@
           - gnupg
           - lsb-release
           - iptables
+          - open-iscsi
         state: present
         update_cache: yes
       tags: [packages]
@@ -655,6 +656,7 @@
         name:
           - curl
           - wget
+          - open-iscsi
         state: present
         update_cache: yes
       tags: [packages]
