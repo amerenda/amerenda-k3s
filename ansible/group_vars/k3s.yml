@@ -27,6 +27,7 @@ longhorn_replica_count: 3
 # Set to false to exclude this node from Longhorn storage
 # Default: true (all nodes can store Longhorn data)
 # Example: longhorn_storage_enabled: false  # Exclude this node from storage
+longhorn_storage_enabled: "{{ longhorn_storage_enabled | default(true) | bool }}"
 
 # Node taints for Longhorn-only nodes
 longhorn_taints:
