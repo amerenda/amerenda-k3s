@@ -586,9 +586,9 @@
           ========================================
       when: replace_cluster_bool
 
-    - name: Fail if k3s agent exists and overwrite not requested
-      fail:
-        msg: "k3s agent already running. Use -e replace_cluster_bool=true to overwrite."
+    - name: Skip k3s agent installation if already running
+      debug:
+        msg: "k3s agent already running, skipping installation. Use -e replace_cluster_bool=true to overwrite."
       when: k3s_agent_running.status.ActiveState == 'active' and not replace_cluster_bool
 
     - name: Set k3s token from environment variable
@@ -709,14 +709,14 @@
     - name: Download and install k3s agent (Longhorn storage node)
       shell: |
         curl -sfL https://get.k3s.io | K3S_URL=https://{{ k3s_server_ip }}:6443 K3S_TOKEN="{{ k3s_token | default(ansible_env.K3S_TOKEN) }}" INSTALL_K3S_VERSION="{{ k3s_version }}" sh -
-      when: not k3s_installed.stat.exists
+      when: not k3s_installed.stat.exists and not (k3s_agent_running.status.ActiveState == 'active' and not replace_cluster_bool)
       tags: [k3s, install]
 
     - name: Stop k3s agent service if running (for reconfiguration)
       systemd:
         name: k3s-agent
         state: stopped
-      when: k3s_installed.stat.exists
+      when: k3s_installed.stat.exists and not (k3s_agent_running.status.ActiveState == 'active' and not replace_cluster_bool)
       tags: [k3s, stop]
 
     - name: Configure k3s agent (Longhorn storage node)
@@ -726,6 +726,7 @@
         owner: root
         group: root
         mode: '0644'
+      when: not (k3s_agent_running.status.ActiveState == 'active' and not replace_cluster_bool)
       tags: [k3s, config]
 
     - name: Start and enable k3s agent service
@@ -734,6 +735,7 @@
         state: started
         enabled: yes
         daemon_reload: yes
+      when: not (k3s_agent_running.status.ActiveState == 'active' and not replace_cluster_bool)
       tags: [k3s, service]
 
     - name: Wait for node to join cluster
