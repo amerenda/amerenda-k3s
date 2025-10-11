@@ -23,6 +23,11 @@ etcd_snapshot_schedule: "0 */6 * * *"  # Every 6 hours
 longhorn_storage_class: "longhorn"
 longhorn_replica_count: 3
 
+# Longhorn storage node control
+# Set to false to exclude this node from Longhorn storage
+# Default: true (all nodes can store Longhorn data)
+# Example: longhorn_storage_enabled: false  # Exclude this node from storage
+
 # Node taints for Longhorn-only nodes
 longhorn_taints:
   - "longhorn.io/storage=true:NoSchedule"

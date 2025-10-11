@@ -39,6 +39,10 @@
     
     # Convert string boolean to actual boolean
     replace_cluster_bool: "{{ replace_cluster | default(false) | bool }}"
+    
+    # Longhorn storage configuration
+    # Set to false to exclude this node from Longhorn storage
+    longhorn_storage_enabled: "{{ longhorn_storage_enabled | default(true) | bool }}"
 
   pre_tasks:
     - name: Check if SSH private key exists
@@ -547,6 +551,20 @@
       when: is_first_controller
       tags: [argocd, reminder]
 
+    - name: Add Longhorn storage labels to controller node
+      shell: |
+        kubectl label node {{ inventory_hostname }} longhorn.io/storage=true node-role.kubernetes.io/longhorn-storage=true --overwrite
+      delegate_to: localhost
+      when: longhorn_storage_enabled
+      tags: [k3s, labels, longhorn]
+
+    - name: Remove Longhorn storage labels from controller node
+      shell: |
+        kubectl label node {{ inventory_hostname }} longhorn.io/storage- || true
+        kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/longhorn-storage- || true
+      delegate_to: localhost
+      when: not longhorn_storage_enabled
+      tags: [k3s, labels, longhorn]
 
 - name: Setup Longhorn Storage Node
   hosts: longhorn_storage
@@ -749,14 +767,29 @@
       shell: |
         kubectl label node {{ inventory_hostname }} longhorn.io/storage=true node-role.kubernetes.io/longhorn-storage=true --overwrite
       delegate_to: "{{ groups['controllers'][0] }}"
-      when: k3s_installed.stat.exists
+      when: k3s_installed.stat.exists and longhorn_storage_enabled
+      tags: [k3s, labels, longhorn]
+
+    - name: Remove Longhorn storage labels from node
+      shell: |
+        kubectl label node {{ inventory_hostname }} longhorn.io/storage- || true
+        kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/longhorn-storage- || true
+      delegate_to: "{{ groups['controllers'][0] }}"
+      when: k3s_installed.stat.exists and not longhorn_storage_enabled
       tags: [k3s, labels, longhorn]
 
     - name: Add Longhorn-only taints to node
       shell: |
         kubectl taint node {{ inventory_hostname }} longhorn.io/storage=true:NoSchedule longhorn.io/storage=true:NoExecute --overwrite
       delegate_to: "{{ groups['controllers'][0] }}"
-      when: k3s_installed.stat.exists
+      when: k3s_installed.stat.exists and longhorn_storage_enabled
+      tags: [k3s, taints]
+
+    - name: Remove Longhorn-only taints from node
+      shell: |
+        kubectl taint node {{ inventory_hostname }} longhorn.io/storage=true:NoSchedule- longhorn.io/storage=true:NoExecute- --overwrite || true
+      delegate_to: "{{ groups['controllers'][0] }}"
+      when: k3s_installed.stat.exists and not longhorn_storage_enabled
       tags: [k3s, taints]
 
   handlers:
