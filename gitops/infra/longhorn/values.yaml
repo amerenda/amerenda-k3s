@@ -149,6 +149,10 @@ extraManifests:
               kubectl patch settings.longhorn.io system-managed-components-node-selector \
                 --type merge -p '{"value": "longhorn.io/storage-preference=true"}' || echo "Setting already configured"
               
+              # Verify system components node selector
+              echo "Current system-managed-components-node-selector:"
+              kubectl get settings.longhorn.io system-managed-components-node-selector -o jsonpath='{.value}' || echo "Setting not found"
+              
               # Apply taint tolerations
               kubectl patch settings.longhorn.io taint-toleration \
                 --type merge -p '{"value": "longhorn.io/storage=true:NoSchedule,longhorn.io/storage=true:NoExecute"}' || echo "Setting already configured"
@@ -169,6 +173,13 @@ extraManifests:
               
               kubectl patch settings.longhorn.io node-drain-policy \
                 --type merge -p '{"value": "block-if-contains-last-replica"}' || echo "Setting already configured"
+              
+              # Configure replica scheduling preferences
+              kubectl patch settings.longhorn.io replica-soft-anti-affinity \
+                --type merge -p '{"value": "false"}' || echo "Setting already configured"
+              
+              kubectl patch settings.longhorn.io replica-hard-anti-affinity \
+                --type merge -p '{"value": "false"}' || echo "Setting already configured"
               
               # Verify two-tier storage configuration
               echo "Verifying two-tier storage configuration..."
