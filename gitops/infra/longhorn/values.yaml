@@ -1,0 +1,104 @@
+# Longhorn Helm Chart Values
+
+# Install CRDs automatically
+installCRDs: true
+
+# Longhorn configuration
+longhorn:
+  # Enable Longhorn manager
+  manager:
+    enabled: true
+    replicas: 1
+    # Tolerate storage taints to run on rpi3-0
+    tolerations:
+      - key: "node-role.kubernetes.io/storage"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+    # Prefer nodes with longhorn.io/storage=true label
+    nodeSelector:
+      longhorn.io/storage: "true"
+    
+  # Enable Longhorn UI
+  ui:
+    enabled: true
+    replicas: 1
+    service:
+      type: LoadBalancer
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: longhorn.amer.home
+        external-dns.alpha.kubernetes.io/ttl: "300"
+      loadBalancerIP: 10.100.20.243
+    # Tolerate storage taints to run on rpi3-0
+    tolerations:
+      - key: "node-role.kubernetes.io/storage"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+    # Prefer nodes with longhorn.io/storage=true label
+    nodeSelector:
+      longhorn.io/storage: "true"
+    
+  # Enable Longhorn driver
+  driver:
+    enabled: true
+    # Tolerate storage taints to run on rpi3-0
+    tolerations:
+      - key: "node-role.kubernetes.io/storage"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+    # Prefer nodes with longhorn.io/storage=true label
+    nodeSelector:
+      longhorn.io/storage: "true"
+    
+  # Storage class configuration
+  storageClass:
+    name: longhorn
+    defaultClass: true
+    reclaimPolicy: Delete
+    allowVolumeExpansion: true
+    volumeBindingMode: Immediate
+    
+  # Resource limits for Pi hardware
+  resources:
+    manager:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+    ui:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+        
+  # Longhorn settings for multi-node Pi cluster with storage preference
+  settings:
+    default-replica-count: "2"
+    system-managed-components-node-selector: "longhorn.io/storage: true"
+    replica-auto-balance: "disabled"
+    concurrent-replica-rebuild-per-node-limit: "2"
+    concurrent-automatic-engine-upgrade-per-node-limit: "1"
+    disable-scheduling-on-cordoned-node: "true"
+    node-drain-policy: "block-if-contains-last-replica"
+    # Prefer replicas on storage nodes
+    replica-soft-anti-affinity: "false"
+    replica-hard-anti-affinity: "false"
+
+# Disable pre-upgrade hook to avoid service account dependency issues
+preUpgradeChecker:
+  jobEnabled: false
+
+# Default backup store configuration
+defaultBackupStore:
+  # Endpoint used to access the default backupstore
+  backupTarget: s3://amerenda-backups@us/k3s/dean
+  # Name of the Kubernetes secret associated with the default backup target
+  backupTargetCredentialSecret: gcs-backup-credentials
+  # Number of seconds that Longhorn waits before checking the default backupstore for new backups
+  pollInterval: 300

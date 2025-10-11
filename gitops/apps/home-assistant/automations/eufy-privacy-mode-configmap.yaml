@@ -1,0 +1,110 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: eufy-privacy-mode-automation
+  namespace: home-assistant
+data:
+  privacy-mode-automation.yaml: |
+    # Camera Control Automation
+    # Disables cameras when phone is detected at home
+    
+    - alias: "Cameras Off When Home"
+      description: "Disables cameras when phone is detected at home"
+      trigger:
+        - device_id: 801683f6c351e0bd86eddb0afb35c3ba
+          domain: device_tracker
+          entity_id: 7db75340c748455abcacf61c9c0803f3
+          type: enters
+          trigger: device
+          zone: zone.home
+      action:
+        - service: switch.turn_off
+          target:
+            device_id:
+            - add2baf8e9746e2f87ff5acfdc9d5541
+            - cee1fb8e14d6c17e39b45beb672f677c
+        - service: notify.mobile_app_pixel_9_pro_xl
+          data:
+            title: "📹 Cameras Disabled"
+            message: "Cameras turned off - You are home"
+            data:
+              channel: "Camera Control"
+              importance: "high"
+        - service: system_log.write
+          data:
+            message: "Cameras disabled - Phone detected at home"
+            level: info
+    
+    - alias: "Cameras On When Away"
+      description: "Enables cameras when phone leaves home"
+      trigger:
+        - device_id: 801683f6c351e0bd86eddb0afb35c3ba
+          domain: device_tracker
+          entity_id: 7db75340c748455abcacf61c9c0803f3
+          type: leaves
+          trigger: device
+          zone: zone.home
+      action:
+        - service: switch.turn_on
+          target:
+            device_id:
+            - add2baf8e9746e2f87ff5acfdc9d5541
+            - cee1fb8e14d6c17e39b45beb672f677c
+        - service: notify.mobile_app_pixel_9_pro_xl
+          data:
+            title: "📹 Cameras Enabled"
+            message: "Cameras turned on - You left home"
+            data:
+              channel: "Camera Control"
+              importance: "high"
+        - service: system_log.write
+          data:
+            message: "Cameras enabled - Phone left home"
+            level: info
+    
+    - alias: "Privacy Mode Toggle"
+      id: privacy_mode_toggle
+      description: "Manual toggle to disable/enable all cameras"
+      trigger:
+        - platform: state
+          entity_id: input_boolean.privacy_mode
+      action:
+        - if:
+            - condition: state
+              entity_id: input_boolean.privacy_mode
+              state: 'on'
+          then:
+            - service: switch.turn_off
+              target:
+                device_id:
+                - add2baf8e9746e2f87ff5acfdc9d5541
+                - cee1fb8e14d6c17e39b45beb672f677c
+            - service: notify.mobile_app_pixel_9_pro_xl
+              data:
+                title: "🔒 Privacy Mode Enabled"
+                message: "All cameras disabled manually"
+                data:
+                  channel: "Camera Control"
+                  importance: "high"
+            - service: system_log.write
+              data:
+                message: "Privacy mode enabled - All cameras disabled manually"
+                level: info
+          else:
+            - service: switch.turn_on
+              target:
+                device_id:
+                - add2baf8e9746e2f87ff5acfdc9d5541
+                - cee1fb8e14d6c17e39b45beb672f677c
+            - service: notify.mobile_app_pixel_9_pro_xl
+              data:
+                title: "🔓 Privacy Mode Disabled"
+                message: "All cameras enabled manually"
+                data:
+                  channel: "Camera Control"
+                  importance: "high"
+            - service: system_log.write
+              data:
+                message: "Privacy mode disabled - All cameras enabled manually"
+                level: info
+

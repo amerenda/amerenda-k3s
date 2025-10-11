@@ -1,0 +1,12 @@
+# Bootstrap secrets - NEVER commit these
+bootstrap/*.secret
+bootstrap/*.key
+bootstrap/*.token
+bootstrap/bitwarden-credentials-secret.yaml
+*.secret
+*.key
+*.token
+
+# Ignore files with sensitive information
+gitops/infra/external-secrets/bitwarden-secretstore.yaml
+gitops/infra/external-secrets/bitwarden-credentials-secret.yamlansible/k3s-kubeconfig.yaml

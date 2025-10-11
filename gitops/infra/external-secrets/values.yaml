@@ -1,0 +1,71 @@
+# External Secrets Operator Helm Chart Values
+# This file contains the configuration for the External Secrets Operator with Bitwarden SecretStore
+
+# Bitwarden SecretStore configuration
+remoteRef:
+  accessToken: "bitwarden-access-token"
+  property: "password"
+
+# Enable Bitwarden SDK Server
+bitwarden-sdk-server:
+  enabled: true
+  # Enable TLS for secure communication
+  tls:
+    enabled: true
+    # Use cert-manager to generate certificates
+    certManager:
+      enabled: true
+      issuerRef:
+        name: selfsigned-issuer
+        kind: ClusterIssuer
+      # Certificate configuration for default namespace
+      certificate:
+        name: bitwarden-sdk-server-tls
+        namespace: default
+
+# External Secrets Operator configuration
+external-secrets:
+  # Install CRDs automatically
+  installCRDs: true
+  
+  # Service account configuration
+  serviceAccount:
+    create: true
+    name: external-secrets
+  
+  # RBAC configuration
+  rbac:
+    create: true
+  
+  # Webhook configuration
+  webhook:
+    enabled: true
+    port: 9443
+    tls:
+      enabled: true
+      certManager:
+        enabled: true
+        issuerRef:
+          name: selfsigned-issuer
+          kind: ClusterIssuer
+        certificate:
+          name: external-secrets-webhook-cert
+          namespace: default
+  
+  # Metrics configuration
+  metrics:
+    enabled: true
+    port: 8080
+    path: /metrics
+  
+  # Health check
+  health:
+    enabled: true
+    port: 8081
+    path: /healthz
+  
+  # Readiness check
+  readiness:
+    enabled: true
+    port: 8081
+    path: /readyz
