@@ -92,12 +92,14 @@ longhorn:
   # Longhorn settings for multi-node Pi cluster with storage preference
   settings:
     default-replica-count: "2"
-    system-managed-components-node-selector: "longhorn.io/storage: true"
+    system-managed-components-node-selector: "longhorn.io/storage=true"
     replica-auto-balance: "disabled"
     concurrent-replica-rebuild-per-node-limit: "2"
     concurrent-automatic-engine-upgrade-per-node-limit: "1"
     disable-scheduling-on-cordoned-node: "true"
     node-drain-policy: "block-if-contains-last-replica"
+    # Storage gate - only nodes with longhorn.io/storage=true can store data
+    create-default-disk-labeled-nodes: "false"
     # Prefer replicas on storage nodes
     replica-soft-anti-affinity: "false"
     replica-hard-anti-affinity: "false"
@@ -151,6 +153,10 @@ extraManifests:
               kubectl patch settings.longhorn.io taint-toleration \
                 --type merge -p '{"value": "longhorn.io/storage=true:NoSchedule,longhorn.io/storage=true:NoExecute"}' || echo "Setting already configured"
               
+              # Configure storage gate - only nodes with longhorn.io/storage=true can store data
+              kubectl patch settings.longhorn.io create-default-disk-labeled-nodes \
+                --type merge -p '{"value": "false"}' || echo "Setting already configured"
+              
               # Apply storage optimization settings
               kubectl patch settings.longhorn.io storage-minimal-available-percentage \
                 --type merge -p '{"value": "25"}' || echo "Setting already configured"
@@ -164,7 +170,12 @@ extraManifests:
               kubectl patch settings.longhorn.io node-drain-policy \
                 --type merge -p '{"value": "block-if-contains-last-replica"}' || echo "Setting already configured"
               
+              # Verify storage gate configuration
+              echo "Verifying storage gate configuration..."
+              kubectl get settings.longhorn.io create-default-disk-labeled-nodes -o jsonpath='{.value}' || echo "Storage gate setting not found"
+              
               echo "Longhorn settings applied successfully!"
+              echo "Storage gate: Only nodes with longhorn.io/storage=true can store Longhorn data"
           restartPolicy: OnFailure
       backoffLimit: 3
   - apiVersion: v1

@@ -38,3 +38,6 @@ longhorn_taints:
 longhorn_labels:
   - "longhorn.io/storage=true"
   - "node-role.kubernetes.io/longhorn-storage=true"
+
+# Storage gate label - only applied to longhorn_storage nodes
+longhorn_storage_gate_label: "longhorn.io/storage=true"
