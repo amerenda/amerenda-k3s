@@ -745,6 +745,13 @@
         timeout: 300
       tags: [k3s, wait]
 
+    - name: Add Longhorn storage labels to node
+      shell: |
+        kubectl label node {{ inventory_hostname }} longhorn.io/storage=true node-role.kubernetes.io/longhorn-storage=true --overwrite
+      delegate_to: "{{ groups['controllers'][0] }}"
+      when: k3s_installed.stat.exists
+      tags: [k3s, labels, longhorn]
+
     - name: Add Longhorn-only taints to node
       shell: |
         kubectl taint node {{ inventory_hostname }} longhorn.io/storage=true:NoSchedule longhorn.io/storage=true:NoExecute --overwrite
