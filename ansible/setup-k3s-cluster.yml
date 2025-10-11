@@ -567,12 +567,12 @@
       loop: "{{ longhorn_labels }}"
       tags: [k3s, labels, longhorn]
 
-    - name: Ensure controller nodes do NOT have storage gate label
+    - name: Add storage preference label to controller nodes
       shell: |
-        kubectl label node {{ inventory_hostname }} longhorn.io/storage- || true
+        kubectl label node {{ inventory_hostname }} longhorn.io/storage-preference=false --overwrite
       delegate_to: localhost
       when: not longhorn_storage_enabled
-      tags: [k3s, labels, longhorn, storage-gate]
+      tags: [k3s, labels, longhorn, storage-preference]
 
 - name: Setup Longhorn Storage Node
   hosts: longhorn_storage
@@ -779,12 +779,12 @@
       loop: "{{ longhorn_labels }}"
       tags: [k3s, labels, longhorn]
 
-    - name: Ensure storage gate label is applied to storage node
+    - name: Add storage preference label to storage node
       shell: |
-        kubectl label node {{ inventory_hostname }} {{ longhorn_storage_gate_label }} --overwrite
+        kubectl label node {{ inventory_hostname }} longhorn.io/storage-preference=true --overwrite
       delegate_to: "{{ groups['controllers'][0] }}"
       when: k3s_installed.stat.exists and longhorn_storage_enabled
-      tags: [k3s, labels, longhorn, storage-gate]
+      tags: [k3s, labels, longhorn, storage-preference]
 
     - name: Remove Longhorn storage labels from node
       shell: |
