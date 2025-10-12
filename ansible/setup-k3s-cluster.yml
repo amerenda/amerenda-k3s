@@ -1,0 +1,825 @@
+---
+# k3s Multi-Controller Cluster Setup with etcd
+# This playbook sets up a k3s cluster with multiple controllers using etcd backend
+# Run with: ansible-playbook -i inventory.ini setup-k3s-cluster.yml
+
+- name: Setup k3s Multi-Controller Cluster with etcd
+  hosts: controllers
+  become: yes
+  gather_facts: yes
+  serial: [1, "{{ groups['controllers'] | length - 1 }}"]  # Run first controller alone, then rest in parallel
+  tags: [k3s, etcd, controllers, install]
+
+  vars:
+    # k3s configuration
+    k3s_version: "v1.33.5+k3s1"
+    k3s_data_dir: "/var/lib/rancher/k3s"
+    etcd_data_dir: "/var/lib/rancher/k3s/server/db"
+    
+    # ArgoCD configuration
+    argocd_version: "8.6.0"
+    argocd_namespace: "default"
+    argocd_release_name: "argocd"
+    
+    # Local user configuration
+    local_user: "{{ ansible_user | default('alex') }}"
+    
+    # Network configuration
+    cluster_cidr: "10.42.0.0/16"
+    service_cidr: "10.43.0.0/16"
+    cluster_dns: "10.43.0.10"
+    
+    # Controller configuration
+    controller_ips: "{{ groups['controllers'] | map('extract', hostvars, 'ansible_host') | list }}"
+    first_controller: "{{ groups['controllers'][0] }}"
+    is_first_controller: "{{ inventory_hostname == first_controller }}"
+    
+    # Cluster replacement protection (defaults to false if not set)
+    # replace_cluster: false  # This will be set via -e replace_cluster=true if needed
+    
+    # Convert string boolean to actual boolean
+    replace_cluster_bool: "{{ replace_cluster | default(false) | bool }}"
+    
+    # Longhorn storage configuration
+    # Set to false to exclude this node from Longhorn storage
+    enable_longhorn_storage: "{{ (longhorn_storage_enabled | default(true)) | bool }}"
+
+  pre_tasks:
+    - name: Check if SSH private key exists
+      stat:
+        path: "{{ ansible_ssh_private_key_file | default('~/.ssh/alex_id_ed25519') | expanduser }}"
+      register: ssh_key_check
+      delegate_to: localhost
+      become: no
+      run_once: true
+
+    - name: Fail if SSH private key is missing
+      fail:
+        msg: "SSH private key not found at {{ ansible_ssh_private_key_file | default('~/.ssh/alex_id_ed25519') | expanduser }}. Please ensure the key exists before running this playbook."
+      when: not ssh_key_check.stat.exists
+
+    - name: Display SSH key information
+      debug:
+        msg: "Using SSH key: {{ ansible_ssh_private_key_file | default('~/.ssh/alex_id_ed25519') | expanduser }}"
+      when: ssh_key_check.stat.exists
+
+    - name: Check if etcd data directory exists
+      stat:
+        path: "{{ etcd_data_dir }}"
+      register: etcd_exists
+
+    - name: Check if k3s is already running
+      systemd:
+        name: k3s
+      register: k3s_running
+      ignore_errors: yes
+
+    - name: Display cluster protection warning
+      debug:
+        msg: |
+          ⚠️  WARNING: Existing k3s cluster detected! ⚠️
+          ========================================
+          etcd data directory exists: {{ etcd_exists.stat.exists }}
+          k3s service status: {{ 'running' if k3s_running.status.ActiveState == 'active' else 'stopped' }}
+          ========================================
+          To replace existing cluster, use: -e replace_cluster=true
+          This will DESTROY existing cluster data!
+          ========================================
+      when: etcd_exists.stat.exists and not (replace_cluster_bool)
+
+    - name: Display replacement warning
+      debug:
+        msg: |
+          ⚠️  WARNING: REPLACING EXISTING K3S CLUSTER! ⚠️
+          ========================================
+          This will DESTROY all existing cluster data!
+          Make sure you have backups before proceeding!
+          ========================================
+      when: replace_cluster_bool
+
+    - name: Skip installation if cluster exists and replacement not requested
+      debug:
+        msg: "Existing k3s cluster detected. Skipping installation. Use -e replace_cluster=true to replace."
+      when: etcd_exists.stat.exists and not (replace_cluster_bool)
+      tags: [k3s, protection]
+
+    - name: Set k3s token from environment variable
+      set_fact:
+        k3s_token: "{{ ansible_env.K3S_TOKEN }}"
+      when: ansible_env.K3S_TOKEN is defined and ansible_env.K3S_TOKEN != ""
+
+    - name: Validate k3s token is set (only required when replacing)
+      fail:
+        msg: "k3s_token must be set when replace_cluster=true. Use -e k3s_token=your-token, set K3S_TOKEN env var, or set it in group_vars"
+      when: replace_cluster_bool and (k3s_token is not defined or k3s_token == "")
+
+    - name: Check if k3s token file exists on first controller
+      stat:
+        path: /var/lib/rancher/k3s/server/token
+      register: existing_token_file
+      when: is_first_controller
+      tags: [validation]
+
+    - name: Get existing cluster token from first controller
+      shell: cat /var/lib/rancher/k3s/server/token
+      register: existing_token
+      when: is_first_controller and existing_token_file.stat.exists
+      changed_when: false
+      tags: [validation]
+
+    - name: Validate token matches existing cluster (first controller)
+      fail:
+        msg: |
+          ========================================
+          ❌ TOKEN MISMATCH DETECTED! ❌
+          ========================================
+          The provided k3s_token does not match the existing cluster token.
+          
+          Current cluster token: {{ existing_token.stdout }}
+          Provided token: {{ k3s_token }}
+          
+          To fix this, get the correct token from the first controller:
+          ssh {{ ansible_host }} "sudo cat /var/lib/rancher/k3s/server/token"
+          
+          Then re-run the playbook with the correct token:
+          ansible-playbook -i inventory.ini setup-k3s-cluster.yml -e k3s_token=CORRECT_TOKEN
+          ========================================
+      when: 
+        - is_first_controller
+        - existing_token_file.stat.exists
+        - existing_token.stdout != k3s_token
+      tags: [validation]
+
+    - name: Display cluster configuration
+      debug:
+        msg: |
+          ========================================
+          k3s Cluster Configuration
+          ========================================
+          Host: {{ inventory_hostname }} ({{ ansible_host }})
+          Role: {{ 'First Controller' if is_first_controller else 'Additional Controller' }}
+          k3s Version: {{ k3s_version }}
+          etcd Data Dir: {{ etcd_data_dir }}
+          Controller IPs: {{ controller_ips | join(', ') }}
+          ========================================
+
+  tasks:
+    - name: Resize root filesystem to use all available space
+      shell: |
+        echo "Resizing filesystem to use all available space..."
+        
+        # Find the root filesystem device
+        ROOT_DEV=$(df / | tail -1 | awk '{print $1}')
+        echo "Root device: $ROOT_DEV"
+        
+        # Extract the disk and partition number using sed instead of bash regex
+        DISK=$(echo $ROOT_DEV | sed 's/p[0-9]*$//')
+        PART_NUM=$(echo $ROOT_DEV | sed 's/.*p//')
+        echo "Disk: $DISK, Partition: $PART_NUM"
+        
+        # Resize the partition to use all available space
+        parted $DISK resizepart $PART_NUM 100%
+        
+        # Resize the filesystem to fill the partition
+        resize2fs $ROOT_DEV
+        
+        echo "Filesystem resize complete"
+      register: resize_result
+      changed_when: true
+      when: resize_rootfs | default(false)
+      tags: [filesystem, resize]
+
+    - name: Show filesystem resize result
+      debug:
+        var: resize_result.stdout_lines
+      when: resize_result.stdout_lines is defined and (resize_rootfs | default(false))
+      tags: [filesystem, resize]
+
+    - name: Check available disk space after resize
+      shell: df -h /
+      register: disk_usage
+      changed_when: false
+      when: resize_rootfs | default(false)
+      tags: [filesystem, resize]
+
+
+    - name: Check if systemd-resolved service exists
+      systemd:
+        name: systemd-resolved
+      register: systemd_resolved_check
+      failed_when: false
+      tags: [dns, network]
+
+    - name: Configure DNS to use 1.1.1.1 (systemd-resolved)
+      lineinfile:
+        path: /etc/systemd/resolved.conf
+        regexp: '^DNS='
+        line: 'DNS=1.1.1.1'
+        state: present
+        create: yes
+      when: systemd_resolved_check.status is defined and systemd_resolved_check.status.ActiveState == "active"
+      register: dns_systemd_result
+      tags: [dns, network]
+
+    - name: Configure fallback DNS (systemd-resolved)
+      lineinfile:
+        path: /etc/systemd/resolved.conf
+        regexp: '^FallbackDNS='
+        line: 'FallbackDNS=8.8.8.8'
+        state: present
+        create: yes
+      when: systemd_resolved_check.status is defined and systemd_resolved_check.status.ActiveState == "active"
+      register: dns_fallback_result
+      tags: [dns, network]
+
+    - name: Check current DNS configuration in resolv.conf
+      shell: cat /etc/resolv.conf
+      register: current_dns_config
+      when: systemd_resolved_check.status is not defined or systemd_resolved_check.status.ActiveState != "active"
+      changed_when: false
+      tags: [dns, network]
+
+    - name: Configure DNS via resolv.conf (fallback)
+      copy:
+        content: |
+          nameserver 1.1.1.1
+          nameserver 8.8.8.8
+        dest: /etc/resolv.conf
+        backup: yes
+      when: systemd_resolved_check.status is not defined or systemd_resolved_check.status.ActiveState != "active"
+      register: dns_config_result
+      tags: [dns, network]
+
+    - name: Check if DNS configuration actually changed
+      set_fact:
+        dns_actually_changed: "{{ dns_config_result.changed and (current_dns_config.stdout | default('') != 'nameserver 1.1.1.1\nnameserver 8.8.8.8') }}"
+      when: systemd_resolved_check.status is not defined or systemd_resolved_check.status.ActiveState != "active"
+      tags: [dns, network]
+
+    - name: Restart systemd-resolved (if available)
+      systemd:
+        name: systemd-resolved
+        state: restarted
+      when: systemd_resolved_check.status is defined and systemd_resolved_check.status.ActiveState == "active" and ((dns_systemd_result is defined and dns_systemd_result.changed) or (dns_fallback_result is defined and dns_fallback_result.changed))
+      tags: [dns, network]
+
+    - name: Restart NetworkManager (if systemd-resolved not available)
+      systemd:
+        name: NetworkManager
+        state: restarted
+      when: (systemd_resolved_check.status is not defined or systemd_resolved_check.status.ActiveState != "active") and dns_actually_changed is defined and dns_actually_changed
+      tags: [dns, network]
+
+    - name: Install required packages for k3s
+      apt:
+        name:
+          - curl
+          - wget
+          - gnupg
+          - lsb-release
+          - iptables
+          - open-iscsi
+        state: present
+        update_cache: yes
+      tags: [packages]
+
+    - name: Check if cgroup parameters are already present
+      shell: grep -q "cgroup_memory=1" /boot/firmware/cmdline.txt
+      register: cgroup_check
+      failed_when: false
+      tags: [k3s, cgroup, raspberry-pi]
+
+    - name: Enable memory cgroup for k3s (Raspberry Pi)
+      shell: |
+        # Create backup
+        cp /boot/firmware/cmdline.txt /boot/firmware/cmdline.txt.backup
+        
+        # Read current cmdline
+        CMDLINE=$(cat /boot/firmware/cmdline.txt)
+        
+        # Add cgroup parameters if not present
+        if ! echo "$CMDLINE" | grep -q "cgroup_memory=1"; then
+          echo "$CMDLINE cgroup_memory=1 cgroup_enable=memory" > /boot/firmware/cmdline.txt
+          echo "Added cgroup parameters to cmdline.txt"
+        else
+          echo "Cgroup parameters already present"
+        fi
+      register: cgroup_update
+      when: not cgroup_check.rc == 0
+      tags: [k3s, cgroup, raspberry-pi]
+
+    - name: Show cgroup configuration update
+      debug:
+        var: cgroup_update.stdout_lines
+      when: cgroup_update.stdout_lines is defined
+      tags: [k3s, cgroup, raspberry-pi]
+
+    - name: Reboot if cgroup configuration was updated
+      reboot:
+        msg: "Rebooting to apply cgroup configuration changes"
+        reboot_timeout: 300
+        connect_timeout: 5
+      when: cgroup_update.changed
+      tags: [k3s, cgroup, raspberry-pi, reboot]
+
+    - name: Create k3s data directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+      loop:
+        - "{{ k3s_data_dir }}"
+        - "{{ etcd_data_dir }}"
+        - "/etc/rancher/k3s"
+      tags: [k3s, directories]
+
+    - name: Check if k3s is already installed
+      stat:
+        path: /usr/local/bin/k3s
+      register: k3s_installed
+      tags: [k3s, check]
+
+    - name: Uninstall existing k3s (when replacing cluster)
+      shell: |
+        # Use official k3s uninstall script
+        /usr/local/bin/k3s-uninstall.sh || true
+        
+        # Also remove any remaining k3s-agent if it exists
+        /usr/local/bin/k3s-agent-uninstall.sh || true
+        
+        echo "k3s completely uninstalled using official scripts"
+      when: replace_cluster_bool and k3s_installed.stat.exists
+      tags: [k3s, uninstall]
+
+    - name: Download and install k3s (first controller - cluster init)
+      shell: |
+        curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="{{ k3s_version }}" INSTALL_K3S_EXEC="--cluster-init --token {{ k3s_token | default(ansible_env.K3S_TOKEN) }}" sh -
+      when: (not k3s_installed.stat.exists or (replace_cluster_bool)) and is_first_controller and not (etcd_exists.stat.exists and not replace_cluster_bool)
+      tags: [k3s, install]
+
+    - name: Wait for first controller to be ready (for additional controllers)
+      wait_for:
+        host: "{{ hostvars[first_controller]['ansible_host'] }}"
+        port: 6443
+        timeout: 300
+        delay: 10
+      when: not is_first_controller
+      tags: [k3s, wait]
+
+
+    - name: Download and install k3s (additional controllers - join cluster)
+      shell: |
+        curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="{{ k3s_version }}" INSTALL_K3S_EXEC="--server https://{{ hostvars[first_controller]['ansible_host'] }}:6443 --token {{ k3s_token | default(ansible_env.K3S_TOKEN) }}" sh -
+      when: (not k3s_installed.stat.exists or (replace_cluster_bool)) and not is_first_controller and not (etcd_exists.stat.exists and not replace_cluster_bool)
+      ignore_errors: yes
+      register: k3s_install_result
+      tags: [k3s, install]
+
+
+    - name: Deploy k3s systemd service
+      template:
+        src: k3s.service.j2
+        dest: /etc/systemd/system/k3s.service
+        owner: root
+        group: root
+        mode: '0644'
+        backup: yes
+      when: not (etcd_exists.stat.exists and not replace_cluster_bool) and (not k3s_installed.stat.exists or replace_cluster_bool)
+      tags: [k3s, systemd]
+
+    - name: Stop k3s service if running
+      systemd:
+        name: k3s
+        state: stopped
+      when: k3s_installed.stat.exists and replace_cluster_bool
+      tags: [k3s, stop]
+
+    - name: Configure k3s server for first controller
+      template:
+        src: k3s-server-config.yaml.j2
+        dest: /etc/rancher/k3s/config.yaml
+        owner: root
+        group: root
+        mode: '0644'
+      when: is_first_controller
+      tags: [k3s, config, first]
+
+    - name: Configure k3s server for additional controllers
+      template:
+        src: k3s-server-config.yaml.j2
+        dest: /etc/rancher/k3s/config.yaml
+        owner: root
+        group: root
+        mode: '0644'
+      when: not is_first_controller
+      tags: [k3s, config, additional]
+
+    - name: Deploy k3s systemd service
+      template:
+        src: k3s.service.j2
+        dest: /etc/systemd/system/k3s.service
+        owner: root
+        group: root
+        mode: '0644'
+        backup: yes
+      when: not (etcd_exists.stat.exists and not replace_cluster_bool) and (not k3s_installed.stat.exists or replace_cluster_bool)
+      tags: [k3s, systemd]
+
+    - name: Reload systemd daemon
+      systemd:
+        daemon_reload: yes
+      when: not (etcd_exists.stat.exists and not replace_cluster_bool) and (not k3s_installed.stat.exists or replace_cluster_bool)
+      tags: [k3s, systemd]
+
+    - name: Start and enable k3s service
+      systemd:
+        name: k3s
+        state: started
+        enabled: yes
+      ignore_errors: yes
+      register: k3s_start_result
+      when: not (etcd_exists.stat.exists and not replace_cluster_bool)
+      tags: [k3s, service]
+
+
+    - name: Wait for k3s API to be ready
+      shell: |
+        curl -k -s -o /dev/null -w "%{http_code}" https://{{ ansible_host }}:6443/healthz
+      register: k3s_health_check
+      until: k3s_health_check.rc == 0 and (k3s_health_check.stdout == "200" or k3s_health_check.stdout == "401")
+      retries: 30
+      delay: 5
+      tags: [k3s, wait]
+
+    - name: Copy kubeconfig for first controller
+      fetch:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: "{{ playbook_dir }}/k3s-kubeconfig.yaml"
+        flat: yes
+      when: is_first_controller
+      tags: [k3s, kubeconfig]
+
+    - name: Create .kube directory if it doesn't exist
+      file:
+        path: "/home/{{ local_user }}/.kube"
+        state: directory
+        mode: '0755'
+      when: is_first_controller
+      delegate_to: localhost
+      become: no
+      remote_user: "{{ local_user }}"
+      tags: [k3s, kubeconfig]
+
+    - name: Copy kubeconfig to local machine
+      copy:
+        src: "{{ playbook_dir }}/k3s-kubeconfig.yaml"
+        dest: "/home/{{ local_user }}/.kube/config"
+        remote_src: yes
+        backup: yes
+      when: is_first_controller
+      delegate_to: localhost
+      become: no
+      remote_user: "{{ local_user }}"
+      tags: [k3s, kubeconfig]
+
+    - name: Update kubeconfig server URL to use first controller IP
+      replace:
+        path: "/home/{{ local_user }}/.kube/config"
+        regexp: 'server: https://127\.0\.0\.1:6443'
+        replace: "server: https://{{ hostvars[groups['controllers'][0]]['ansible_host'] }}:6443"
+      when: is_first_controller
+      delegate_to: localhost
+      become: no
+      remote_user: "{{ local_user }}"
+      tags: [k3s, kubeconfig]
+
+    - name: Add ArgoCD Helm repository
+      kubernetes.core.helm_repository:
+        name: argo
+        repo_url: https://argoproj.github.io/argo-helm
+      when: is_first_controller
+      delegate_to: localhost
+      become: no
+      remote_user: "{{ local_user }}"
+      tags: [argocd, helm]
+
+    - name: Install ArgoCD
+      kubernetes.core.helm:
+        name: "{{ argocd_release_name }}"
+        chart_ref: argo/argo-cd
+        release_namespace: "{{ argocd_namespace }}"
+        create_namespace: false
+        chart_version: "{{ argocd_version }}"
+        kubeconfig: "/home/{{ local_user }}/.kube/config"
+        values_files:
+          - "{{ playbook_dir | dirname }}/bootstrap/argocd/values.yaml"
+        wait: true
+        timeout: 300s
+      when: is_first_controller
+      delegate_to: localhost
+      become: no
+      remote_user: "{{ local_user }}"
+      tags: [argocd, helm]
+
+    - name: Wait for ArgoCD to be ready
+      shell: |
+        kubectl --kubeconfig="/home/{{ local_user }}/.kube/config" get pods -n "{{ argocd_namespace }}" -l "app.kubernetes.io/name=argocd-server" -o jsonpath='{.items[0].status.phase}' | grep -q "Running"
+      register: argocd_ready
+      until: argocd_ready.rc == 0
+      retries: 30
+      delay: 10
+      when: is_first_controller
+      delegate_to: localhost
+      become: no
+      remote_user: "{{ local_user }}"
+      tags: [argocd, wait]
+
+    - name: Apply root-app.yaml to bootstrap GitOps
+      shell: |
+        kubectl --kubeconfig="/home/{{ local_user }}/.kube/config" apply -f "{{ playbook_dir | dirname }}/gitops/apps/root-app.yaml"
+      when: is_first_controller
+      delegate_to: localhost
+      become: no
+      remote_user: "{{ local_user }}"
+      tags: [argocd, gitops, bootstrap]
+
+    - name: Display ArgoCD installation reminder
+      debug:
+        msg: "ArgoCD installation complete! Remember to bootstrap Bitwarden credentials: kubectl apply -f bootstrap/bitwarden-credentials-secret.yaml"
+      when: is_first_controller
+      tags: [argocd, reminder]
+
+    - name: Add Longhorn storage gate label to controller node
+      shell: |
+        kubectl label node {{ inventory_hostname }} longhorn.io/storage=true --overwrite
+      delegate_to: localhost
+      when: enable_longhorn_storage
+      tags: [k3s, labels, longhorn, storage-gate]
+
+    - name: Remove Longhorn storage gate label from controller node
+      shell: |
+        kubectl label node {{ inventory_hostname }} longhorn.io/storage- || true
+      delegate_to: localhost
+      when: not enable_longhorn_storage
+      tags: [k3s, labels, longhorn, storage-gate]
+
+    - name: Add storage preference label to controller nodes
+      shell: |
+        kubectl label node {{ inventory_hostname }} longhorn.io/storage-preference=false --overwrite
+      delegate_to: localhost
+      when: enable_longhorn_storage
+      tags: [k3s, labels, longhorn, storage-preference]
+
+- name: Setup Longhorn Storage Node
+  hosts: longhorn_storage
+  become: yes
+  gather_facts: yes
+  tags: [k3s, longhorn, worker]
+
+  vars:
+    k3s_version: "v1.33.5+k3s1"
+    k3s_server_ip: "{{ hostvars[groups['controllers'][0]]['ansible_host'] }}"
+    replace_cluster_bool: "{{ (replace_cluster | default(false)) | bool }}"
+    
+    # Longhorn storage configuration
+    # Set to false to exclude this node from Longhorn storage
+    enable_longhorn_storage: "{{ (longhorn_storage_enabled | default(true)) | bool }}"
+
+  pre_tasks:
+    - name: Check if k3s agent is already running
+      systemd:
+        name: k3s-agent
+      register: k3s_agent_running
+      ignore_errors: yes
+
+    - name: Display k3s agent protection warning
+      debug:
+        msg: |
+          ⚠️  WARNING: k3s agent already running! ⚠️
+          ========================================
+          k3s-agent service status: {{ 'running' if k3s_agent_running.status.ActiveState == 'active' else 'stopped' }}
+          ========================================
+          To overwrite existing agent, use: -e replace_cluster_bool=true
+          ========================================
+      when: k3s_agent_running.status.ActiveState == 'active' and not replace_cluster_bool
+
+    - name: Display overwrite warning
+      debug:
+        msg: |
+          ⚠️  WARNING: OVERWRITING EXISTING K3S AGENT! ⚠️
+          ========================================
+          This will restart the k3s agent service!
+          ========================================
+      when: replace_cluster_bool
+
+    - name: Skip k3s agent installation if already running
+      debug:
+        msg: "k3s agent already running, skipping installation. Use -e replace_cluster_bool=true to overwrite."
+      when: k3s_agent_running.status.ActiveState == 'active' and not replace_cluster_bool
+
+    - name: Set k3s token from environment variable
+      set_fact:
+        k3s_token: "{{ ansible_env.K3S_TOKEN }}"
+      when: ansible_env.K3S_TOKEN is defined and ansible_env.K3S_TOKEN != ""
+
+    - name: Validate k3s token is set (only required when replacing)
+      fail:
+        msg: "k3s_token must be set when replace_cluster=true. Use -e k3s_token=your-token, set K3S_TOKEN env var, or set it in group_vars"
+      when: replace_cluster_bool and (k3s_token is not defined or k3s_token == "")
+
+  tasks:
+    - name: Debug group variables
+      debug:
+        msg: |
+          longhorn_taints: {{ longhorn_taints | default('undefined') }}
+          longhorn_labels: {{ longhorn_labels | default('undefined') }}
+          longhorn_storage_enabled: {{ longhorn_storage_enabled | default('undefined') }}
+      tags: [debug]
+    - name: Resize root filesystem to use all available space
+      shell: |
+        echo "Resizing filesystem to use all available space..."
+        
+        # Find the root filesystem device
+        ROOT_DEV=$(df / | tail -1 | awk '{print $1}')
+        echo "Root device: $ROOT_DEV"
+        
+        # Extract the disk and partition number using sed instead of bash regex
+        DISK=$(echo $ROOT_DEV | sed 's/p[0-9]*$//')
+        PART_NUM=$(echo $ROOT_DEV | sed 's/.*p//')
+        echo "Disk: $DISK, Partition: $PART_NUM"
+        
+        # Resize the partition to use all available space
+        parted $DISK resizepart $PART_NUM 100%
+        
+        # Resize the filesystem to fill the partition
+        resize2fs $ROOT_DEV
+        
+        echo "Filesystem resize complete"
+      register: resize_result
+      changed_when: true
+      when: resize_rootfs | default(false)
+      tags: [filesystem, resize]
+
+    - name: Show filesystem resize result
+      debug:
+        var: resize_result.stdout_lines
+      when: resize_result.stdout_lines is defined and (resize_rootfs | default(false))
+      tags: [filesystem, resize]
+
+    - name: Check available disk space after resize
+      shell: df -h /
+      register: disk_usage
+      changed_when: false
+      when: resize_rootfs | default(false)
+      tags: [filesystem, resize]
+
+    - name: Create k3s data directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+      loop:
+        - "/etc/rancher/k3s"
+      tags: [k3s, directories]
+
+    - name: Install required packages for k3s
+      apt:
+        name:
+          - curl
+          - wget
+          - open-iscsi
+        state: present
+        update_cache: yes
+      tags: [packages]
+
+    - name: Check if cgroup parameters are already present
+      shell: grep -q "cgroup_memory=1" /boot/firmware/cmdline.txt
+      register: cgroup_check
+      failed_when: false
+      tags: [k3s, cgroup, raspberry-pi]
+
+    - name: Enable memory cgroup for k3s (Raspberry Pi)
+      shell: |
+        # Create backup
+        cp /boot/firmware/cmdline.txt /boot/firmware/cmdline.txt.backup
+        
+        # Read current cmdline
+        CMDLINE=$(cat /boot/firmware/cmdline.txt)
+        
+        # Add cgroup parameters if not present
+        if ! echo "$CMDLINE" | grep -q "cgroup_memory=1"; then
+          echo "$CMDLINE cgroup_memory=1 cgroup_enable=memory" > /boot/firmware/cmdline.txt
+          echo "Added cgroup parameters to cmdline.txt"
+        else
+          echo "Cgroup parameters already present"
+        fi
+      register: cgroup_update
+      when: not cgroup_check.rc == 0
+      tags: [k3s, cgroup, raspberry-pi]
+
+    - name: Show cgroup configuration update
+      debug:
+        var: cgroup_update.stdout_lines
+      when: cgroup_update.stdout_lines is defined
+      tags: [k3s, cgroup, raspberry-pi]
+
+    - name: Reboot if cgroup configuration was updated
+      reboot:
+        msg: "Rebooting to apply cgroup configuration changes"
+        reboot_timeout: 300
+        connect_timeout: 5
+      when: cgroup_update.changed
+      tags: [k3s, cgroup, raspberry-pi, reboot]
+
+    - name: Check if k3s is already installed
+      stat:
+        path: /usr/local/bin/k3s
+      register: k3s_installed
+      tags: [k3s, check]
+
+    - name: Download and install k3s agent (Longhorn storage node)
+      shell: |
+        curl -sfL https://get.k3s.io | K3S_URL=https://{{ k3s_server_ip }}:6443 K3S_TOKEN="{{ k3s_token | default(ansible_env.K3S_TOKEN) }}" INSTALL_K3S_VERSION="{{ k3s_version }}" sh -
+      when: not k3s_installed.stat.exists and not (k3s_agent_running.status.ActiveState == 'active' and not replace_cluster_bool)
+      tags: [k3s, install]
+
+    - name: Stop k3s agent service if running (for reconfiguration)
+      systemd:
+        name: k3s-agent
+        state: stopped
+      when: k3s_installed.stat.exists and not (k3s_agent_running.status.ActiveState == 'active' and not replace_cluster_bool)
+      tags: [k3s, stop]
+
+    - name: Configure k3s agent (Longhorn storage node)
+      template:
+        src: k3s-agent-config.yaml.j2
+        dest: /etc/rancher/k3s/config.yaml
+        owner: root
+        group: root
+        mode: '0644'
+      when: not (k3s_agent_running.status.ActiveState == 'active' and not replace_cluster_bool)
+      tags: [k3s, config]
+
+    - name: Start and enable k3s agent service
+      systemd:
+        name: k3s-agent
+        state: started
+        enabled: yes
+        daemon_reload: yes
+      when: not (k3s_agent_running.status.ActiveState == 'active' and not replace_cluster_bool)
+      tags: [k3s, service]
+
+    - name: Wait for node to join cluster
+      wait_for:
+        port: 10250
+        host: "{{ ansible_host }}"
+        timeout: 300
+      tags: [k3s, wait]
+
+    - name: Add Longhorn storage gate label to storage node
+      shell: |
+        kubectl label node {{ inventory_hostname }} longhorn.io/storage=true --overwrite
+      delegate_to: "{{ groups['controllers'][0] }}"
+      when: k3s_installed.stat.exists and enable_longhorn_storage
+      tags: [k3s, labels, longhorn, storage-gate]
+
+    - name: Add storage preference label to storage node
+      shell: |
+        kubectl label node {{ inventory_hostname }} longhorn.io/storage-preference=true --overwrite
+      delegate_to: "{{ groups['controllers'][0] }}"
+      when: k3s_installed.stat.exists and enable_longhorn_storage
+      tags: [k3s, labels, longhorn, storage-preference]
+
+    - name: Remove Longhorn storage labels from node
+      shell: |
+        kubectl label node {{ inventory_hostname }} {{ item | replace('=', '-') }} || true
+      delegate_to: "{{ groups['controllers'][0] }}"
+      when: k3s_installed.stat.exists and not enable_longhorn_storage
+      loop: "{{ longhorn_labels }}"
+      tags: [k3s, labels, longhorn]
+
+    - name: Add Longhorn-only taints to node
+      shell: |
+        kubectl taint node {{ inventory_hostname }} {{ item }} --overwrite
+      delegate_to: "{{ groups['controllers'][0] }}"
+      when: k3s_installed.stat.exists and enable_longhorn_storage
+      loop: "{{ longhorn_taints }}"
+      tags: [k3s, taints]
+
+    - name: Remove Longhorn-only taints from node
+      shell: |
+        kubectl taint node {{ inventory_hostname }} {{ item | replace(':', '-:') }} --overwrite || true
+      delegate_to: "{{ groups['controllers'][0] }}"
+      when: k3s_installed.stat.exists and not enable_longhorn_storage
+      loop: "{{ longhorn_taints }}"
+      tags: [k3s, taints]
+
+  handlers:
+    - name: restart k3s
+      systemd:
+        name: "{{ 'k3s' if inventory_hostname in groups['controllers'] else 'k3s-agent' }}"
+        state: restarted

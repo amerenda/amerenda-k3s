@@ -1,0 +1,24 @@
+# Longhorn Storage Node Configuration Variables
+
+# Longhorn storage node control
+# Set to false to exclude this node from Longhorn storage
+# Default: true (all nodes can store Longhorn data)
+# Example: longhorn_storage_enabled: false  # Exclude this node from storage
+longhorn_storage_enabled: true
+
+# Node taints for Longhorn-only nodes
+longhorn_taints:
+  - "longhorn.io/storage=true:NoSchedule"
+  - "longhorn.io/storage=true:NoExecute"
+
+# Node labels
+longhorn_labels:
+  - "longhorn.io/storage=true"
+  - "node-role.kubernetes.io/longhorn-storage=true"
+
+# Two-tier storage system
+# Tier 1: Storage gate - longhorn.io/storage=true (required to store data)
+# Tier 2: Storage preference - longhorn.io/storage-preference=true (preferred for storage)
+longhorn_storage_gate_label: "longhorn.io/storage=true"
+longhorn_storage_preference_label: "longhorn.io/storage-preference=true"  # Applied to rpi3-0
+longhorn_storage_preference_false_label: "longhorn.io/storage-preference=false"  # Applied to controllers

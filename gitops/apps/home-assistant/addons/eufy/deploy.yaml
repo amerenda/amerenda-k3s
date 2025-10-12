@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eufy-security-ws
+  namespace: home-assistant
+  labels:
+    app: eufy-security-ws
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eufy-security-ws
+  template:
+    metadata:
+      labels:
+        app: eufy-security-ws
+    spec:
+      containers:
+        - name: eufy-security-ws
+          image: bropat/eufy-security-ws:latest
+          ports:
+            - containerPort: 3000
+            - containerPort: 3001
+          env:
+            - name: USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: eufy-ws-secret
+                  key: EUFY_EMAIL
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: eufy-ws-secret
+                  key: EUFY_PASSWORD
+            - name: COUNTRY
+              valueFrom:
+                secretKeyRef:
+                  name: eufy-ws-secret
+                  key: EUFY_COUNTRY
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: eufy-ws-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eufy-security-ws
+  namespace: home-assistant
+spec:
+  selector:
+    app: eufy-security-ws
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+    - name: ws
+      port: 3001
+      targetPort: 3001
+  type: ClusterIP
+

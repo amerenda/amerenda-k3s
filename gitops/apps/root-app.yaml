@@ -1,0 +1,485 @@
+---
+# ArgoCD App-of-Apps Root Application
+# This is the main application that manages all other applications in the cluster
+# TODO: Replace <REPLACE_ME> with your actual GitHub username/organization
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root
+  namespace: default
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/amerenda/amerenda-k3s.git
+    targetRevision: main
+    path: gitops/apps
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - IgnoreExtraneous=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+---
+# Infrastructure: Flannel CNI
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-flannel
+  namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"  # Install first - critical for networking
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/amerenda/amerenda-k3s.git
+    targetRevision: main
+    path: gitops/infra/flannel
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+---
+# Infrastructure: Longhorn Storage
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-longhorn
+  namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"  # Install after external-secrets (needs GCS credentials)
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: default
+  sources:
+    - repoURL: https://charts.longhorn.io
+      chart: longhorn
+      targetRevision: 1.10.0
+      helm:
+        valueFiles:
+          - $values/gitops/infra/longhorn/values.yaml
+    - repoURL: https://github.com/amerenda/amerenda-k3s.git
+      targetRevision: main
+      ref: values
+    - repoURL: https://github.com/amerenda/amerenda-k3s.git
+      targetRevision: main
+      path: gitops/infra/longhorn/backups
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  ignoreDifferences:
+  - group: "apiextensions.k8s.io"
+    kind: CustomResourceDefinition
+    name: engineimages.longhorn.io
+    jsonPointers:
+    - /spec/subresources
+    - /spec/preserveUnknownFields
+  - group: "apiextensions.k8s.io"
+    kind: CustomResourceDefinition
+    name: nodes.longhorn.io
+    jsonPointers:
+    - /spec/subresources
+    - /spec/preserveUnknownFields
+  - group: "apiextensions.k8s.io"
+    kind: CustomResourceDefinition
+    name: volumes.longhorn.io
+    jsonPointers:
+    - /spec/subresources
+    - /spec/preserveUnknownFields
+  - group: ""
+    kind: Service
+    name: longhorn-frontend
+    jsonPointers:
+    - /spec/ports/0/nodePort
+
+---
+# Infrastructure: External Secrets Operator
+# Deploys External Secrets Operator using Helm chart with custom templates
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-external-secrets
+  namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"  # Install after cert-manager (needs TLS for Bitwarden)
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: default
+  sources:
+    - repoURL: https://charts.external-secrets.io
+      chart: external-secrets
+      targetRevision: 0.19.2
+      helm:
+        valueFiles:
+          - $values/gitops/infra/external-secrets/values.yaml
+    - repoURL: https://github.com/amerenda/amerenda-k3s.git
+      targetRevision: main
+      ref: values
+    - repoURL: https://github.com/amerenda/amerenda-k3s.git
+      targetRevision: main
+      path: gitops/infra/external-secrets/templates
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+---
+# Infrastructure: Monitoring Stack
+# TODO: Update path if your monitoring manifests are in a different location
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-monitoring
+  namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "6"  # Install last - depends on all infrastructure
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/amerenda/amerenda-k3s.git
+    targetRevision: main
+    path: gitops/infra/monitoring
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+---
+# Application: Pi-hole DNS
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-pihole
+  namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"  # Install after infrastructure (needs storage and secrets)
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: default
+  sources:
+    - repoURL: https://mojo2600.github.io/pihole-kubernetes/
+      chart: pihole
+      targetRevision: "2.34.0"
+      helm:
+        valueFiles:
+          - $values/gitops/apps/pihole/values.yaml
+    - repoURL: https://github.com/amerenda/amerenda-k3s.git
+      targetRevision: main
+      ref: values
+    - repoURL: https://github.com/amerenda/amerenda-k3s.git
+      targetRevision: main
+      path: gitops/apps/pihole
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: pihole
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+---
+# Application: Home Assistant
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-home-assistant
+  namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"  # Install after infrastructure (needs storage)
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/amerenda/amerenda-k3s.git
+    targetRevision: main
+    path: gitops/apps/home-assistant
+  sources:
+    - repoURL: https://github.com/amerenda/amerenda-k3s.git
+      targetRevision: main
+      path: gitops/apps/home-assistant
+    - repoURL: https://github.com/amerenda/amerenda-k3s.git
+      targetRevision: main
+      path: gitops/apps/home-assistant/automations
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: home-assistant
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+---
+# Application: Tailscale
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-tailscale
+  namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"  # Install after infrastructure (needs secrets)
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/amerenda/amerenda-k3s.git
+    targetRevision: main
+    path: gitops/apps/tailscale
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: tailscale
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+---
+# Infrastructure: MetalLB Load Balancer
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-metallb
+  namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"  # Install first - no dependencies
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/amerenda/amerenda-k3s.git
+    targetRevision: main
+    path: gitops/infra/metallb
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: metallb-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - IgnoreExtraneous=true
+      - ServerSideApply=true
+  ignoreDifferences:
+  - group: "apiextensions.k8s.io"
+    kind: CustomResourceDefinition
+    name: bgppeers.metallb.io
+    jsonPointers:
+    - /spec/conversion/webhook/clientConfig/caBundle
+
+---
+# Infrastructure: cert-manager
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-cert-manager
+  namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"  # Install second - needed for TLS certificates
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: default
+  sources:
+    - repoURL: https://charts.jetstack.io
+      chart: cert-manager
+      targetRevision: v1.19.0
+      helm:
+        valueFiles:
+          - $values/gitops/infra/cert-manager/values.yaml
+    - repoURL: https://github.com/amerenda/amerenda-k3s.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cert-manager
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+---
+# Infrastructure: DNS (BIND9)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-dns
+  namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"  # Install after external-secrets (needs TSIG key)
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/amerenda/amerenda-k3s.git
+    targetRevision: main
+    path: gitops/infra/dns
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+---
+# Infrastructure: External DNS
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-external-dns
+  namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"  # Install with DNS (needs BIND9 for TSIG)
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: default
+  sources:
+    - repoURL: https://kubernetes-sigs.github.io/external-dns/
+      chart: external-dns
+      targetRevision: 1.19.0
+      helm:
+        valueFiles:
+          - $values/gitops/infra/external-dns/values.yaml
+    - repoURL: https://github.com/amerenda/amerenda-k3s.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
