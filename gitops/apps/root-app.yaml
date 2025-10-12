@@ -315,7 +315,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/amerenda/amerenda-k3s.git
-    targetRevision: feat/move-tailscale-to-infra
+    targetRevision: main
     path: gitops/infra/tailscale
   destination:
     server: https://kubernetes.default.svc
