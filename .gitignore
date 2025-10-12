@@ -1,0 +1,15 @@
+# Bootstrap secrets - NEVER commit these
+bootstrap/*.secret
+bootstrap/*.key
+bootstrap/*.token
+*.secret
+*.key
+*.token
+
+# K3s kubeconfig files - NEVER commit these
+ansible/k3s-kubeconfig.yaml
+k3s-kubeconfig.yaml
+*.kubeconfig
+
+# Development tools
+.cursor-rules

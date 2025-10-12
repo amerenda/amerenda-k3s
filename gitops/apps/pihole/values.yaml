@@ -1,0 +1,64 @@
+# --- Pi-hole on K3s for your LAN ---
+
+# Admin password configuration
+adminPasswordExistingSecret: "pihole-admin"
+
+# DNS Service Configuration
+serviceDns:
+  type: LoadBalancer
+  loadBalancerIP: 10.100.20.240
+  annotations:
+    metallb.universe.tf/allow-shared-ip: "pihole"
+  externalTrafficPolicy: Local
+  port: 53
+
+# Web Service Configuration  
+serviceWeb:
+  type: LoadBalancer
+  loadBalancerIP: 10.100.20.242
+  annotations:
+    metallb.universe.tf/allow-shared-ip: "pihole"
+    external-dns.alpha.kubernetes.io/hostname: pihole.amer.home,pi.amer.home,pi-hole.amer.home
+    external-dns.alpha.kubernetes.io/ttl: "300"
+  externalTrafficPolicy: Cluster
+  port: 80
+
+persistentVolumeClaim:
+  enabled: true
+  storageClass: longhorn
+  accessModes: [ReadWriteMany]
+  size: 10Gi
+
+# DNS Configuration
+dnsmasq:
+  upstreamServers:
+    - server=/amer.home/10.100.20.241
+    - server=/merenda.home.arpa/10.100.20.241
+
+# Environment variables
+extraEnvVars:
+  DNSMASQ_LISTENING: "all"
+  TZ: "America/New_York"
+  FTLCONF_LOCAL_IPV4: "10.100.20.240"
+  PIHOLE_DNS_: "1.1.1.1;1.0.0.1;8.8.8.8;8.8.4.4"
+
+# DoH (DNS over HTTPS) configuration
+doh:
+  enabled: true
+  pullPolicy: Always
+  envVars:
+    DOH_UPSTREAM: "https://1.1.1.1/dns-query"
+
+# Optional: small resource bounds
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 300m
+    memory: 384Mi
+
+
+
+
+# Cloudflare for everything else

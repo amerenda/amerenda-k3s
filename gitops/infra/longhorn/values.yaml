@@ -1,0 +1,186 @@
+# Longhorn Helm Chart Values
+
+# Install CRDs automatically
+installCRDs: true
+
+# Global tolerations and node selector for Longhorn components
+tolerations:
+  - key: "longhorn"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+
+nodeSelector:
+  longhorn-storage: "true"
+
+# Longhorn configuration
+longhorn:
+  # Enable Longhorn manager
+  manager:
+    enabled: true
+    replicas: 1
+    
+  # Storage class configuration
+  storageClass:
+    name: longhorn
+    defaultClass: true
+    reclaimPolicy: Delete
+    allowVolumeExpansion: true
+    volumeBindingMode: Immediate
+    
+  # Resource limits for Pi hardware
+  resources:
+    manager:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+    ui:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+        
+  # Longhorn settings for simplified storage system
+  settings:
+    default-replica-count: "2"
+    system-managed-components-node-selector: "longhorn-storage=true"
+    replica-auto-balance: "disabled"
+    concurrent-replica-rebuild-per-node-limit: "2"
+    concurrent-automatic-engine-upgrade-per-node-limit: "1"
+    disable-scheduling-on-cordoned-node: "true"
+    node-drain-policy: "block-if-contains-last-replica"
+    # All nodes can store data (no storage gate)
+    create-default-disk-labeled-nodes: "true"
+    # Allow replicas on any node
+    replica-soft-anti-affinity: "false"
+    replica-hard-anti-affinity: "false"
+    # K3s kubelet root directory configuration
+    kubelet-root-dir: "/var/lib/rancher/k3s/agent/kubelet"
+
+# Disable pre-upgrade hook to avoid service account dependency issues
+preUpgradeChecker:
+  jobEnabled: false
+
+# Default backup store configuration
+defaultBackupStore:
+  # Endpoint used to access the default backupstore
+  backupTarget: s3://amerenda-backups@us/k3s/dean
+  # Name of the Kubernetes secret associated with the default backup target
+  backupTargetCredentialSecret: gcs-backup-credentials
+  # Number of seconds that Longhorn waits before checking the default backupstore for new backups
+  pollInterval: 300
+
+# Additional manifests to apply after Longhorn installation
+extraManifests:
+  - apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: longhorn-settings-applier
+      namespace: default
+      annotations:
+        argocd.argoproj.io/sync-wave: "4"  # After Longhorn is running
+      labels:
+        app: longhorn-settings-applier
+    spec:
+      template:
+        spec:
+          serviceAccountName: longhorn-settings-applier
+          containers:
+          - name: settings-applier
+            image: bitnami/kubectl:latest
+            command:
+            - /bin/bash
+            - -c
+            - |
+              set -e
+              echo "Waiting for Longhorn to be ready..."
+              kubectl wait --for=condition=ready pod -l app=longhorn-manager --timeout=300s
+              
+              echo "Applying Longhorn settings..."
+              
+              # Apply node selector for system components (all nodes with longhorn-storage label)
+              kubectl patch settings.longhorn.io system-managed-components-node-selector \
+                --type merge -p '{"value": "longhorn-storage=true"}' || echo "Setting already configured"
+              
+              # Verify system components node selector
+              echo "Current system-managed-components-node-selector:"
+              kubectl get settings.longhorn.io system-managed-components-node-selector -o jsonpath='{.value}' || echo "Setting not found"
+              
+              # Apply taint tolerations for longhorn taint
+              kubectl patch settings.longhorn.io taint-toleration \
+                --type merge -p '{"value": "longhorn=true:NoSchedule"}' || echo "Setting already configured"
+              
+              # Configure storage - all nodes can store data
+              kubectl patch settings.longhorn.io create-default-disk-labeled-nodes \
+                --type merge -p '{"value": "true"}' || echo "Setting already configured"
+              
+              # Apply storage optimization settings
+              kubectl patch settings.longhorn.io storage-minimal-available-percentage \
+                --type merge -p '{"value": "25"}' || echo "Setting already configured"
+              
+              kubectl patch settings.longhorn.io storage-reserved-percentage-for-default-disk \
+                --type merge -p '{"value": "30"}' || echo "Setting already configured"
+              
+              kubectl patch settings.longhorn.io disable-scheduling-on-cordoned-node \
+                --type merge -p '{"value": "true"}' || echo "Setting already configured"
+              
+              kubectl patch settings.longhorn.io node-drain-policy \
+                --type merge -p '{"value": "block-if-contains-last-replica"}' || echo "Setting already configured"
+              
+              # Configure replica scheduling preferences
+              kubectl patch settings.longhorn.io replica-soft-anti-affinity \
+                --type merge -p '{"value": "false"}' || echo "Setting already configured"
+              
+              kubectl patch settings.longhorn.io replica-hard-anti-affinity \
+                --type merge -p '{"value": "false"}' || echo "Setting already configured"
+              
+              # Verify simplified storage configuration
+              echo "Verifying simplified storage configuration..."
+              kubectl get settings.longhorn.io create-default-disk-labeled-nodes -o jsonpath='{.value}' || echo "Storage setting not found"
+              
+              echo "Longhorn settings applied successfully!"
+              echo "Simplified storage system:"
+              echo "  - All nodes can store data (no storage gate)"
+              echo "  - Longhorn pods schedule on all nodes with longhorn-storage=true label"
+          restartPolicy: OnFailure
+      backoffLimit: 3
+  - apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      name: longhorn-settings-applier
+      namespace: default
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      name: longhorn-settings-applier
+    rules:
+    - apiGroups: ["longhorn.io"]
+      resources: ["settings"]
+      verbs: ["get", "list", "patch", "update"]
+    - apiGroups: [""]
+      resources: ["pods"]
+      verbs: ["get", "list", "watch"]
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      name: longhorn-settings-applier
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: longhorn-settings-applier
+    subjects:
+    - kind: ServiceAccount
+      name: longhorn-settings-applier
+      namespace: default
+
+service:
+  ui:
+    type: LoadBalancer
+    annotations:
+      external-dns.alpha.kubernetes.io/hostname: longhorn.amer.home
+      external-dns.alpha.kubernetes.io/ttl: "300"

@@ -1,0 +1,133 @@
+---
+# Post k3s Setup - Configure cluster components
+# Run after: ansible-playbook -i inventory.ini setup-k3s-cluster.yml
+# Then run: ansible-playbook -i inventory.ini post-k3s-setup.yml
+
+- name: Post k3s Setup - Configure cluster
+  hosts: localhost  # Run locally to access kubeconfig
+  become: no
+  gather_facts: yes
+  connection: local
+  tags: [post-setup, longhorn, taints]
+
+  vars:
+    kubeconfig_path: "/home/alex/.kube/config"
+
+  pre_tasks:
+    - name: Check if kubeconfig exists
+      stat:
+        path: "{{ kubeconfig_path }}"
+      register: kubeconfig_check
+
+    - name: Fail if kubeconfig is missing
+      fail:
+        msg: "kubeconfig not found at {{ kubeconfig_path }}. Run setup-k3s-cluster.yml first."
+      when: not kubeconfig_check.stat.exists
+
+  tasks:
+    - name: Set KUBECONFIG environment variable
+      set_fact:
+        kubeconfig_env: "KUBECONFIG={{ kubeconfig_path }}"
+
+    - name: Check if all nodes are ready
+      shell: "{{ kubeconfig_env }} kubectl get nodes --no-headers | grep -v Ready"
+      register: not_ready_nodes
+      failed_when: false
+      tags: [wait, nodes]
+
+    - name: Display cluster nodes
+      shell: "{{ kubeconfig_env }} kubectl get nodes -o wide"
+      register: cluster_nodes
+      changed_when: false
+      tags: [info, nodes]
+
+    - name: Show cluster nodes
+      debug:
+        var: cluster_nodes.stdout_lines
+      tags: [info, nodes]
+
+    - name: Add Longhorn storage taint to longhorn_storage nodes (prevents app scheduling)
+      shell: "{{ kubeconfig_env }} kubectl taint node {{ item }} longhorn.io/storage=true:NoSchedule --overwrite"
+      loop: "{{ groups['longhorn_storage'] }}"
+      register: taint_result
+      tags: [taints, longhorn]
+
+    - name: Add Longhorn storage NoExecute taint to longhorn_storage nodes
+      shell: "{{ kubeconfig_env }} kubectl taint node {{ item }} longhorn.io/storage=true:NoExecute --overwrite"
+      loop: "{{ groups['longhorn_storage'] }}"
+      register: taint_noexecute_result
+      tags: [taints, longhorn]
+
+    - name: Show taint result
+      debug:
+        var: taint_result
+      tags: [taints, longhorn]
+
+    - name: Add Longhorn storage label to all nodes for replica scheduling
+      shell: "{{ kubeconfig_env }} kubectl label node {{ item }} longhorn.io/storage=true --overwrite"
+      loop: "{{ groups['controllers'] + groups['longhorn_storage'] }}"
+      register: label_result
+      tags: [labels, longhorn]
+
+    - name: Show label result
+      debug:
+        var: label_result
+      tags: [labels, longhorn]
+
+    - name: Verify node configuration
+      shell: "{{ kubeconfig_env }} kubectl describe node rpi3-0"
+      register: node_info
+      changed_when: false
+      tags: [verify, longhorn]
+
+    - name: Show node configuration
+      debug:
+        var: node_info.stdout_lines
+      tags: [verify, longhorn]
+
+    - name: Wait for Longhorn manager daemonset to exist
+      shell: "{{ kubeconfig_env }} kubectl get daemonset longhorn-manager"
+      register: longhorn_ds_check
+      until: longhorn_ds_check.rc == 0
+      retries: 30
+      delay: 10
+      tags: [longhorn, wait]
+
+    - name: Add Flannel toleration taint to longhorn storage nodes
+      shell: "{{ kubeconfig_env }} kubectl taint node {{ item }} flannel.io/required=true:NoSchedule --overwrite"
+      loop: "{{ groups['longhorn_storage'] }}"
+      register: flannel_taint_result
+      tags: [taints, flannel, longhorn]
+
+    - name: Show Flannel taint result
+      debug:
+        var: flannel_taint_result
+      tags: [taints, flannel, longhorn]
+
+    - name: Create Longhorn namespace
+      shell: "{{ kubeconfig_env }} kubectl create namespace longhorn-system --dry-run=client -o yaml | {{ kubeconfig_env }} kubectl apply -f -"
+      register: namespace_result
+      tags: [longhorn, namespace]
+
+    - name: Show namespace result
+      debug:
+        var: namespace_result.stdout
+      when: namespace_result.stdout != ""
+      tags: [longhorn, namespace]
+
+    - name: Display cluster setup summary
+      debug:
+        msg: |
+          ========================================
+          k3s Cluster Setup Complete
+          ========================================
+          Controllers: {{ groups['controllers'] | join(', ') }}
+          Longhorn Storage: {{ groups['longhorn_storage'] | join(', ') }}
+          kubeconfig: {{ kubeconfig_path }}
+          
+          Next steps:
+          1. Deploy Longhorn using your GitOps setup
+          2. Verify all nodes are ready: kubectl get nodes
+          3. Check Longhorn storage node taints: kubectl describe node {{ groups['longhorn_storage'][0] }}
+          ========================================
+      tags: [summary]
