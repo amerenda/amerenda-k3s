@@ -17,6 +17,16 @@
     # Longhorn-specific packages
     longhorn_packages:
       - open-iscsi
+      - nfs-common
+    
+    # Longhorn service configuration
+    longhorn_iscsi_service: "iscsid"
+    longhorn_iscsi_enable: true
+    
+    # Kernel modules required for Longhorn
+    kernel_modules:
+      - nfs
+      - iscsi_tcp
 
   pre_tasks:
     - name: Check if k3s is installed
@@ -38,6 +48,41 @@
         state: present
         update_cache: yes
       tags: [packages, longhorn]
+
+    - name: Enable and start iscsid service for Longhorn
+      systemd:
+        name: "{{ longhorn_iscsi_service }}"
+        enabled: "{{ longhorn_iscsi_enable }}"
+        state: started
+      tags: [longhorn, services]
+
+    - name: Add kernel modules to /etc/modules
+      lineinfile:
+        path: /etc/modules
+        line: "{{ item }}"
+        create: yes
+      loop: "{{ kernel_modules }}"
+      tags: [longhorn, kernel]
+
+    - name: Load kernel modules
+      modprobe:
+        name: "{{ item }}"
+      loop: "{{ kernel_modules }}"
+      tags: [longhorn, kernel]
+
+    - name: Verify iscsid service status
+      systemd:
+        name: "{{ longhorn_iscsi_service }}"
+      register: iscsid_status
+      changed_when: false
+      tags: [longhorn, verification]
+
+    - name: Check loaded kernel modules
+      shell: lsmod | grep -E "{{ kernel_modules | join('|') }}"
+      register: loaded_modules
+      changed_when: false
+      failed_when: false
+      tags: [longhorn, verification]
 
     - name: Debug group variables
       debug:

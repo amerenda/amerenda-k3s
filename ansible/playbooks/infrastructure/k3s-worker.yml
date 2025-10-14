@@ -14,8 +14,6 @@
     k3s_server_ip: "{{ hostvars[groups['controllers'][0]]['ansible_host'] }}"
     replace_cluster_bool: "{{ (replace_cluster | default(false)) | bool }}"
     
-    # Longhorn storage configuration
-    enable_longhorn_storage: "{{ (longhorn_storage_enabled | default(true)) | bool }}"
 
   pre_tasks:
     - name: Check if k3s agent is already running
@@ -116,19 +114,6 @@
         timeout: 300
       tags: [k3s, wait]
 
-    - name: Add Longhorn storage gate label to worker node
-      shell: |
-        kubectl label node {{ inventory_hostname }} longhorn.io/storage=true --overwrite
-      delegate_to: "{{ groups['controllers'][0] }}"
-      when: k3s_installed.stat.exists and enable_longhorn_storage
-      tags: [k3s, labels, longhorn, storage-gate]
-
-    - name: Add storage preference label to worker node
-      shell: |
-        kubectl label node {{ inventory_hostname }} longhorn.io/storage-preference=false --overwrite
-      delegate_to: "{{ groups['controllers'][0] }}"
-      when: k3s_installed.stat.exists and enable_longhorn_storage
-      tags: [k3s, labels, longhorn, storage-preference]
 
   handlers:
     - name: restart k3s-agent

@@ -37,8 +37,6 @@
     # Cluster replacement protection (defaults to false if not set)
     replace_cluster_bool: "{{ replace_cluster | default(false) | bool }}"
     
-    # Longhorn storage configuration
-    enable_longhorn_storage: "{{ (longhorn_storage_enabled | default(true)) | bool }}"
 
     # etcd packages for controller nodes (K3s includes etcd binary, no separate packages needed)
     etcd_packages: []
@@ -443,37 +441,6 @@
       when: is_first_controller
       tags: [argocd, reminder]
 
-    - name: Check if kubectl is available and cluster is ready
-      shell: |
-        kubectl get nodes --no-headers | wc -l
-      delegate_to: localhost
-      become: no
-      register: kubectl_check
-      failed_when: false
-      when: enable_longhorn_storage
-      tags: [k3s, labels, longhorn, storage-gate]
-
-    - name: Add longhorn-storage label to all nodes
-      shell: |
-        kubectl label node {{ inventory_hostname }} longhorn-storage=true --overwrite
-      delegate_to: localhost
-      become: no
-      when: enable_longhorn_storage and kubectl_check.rc == 0
-      tags: [k3s, labels, longhorn, storage]
-
-    - name: Skip Longhorn label (kubectl not ready)
-      debug:
-        msg: "Skipping Longhorn storage label - kubectl not ready or cluster not available"
-      when: enable_longhorn_storage and kubectl_check.rc != 0
-      tags: [k3s, labels, longhorn, storage]
-
-    - name: Remove longhorn-storage label from all nodes
-      shell: |
-        kubectl label node {{ inventory_hostname }} longhorn-storage- || true
-      delegate_to: localhost
-      become: no
-      when: not enable_longhorn_storage
-      tags: [k3s, labels, longhorn, storage]
 
   handlers:
     - name: restart k3s

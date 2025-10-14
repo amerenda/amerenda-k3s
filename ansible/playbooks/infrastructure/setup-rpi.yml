@@ -1,14 +1,14 @@
 ---
-# Raspberry Pi 5 k3s + Longhorn Node Preparation Playbook
-# This playbook prepares Raspberry Pi nodes for k3s cluster with Longhorn storage
+# Raspberry Pi 5 k3s Node Preparation Playbook
+# This playbook prepares Raspberry Pi nodes for k3s cluster
 # Combines setup-rpi.yml and common-setup.yml functionality
 # Run with: ansible-playbook -i inventory.ini setup-rpi.yml
 
-- name: Prepare Raspberry Pi 5 nodes for k3s + Longhorn cluster
+- name: Prepare Raspberry Pi 5 nodes for k3s cluster
   hosts: rpi
   become: yes
   gather_facts: yes
-  tags: [bootstrap, longhorn, ssh, common, dns, packages, iscsi]
+  tags: [bootstrap, ssh, common, dns, packages]
 
   vars:
     # Ensure we have the target user defined
@@ -17,7 +17,7 @@
     # System upgrade control
     upgrade_packages: false
     
-    # Base packages required for k3s + Longhorn
+    # Base packages required for k3s
     base_packages:
       - curl
       - vim
@@ -32,10 +32,6 @@
       - wget
       - iptables
     
-    # Longhorn-specific packages
-    longhorn_packages:
-      - open-iscsi
-      - nfs-common
 
   tasks:
     - name: Update apt cache
@@ -59,13 +55,6 @@
         update_cache: yes
       tags: [packages]
 
-    - name: Install Longhorn packages for storage nodes
-      apt:
-        name: "{{ longhorn_packages }}"
-        state: present
-        update_cache: yes
-      when: "'storage' in group_names"
-      tags: [packages, longhorn]
 
     - name: Check if dhcpcd service exists
       stat:
@@ -225,66 +214,26 @@
       when: systemd_resolved_check.status is defined and systemd_resolved_check.status.ActiveState == "active" and dns_dropin_result.changed
       tags: [dns, network]
 
-    - name: Enable and start open-iscsi service
-      systemd:
-        name: open-iscsi
-        state: started
-        enabled: yes
-      tags: [iscsi, common]
 
-    - name: Enable and start iscsid service for Longhorn
-      systemd:
-        name: "{{ longhorn_iscsi_service }}"
-        enabled: "{{ longhorn_iscsi_enable }}"
-        state: started
-        daemon_reload: yes
-      tags: [longhorn, services]
-
-    - name: Add kernel modules to /etc/modules
-      lineinfile:
-        path: /etc/modules
-        line: "{{ item }}"
-        state: present
-        create: yes
-      loop: "{{ kernel_modules }}"
-      tags: [longhorn, kernel]
-
-    - name: Load kernel modules
-      modprobe:
-        name: "{{ item }}"
-        state: present
-      loop: "{{ kernel_modules }}"
-      tags: [longhorn, kernel]
 
     - name: Configure timezone
       timezone:
-        name: "{{ timezone }}"
+        name: "America/New_York"
       tags: [system]
 
     - name: Generate locale
       locale_gen:
-        name: "{{ locale }}"
+        name: "en_US.UTF-8"
         state: present
       tags: [system]
 
     - name: Set system locale
       lineinfile:
         path: /etc/environment
-        line: "LANG={{ locale }}"
+        line: "LANG=en_US.UTF-8"
         state: present
       tags: [system]
 
-    - name: Verify iscsid service status
-      systemd:
-        name: "{{ longhorn_iscsi_service }}"
-      register: iscsid_status
-      tags: [longhorn, verification]
-
-    - name: Check loaded kernel modules
-      command: lsmod
-      register: loaded_modules
-      changed_when: false
-      tags: [longhorn, verification]
 
     - name: Verify network configuration
       command: ip addr show eth0
@@ -332,29 +281,6 @@
       when: cgroup_update.changed
       tags: [k3s, cgroup, raspberry-pi, reboot]
 
-    # Longhorn node labeling (applied to all nodes)
-    - name: Check if kubectl is available for node labeling
-      shell: |
-        kubectl get nodes --no-headers | wc -l
-      delegate_to: localhost
-      become: no
-      register: kubectl_label_check
-      failed_when: false
-      tags: [longhorn, labels, kubectl]
-
-    - name: Add longhorn-storage label to all nodes
-      shell: |
-        kubectl label node {{ inventory_hostname }} longhorn-storage=true --overwrite
-      delegate_to: localhost
-      become: no
-      when: kubectl_label_check.rc == 0
-      tags: [longhorn, labels, storage]
-
-    - name: Skip Longhorn labeling (kubectl not ready)
-      debug:
-        msg: "Skipping Longhorn storage label - kubectl not ready or cluster not available"
-      when: kubectl_label_check.rc != 0
-      tags: [longhorn, labels, storage]
 
     - name: Display node preparation summary
       debug:
@@ -372,17 +298,8 @@
             DNS: 1.1.1.1, 8.8.8.8
           
           System Status:
-            iscsid Status: {{ iscsid_status.status.ActiveState }}
-            Loaded Modules: {{ kernel_modules | join(', ') }}
             Packages Installed: {{ base_packages | length }} packages
-            Common Packages: {{ common_packages | length }} packages
           
           ========================================
       tags: [summary]
 
-  handlers:
-    - name: restart iscsid
-      systemd:
-        name: "{{ longhorn_iscsi_service }}"
-        state: restarted
-      when: longhorn_iscsi_enable | bool
