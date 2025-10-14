@@ -17,15 +17,25 @@
     # System upgrade control
     upgrade_packages: false
     
-    # Common packages needed for k3s (from common-setup.yml)
-    common_packages:
+    # Base packages required for k3s + Longhorn
+    base_packages:
       - curl
-      - wget
+      - vim
+      - git
+      - jq
+      - htop
+      - util-linux
+      - apt-transport-https
+      - ca-certificates
       - gnupg
       - lsb-release
+      - wget
       - iptables
+    
+    # Longhorn-specific packages
+    longhorn_packages:
       - open-iscsi
-      - jq
+      - nfs-common
 
   tasks:
     - name: Update apt cache
@@ -49,12 +59,13 @@
         update_cache: yes
       tags: [packages]
 
-    - name: Install common packages for k3s
+    - name: Install Longhorn packages for storage nodes
       apt:
-        name: "{{ common_packages }}"
+        name: "{{ longhorn_packages }}"
         state: present
         update_cache: yes
-      tags: [packages, common]
+      when: "'storage' in group_names"
+      tags: [packages, longhorn]
 
     - name: Check if dhcpcd service exists
       stat:

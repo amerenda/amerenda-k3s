@@ -5,14 +5,18 @@
 # Run with: ansible-playbook -i inventory/inventory.ini playbooks/infrastructure/longhorn-storage.yml
 
 - name: Configure Longhorn Storage Node
-  hosts: longhorn_storage
-  become: no
+  hosts: storage
+  become: yes
   gather_facts: yes
   tags: [k3s, longhorn, storage-config]
 
   vars:
     # Longhorn storage configuration
     enable_longhorn_storage: "{{ (longhorn_storage_enabled | default(true)) | bool }}"
+    
+    # Longhorn-specific packages
+    longhorn_packages:
+      - open-iscsi
 
   pre_tasks:
     - name: Check if k3s is installed
@@ -28,6 +32,13 @@
       tags: [k3s, check]
 
   tasks:
+    - name: Install Longhorn packages
+      apt:
+        name: "{{ longhorn_packages }}"
+        state: present
+        update_cache: yes
+      tags: [packages, longhorn]
+
     - name: Debug group variables
       debug:
         msg: |
