@@ -296,7 +296,6 @@ spec:
         maxDuration: 3m
 
 ---
-Infrastructure: Tailscale
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
