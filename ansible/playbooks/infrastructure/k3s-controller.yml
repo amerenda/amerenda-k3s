@@ -188,7 +188,7 @@
 
     - name: Download and install k3s (first controller - cluster init)
       shell: |
-        curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="{{ k3s_version }}" INSTALL_K3S_EXEC="--cluster-init --token {{ k3s_token | default(ansible_env.K3S_TOKEN) }}" sh -
+        curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="{{ k3s_version }}" INSTALL_K3S_EXEC="--cluster-init --token {{ k3s_token | default(ansible_env.K3S_TOKEN) }} -disable=traefik" sh -
       when: (not k3s_installed.stat.exists or (replace_cluster_bool)) and is_first_controller and not (etcd_exists.stat.exists and not replace_cluster_bool)
       tags: [k3s, install]
 
