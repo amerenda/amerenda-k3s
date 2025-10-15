@@ -278,39 +278,6 @@
       when: not (etcd_exists.stat.exists and not replace_cluster_bool) and (not k3s_installed.stat.exists or replace_cluster_bool)
       tags: [k3s, systemd]
 
-    - name: Stop k3s service if running
-      systemd:
-        name: k3s
-        state: stopped
-      when: k3s_installed.stat.exists and replace_cluster_bool
-      tags: [k3s, stop]
-
-    - name: Configure k3s server for first controller
-      template:
-        src: k3s-server-config.yaml.j2
-        dest: /etc/rancher/k3s/config.yaml
-        owner: root
-        group: root
-        mode: '0644'
-      when: is_first_controller
-      tags: [k3s, config, first]
-
-    - name: Configure k3s server for additional controllers
-      template:
-        src: k3s-server-config.yaml.j2
-        dest: /etc/rancher/k3s/config.yaml
-        owner: root
-        group: root
-        mode: '0644'
-      when: not is_first_controller
-      tags: [k3s, config, additional]
-
-    - name: Reload systemd daemon
-      systemd:
-        daemon_reload: yes
-      when: not (etcd_exists.stat.exists and not replace_cluster_bool) and (not k3s_installed.stat.exists or replace_cluster_bool)
-      tags: [k3s, systemd]
-
     - name: Start and enable k3s service
       systemd:
         name: k3s
@@ -341,49 +308,48 @@
       remote_user: "{{ local_user }}"
       tags: [k3s, kubeconfig]
 
-    - name: Create HA kubeconfig with all controller endpoints
-      shell: |
-        # Get the original kubeconfig from the first controller
-        kubectl --kubeconfig=/etc/rancher/k3s/k3s.yaml config view --raw > /tmp/k3s-config.yaml
-        
-        # Extract certificate and key data
-        CERT_DATA=$(kubectl --kubeconfig=/tmp/k3s-config.yaml config view --raw -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')
-        CLIENT_CERT=$(kubectl --kubeconfig=/tmp/k3s-config.yaml config view --raw -o jsonpath='{.users[0].user.client-certificate-data}')
-        CLIENT_KEY=$(kubectl --kubeconfig=/tmp/k3s-config.yaml config view --raw -o jsonpath='{.users[0].user.client-key-data}')
-        
-        # Create HA kubeconfig with all controller endpoints
-        cat > "/home/{{ local_user }}/.kube/config" << EOF
-        apiVersion: v1
-        kind: Config
-        clusters:
-        - cluster:
-            certificate-authority-data: ${CERT_DATA}
-            server: https://{{ controller_ips | join(':6443,https://') }}:6443
-          name: k3s-cluster
-        contexts:
-        - context:
-            cluster: k3s-cluster
-            user: k3s-user
-          name: k3s-context
-        current-context: k3s-context
-        users:
-        - name: k3s-user
-          user:
-            client-certificate-data: ${CLIENT_CERT}
-            client-key-data: ${CLIENT_KEY}
-        EOF
-        
-        # Clean up temp file
-        rm -f /tmp/k3s-config.yaml
-        
-        # Set proper permissions
-        chmod 600 "/home/{{ local_user }}/.kube/config"
-        chown {{ local_user }}:{{ local_user }} "/home/{{ local_user }}/.kube/config"
+    - name: Create kubeconfig with primary controller endpoint
+      copy:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: "/home/{{ local_user }}/.kube/config"
+        remote_src: yes
+        owner: "{{ local_user }}"
+        group: "{{ local_user }}"
+        mode: '0600'
+      when: is_first_controller
+      delegate_to: "{{ inventory_hostname }}"
+      become: yes
+      remote_user: "{{ local_user }}"
+      tags: [k3s, kubeconfig]
+
+    - name: Update kubeconfig server endpoint to use controller IP
+      replace:
+        path: "/home/{{ local_user }}/.kube/config"
+        regexp: '    server: https://127\.0\.0\.1:6443'
+        replace: '    server: https://{{ ansible_default_ipv4.address }}:6443'
       when: is_first_controller
       delegate_to: localhost
       become: no
       remote_user: "{{ local_user }}"
       tags: [k3s, kubeconfig]
+
+    - name: Display HA setup reminder
+      debug:
+        msg: |
+          ========================================
+          High Availability Setup Reminder
+          ========================================
+          Kubeconfig created with primary controller: {{ ansible_default_ipv4.address }}
+          
+          For true HA, consider:
+          1. Set up a load balancer (HAProxy, nginx, etc.)
+          2. Point kubeconfig to load balancer IP
+          3. Configure load balancer to distribute across controllers
+          
+          Current controllers: {{ controller_ips | join(', ') }}
+          ========================================
+      when: is_first_controller
+      tags: [k3s, kubeconfig, ha]
 
     - name: Add ArgoCD Helm repository
       kubernetes.core.helm_repository:
@@ -404,7 +370,7 @@
         chart_version: "{{ argocd_version }}"
         kubeconfig: "/home/{{ local_user }}/.kube/config"
         values_files:
-          - "{{ playbook_dir | dirname }}/bootstrap/argocd/values.yaml"
+          - "{{ playbook_dir | dirname| dirname | dirname }}/bootstrap/argocd/values.yaml"
         wait: true
         timeout: 300s
       when: is_first_controller
@@ -428,7 +394,7 @@
 
     - name: Apply root-app.yaml to bootstrap GitOps
       shell: |
-        kubectl --kubeconfig="/home/{{ local_user }}/.kube/config" apply -f "{{ playbook_dir | dirname }}/gitops/apps/root-app.yaml"
+        kubectl --kubeconfig="/home/{{ local_user }}/.kube/config" apply -f "{{ playbook_dir | dirname | dirname | dirname }}/gitops/apps/root-app.yaml"
       when: is_first_controller
       delegate_to: localhost
       become: no
