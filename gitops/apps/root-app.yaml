@@ -59,7 +59,6 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace=true
       - PrunePropagationPolicy=foreground
     retry:
       limit: 5
@@ -204,7 +203,6 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace=true
       - PrunePropagationPolicy=foreground
     retry:
       limit: 5
@@ -298,38 +296,37 @@ spec:
         maxDuration: 3m
 
 ---
-# Infrastructure: Tailscale
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: infra-tailscale
-#   namespace: default
-#   annotations:
-#     argocd.argoproj.io/sync-wave: "5"  # Install after infrastructure (needs secrets)
-#   finalizers:
-#     - resources-finalizer.argocd.argoproj.io/background
-# spec:
-#   project: default
-#   source:
-#     repoURL: https://github.com/amerenda/amerenda-k3s.git
-#     targetRevision: main
-#     path: gitops/infra/tailscale
-#   destination:
-#     server: https://kubernetes.default.svc
-#     namespace: tailscale
-#   syncPolicy:
-#     automated:
-#       prune: true
-#       selfHeal: true
-#     syncOptions:
-#       - CreateNamespace=true
-#       - PrunePropagationPolicy=foreground
-#     retry:
-#       limit: 5
-#       backoff:
-#         duration: 5s
-#         factor: 2
-#         maxDuration: 3m
+Infrastructure: Tailscale
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-tailscale
+  namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"  # Install after infrastructure (needs secrets)
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/amerenda/amerenda-k3s.git
+    targetRevision: main
+    path: gitops/infra/tailscale
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: tailscale
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
 
 ---
 # Infrastructure: MetalLB Load Balancer
@@ -356,7 +353,6 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace=true
       - PrunePropagationPolicy=foreground
       - IgnoreExtraneous=true
       - ServerSideApply=true
@@ -398,7 +394,6 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace=true
       - PrunePropagationPolicy=foreground
     retry:
       limit: 5
