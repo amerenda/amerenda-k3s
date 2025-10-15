@@ -239,42 +239,43 @@
       delay: 5
       tags: [k3s, wait]
 
-    - name: Create .kube directory if it doesn't exist
-      file:
+    - name: Ensure ~/.kube exists locally
+      ansible.builtin.file:
         path: "/home/{{ local_user }}/.kube"
         state: directory
-        mode: '0755'
-      when: is_first_controller
+        mode: '0700'
       delegate_to: localhost
-      become: no
-      remote_user: "{{ local_user }}"
-      tags: [k3s, kubeconfig]
-
-    - name: Create kubeconfig with primary controller endpoint
-      copy:
+      become: false
+      run_once: true
+    
+    - name: Pull kubeconfig from first controller to local ~/.kube/config
+      ansible.builtin.fetch:
         src: /etc/rancher/k3s/k3s.yaml
         dest: "/home/{{ local_user }}/.kube/config"
-        remote_src: yes
+        flat: true
+      become: true                # needed on the REMOTE to read k3s.yaml
+      when: is_first_controller
+      run_once: true
+    
+    - name: Point server to controller IP in local kubeconfig
+      ansible.builtin.replace:
+        path: "/home/{{ local_user }}/.kube/config"
+        regexp: '^\s*server:.*$'
+        replace: "    server: https://{{ hostvars[first_controller].ansible_host | default(controller_ips[0]) }}:6443"
+      delegate_to: localhost
+      become: false
+      run_once: true
+    
+    - name: Fix local kubeconfig perms
+      ansible.builtin.file:
+        path: "/home/{{ local_user }}/.kube/config"
         owner: "{{ local_user }}"
         group: "{{ local_user }}"
         mode: '0600'
-      when: is_first_controller
-      delegate_to: "{{ inventory_hostname }}"
-      become: yes
-      remote_user: "{{ local_user }}"
-      tags: [k3s, kubeconfig]
-
-    - name: Update kubeconfig server endpoint to use controller IP
-      replace:
-        path: "/home/{{ local_user }}/.kube/config"
-        regexp: '    server: https://127\.0\.0\.1:6443'
-        replace: '    server: https://{{ ansible_default_ipv4.address }}:6443'
-      when: is_first_controller
       delegate_to: localhost
-      become: no
-      remote_user: "{{ local_user }}"
-      tags: [k3s, kubeconfig]
-
+      become: false
+      run_once: true
+    
     - name: Display HA setup reminder
       debug:
         msg: |
