@@ -5,7 +5,7 @@
 # Run with: ansible-playbook -i inventory/inventory.ini playbooks/infrastructure/longhorn-storage.yml
 
 - name: Configure Longhorn Storage Node
-  hosts: storage
+  hosts: longhorn_storage
   become: yes
   gather_facts: yes
   tags: [k3s, longhorn, storage-config]
@@ -16,8 +16,10 @@
     
     # Longhorn-specific packages
     longhorn_packages:
-      - open-iscsi
       - nfs-common
+      - libisns0 
+      - libopeniscsiusr 
+      - open-iscsi
     
     # Longhorn service configuration
     longhorn_iscsi_service: "iscsid"

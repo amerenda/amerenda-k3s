@@ -38,28 +38,7 @@
     replace_cluster_bool: "{{ replace_cluster | default(false) | bool }}"
     
 
-    # etcd packages for controller nodes (K3s includes etcd binary, no separate packages needed)
-    etcd_packages: []
-
   pre_tasks:
-    - name: Check if SSH private key exists
-      stat:
-        path: "{{ ansible_ssh_private_key_file | default('~/.ssh/alex_id_ed25519') | expanduser }}"
-      register: ssh_key_check
-      delegate_to: localhost
-      become: no
-      run_once: true
-
-    - name: Fail if SSH private key is missing
-      fail:
-        msg: "SSH private key not found at {{ ansible_ssh_private_key_file | default('~/.ssh/alex_id_ed25519') | expanduser }}. Please ensure the key exists before running this playbook."
-      when: not ssh_key_check.stat.exists
-
-    - name: Display SSH key information
-      debug:
-        msg: "Using SSH key: {{ ansible_ssh_private_key_file | default('~/.ssh/alex_id_ed25519') | expanduser }}"
-      when: ssh_key_check.stat.exists
-
     - name: Check if etcd data directory exists
       stat:
         path: "{{ etcd_data_dir }}"
@@ -70,29 +49,6 @@
         name: k3s
       register: k3s_running
       ignore_errors: yes
-
-    - name: Display cluster protection warning
-      debug:
-        msg: |
-          ⚠️  WARNING: Existing k3s cluster detected! ⚠️
-          ========================================
-          etcd data directory exists: {{ etcd_exists.stat.exists }}
-          k3s service status: {{ 'running' if k3s_running.status.ActiveState == 'active' else 'stopped' }}
-          ========================================
-          To replace existing cluster, use: -e replace_cluster=true
-          This will DESTROY existing cluster data!
-          ========================================
-      when: etcd_exists.stat.exists and not (replace_cluster_bool)
-
-    - name: Display replacement warning
-      debug:
-        msg: |
-          ⚠️  WARNING: REPLACING EXISTING K3S CLUSTER! ⚠️
-          ========================================
-          This will DESTROY all existing cluster data!
-          Make sure you have backups before proceeding!
-          ========================================
-      when: replace_cluster_bool
 
     - name: Skip installation if cluster exists and replacement not requested
       debug:
@@ -161,20 +117,6 @@
           ========================================
 
   tasks:
-    - name: Install etcd packages for controller nodes
-      apt:
-        name: "{{ etcd_packages }}"
-        state: present
-        update_cache: yes
-      when: etcd_packages | length > 0
-      tags: [etcd, packages]
-
-    - name: Skip etcd package installation (K3s includes etcd binary)
-      debug:
-        msg: "Skipping etcd package installation - K3s includes its own etcd binary"
-      when: etcd_packages | length == 0
-      tags: [etcd, packages]
-
     - name: Resize root filesystem to use all available space
       shell: |
         echo "Resizing filesystem to use all available space..."
