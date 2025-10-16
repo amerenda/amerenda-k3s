@@ -30,55 +30,6 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-      # --- Init step: install HACS into /config on your PVC ---
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - homeassistant
-              topologyKey: kubernetes.io/hostname
-      containers:
-        - name: homeassistant
-          image: ghcr.io/home-assistant/home-assistant:stable
-          imagePullPolicy: IfNotPresent
-          resources:
-            requests:
-              memory: "512Mi"
-              cpu: "250m"
-            limits:
-              memory: "2Gi"
-              cpu: "2"
-          ports:
-            - name: http
-              containerPort: 8123
-          env:
-            - name: TZ
-              value: "America/New_York"
-          volumeMounts:
-            - name: config
-              mountPath: /config
-            - name: config-files
-              mountPath: /config/configuration.yaml
-              subPath: configuration.yaml
-            # No external include files mounted; handled inline in configuration.yaml
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/bin/sh","-c","kill -TERM 1 && sleep 5"]
-      volumes:
-        - name: config
-          persistentVolumeClaim:
-            claimName: homeassistant-config
-        - name: config-files
-          configMap:
-            name: homeassistant-config
-      initContainers:
         - name: install-hacs
           image: alpine:3.20
           imagePullPolicy: IfNotPresent
@@ -162,6 +113,54 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
+      # --- Init step: install HACS into /config on your PVC ---
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - homeassistant
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - name: homeassistant
+          image: ghcr.io/home-assistant/home-assistant:stable
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "2"
+          ports:
+            - name: http
+              containerPort: 8123
+          env:
+            - name: TZ
+              value: "America/New_York"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: config-files
+              mountPath: /config/configuration.yaml
+              subPath: configuration.yaml
+            # No external include files mounted; handled inline in configuration.yaml
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","kill -TERM 1 && sleep 5"]
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: homeassistant-config
+        - name: config-files
+          configMap:
+            name: homeassistant-config
 ---
 apiVersion: v1
 kind: Service
