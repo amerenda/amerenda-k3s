@@ -30,19 +30,18 @@
     - name: Check if kubectl is available and cluster is ready
       shell: |
         kubectl get nodes --no-headers | wc -l
-      delegate_to: "{{ groups['controllers'][0] }}"
+      delegate_to: localhost
       become: no
       register: kubectl_check
       failed_when: false
       tags: [k3s, post-setup]
 
   tasks:
-
     # STORAGE LABELS
     - name: Add longhorn-storage label to storage nodes
       shell: |
         kubectl label node {{ inventory_hostname }} longhorn-storage=true --overwrite
-      delegate_to: "{{ groups['controllers'][0] }}"
+      delegate_to: localhost
       become: no
       when: inventory_hostname in (groups['storage'] | default([]))
       tags: [k3s, labels, longhorn, storage]
@@ -50,7 +49,7 @@
     - name: Remove Longhorn storage labels from node
       shell: |
         kubectl label node {{ inventory_hostname }} {{ item | replace('=', '-') }} || true
-      delegate_to: "{{ groups['controllers'][0] }}"
+      delegate_to: localhost
       become: no
       when: inventory_hostname not in (groups['storage'] | default([]))
       loop: "{{ longhorn_labels }}"
@@ -60,7 +59,7 @@
     - name: Add Longhorn-only taints to storage_only nodes
       shell: |
         kubectl taint node {{ inventory_hostname }} {{ item }} --overwrite
-      delegate_to: "{{ groups['controllers'][0] }}"
+      delegate_to: localhost
       become: no
       when: inventory_hostname in (groups['storage_only'] | default([]))
       loop: "{{ longhorn_taints }}"
@@ -69,7 +68,7 @@
     - name: Remove Longhorn-only taints from nodes not in the "storage_only" group
       shell: |
         kubectl taint node {{ inventory_hostname }} {{ item | replace(':', '-:') }} --overwrite || true
-      delegate_to: "{{ groups['controllers'][0] }}"
+      delegate_to: localhost
       become: no
       when: inventory_hostname not in (groups['storage_only'] | default([]))
       loop: "{{ longhorn_taints }}"
@@ -78,7 +77,7 @@
     - name: Add flannel taints to storage_only nodes
       shell: |
         kubectl taint node {{ inventory_hostname }} {{ item }} --overwrite
-      delegate_to: "{{ groups['controllers'][0] }}"
+      delegate_to: localhost
       become: no
       when: inventory_hostname in (groups['storage_only'] | default([]))
       loop: "{{ longhorn_taints }}"
@@ -87,7 +86,7 @@
     - name: Remove flannel taints from nodes not in the "storage_only" group
       shell: |
         kubectl taint node {{ inventory_hostname }} {{ item | replace(':', '-:') }} --overwrite || true
-      delegate_to: "{{ groups['controllers'][0] }}"
+      delegate_to: localhost
       become: no
       when: inventory_hostname not in (groups['storage_only'] | default([]))
       loop: "{{ longhorn_taints }}"
