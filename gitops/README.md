@@ -17,8 +17,8 @@ Applications are deployed in a specific order using ArgoCD sync waves:
 
 ```
 gitops/
-├── apps/                          # Application deployments
-│   ├── root-app.yaml             # ArgoCD App-of-Apps root application
+├── root-app.yaml                 # ArgoCD App-of-Apps root application
+├── apps/                         # Application deployments
 │   ├── pihole/                   # Pi-hole DNS server
 │   │   ├── externalsecret.yaml   # Bitwarden integration
 │   │   └── values.yaml           # Helm values
