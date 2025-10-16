@@ -4,7 +4,7 @@
 # Combines setup-rpi.yml and common-setup.yml functionality
 # Run with: ansible-playbook -i inventory.ini setup-rpi.yml
 
-- name: Prepare Raspberry Pi 5 nodes for k3s cluster
+- name: Prepare Raspberry Pi nodes for k3s cluster
   hosts: rpi
   become: yes
   gather_facts: yes
@@ -31,7 +31,6 @@
       - lsb-release
       - wget
       - iptables
-    
 
   tasks:
     - name: Update apt cache
@@ -54,7 +53,6 @@
         state: present
         update_cache: yes
       tags: [packages]
-
 
     - name: Check if dhcpcd service exists
       stat:

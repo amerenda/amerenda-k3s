@@ -5,7 +5,7 @@
 # Run with: ansible-playbook -i inventory/inventory.ini playbooks/infrastructure/longhorn-storage.yml
 
 - name: Configure Longhorn Storage Node
-  hosts: longhorn_storage
+  hosts: storage
   become: yes
   gather_facts: yes
   tags: [k3s, longhorn, storage-config]
@@ -85,75 +85,3 @@
       changed_when: false
       failed_when: false
       tags: [longhorn, verification]
-
-    - name: Debug group variables
-      debug:
-        msg: |
-          longhorn_taints: {{ longhorn_taints | default('undefined') }}
-          longhorn_labels: {{ longhorn_labels | default('undefined') }}
-          longhorn_storage_enabled: {{ longhorn_storage_enabled | default('undefined') }}
-      tags: [debug]
-
-    - name: Check if kubectl is available and cluster is ready
-      shell: |
-        kubectl get nodes --no-headers | wc -l
-      delegate_to: "{{ groups['controllers'][0] }}"
-      become: no
-      register: kubectl_check
-      failed_when: false
-      when: enable_longhorn_storage
-      tags: [k3s, labels, longhorn, storage-gate]
-
-    - name: Add longhorn-storage label to all nodes
-      shell: |
-        kubectl label node {{ inventory_hostname }} longhorn-storage=true --overwrite
-      delegate_to: "{{ groups['controllers'][0] }}"
-      become: no
-      when: enable_longhorn_storage and kubectl_check.rc == 0
-      tags: [k3s, labels, longhorn, storage]
-
-    - name: Skip Longhorn label (kubectl not ready)
-      debug:
-        msg: "Skipping Longhorn storage label - kubectl not ready or cluster not available"
-      when: enable_longhorn_storage and kubectl_check.rc != 0
-      tags: [k3s, labels, longhorn, storage]
-
-    - name: Remove Longhorn storage labels from node
-      shell: |
-        kubectl label node {{ inventory_hostname }} {{ item | replace('=', '-') }} || true
-      delegate_to: "{{ groups['controllers'][0] }}"
-      become: no
-      when: not enable_longhorn_storage and kubectl_check.rc == 0
-      loop: "{{ longhorn_labels }}"
-      tags: [k3s, labels, longhorn]
-
-    - name: Add Longhorn-only taints to node
-      shell: |
-        kubectl taint node {{ inventory_hostname }} {{ item }} --overwrite
-      delegate_to: "{{ groups['controllers'][0] }}"
-      become: no
-      when: enable_longhorn_storage and kubectl_check.rc == 0
-      loop: "{{ longhorn_taints }}"
-      tags: [k3s, taints]
-
-    - name: Remove Longhorn-only taints from node
-      shell: |
-        kubectl taint node {{ inventory_hostname }} {{ item | replace(':', '-:') }} --overwrite || true
-      delegate_to: "{{ groups['controllers'][0] }}"
-      become: no
-      when: not enable_longhorn_storage and kubectl_check.rc == 0
-      loop: "{{ longhorn_taints }}"
-      tags: [k3s, taints]
-
-    - name: Display Longhorn storage configuration summary
-      debug:
-        msg: |
-          ========================================
-          Longhorn Storage Node Configuration
-          ========================================
-          Node: {{ inventory_hostname }}
-          Longhorn Storage: {{ 'enabled' if enable_longhorn_storage else 'disabled' }}
-          Labels: {{ longhorn_labels | default('none') }}
-          Taints: {{ longhorn_taints | default('none') }}
-          ========================================
-      tags: [summary]

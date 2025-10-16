@@ -3,11 +3,11 @@
 # This playbook sets up a k3s worker node
 # Run with: ansible-playbook -i inventory.ini k3s-worker.yml
 
-- name: Setup k3s Worker Node
-  hosts: workers
+- name: Setup k3s Agent Node
+  hosts: agents
   become: yes
   gather_facts: yes
-  tags: [k3s, worker, install]
+  tags: [k3s, agent, install]
 
   vars:
     k3s_version: "v1.33.5+k3s1"
