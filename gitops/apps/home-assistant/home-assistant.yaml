@@ -98,8 +98,21 @@ spec:
               rm -rf "${CC_DIR}" 2>/dev/null || true
               mkdir -p "${CC_DIR}"
               
-              # Copy all files and directories from source
-              cp -r "${HACS_SRC}"/* "${HACS_DST}/" 2>/dev/null || true
+              # Copy all files and directories from source to custom_components directory
+              cp -r "${HACS_SRC}"/* "${CC_DIR}/" 2>/dev/null || true
+              
+              # Create hacs subdirectory and move files there
+              mkdir -p "${CC_DIR}/hacs"
+              # Move Python files, JSON files, and directories to hacs subdirectory
+              mv "${CC_DIR}"/*.py "${CC_DIR}/hacs/" 2>/dev/null || true
+              mv "${CC_DIR}"/*.json "${CC_DIR}/hacs/" 2>/dev/null || true
+              mv "${CC_DIR}"/*.js "${CC_DIR}/hacs/" 2>/dev/null || true
+              mv "${CC_DIR}"/hacs_frontend "${CC_DIR}/hacs/" 2>/dev/null || true
+              mv "${CC_DIR}"/utils "${CC_DIR}/hacs/" 2>/dev/null || true
+              mv "${CC_DIR}"/repositories "${CC_DIR}/hacs/" 2>/dev/null || true
+              mv "${CC_DIR}"/translations "${CC_DIR}/hacs/" 2>/dev/null || true
+              mv "${CC_DIR}"/websocket "${CC_DIR}/hacs/" 2>/dev/null || true
+              mv "${CC_DIR}"/validate "${CC_DIR}/hacs/" 2>/dev/null || true
               
               # Create version file
               if [ -f "${HACS_DST}/manifest.json" ]; then
