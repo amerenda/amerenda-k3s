@@ -46,88 +46,58 @@
         var: cluster_nodes.stdout_lines
       tags: [info, nodes]
 
-    - name: Add Longhorn storage taint to longhorn_storage nodes (prevents app scheduling)
-      shell: "{{ kubeconfig_env }} kubectl taint node {{ item }} longhorn.io/storage=true:NoSchedule --overwrite"
-      loop: "{{ groups['longhorn_storage'] }}"
-      register: taint_result
-      tags: [taints, longhorn]
+    - name: Add ArgoCD Helm repository
+      kubernetes.core.helm_repository:
+        name: argo
+        repo_url: https://argoproj.github.io/argo-helm
+      when: is_first_controller
+      delegate_to: localhost
+      become: no
+      remote_user: "{{ local_user }}"
+      tags: [argocd, helm]
 
-    - name: Add Longhorn storage NoExecute taint to longhorn_storage nodes
-      shell: "{{ kubeconfig_env }} kubectl taint node {{ item }} longhorn.io/storage=true:NoExecute --overwrite"
-      loop: "{{ groups['longhorn_storage'] }}"
-      register: taint_noexecute_result
-      tags: [taints, longhorn]
+    - name: Install ArgoCD
+      kubernetes.core.helm:
+        name: "{{ argocd_release_name }}"
+        chart_ref: argo/argo-cd
+        release_namespace: "{{ argocd_namespace }}"
+        create_namespace: false
+        chart_version: "{{ argocd_version }}"
+        kubeconfig: "/home/{{ local_user }}/.kube/config"
+        values_files:
+          - "{{ playbook_dir | dirname| dirname | dirname }}/bootstrap/argocd/values.yaml"
+        wait: true
+        timeout: 300s
+      when: is_first_controller
+      delegate_to: localhost
+      become: no
+      remote_user: "{{ local_user }}"
+      tags: [argocd, helm]
 
-    - name: Show taint result
-      debug:
-        var: taint_result
-      tags: [taints, longhorn]
-
-    - name: Add Longhorn storage label to all nodes for replica scheduling
-      shell: "{{ kubeconfig_env }} kubectl label node {{ item }} longhorn.io/storage=true --overwrite"
-      loop: "{{ groups['controllers'] + groups['longhorn_storage'] }}"
-      register: label_result
-      tags: [labels, longhorn]
-
-    - name: Show label result
-      debug:
-        var: label_result
-      tags: [labels, longhorn]
-
-    - name: Verify node configuration
-      shell: "{{ kubeconfig_env }} kubectl describe node rpi3-0"
-      register: node_info
-      changed_when: false
-      tags: [verify, longhorn]
-
-    - name: Show node configuration
-      debug:
-        var: node_info.stdout_lines
-      tags: [verify, longhorn]
-
-    - name: Wait for Longhorn manager daemonset to exist
-      shell: "{{ kubeconfig_env }} kubectl get daemonset longhorn-manager"
-      register: longhorn_ds_check
-      until: longhorn_ds_check.rc == 0
+    - name: Wait for ArgoCD to be ready
+      shell: |
+        kubectl --kubeconfig="/home/{{ local_user }}/.kube/config" get pods -n "{{ argocd_namespace }}" -l "app.kubernetes.io/name=argocd-server" -o jsonpath='{.items[0].status.phase}' | grep -q "Running"
+      register: argocd_ready
+      until: argocd_ready.rc == 0
       retries: 30
       delay: 10
-      tags: [longhorn, wait]
+      when: is_first_controller
+      delegate_to: localhost
+      become: no
+      remote_user: "{{ local_user }}"
+      tags: [argocd, wait]
 
-    - name: Add Flannel toleration taint to longhorn storage nodes
-      shell: "{{ kubeconfig_env }} kubectl taint node {{ item }} flannel.io/required=true:NoSchedule --overwrite"
-      loop: "{{ groups['longhorn_storage'] }}"
-      register: flannel_taint_result
-      tags: [taints, flannel, longhorn]
+    - name: Apply root-app.yaml to bootstrap GitOps
+      shell: |
+        kubectl --kubeconfig="/home/{{ local_user }}/.kube/config" apply -f "{{ playbook_dir | dirname | dirname | dirname }}/gitops/root-app.yaml"
+      when: is_first_controller
+      delegate_to: localhost
+      become: no
+      remote_user: "{{ local_user }}"
+      tags: [argocd, gitops, bootstrap]
 
-    - name: Show Flannel taint result
+    - name: Display ArgoCD installation reminder
       debug:
-        var: flannel_taint_result
-      tags: [taints, flannel, longhorn]
-
-    - name: Create Longhorn namespace
-      shell: "{{ kubeconfig_env }} kubectl create namespace longhorn-system --dry-run=client -o yaml | {{ kubeconfig_env }} kubectl apply -f -"
-      register: namespace_result
-      tags: [longhorn, namespace]
-
-    - name: Show namespace result
-      debug:
-        var: namespace_result.stdout
-      when: namespace_result.stdout != ""
-      tags: [longhorn, namespace]
-
-    - name: Display cluster setup summary
-      debug:
-        msg: |
-          ========================================
-          k3s Cluster Setup Complete
-          ========================================
-          Controllers: {{ groups['controllers'] | join(', ') }}
-          Longhorn Storage: {{ groups['longhorn_storage'] | join(', ') }}
-          kubeconfig: {{ kubeconfig_path }}
-          
-          Next steps:
-          1. Deploy Longhorn using your GitOps setup
-          2. Verify all nodes are ready: kubectl get nodes
-          3. Check Longhorn storage node taints: kubectl describe node {{ groups['longhorn_storage'][0] }}
-          ========================================
-      tags: [summary]
+        msg: "ArgoCD installation complete! Remember to bootstrap Bitwarden credentials: kubectl apply -f bootstrap/bitwarden-credentials-secret.yaml"
+      when: is_first_controller
+      tags: [argocd, reminder]

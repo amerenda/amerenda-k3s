@@ -233,61 +233,6 @@
       become: false
       run_once: true
 
-    - name: Add ArgoCD Helm repository
-      kubernetes.core.helm_repository:
-        name: argo
-        repo_url: https://argoproj.github.io/argo-helm
-      when: is_first_controller
-      delegate_to: localhost
-      become: no
-      remote_user: "{{ local_user }}"
-      tags: [argocd, helm]
-
-    - name: Install ArgoCD
-      kubernetes.core.helm:
-        name: "{{ argocd_release_name }}"
-        chart_ref: argo/argo-cd
-        release_namespace: "{{ argocd_namespace }}"
-        create_namespace: false
-        chart_version: "{{ argocd_version }}"
-        kubeconfig: "/home/{{ local_user }}/.kube/config"
-        values_files:
-          - "{{ playbook_dir | dirname| dirname | dirname }}/bootstrap/argocd/values.yaml"
-        wait: true
-        timeout: 300s
-      when: is_first_controller
-      delegate_to: localhost
-      become: no
-      remote_user: "{{ local_user }}"
-      tags: [argocd, helm]
-
-    - name: Wait for ArgoCD to be ready
-      shell: |
-        kubectl --kubeconfig="/home/{{ local_user }}/.kube/config" get pods -n "{{ argocd_namespace }}" -l "app.kubernetes.io/name=argocd-server" -o jsonpath='{.items[0].status.phase}' | grep -q "Running"
-      register: argocd_ready
-      until: argocd_ready.rc == 0
-      retries: 30
-      delay: 10
-      when: is_first_controller
-      delegate_to: localhost
-      become: no
-      remote_user: "{{ local_user }}"
-      tags: [argocd, wait]
-
-    - name: Apply root-app.yaml to bootstrap GitOps
-      shell: |
-        kubectl --kubeconfig="/home/{{ local_user }}/.kube/config" apply -f "{{ playbook_dir | dirname | dirname | dirname }}/gitops/apps/root-app.yaml"
-      when: is_first_controller
-      delegate_to: localhost
-      become: no
-      remote_user: "{{ local_user }}"
-      tags: [argocd, gitops, bootstrap]
-
-    - name: Display ArgoCD installation reminder
-      debug:
-        msg: "ArgoCD installation complete! Remember to bootstrap Bitwarden credentials: kubectl apply -f bootstrap/bitwarden-credentials-secret.yaml"
-      when: is_first_controller
-      tags: [argocd, reminder]
 
 
   handlers:
