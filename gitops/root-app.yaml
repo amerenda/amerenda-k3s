@@ -267,17 +267,10 @@ metadata:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
   project: default
-  source:
-    repoURL: https://github.com/amerenda/amerenda-k3s.git
-    targetRevision: main
-    path: gitops/apps/home-assistant
   sources:
     - repoURL: https://github.com/amerenda/amerenda-k3s.git
       targetRevision: main
       path: gitops/apps/home-assistant
-    - repoURL: https://github.com/amerenda/amerenda-k3s.git
-      targetRevision: main
-      path: gitops/apps/home-assistant/automations
   destination:
     server: https://kubernetes.default.svc
     namespace: home-assistant
