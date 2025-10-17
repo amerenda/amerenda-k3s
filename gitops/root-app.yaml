@@ -15,7 +15,7 @@ spec:
   source:
     repoURL: https://github.com/amerenda/amerenda-k3s.git
     targetRevision: main
-    path: gitops/apps
+    path: gitops/
   destination:
     server: https://kubernetes.default.svc
     namespace: default
