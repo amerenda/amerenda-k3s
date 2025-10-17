@@ -159,10 +159,6 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-            - name: config-files
-              mountPath: /config/configuration.yaml
-              subPath: configuration.yaml
-            # No external include files mounted; handled inline in configuration.yaml
           lifecycle:
             preStop:
               exec:
@@ -171,7 +167,3 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: homeassistant-config
-        - name: config-files
-          configMap:
-            name: homeassistant-config
----
