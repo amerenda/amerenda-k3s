@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: homeassistant
+  namespace: home-assistant
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: home.amer.home,ha.amer.home,homeassistant.amer.home
+    external-dns.alpha.kubernetes.io/ttl: "300"
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  selector:
+    app: homeassistant
+  ports:
+    - port: 8123
+      protocol: TCP
+      targetPort: 8123

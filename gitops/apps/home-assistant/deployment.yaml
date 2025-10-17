@@ -1,0 +1,177 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homeassistant
+  namespace: home-assistant
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: homeassistant
+  template:
+    metadata:
+      labels:
+        app: homeassistant
+    spec:
+      initContainers:
+        - name: cleanup-config-artifacts
+          image: alpine:3.20
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh","-c"]
+          args:
+            - |
+              set -e
+              for f in /config/automations.yaml /config/scripts.yaml /config/scenes.yaml; do
+                if [ -d "$f" ]; then
+                  echo "Removing stale directory $f";
+                  rm -rf "$f";
+                fi
+              done
+          volumeMounts:
+            - name: config
+              mountPath: /config
+        - name: install-hacs
+          image: alpine:3.20
+          imagePullPolicy: IfNotPresent
+          env:
+            # Pin to a specific release (recommended). Example: "2.0.5" or "v2.0.5".
+            # "latest" works too, but pinning avoids surprises.
+            - name: HACS_VERSION
+              value: "2.0.5"
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              apk add --no-cache curl unzip
+              
+              CONFIG_DIR="/config"
+              CC_DIR="${CONFIG_DIR}/custom_components"
+              HACS_DST="${CC_DIR}/hacs"
+              TMPDIR="$(mktemp -d)"
+              mkdir -p "${CC_DIR}"
+
+              # Download HACS
+              if [ "${HACS_VERSION}" = "latest" ]; then
+                URL="https://github.com/hacs/integration/releases/latest/download/hacs.zip"
+              else
+                URL="https://github.com/hacs/integration/releases/download/${HACS_VERSION}/hacs.zip"
+                if ! curl -fsI "${URL}" >/dev/null 2>&1; then
+                  NV="${HACS_VERSION#v}"
+                  URL="https://github.com/hacs/integration/releases/download/v${NV}/hacs.zip"
+                fi
+              fi
+
+              echo "Downloading HACS: ${URL}"
+              curl -fsSL "${URL}" -o "${TMPDIR}/hacs.zip"
+              unzip -q "${TMPDIR}/hacs.zip" -d "${TMPDIR}"
+
+              # Find the hacs directory in the extracted files
+              HACS_SRC=""
+              # Check if files are directly in TMPDIR
+              if [ -f "${TMPDIR}/manifest.json" ] && [ -f "${TMPDIR}/config_flow.py" ]; then
+                HACS_SRC="${TMPDIR}"
+              else
+                # Look in subdirectories
+                for dir in "${TMPDIR}"/*; do
+                  if [ -d "$dir" ] && [ -f "$dir/manifest.json" ] && [ -f "$dir/config_flow.py" ]; then
+                    HACS_SRC="$dir"
+                    break
+                  fi
+                done
+              fi
+
+              if [ -z "$HACS_SRC" ]; then
+                echo "ERROR: Could not find HACS source directory"
+                echo "Contents of ${TMPDIR}:"
+                ls -la "${TMPDIR}"
+                exit 1
+              fi
+
+              echo "Installing HACS from $HACS_SRC to $HACS_DST"
+              
+              # Completely clean install - force remove entire custom_components directory
+              rm -rf "${CC_DIR}" 2>/dev/null || true
+              # Use find to remove stubborn files
+              find "${CC_DIR}" -type f -delete 2>/dev/null || true
+              find "${CC_DIR}" -type d -empty -delete 2>/dev/null || true
+              rm -rf "${CC_DIR}" 2>/dev/null || true
+              mkdir -p "${CC_DIR}"
+              
+              # Copy all files and directories from source to custom_components directory
+              cp -r "${HACS_SRC}"/* "${CC_DIR}/" 2>/dev/null || true
+              
+              # Create hacs subdirectory and move files there
+              mkdir -p "${CC_DIR}/hacs"
+              # Move Python files, JSON files, and directories to hacs subdirectory
+              mv "${CC_DIR}"/*.py "${CC_DIR}/hacs/" 2>/dev/null || true
+              mv "${CC_DIR}"/*.json "${CC_DIR}/hacs/" 2>/dev/null || true
+              mv "${CC_DIR}"/*.js "${CC_DIR}/hacs/" 2>/dev/null || true
+              mv "${CC_DIR}"/hacs_frontend "${CC_DIR}/hacs/" 2>/dev/null || true
+              mv "${CC_DIR}"/utils "${CC_DIR}/hacs/" 2>/dev/null || true
+              mv "${CC_DIR}"/repositories "${CC_DIR}/hacs/" 2>/dev/null || true
+              mv "${CC_DIR}"/translations "${CC_DIR}/hacs/" 2>/dev/null || true
+              mv "${CC_DIR}"/websocket "${CC_DIR}/hacs/" 2>/dev/null || true
+              mv "${CC_DIR}"/validate "${CC_DIR}/hacs/" 2>/dev/null || true
+              
+              # Create version file
+              if [ -f "${HACS_DST}/manifest.json" ]; then
+                VER=$(grep -o '"version"[[:space:]]*:[[:space:]]*"[^"]*"' "${HACS_DST}/manifest.json" | sed 's/.*"\([^"]*\)".*/\1/')
+                echo "$VER" > "${HACS_DST}/.installed_version"
+                echo "HACS $VER installed successfully"
+              fi
+              
+              # Cleanup
+              rm -rf "${TMPDIR}"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      # --- Init step: install HACS into /config on your PVC ---
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - homeassistant
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - name: homeassistant
+          image: ghcr.io/home-assistant/home-assistant:stable
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "2"
+          ports:
+            - name: http
+              containerPort: 8123
+          env:
+            - name: TZ
+              value: "America/New_York"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: config-files
+              mountPath: /config/configuration.yaml
+              subPath: configuration.yaml
+            # No external include files mounted; handled inline in configuration.yaml
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","kill -TERM 1 && sleep 5"]
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: homeassistant-config
+        - name: config-files
+          configMap:
+            name: homeassistant-config
+---
