@@ -4,6 +4,22 @@ metadata:
   name: homeassistant-automations
   namespace: home-assistant
 data:
+  alex_6am_energize_scenes.yaml: |
+    alias: Alex - 6AM Energize Scenes
+    mode: single
+    triggers:
+      - trigger: time
+        at: "06:00:00"
+    actions:
+      - action: scene.turn_on
+        target: 
+          entity_id:
+            - scene.living_room_energize
+            - scene.bathroom_energize
+            - scene.bedroom_energize
+            - scene.hallway_energize
+            - scene.kitchen_energize
+
   alex_ac_auto_cool_away.yaml: |
     alias: Alex - AC Auto Cool (Away)
     mode: restart
@@ -133,8 +149,6 @@ data:
           - light.kitchen
         from: "off"
         to: "on"
-      - trigger: time
-        at: "06:00:00"
     variables:
       is_past_cutoff: >
         {% set wd = now().weekday() %}  {# Mon=0..Sun=6 #}
@@ -151,27 +165,12 @@ data:
         light.hallway: scene.hallway_nightlight
         light.kitchen: scene.kitchen_nightlight
       room_scene: "{{ room_scenes[trigger.entity_id] }}"
-      energize_scenes:
-        light.living_room: scene.living_room_energize
-        light.bathroom: scene.bathroom_energize
-        light.bedroom: scene.bedroom_energize
-        light.hallway: scene.hallway_energize
-        light.kitchen: scene.kitchen_energize
-      energize_scene: "{{ energize_scenes[trigger.entity_id] }}"
+    conditions:
+      - condition: template
+        value_template: "{{ is_past_cutoff }}"
     actions:
-      - choose:
-          - conditions: 
-              - condition: template
-                value_template: "{{ trigger.platform == 'time' }}"
-            sequence:
-              - action: scene.turn_on
-                target: { entity_id: "{{ energize_scene }}" }
-          - conditions: 
-              - condition: template
-                value_template: "{{ trigger.platform == 'state' and is_past_cutoff }}"
-            sequence:
-              - action: scene.turn_on
-                target: { entity_id: "{{ room_scene }}" }
+      - action: scene.turn_on
+        target: { entity_id: "{{ room_scene }}" }
 
   alex_reolink_human_detect_alert.yaml: |
     alias: Alex - Reolink Human Alert (Away)
