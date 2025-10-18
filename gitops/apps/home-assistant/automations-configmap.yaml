@@ -151,20 +151,24 @@ data:
       - choose:
           - conditions: "{{ is_color_light }}"
             sequence:
+              - action: light.turn_off
+                target: { entity_id: "{{ trigger.entity_id }}" }
               - action: light.turn_on
                 target: { entity_id: "{{ trigger.entity_id }}" }
                 data:
                   brightness_pct: 10
                   rgb_color: [255, 0, 0]
-                  transition: 1
+                  transition: 0
           - conditions: "{{ not is_color_light }}"
             sequence:
+              - action: light.turn_off
+                target: { entity_id: "{{ trigger.entity_id }}" }
               - action: light.turn_on
                 target: { entity_id: "{{ trigger.entity_id }}" }
                 data:
                   brightness_pct: 10
                   color_temp_kelvin: 2000
-                  transition: 1
+                  transition: 0
 
   alex_reolink_human_detect_alert.yaml: |
     alias: Alex - Reolink Human Alert (Away)
