@@ -250,10 +250,10 @@ data:
         data:
           filename: "{{ path }}"
       - action: input_text.set_value
-        target: { entity_id: input_text.event_image_location }
+        target: { entity_id: input_text.event_image_location_text }
         data: { value: "{{ room }}" }
       - action: input_text.set_value
-        target: { entity_id: input_text.event_image_timestamp }
+        target: { entity_id: input_text.event_image_timestamp_text }
         data: { value: "{{ timestamp }}" }
       - action: notify.mobile_app_pixel_9_pro_xl
         data:
