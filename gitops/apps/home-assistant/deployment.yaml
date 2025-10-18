@@ -177,9 +177,10 @@ spec:
                 cleanup_old_photos: 'find /config/www/pets -name "*.jpg" -mtime +30 -delete && find /config/www/intruders -name "*.jpg" -mtime +30 -delete'
               EOF
               
-              # Create empty files for scripts and scenes
+              # Create empty files for scripts, scenes, and automations
               echo "[]" > "${CONFIG_DIR}/scripts.yaml"
               echo "[]" > "${CONFIG_DIR}/scenes.yaml"
+              echo "[]" > "${CONFIG_DIR}/automations.yaml"
               
               # Set proper permissions for www directories
               chmod 755 "${CONFIG_DIR}/www/pets"
