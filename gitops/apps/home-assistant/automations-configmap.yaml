@@ -84,6 +84,27 @@ data:
           target: { entity_id: climate.midea_ac }
           data: { hvac_mode: "off" }
 
+  helpers.yaml: |
+    ###############################################################################
+    # PACKAGE: helpers
+    # Helper entities for various automations
+    ###############################################################################
+    
+    # Helper entities for pet tracking
+    input_text:
+      pet_last_seen_room:
+        name: Pet - Last Seen Room
+        max: 64
+      pet_last_image_url:
+        name: Pet - Last Image URL
+        max: 256
+    
+    input_datetime:
+      pet_last_seen_time:
+        name: Pet - Last Seen Time
+        has_date: true
+        has_time: true
+
   human_detection.yaml: |
     ###############################################################################
     # PACKAGE: human_detection
@@ -210,21 +231,6 @@ data:
     # 2) Ensure folders exist: /config/www/pets/
     # 3) Use /local/pets/<slug>.jpg in dashboards.
     ###############################################################################
-    
-    # Helper entities for pet tracking
-    input_text:
-      pet_last_seen_room:
-        name: Pet - Last Seen Room
-        max: 64
-      pet_last_image_url:
-        name: Pet - Last Image URL
-        max: 256
-    
-    input_datetime:
-      pet_last_seen_time:
-        name: Pet - Last Seen Time
-        has_date: true
-        has_time: true
     
     # Pet detection automation
     - id: alex_reolink_pet_detect_snapshot
