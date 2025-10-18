@@ -136,10 +136,11 @@ data:
     variables:
       is_past_cutoff: >
         {% set wd = now().weekday() %}  {# Mon=0..Sun=6 #}
+        {% set current_hour = now().hour %}
         {% if wd in [4,5] %}
-          {{ now().time() >= strptime('01:00','%H:%M').time() }}
+          {{ current_hour >= 1 or current_hour < 6 }}
         {% else %}
-          {{ now().time() >= strptime('23:00','%H:%M').time() }}
+          {{ current_hour >= 23 or current_hour < 6 }}
         {% endif %}
       color_lights: [ 'light.living_room','light.bathroom','light.bedroom' ]
       is_color_light: "{{ trigger.entity_id in color_lights }}"
