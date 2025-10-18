@@ -174,12 +174,10 @@ spec:
                 event_image_location:
                   name: "Event Image Location"
                   initial: "None"
-                  icon: mdi:map-marker
                   
                 event_image_timestamp:
                   name: "Event Image Timestamp" 
                   initial: "None"
-                  icon: mdi:clock
               EOF
               
               # Set proper permissions for www directories
