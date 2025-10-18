@@ -168,6 +168,7 @@ spec:
                 themes: !include_dir_merge_named themes
               
               automation: !include_dir_list automations/
+              automation ui: !include automations.yaml
               script: !include scripts.yaml
               scene: !include scenes.yaml
               
@@ -175,9 +176,6 @@ spec:
               shell_command:
                 cleanup_old_photos: 'find /config/www/pets -name "*.jpg" -mtime +30 -delete && find /config/www/intruders -name "*.jpg" -mtime +30 -delete'
               EOF
-              
-              # Remove the automations.yaml file to avoid conflicts
-              rm -f "${CONFIG_DIR}/automations.yaml"
               
               # Create empty files for scripts and scenes
               echo "[]" > "${CONFIG_DIR}/scripts.yaml"
