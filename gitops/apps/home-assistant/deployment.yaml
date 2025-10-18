@@ -124,22 +124,6 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-        - name: validate-config
-          image: ghcr.io/home-assistant/home-assistant:stable
-          imagePullPolicy: IfNotPresent
-          command: ["/bin/sh","-c"]
-          args:
-            - |
-              set -e
-              echo "Validating Home Assistant configuration..."
-              
-              # Run configuration check
-              python -m homeassistant --script check_config --config /config
-              
-              echo "Configuration validation passed"
-          volumeMounts:
-            - name: config
-              mountPath: /config
         - name: setup-default-config
           image: alpine:3.20
           imagePullPolicy: IfNotPresent
@@ -187,6 +171,22 @@ spec:
               chmod 755 "${CONFIG_DIR}/www/intruders"
               
               echo "Default configuration and directories created"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+        - name: validate-config
+          image: ghcr.io/home-assistant/home-assistant:stable
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh","-c"]
+          args:
+            - |
+              set -e
+              echo "Validating Home Assistant configuration..."
+              
+              # Run configuration check
+              python -m homeassistant --script check_config --config /config
+              
+              echo "Configuration validation passed"
           volumeMounts:
             - name: config
               mountPath: /config
