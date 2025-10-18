@@ -36,7 +36,7 @@ actions:
       filename: "{{ path }}"
   - action: input_text.set_value
     target: { entity_id: input_text.event_image_location_text }
-    data: { value: "{{ room }}" }
+    data: { value: "{{ slug }}" }
   - action: input_text.set_value
     target: { entity_id: input_text.event_image_timestamp_text }
     data: { value: "{{ timestamp }}" }
@@ -49,4 +49,3 @@ actions:
         tag: "pet-{{ slug }}"
         importance: low
         sticky: true
-
