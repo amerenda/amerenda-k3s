@@ -140,6 +140,60 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
+        - name: setup-default-config
+          image: alpine:3.20
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh","-c"]
+          args:
+            - |
+              set -e
+              CONFIG_DIR="/config"
+              
+              # Create directories if they don't exist
+              mkdir -p "${CONFIG_DIR}/themes"
+              mkdir -p "${CONFIG_DIR}/www"
+              mkdir -p "${CONFIG_DIR}/automations"
+              mkdir -p "${CONFIG_DIR}/scripts"
+              mkdir -p "${CONFIG_DIR}/scenes"
+              
+              # Create default configuration.yaml
+              cat > "${CONFIG_DIR}/configuration.yaml" << 'EOF'
+              # Loads default set of integrations. Do not remove.
+              default_config:
+              
+              # Load frontend themes from the themes folder
+              frontend:
+                themes: !include_dir_merge_named themes
+              
+              automation: !include_dir_list automations/
+              script: !include scripts.yaml
+              scene: !include scenes.yaml
+              EOF
+              
+              # Create empty files for scripts and scenes
+              echo "[]" > "${CONFIG_DIR}/scripts.yaml"
+              echo "[]" > "${CONFIG_DIR}/scenes.yaml"
+              
+              echo "Default configuration created"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+        - name: validate-config
+          image: ghcr.io/home-assistant/home-assistant:stable
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh","-c"]
+          args:
+            - |
+              set -e
+              echo "Validating Home Assistant configuration..."
+              
+              # Run configuration check
+              python -m homeassistant --script check_config --config /config
+              
+              echo "Configuration validation passed"
+          volumeMounts:
+            - name: config
+              mountPath: /config
       # --- Init step: install HACS into /config on your PVC ---
       affinity:
         podAntiAffinity:
