@@ -1,0 +1,47 @@
+alias: Alex - Reolink Human Alert (Away)
+mode: queued
+triggers:
+  - trigger: state
+    entity_id:
+      - binary_sensor.living_room_cam_person
+      - binary_sensor.bedroom_cam_person
+      - binary_sensor.kitchen_cam_person
+    from: "off"
+    to: "on"
+conditions:
+  - condition: not
+    conditions:
+      - condition: state
+        entity_id: person.alex_merenda
+        state: "home"
+variables:
+  CAM_MAP: >
+    {{
+      {
+        'binary_sensor.living_room_cam_person':
+          {'camera': 'camera.living_room_cam','room':'Living Room','slug':'living_room'},
+        'binary_sensor.bedroom_cam_person':
+          {'camera': 'camera.bedroom_cam',    'room':'Bedroom',    'slug':'bedroom'},
+        'binary_sensor.kitchen_cam_person':
+          {'camera': 'camera.kitchen_cam',    'room':'Kitchen',    'slug':'kitchen'}
+      }
+    }}
+  cam: "{{ CAM_MAP[trigger.entity_id]['camera'] }}"
+  room: "{{ CAM_MAP[trigger.entity_id]['room'] }}"
+  slug: "{{ CAM_MAP[trigger.entity_id]['slug'] }}"
+  path: "/config/www/intruders/{{ slug }}.jpg"
+  url: "/local/intruders/{{ slug }}.jpg"
+actions:
+  - action: camera.snapshot
+    target: { entity_id: "{{ cam }}" }
+    data:
+      filename: "{{ path }}"
+  - action: notify.mobile_app_pixel_9_pro_xl
+    data:
+      title: "Human detected - {{ room }}"
+      message: "{{ now().strftime('%-I:%M %p on %b %-d') }}"
+      data:
+        image: "{{ url }}"
+        tag: "human-{{ slug }}"
+        importance: high
+        sticky: true
