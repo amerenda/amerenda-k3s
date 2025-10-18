@@ -133,6 +133,8 @@ data:
           - light.kitchen
         from: "off"
         to: "on"
+      - trigger: time
+        at: "06:00:00"
     variables:
       is_past_cutoff: >
         {% set wd = now().weekday() %}  {# Mon=0..Sun=6 #}
@@ -149,20 +151,26 @@ data:
         value_template: "{{ is_past_cutoff }}"
     actions:
       - choose:
-          - conditions: "{{ is_color_light }}"
+          - conditions: 
+              - condition: template
+                value_template: "{{ trigger.platform == 'time' }}"
             sequence:
-              - action: light.turn_off
-                target: { entity_id: "{{ trigger.entity_id }}" }
+              - action: scene.turn_on
+                target: { entity_id: "scene.bathroom_energize" }
+          - conditions: 
+              - condition: template
+                value_template: "{{ trigger.platform == 'state' and is_past_cutoff and is_color_light }}"
+            sequence:
               - action: light.turn_on
                 target: { entity_id: "{{ trigger.entity_id }}" }
                 data:
                   brightness_pct: 10
                   rgb_color: [255, 0, 0]
                   transition: 0
-          - conditions: "{{ not is_color_light }}"
+          - conditions: 
+              - condition: template
+                value_template: "{{ trigger.platform == 'state' and is_past_cutoff and not is_color_light }}"
             sequence:
-              - action: light.turn_off
-                target: { entity_id: "{{ trigger.entity_id }}" }
               - action: light.turn_on
                 target: { entity_id: "{{ trigger.entity_id }}" }
                 data:
@@ -269,5 +277,4 @@ data:
             tag: "pet-{{ slug }}"
             importance: low
             sticky: true
-    
 
