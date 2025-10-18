@@ -159,6 +159,8 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
+            - name: automations
+              mountPath: /config/automations
           lifecycle:
             preStop:
               exec:
@@ -167,3 +169,6 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: homeassistant-config
+        - name: automations
+          configMap:
+            name: homeassistant-automations

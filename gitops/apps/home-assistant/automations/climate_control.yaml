@@ -1,0 +1,80 @@
+###############################################################################
+# PACKAGE: climate_control
+# Behavior:
+# - When Alex is home: cool ON if current_temperature > 26°C for 5 min
+# - When away:        cool ON if current_temperature > 30°C for 5 min
+# - Optional: cool OFF with hysteresis to avoid flapping
+# Entities used:
+#   person.alex_merenda
+#   climate.midea_ac           <-- adjust if your entity differs
+###############################################################################
+
+automation:
+
+  # Turn COOL on (home)
+  - id: alex_ac_auto_cool_home
+    alias: Alex - AC Auto Cool (Home)
+    mode: restart
+    triggers:
+      - trigger: numeric_state
+        entity_id: climate.midea_ac
+        attribute: current_temperature
+        above: 26
+        for: "00:05:00"
+    conditions:
+      - condition: state
+        entity_id: person.alex_merenda
+        state: "home"
+      - condition: template
+        value_template: "{{ state_attr('climate.midea_ac','hvac_mode') != 'cool' }}"
+    actions:
+      - action: climate.set_hvac_mode
+        target: { entity_id: climate.midea_ac }
+        data: { hvac_mode: cool }
+      - action: climate.set_temperature
+        target: { entity_id: climate.midea_ac }
+        data: { temperature: 24 }
+
+  # Turn COOL on (away)
+  - id: alex_ac_auto_cool_away
+    alias: Alex - AC Auto Cool (Away)
+    mode: restart
+    triggers:
+      - trigger: numeric_state
+        entity_id: climate.midea_ac
+        attribute: current_temperature
+        above: 30
+        for: "00:05:00"
+    conditions:
+      - condition: not
+        conditions:
+          - condition: state
+            entity_id: person.alex_merenda
+            state: "home"
+      - condition: template
+        value_template: "{{ state_attr('climate.midea_ac','hvac_mode') != 'cool' }}"
+    actions:
+      - action: climate.set_hvac_mode
+        target: { entity_id: climate.midea_ac }
+        data: { hvac_mode: cool }
+      - action: climate.set_temperature
+        target: { entity_id: climate.midea_ac }
+        data: { temperature: 27 }
+
+  # Optional: turn cooling OFF with hysteresis (both home & away)
+  - id: alex_ac_cool_off_hysteresis
+    alias: Alex - AC Cool Off (Hysteresis)
+    mode: restart
+    triggers:
+      - trigger: numeric_state
+        entity_id: climate.midea_ac
+        attribute: current_temperature
+        below: 23             # adjust if you prefer a different cutoff
+        for: "00:03:00"
+    conditions:
+      - condition: template
+        value_template: "{{ is_state_attr('climate.midea_ac','hvac_mode','cool') }}"
+    actions:
+      - action: climate.set_hvac_mode
+        target: { entity_id: climate.midea_ac }
+        data: { hvac_mode: "off" }
