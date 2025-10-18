@@ -140,6 +140,27 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
+        - name: setup-www-directories
+          image: alpine:3.20
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh","-c"]
+          args:
+            - |
+              set -e
+              echo "Creating www directories for automations..."
+              
+              # Create directories for automation file storage
+              mkdir -p /config/www/pets
+              mkdir -p /config/www/intruders
+              
+              # Set proper permissions
+              chmod 755 /config/www/pets
+              chmod 755 /config/www/intruders
+              
+              echo "www directories created successfully"
+          volumeMounts:
+            - name: config
+              mountPath: /config
       # --- Init step: install HACS into /config on your PVC ---
       affinity:
         podAntiAffinity:
