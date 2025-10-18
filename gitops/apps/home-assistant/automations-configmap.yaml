@@ -144,11 +144,20 @@ data:
         {% else %}
           {{ current_hour >= 23 or current_hour < 6 }}
         {% endif %}
-      color_lights: [ 'light.living_room','light.bathroom','light.bedroom' ]
-      is_color_light: "{{ trigger.entity_id in color_lights }}"
-    conditions:
-      - condition: template
-        value_template: "{{ is_past_cutoff }}"
+      room_scenes:
+        light.living_room: scene.living_room_nightlight
+        light.bathroom: scene.bathroom_nightlight
+        light.bedroom: scene.bedroom_nightlight
+        light.hallway: scene.hallway_nightlight
+        light.kitchen: scene.kitchen_nightlight
+      room_scene: "{{ room_scenes[trigger.entity_id] }}"
+      energize_scenes:
+        light.living_room: scene.living_room_energize
+        light.bathroom: scene.bathroom_energize
+        light.bedroom: scene.bedroom_energize
+        light.hallway: scene.hallway_energize
+        light.kitchen: scene.kitchen_energize
+      energize_scene: "{{ energize_scenes[trigger.entity_id] }}"
     actions:
       - choose:
           - conditions: 
@@ -156,27 +165,13 @@ data:
                 value_template: "{{ trigger.platform == 'time' }}"
             sequence:
               - action: scene.turn_on
-                target: { entity_id: "scene.bathroom_energize" }
+                target: { entity_id: "{{ energize_scene }}" }
           - conditions: 
               - condition: template
-                value_template: "{{ trigger.platform == 'state' and is_past_cutoff and is_color_light }}"
+                value_template: "{{ trigger.platform == 'state' and is_past_cutoff }}"
             sequence:
-              - action: light.turn_on
-                target: { entity_id: "{{ trigger.entity_id }}" }
-                data:
-                  brightness_pct: 10
-                  rgb_color: [255, 0, 0]
-                  transition: 0
-          - conditions: 
-              - condition: template
-                value_template: "{{ trigger.platform == 'state' and is_past_cutoff and not is_color_light }}"
-            sequence:
-              - action: light.turn_on
-                target: { entity_id: "{{ trigger.entity_id }}" }
-                data:
-                  brightness_pct: 10
-                  color_temp_kelvin: 2000
-                  transition: 0
+              - action: scene.turn_on
+                target: { entity_id: "{{ room_scene }}" }
 
   alex_reolink_human_detect_alert.yaml: |
     alias: Alex - Reolink Human Alert (Away)
