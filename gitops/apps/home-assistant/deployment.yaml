@@ -155,7 +155,6 @@ spec:
               automation ui: !include automations.yaml
               script: !include scripts.yaml
               scene: !include scenes.yaml
-              input_text: !include helpers.yaml
               
               # Shell commands for photo cleanup
               shell_command:
@@ -167,18 +166,9 @@ spec:
               echo "[]" > "${CONFIG_DIR}/scenes.yaml"
               echo "[]" > "${CONFIG_DIR}/automations.yaml"
               
-              # Create helper entities configuration
-              cat > "${CONFIG_DIR}/helpers.yaml" << 'EOF'
-              # Helper entities for pet detection automation
-              input_text:
-                event_image_location:
-                  name: "Event Image Location"
-                  initial: "None"
-                  
-                event_image_timestamp:
-                  name: "Event Image Timestamp" 
-                  initial: "None"
-              EOF
+              # Note: Helper entities need to be created manually in the UI
+              # Go to Settings → Devices & Services → Helpers
+              # Create: Event Image Location (Text) and Event Image Timestamp (Text)
               
               # Set proper permissions for www directories
               chmod 755 "${CONFIG_DIR}/www/pets"
