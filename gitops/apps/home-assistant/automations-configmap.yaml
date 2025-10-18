@@ -109,6 +109,17 @@ data:
             - switch.bedroom_privacy_mode
             - switch.living_room_privacy_mode
 
+  alex_cleanup_old_photos.yaml: |
+    alias: Alex - Cleanup Old Photos (30+ days)
+    mode: single
+    triggers:
+      - platform: time
+        at: "02:00:00"
+    conditions: []
+    actions:
+      - service: shell_command.cleanup_old_photos
+        data: {}
+
   alex_night_lighting_on_toggle.yaml: |
     alias: Alex - Night Lighting on Toggle
     mode: parallel
@@ -183,8 +194,9 @@ data:
       cam: "{{ CAM_MAP[trigger.entity_id]['camera'] }}"
       room: "{{ CAM_MAP[trigger.entity_id]['room'] }}"
       slug: "{{ CAM_MAP[trigger.entity_id]['slug'] }}"
-      path: "/config/www/intruders/{{ slug }}.jpg"
-      url: "/local/intruders/{{ slug }}.jpg"
+      timestamp: "{{ now().strftime('%Y%m%d_%H%M%S') }}"
+      path: "/config/www/intruders/{{ slug }}_{{ timestamp }}.jpg"
+      url: "/local/intruders/{{ slug }}_{{ timestamp }}.jpg"
     actions:
       - action: camera.snapshot
         target: { entity_id: "{{ cam }}" }
@@ -229,8 +241,9 @@ data:
       cam: "{{ CAM_MAP[trigger.entity_id]['camera'] }}"
       room: "{{ CAM_MAP[trigger.entity_id]['room'] }}"
       slug: "{{ CAM_MAP[trigger.entity_id]['slug'] }}"
-      path: "/config/www/pets/{{ slug }}.jpg"
-      url: "/local/pets/{{ slug }}.jpg"
+      timestamp: "{{ now().strftime('%Y%m%d_%H%M%S') }}"
+      path: "/config/www/pets/{{ slug }}_{{ timestamp }}.jpg"
+      url: "/local/pets/{{ slug }}_{{ timestamp }}.jpg"
     actions:
       - action: camera.snapshot
         target: { entity_id: "{{ cam }}" }

@@ -140,24 +140,54 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-        - name: setup-www-directories
+        - name: setup-default-config
           image: alpine:3.20
           imagePullPolicy: IfNotPresent
           command: ["/bin/sh","-c"]
           args:
             - |
               set -e
-              echo "Creating www directories for automations..."
+              CONFIG_DIR="/config"
               
-              # Create directories for automation file storage
-              mkdir -p /config/www/pets
-              mkdir -p /config/www/intruders
+              # Create directories if they don't exist
+              mkdir -p "${CONFIG_DIR}/themes"
+              mkdir -p "${CONFIG_DIR}/www"
+              mkdir -p "${CONFIG_DIR}/automations"
+              mkdir -p "${CONFIG_DIR}/scripts"
+              mkdir -p "${CONFIG_DIR}/scenes"
+              mkdir -p "${CONFIG_DIR}/www/pets"
+              mkdir -p "${CONFIG_DIR}/www/intruders"
               
-              # Set proper permissions
-              chmod 755 /config/www/pets
-              chmod 755 /config/www/intruders
+              # Create default configuration.yaml
+              cat > "${CONFIG_DIR}/configuration.yaml" << 'EOF'
+              # Loads default set of integrations. Do not remove.
+              default_config:
               
-              echo "www directories created successfully"
+              # Load frontend themes from the themes folder
+              frontend:
+                themes: !include_dir_merge_named themes
+              
+              automation: !include_dir_list automations/
+              script: !include scripts.yaml
+              scene: !include scenes.yaml
+              
+              # Shell commands for photo cleanup
+              shell_command:
+                cleanup_old_photos: 'find /config/www/pets -name "*.jpg" -mtime +30 -delete && find /config/www/intruders -name "*.jpg" -mtime +30 -delete'
+              EOF
+              
+              # Remove the automations.yaml file to avoid conflicts
+              rm -f "${CONFIG_DIR}/automations.yaml"
+              
+              # Create empty files for scripts and scenes
+              echo "[]" > "${CONFIG_DIR}/scripts.yaml"
+              echo "[]" > "${CONFIG_DIR}/scenes.yaml"
+              
+              # Set proper permissions for www directories
+              chmod 755 "${CONFIG_DIR}/www/pets"
+              chmod 755 "${CONFIG_DIR}/www/intruders"
+              
+              echo "Default configuration and directories created"
           volumeMounts:
             - name: config
               mountPath: /config

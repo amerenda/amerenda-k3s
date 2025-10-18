@@ -26,8 +26,9 @@ variables:
   cam: "{{ CAM_MAP[trigger.entity_id]['camera'] }}"
   room: "{{ CAM_MAP[trigger.entity_id]['room'] }}"
   slug: "{{ CAM_MAP[trigger.entity_id]['slug'] }}"
-  path: "/config/www/pets/{{ slug }}.jpg"
-  url: "/local/pets/{{ slug }}.jpg"
+  timestamp: "{{ now().strftime('%Y%m%d_%H%M%S') }}"
+  path: "/config/www/pets/{{ slug }}_{{ timestamp }}.jpg"
+  url: "/local/pets/{{ slug }}_{{ timestamp }}.jpg"
 actions:
   - action: camera.snapshot
     target: { entity_id: "{{ cam }}" }
