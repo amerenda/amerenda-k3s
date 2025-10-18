@@ -213,24 +213,3 @@ data:
         target: { entity_id: input_text.pet_last_image_url }
         data: { value: "{{ url }}" }
 
-  helpers.yaml: |
-    ###############################################################################
-    # PACKAGE: helpers
-    # Helper entities for various automations
-    ###############################################################################
-    
-    # Helper entities for pet tracking
-    input_text:
-      pet_last_seen_room:
-        name: Pet - Last Seen Room
-        max: 64
-      pet_last_image_url:
-        name: Pet - Last Image URL
-        max: 256
-    
-    input_datetime:
-      pet_last_seen_time:
-        name: Pet - Last Seen Time
-        has_date: true
-        has_time: true
-
