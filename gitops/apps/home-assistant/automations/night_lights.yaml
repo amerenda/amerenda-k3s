@@ -6,48 +6,47 @@
 # - Color lights -> dim red; White-only -> warm & dim
 ###############################################################################
 
-automation:
-  - id: alex_night_lighting_on_toggle
-    alias: Alex - Night Lighting on Toggle
-    mode: parallel
-    triggers:
-      - trigger: state
-        entity_id:
-          - light.living_room
-          - light.bathroom
-          - light.bedroom
-          - light.hallway
-          - light.kitchen
-        from: "off"
-        to: "on"
-    variables:
-      is_past_cutoff: >
-        {% set wd = now().weekday() %}  {# Mon=0..Sun=6 #}
-        {% if wd in [4,5] %}
-          {{ now().time() >= strptime('01:00','%H:%M').time() }}
-        {% else %}
-          {{ now().time() >= strptime('23:00','%H:%M').time() }}
-        {% endif %}
-      color_lights: [ 'light.living_room','light.bathroom','light.bedroom' ]
-      is_color_light: "{{ trigger.entity_id in color_lights }}"
-    conditions:
-      - condition: template
-        value_template: "{{ is_past_cutoff }}"
-    actions:
-      - choose:
-          - conditions: "{{ is_color_light }}"
-            sequence:
-              - action: light.turn_on
-                target: { entity_id: "{{ trigger.entity_id }}" }
-                data:
-                  brightness_pct: 10
-                  rgb_color: [255, 0, 0]
-                  transition: 1
-          - conditions: "{{ not is_color_light }}"
-            sequence:
-              - action: light.turn_on
-                target: { entity_id: "{{ trigger.entity_id }}" }
-                data:
-                  brightness_pct: 10
-                  color_temp_kelvin: 2000
-                  transition: 1
+- id: alex_night_lighting_on_toggle
+  alias: Alex - Night Lighting on Toggle
+  mode: parallel
+  triggers:
+    - trigger: state
+      entity_id:
+        - light.living_room
+        - light.bathroom
+        - light.bedroom
+        - light.hallway
+        - light.kitchen
+      from: "off"
+      to: "on"
+  variables:
+    is_past_cutoff: >
+      {% set wd = now().weekday() %}  {# Mon=0..Sun=6 #}
+      {% if wd in [4,5] %}
+        {{ now().time() >= strptime('01:00','%H:%M').time() }}
+      {% else %}
+        {{ now().time() >= strptime('23:00','%H:%M').time() }}
+      {% endif %}
+    color_lights: [ 'light.living_room','light.bathroom','light.bedroom' ]
+    is_color_light: "{{ trigger.entity_id in color_lights }}"
+  conditions:
+    - condition: template
+      value_template: "{{ is_past_cutoff }}"
+  actions:
+    - choose:
+        - conditions: "{{ is_color_light }}"
+          sequence:
+            - action: light.turn_on
+              target: { entity_id: "{{ trigger.entity_id }}" }
+              data:
+                brightness_pct: 10
+                rgb_color: [255, 0, 0]
+                transition: 1
+        - conditions: "{{ not is_color_light }}"
+          sequence:
+            - action: light.turn_on
+              target: { entity_id: "{{ trigger.entity_id }}" }
+              data:
+                brightness_pct: 10
+                color_temp_kelvin: 2000
+                transition: 1

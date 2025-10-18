@@ -9,6 +9,7 @@
 # 3) Use /local/pets/<slug>.jpg in dashboards.
 ###############################################################################
 
+# Helper entities for pet tracking
 input_text:
   pet_last_seen_room:
     name: Pet - Last Seen Room
@@ -23,55 +24,55 @@ input_datetime:
     has_date: true
     has_time: true
 
-automation:
-  - id: alex_reolink_pet_detect_snapshot
-    alias: Alex - Reolink Pet Snapshot (Away)
-    mode: queued
-    triggers:
-      # EDIT these to your Reolink pet-detection binary_sensors
-      - trigger: state
-        entity_id:
-          - binary_sensor.living_room_cam_pet
-          - binary_sensor.bedroom_cam_pet
-          - binary_sensor.kitchen_cam_pet
-        from: "off"
-        to: "on"
-    conditions:
-      - condition: not
-        conditions:
-          - condition: state
-            entity_id: person.alex_merenda
-            state: "home"
-    variables:
-      # === EDIT THIS MAP to your exact entities ===
-      CAM_MAP: >
-        {{
-          {
-            'binary_sensor.living_room_cam_pet':
-              {'camera': 'camera.living_room_cam', 'room':'Living Room','slug':'living_room'},
-            'binary_sensor.bedroom_cam_pet':
-              {'camera': 'camera.bedroom_cam',     'room':'Bedroom',    'slug':'bedroom'},
-            'binary_sensor.kitchen_cam_pet':
-              {'camera': 'camera.kitchen_cam',     'room':'Kitchen',    'slug':'kitchen'}
-          }
-        }}
-      cam: "{{ CAM_MAP[trigger.entity_id]['camera'] }}"
-      room: "{{ CAM_MAP[trigger.entity_id]['room'] }}"
-      slug: "{{ CAM_MAP[trigger.entity_id]['slug'] }}"
-      path: "/config/www/pets/{{ slug }}.jpg"
-      url: "/local/pets/{{ slug }}.jpg"
-    actions:
-      - action: camera.snapshot
-        target: { entity_id: "{{ cam }}" }
-        data:
-          filename: "{{ path }}"
-      - action: input_text.set_value
-        target: { entity_id: input_text.pet_last_seen_room }
-        data: { value: "{{ room }}" }
-      - action: input_datetime.set_datetime
-        target: { entity_id: input_datetime.pet_last_seen_time }
-        data:
-          datetime: "{{ now().strftime('%Y-%m-%d %H:%M:%S') }}"
-      - action: input_text.set_value
-        target: { entity_id: input_text.pet_last_image_url }
-        data: { value: "{{ url }}" }
+# Pet detection automation
+- id: alex_reolink_pet_detect_snapshot
+  alias: Alex - Reolink Pet Snapshot (Away)
+  mode: queued
+  triggers:
+    # EDIT these to your Reolink pet-detection binary_sensors
+    - trigger: state
+      entity_id:
+        - binary_sensor.living_room_cam_pet
+        - binary_sensor.bedroom_cam_pet
+        - binary_sensor.kitchen_cam_pet
+      from: "off"
+      to: "on"
+  conditions:
+    - condition: not
+      conditions:
+        - condition: state
+          entity_id: person.alex_merenda
+          state: "home"
+  variables:
+    # === EDIT THIS MAP to your exact entities ===
+    CAM_MAP: >
+      {{
+        {
+          'binary_sensor.living_room_cam_pet':
+            {'camera': 'camera.living_room_cam', 'room':'Living Room','slug':'living_room'},
+          'binary_sensor.bedroom_cam_pet':
+            {'camera': 'camera.bedroom_cam',     'room':'Bedroom',    'slug':'bedroom'},
+          'binary_sensor.kitchen_cam_pet':
+            {'camera': 'camera.kitchen_cam',     'room':'Kitchen',    'slug':'kitchen'}
+        }
+      }}
+    cam: "{{ CAM_MAP[trigger.entity_id]['camera'] }}"
+    room: "{{ CAM_MAP[trigger.entity_id]['room'] }}"
+    slug: "{{ CAM_MAP[trigger.entity_id]['slug'] }}"
+    path: "/config/www/pets/{{ slug }}.jpg"
+    url: "/local/pets/{{ slug }}.jpg"
+  actions:
+    - action: camera.snapshot
+      target: { entity_id: "{{ cam }}" }
+      data:
+        filename: "{{ path }}"
+    - action: input_text.set_value
+      target: { entity_id: input_text.pet_last_seen_room }
+      data: { value: "{{ room }}" }
+    - action: input_datetime.set_datetime
+      target: { entity_id: input_datetime.pet_last_seen_time }
+      data:
+        datetime: "{{ now().strftime('%Y-%m-%d %H:%M:%S') }}"
+    - action: input_text.set_value
+      target: { entity_id: input_text.pet_last_image_url }
+      data: { value: "{{ url }}" }

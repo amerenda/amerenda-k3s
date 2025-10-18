@@ -48,8 +48,22 @@ spec:
               CONFIG_DIR="/config"
               CC_DIR="${CONFIG_DIR}/custom_components"
               HACS_DST="${CC_DIR}/hacs"
+              VERSION_FILE="${HACS_DST}/.installed_version"
               TMPDIR="$(mktemp -d)"
               mkdir -p "${CC_DIR}"
+
+              # Check if HACS is already installed with the same version
+              if [ -f "${VERSION_FILE}" ] && [ -d "${HACS_DST}" ]; then
+                INSTALLED_VERSION=$(cat "${VERSION_FILE}" 2>/dev/null || echo "")
+                if [ "${INSTALLED_VERSION}" = "${HACS_VERSION}" ]; then
+                  echo "HACS ${HACS_VERSION} is already installed. Skipping installation."
+                  exit 0
+                else
+                  echo "HACS version mismatch. Installed: ${INSTALLED_VERSION}, Required: ${HACS_VERSION}. Reinstalling..."
+                fi
+              else
+                echo "HACS not found or version file missing. Installing ${HACS_VERSION}..."
+              fi
 
               # Download HACS
               if [ "${HACS_VERSION}" = "latest" ]; then
@@ -117,7 +131,7 @@ spec:
               # Create version file
               if [ -f "${HACS_DST}/manifest.json" ]; then
                 VER=$(grep -o '"version"[[:space:]]*:[[:space:]]*"[^"]*"' "${HACS_DST}/manifest.json" | sed 's/.*"\([^"]*\)".*/\1/')
-                echo "$VER" > "${HACS_DST}/.installed_version"
+                echo "$VER" > "${VERSION_FILE}"
                 echo "HACS $VER installed successfully"
               fi
               
