@@ -160,9 +160,9 @@ data:
     triggers:
       - trigger: state
         entity_id:
-          - binary_sensor.living_room_cam_person
-          - binary_sensor.bedroom_cam_person
-          - binary_sensor.kitchen_cam_person
+          - binary_sensor.living_room_person
+          - binary_sensor.bedroom_person
+          - binary_sensor.kitchen_person
         from: "off"
         to: "on"
     conditions:
@@ -175,11 +175,11 @@ data:
       CAM_MAP: >
         {{
           {
-            'binary_sensor.living_room_cam_person':
+            'binary_sensor.living_room_person':
               {'camera': 'camera.living_room_cam','room':'Living Room','slug':'living_room'},
-            'binary_sensor.bedroom_cam_person':
+            'binary_sensor.bedroom_person':
               {'camera': 'camera.bedroom_cam',    'room':'Bedroom',    'slug':'bedroom'},
-            'binary_sensor.kitchen_cam_person':
+            'binary_sensor.kitchen_person':
               {'camera': 'camera.kitchen_cam',    'room':'Kitchen',    'slug':'kitchen'}
           }
         }}
@@ -209,9 +209,9 @@ data:
     triggers:
       - trigger: state
         entity_id:
-          - binary_sensor.living_room_cam_pet
-          - binary_sensor.bedroom_cam_pet
-          - binary_sensor.kitchen_cam_pet
+          - binary_sensor.living_room_animal
+          - binary_sensor.bedroom_animal
+          - binary_sensor.kitchen_animal
         from: "off"
         to: "on"
     conditions:
@@ -224,11 +224,11 @@ data:
       CAM_MAP: >
         {{
           {
-            'binary_sensor.living_room_cam_pet':
+            'binary_sensor.living_room_animal':
               {'camera': 'camera.living_room_cam', 'room':'Living Room','slug':'living_room'},
-            'binary_sensor.bedroom_cam_pet':
+            'binary_sensor.bedroom_animal':
               {'camera': 'camera.bedroom_cam',     'room':'Bedroom',    'slug':'bedroom'},
-            'binary_sensor.kitchen_cam_pet':
+            'binary_sensor.kitchen_animal':
               {'camera': 'camera.kitchen_cam',     'room':'Kitchen',    'slug':'kitchen'}
           }
         }}
