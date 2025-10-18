@@ -236,4 +236,10 @@ data:
         target: { entity_id: "{{ cam }}" }
         data:
           filename: "{{ path }}"
+      - action: input_text.set_value
+        target: { entity_id: input_text.event_image_location }
+        data: { value: "{{ room }}" }
+      - action: input_text.set_value
+        target: { entity_id: input_text.event_image_timestamp }
+        data: { value: "{{ now().strftime('%Y-%m-%d %H:%M:%S') }}" }
 
