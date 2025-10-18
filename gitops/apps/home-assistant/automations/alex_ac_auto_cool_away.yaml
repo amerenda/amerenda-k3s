@@ -2,7 +2,7 @@ alias: Alex - AC Auto Cool (Away)
 mode: restart
 triggers:
   - trigger: numeric_state
-    entity_id: climate.midea_ac
+    entity_id: climate.151732605151026_climate
     attribute: current_temperature
     above: 30
     for: "00:05:00"
@@ -13,11 +13,11 @@ conditions:
         entity_id: person.alex_merenda
         state: "home"
   - condition: template
-    value_template: "{{ state_attr('climate.midea_ac','hvac_mode') != 'cool' }}"
+    value_template: "{{ state_attr('climate.151732605151026_climate','hvac_mode') != 'cool' }}"
 actions:
   - action: climate.set_hvac_mode
-    target: { entity_id: climate.midea_ac }
+    target: { entity_id: climate.151732605151026_climate }
     data: { hvac_mode: cool }
   - action: climate.set_temperature
-    target: { entity_id: climate.midea_ac }
+    target: { entity_id: climate.151732605151026_climate }
     data: { temperature: 27 }

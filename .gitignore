@@ -13,3 +13,4 @@ k3s-kubeconfig.yaml
 
 # Development tools
 .cursor-rules
+.cursor/

@@ -9,7 +9,7 @@ data:
     mode: restart
     triggers:
       - trigger: numeric_state
-        entity_id: climate.midea_ac
+        entity_id: climate.151732605151026_climate
         attribute: current_temperature
         above: 30
         for: "00:05:00"
@@ -20,13 +20,13 @@ data:
             entity_id: person.alex_merenda
             state: "home"
       - condition: template
-        value_template: "{{ state_attr('climate.midea_ac','hvac_mode') != 'cool' }}"
+        value_template: "{{ state_attr('climate.151732605151026_climate','hvac_mode') != 'cool' }}"
     actions:
       - action: climate.set_hvac_mode
-        target: { entity_id: climate.midea_ac }
+        target: { entity_id: climate.151732605151026_climate }
         data: { hvac_mode: cool }
       - action: climate.set_temperature
-        target: { entity_id: climate.midea_ac }
+        target: { entity_id: climate.151732605151026_climate }
         data: { temperature: 27 }
 
   alex_ac_auto_cool_home.yaml: |
@@ -34,7 +34,7 @@ data:
     mode: restart
     triggers:
       - trigger: numeric_state
-        entity_id: climate.midea_ac
+        entity_id: climate.151732605151026_climate
         attribute: current_temperature
         above: 26
         for: "00:05:00"
@@ -43,13 +43,13 @@ data:
         entity_id: person.alex_merenda
         state: "home"
       - condition: template
-        value_template: "{{ state_attr('climate.midea_ac','hvac_mode') != 'cool' }}"
+        value_template: "{{ state_attr('climate.151732605151026_climate','hvac_mode') != 'cool' }}"
     actions:
       - action: climate.set_hvac_mode
-        target: { entity_id: climate.midea_ac }
+        target: { entity_id: climate.151732605151026_climate }
         data: { hvac_mode: cool }
       - action: climate.set_temperature
-        target: { entity_id: climate.midea_ac }
+        target: { entity_id: climate.151732605151026_climate }
         data: { temperature: 24 }
 
   alex_ac_cool_off_hysteresis.yaml: |
@@ -57,16 +57,16 @@ data:
     mode: restart
     triggers:
       - trigger: numeric_state
-        entity_id: climate.midea_ac
+        entity_id: climate.151732605151026_climate
         attribute: current_temperature
         below: 23
         for: "00:03:00"
     conditions:
       - condition: template
-        value_template: "{{ is_state_attr('climate.midea_ac','hvac_mode','cool') }}"
+        value_template: "{{ is_state_attr('climate.151732605151026_climate','hvac_mode','cool') }}"
     actions:
       - action: climate.set_hvac_mode
-        target: { entity_id: climate.midea_ac }
+        target: { entity_id: climate.151732605151026_climate }
         data: { hvac_mode: "off" }
 
   alex_camera_privacy_away.yaml: |
@@ -162,7 +162,6 @@ data:
         entity_id:
           - binary_sensor.living_room_person
           - binary_sensor.bedroom_person
-          - binary_sensor.kitchen_person
         from: "off"
         to: "on"
     conditions:
@@ -176,11 +175,9 @@ data:
         {{
           {
             'binary_sensor.living_room_person':
-              {'camera': 'camera.living_room_cam','room':'Living Room','slug':'living_room'},
+              {'camera': 'camera.living_room_fluent','room':'Living Room','slug':'living_room'},
             'binary_sensor.bedroom_person':
-              {'camera': 'camera.bedroom_cam',    'room':'Bedroom',    'slug':'bedroom'},
-            'binary_sensor.kitchen_person':
-              {'camera': 'camera.kitchen_cam',    'room':'Kitchen',    'slug':'kitchen'}
+              {'camera': 'camera.bedroom_fluent',    'room':'Bedroom',    'slug':'bedroom'}
           }
         }}
       cam: "{{ CAM_MAP[trigger.entity_id]['camera'] }}"
@@ -211,7 +208,6 @@ data:
         entity_id:
           - binary_sensor.living_room_animal
           - binary_sensor.bedroom_animal
-          - binary_sensor.kitchen_animal
         from: "off"
         to: "on"
     conditions:
@@ -225,11 +221,9 @@ data:
         {{
           {
             'binary_sensor.living_room_animal':
-              {'camera': 'camera.living_room_cam', 'room':'Living Room','slug':'living_room'},
+              {'camera': 'camera.living_room_fluent', 'room':'Living Room','slug':'living_room'},
             'binary_sensor.bedroom_animal':
-              {'camera': 'camera.bedroom_cam',     'room':'Bedroom',    'slug':'bedroom'},
-            'binary_sensor.kitchen_animal':
-              {'camera': 'camera.kitchen_cam',     'room':'Kitchen',    'slug':'kitchen'}
+              {'camera': 'camera.bedroom_fluent',     'room':'Bedroom',    'slug':'bedroom'}
           }
         }}
       cam: "{{ CAM_MAP[trigger.entity_id]['camera'] }}"
@@ -242,14 +236,4 @@ data:
         target: { entity_id: "{{ cam }}" }
         data:
           filename: "{{ path }}"
-      - action: input_text.set_value
-        target: { entity_id: input_text.pet_last_seen_room }
-        data: { value: "{{ room }}" }
-      - action: input_datetime.set_datetime
-        target: { entity_id: input_datetime.pet_last_seen_time }
-        data:
-          datetime: "{{ now().strftime('%Y-%m-%d %H:%M:%S') }}"
-      - action: input_text.set_value
-        target: { entity_id: input_text.pet_last_image_url }
-        data: { value: "{{ url }}" }
 

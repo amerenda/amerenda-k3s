@@ -5,7 +5,6 @@ triggers:
     entity_id:
       - binary_sensor.living_room_animal
       - binary_sensor.bedroom_animal
-      - binary_sensor.kitchen_animal
     from: "off"
     to: "on"
 conditions:
@@ -19,11 +18,9 @@ variables:
     {{
       {
         'binary_sensor.living_room_animal':
-          {'camera': 'camera.living_room_cam', 'room':'Living Room','slug':'living_room'},
+          {'camera': 'camera.living_room_fluent', 'room':'Living Room','slug':'living_room'},
         'binary_sensor.bedroom_animal':
-          {'camera': 'camera.bedroom_cam',     'room':'Bedroom',    'slug':'bedroom'},
-        'binary_sensor.kitchen_animal':
-          {'camera': 'camera.kitchen_cam',     'room':'Kitchen',    'slug':'kitchen'}
+          {'camera': 'camera.bedroom_fluent',     'room':'Bedroom',    'slug':'bedroom'}
       }
     }}
   cam: "{{ CAM_MAP[trigger.entity_id]['camera'] }}"
@@ -36,13 +33,3 @@ actions:
     target: { entity_id: "{{ cam }}" }
     data:
       filename: "{{ path }}"
-  - action: input_text.set_value
-    target: { entity_id: input_text.pet_last_seen_room }
-    data: { value: "{{ room }}" }
-  - action: input_datetime.set_datetime
-    target: { entity_id: input_datetime.pet_last_seen_time }
-    data:
-      datetime: "{{ now().strftime('%Y-%m-%d %H:%M:%S') }}"
-  - action: input_text.set_value
-    target: { entity_id: input_text.pet_last_image_url }
-    data: { value: "{{ url }}" }
