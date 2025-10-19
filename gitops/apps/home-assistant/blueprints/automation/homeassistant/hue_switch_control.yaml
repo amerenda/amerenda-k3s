@@ -305,7 +305,7 @@ action:
                 sequence:
                   - service: scene.turn_on
                     target:
-                      entity_id: "{{ scene_entities[0] if scene_entities else '' }}"
+                      entity_id: "{{ scene_entities[1] if scene_entities|length > 1 else scene_entities[0] if scene_entities else '' }}"
               
               # Scene previous
               - conditions:
@@ -314,7 +314,7 @@ action:
                 sequence:
                   - service: scene.turn_on
                     target:
-                      entity_id: "{{ scene_entities[0] if scene_entities else '' }}"
+                      entity_id: "{{ scene_entities[2] if scene_entities|length > 2 else scene_entities[0] if scene_entities else '' }}"
               
               # Color cycle
               - conditions:

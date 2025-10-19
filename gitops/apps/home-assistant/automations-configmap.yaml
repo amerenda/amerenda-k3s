@@ -236,7 +236,7 @@ data:
         button_2_brightness_up: true
         button_3_brightness_down: true
         button_4_custom: true
-        button_4_action: scene_cycle
+        button_4_action: scene_next
         scene_entities:
           - scene.living_room_nightlight
           - scene.living_room_relax
