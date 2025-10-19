@@ -247,4 +247,4 @@ action:
                   - service: "{{ custom_service }}"
                     target:
                       entity_id: !input target_lights
-                    data: "{{ custom_service_data | from_yaml }}"
+                    data: "{{ custom_service_data }}"
