@@ -237,7 +237,7 @@ action:
                   - condition: template
                     value_template: "{{ button_1_long_action == 'all_lights_off' }}"
                 sequence:
-                  - service: light.turn_off
+                  - service: homeassistant.turn_off
                     target:
                       entity_id: >
                         {% set hue_lights = states.light | selectattr('attributes.is_hue_group', 'eq', true) | map(attribute='entity_id') | list %}
