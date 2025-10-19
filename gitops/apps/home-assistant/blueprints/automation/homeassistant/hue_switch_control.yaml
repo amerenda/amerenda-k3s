@@ -237,11 +237,15 @@ action:
                   - condition: template
                     value_template: "{{ button_1_long_action == 'all_lights_off' }}"
                 sequence:
-                  - service: light.turn_off
-                    target:
-                      entity_id: >
+                  - repeat:
+                      for_each: >
                         {% set hue_lights = states.light | selectattr('attributes.is_hue_group', 'eq', true) | map(attribute='entity_id') | list %}
                         {{ hue_lights }}
+                      sequence:
+                        - service: light.turn_off
+                          target:
+                            entity_id: "{{ repeat.item }}"
+                        - delay: 0.1
               - conditions:
                   - condition: template
                     value_template: "{{ button_1_long_action == 'custom_service' and custom_service != '' }}"
