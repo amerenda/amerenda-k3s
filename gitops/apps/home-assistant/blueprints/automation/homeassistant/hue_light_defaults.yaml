@@ -1,20 +1,21 @@
 blueprint:
-  name: Hue - Living Room defaults (light on or switch press)
+  name: Hue - Light defaults (light on or switch press)
   description: >
-    Applies your default color/brightness to Living Room Hue lights when:
+    Applies your default color/brightness to any Hue lights when:
     1) the light turns ON (manually via Hue), or
     2) your Hue switch event entity fires (e.g., event.living_room_switch_button_1).
     For state-based turn-ons, can ignore HA-initiated calls using context.user_id.
   domain: automation
   input:
-    living_room_lights:
-      name: Living Room lights
+    target_lights:
+      name: Target lights
+      description: Select the lights you want to apply defaults to
       selector:
         entity:
           domain: light
           multiple: true
-    living_room_switch_events:
-      name: Living Room Hue switch event entities
+    switch_events:
+      name: Hue switch event entities
       description: e.g. event.living_room_switch_button_1
       selector:
         entity:
@@ -114,14 +115,14 @@ variables:
 trigger:
   - id: light_on
     platform: state
-    entity_id: !input living_room_lights
+    entity_id: !input target_lights
     to: "on"
     for:
       seconds: !input settle_seconds
 
   - id: switch_event
     platform: state
-    entity_id: !input living_room_switch_events
+    entity_id: !input switch_events
 
 condition: []
 
@@ -145,7 +146,7 @@ action:
                 sequence:
                   - service: light.turn_on
                     target:
-                      entity_id: !input living_room_lights
+                      entity_id: !input target_lights
                     data:
                       brightness: "{{ brightness | int }}"
                       color_temp: "{{ color_temp_mireds | int }}"
@@ -156,7 +157,7 @@ action:
                 sequence:
                   - service: light.turn_on
                     target:
-                      entity_id: !input living_room_lights
+                      entity_id: !input target_lights
                     data:
                       brightness: "{{ brightness | int }}"
                       hs_color: ["{{ hs_hue | float }}", "{{ hs_sat | float }}"]
@@ -180,7 +181,7 @@ action:
                 sequence:
                   - service: light.turn_on
                     target:
-                      entity_id: !input living_room_lights
+                      entity_id: !input target_lights
                     data:
                       brightness: "{{ brightness | int }}"
                       color_temp: "{{ color_temp_mireds | int }}"
@@ -191,7 +192,7 @@ action:
                 sequence:
                   - service: light.turn_on
                     target:
-                      entity_id: !input living_room_lights
+                      entity_id: !input target_lights
                     data:
                       brightness: "{{ brightness | int }}"
                       hs_color: ["{{ hs_hue | float }}", "{{ hs_sat | float }}"]
