@@ -167,29 +167,35 @@ data:
                   {% endif %}
             sequence:
               - choose:
-                  - conditions: "{{ color_mode == 'scene' and scene_entity != '' }}"
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ color_mode == 'scene' and scene_entity != '' }}"
                     sequence:
                       - service: scene.turn_on
                         target:
                           entity_id: "{{ scene_entity }}"
-                  - conditions: "{{ color_mode == 'color_temp' }}"
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ color_mode == 'color_temp' }}"
                     sequence:
                       - service: light.turn_on
                         target:
                           entity_id: !input target_lights
                         data:
-                          brightness: {{ brightness | int }}
-                          color_temp: {{ color_temp_mireds | int }}
-                          transition: {{ transition_secs | float }}
-                  - conditions: "{{ color_mode == 'hs' }}"
+                          brightness: "{{ brightness | int }}"
+                          color_temp: "{{ color_temp_mireds | int }}"
+                          transition: "{{ transition_secs | float }}"
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ color_mode == 'hs' }}"
                     sequence:
                       - service: light.turn_on
                         target:
                           entity_id: !input target_lights
                         data:
-                          brightness: {{ brightness | int }}
-                          hs_color: [{{ hs_hue | float }}, {{ hs_sat | float }}]
-                          transition: {{ transition_secs | float }}
+                          brightness: "{{ brightness | int }}"
+                          hs_color: ["{{ hs_hue | float }}", "{{ hs_sat | float }}"]
+                          transition: "{{ transition_secs | float }}"
     
           # B) Hue switch event fired
           - conditions:
@@ -204,26 +210,32 @@ data:
               - delay:
                   seconds: 0.2  # let Hue toggle power, then override cleanly
               - choose:
-                  - conditions: "{{ color_mode == 'scene' and scene_entity != '' }}"
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ color_mode == 'scene' and scene_entity != '' }}"
                     sequence:
                       - service: scene.turn_on
                         target:
                           entity_id: "{{ scene_entity }}"
-                  - conditions: "{{ color_mode == 'color_temp' }}"
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ color_mode == 'color_temp' }}"
                     sequence:
                       - service: light.turn_on
                         target:
                           entity_id: !input target_lights
                         data:
-                          brightness: {{ brightness | int }}
-                          color_temp: {{ color_temp_mireds | int }}
-                          transition: {{ transition_secs | float }}
-                  - conditions: "{{ color_mode == 'hs' }}"
+                          brightness: "{{ brightness | int }}"
+                          color_temp: "{{ color_temp_mireds | int }}"
+                          transition: "{{ transition_secs | float }}"
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ color_mode == 'hs' }}"
                     sequence:
                       - service: light.turn_on
                         target:
                           entity_id: !input target_lights
                         data:
-                          brightness: {{ brightness | int }}
-                          hs_color: [{{ hs_hue | float }}, {{ hs_sat | float }}]
-                          transition: {{ transition_secs | float }}
+                          brightness: "{{ brightness | int }}"
+                          hs_color: ["{{ hs_hue | float }}", "{{ hs_sat | float }}"]
+                          transition: "{{ transition_secs | float }}"
