@@ -226,6 +226,26 @@ spec:
           env:
             - name: TZ
               value: "America/New_York"
+          startupProbe:
+            httpGet:
+              path: /
+              port: 8123
+            periodSeconds: 5
+            failureThreshold: 60  # allow up to ~5 minutes
+          readinessProbe:
+            httpGet:
+              path: /manifest.json
+              port: 8123
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8123
+            periodSeconds: 20
+            timeoutSeconds: 2
+            failureThreshold: 5
           volumeMounts:
             - name: config
               mountPath: /config
