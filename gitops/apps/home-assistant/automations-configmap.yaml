@@ -223,7 +223,7 @@ data:
             sticky: true
 
   switch_control_bathroom.yaml: |
-    alias: Bathroom Switch Control
+    alias: Switch Control - Bathroom
     id: bathroom_switch_control
     description: Control bathroom lights with Hue switch buttons
     use_blueprint:
@@ -251,7 +251,7 @@ data:
         max_brightness: 255
 
   switch_control_bedroom.yaml: |
-    alias: Bedroom Switch Control
+    alias: Switch Control - Bedroom
     id: bedroom_switch_control
     description: Control bedroom lights with Hue switch buttons
     use_blueprint:
@@ -279,7 +279,7 @@ data:
         max_brightness: 255
 
   switch_control_hallway.yaml: |
-    alias: Hallway Switch Control
+    alias: Switch Control - Hallway
     id: hallway_switch_control
     description: Control hallway lights with Hue switch buttons
     use_blueprint:
@@ -307,7 +307,7 @@ data:
         max_brightness: 255
 
   switch_control_kitchen.yaml: |
-    alias: Kitchen Switch Control
+    alias: Switch Control - Kitchen
     id: kitchen_switch_control
     description: Control kitchen lights with Hue switch buttons
     use_blueprint:
@@ -335,7 +335,7 @@ data:
         max_brightness: 255
 
   switch_control_living_room.yaml: |
-    alias: Living Room Switch Control
+    alias: Switch Control - Living Room
     id: living_room_switch_control
     description: Control living room lights with Hue switch buttons
     use_blueprint:

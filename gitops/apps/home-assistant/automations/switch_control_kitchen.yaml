@@ -1,4 +1,4 @@
-alias: Kitchen Switch Control
+alias: Switch Control - Kitchen
 id: kitchen_switch_control
 description: Control kitchen lights with Hue switch buttons
 use_blueprint:

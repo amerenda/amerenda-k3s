@@ -1,4 +1,4 @@
-alias: Hallway Switch Control
+alias: Switch Control - Hallway
 id: hallway_switch_control
 description: Control hallway lights with Hue switch buttons
 use_blueprint:

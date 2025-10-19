@@ -1,4 +1,4 @@
-alias: Living Room Switch Control
+alias: Switch Control - Living Room
 id: living_room_switch_control
 description: Control living room lights with Hue switch buttons
 use_blueprint:

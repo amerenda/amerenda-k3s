@@ -1,4 +1,4 @@
-alias: Bathroom Switch Control
+alias: Switch Control - Bathroom
 id: bathroom_switch_control
 description: Control bathroom lights with Hue switch buttons
 use_blueprint:
