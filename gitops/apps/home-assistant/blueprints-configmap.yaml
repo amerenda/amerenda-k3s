@@ -437,7 +437,7 @@ data:
       - platform: event
         event_type: hue_event
         event_data:
-          id: "{{ switch_entity.split('.')[-1].replace('_button_1', '_switch_button').replace('_button_2', '_switch_button').replace('_button_3', '_switch_button').replace('_button_4', '_switch_button') }}"
+          id: "{{ switch_entity.split('.')[-1].replace('_button_1', '_switch_button') }}"
     
     condition: []
     
@@ -468,7 +468,7 @@ data:
                     sequence:
                       - service: light.turn_off
                         target:
-                          domain: light
+                          entity_id: all
                   - conditions:
                       - condition: template
                         value_template: "{{ button_1_long_action == 'custom_service' and custom_service != '' }}"
