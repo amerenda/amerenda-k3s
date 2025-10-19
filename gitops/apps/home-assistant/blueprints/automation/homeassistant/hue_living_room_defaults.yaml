@@ -50,7 +50,7 @@ blueprint:
             - repeat
             - long_release
     brightness:
-      name: Brightness (0–255)
+      name: Brightness (0-255)
       default: 180
       selector:
         number:
@@ -74,7 +74,7 @@ blueprint:
           max: 500
           step: 1
     hs_hue:
-      name: HS – Hue (0–360)
+      name: HS - Hue (0-360)
       default: 30
       selector:
         number:
@@ -82,7 +82,7 @@ blueprint:
           max: 360
           step: 1
     hs_sat:
-      name: HS – Saturation (0–100)
+      name: HS - Saturation (0-100)
       default: 30
       selector:
         number:

@@ -6,7 +6,7 @@ metadata:
 data:
   hue_living_room_defaults.yaml: |
     blueprint:
-      name: Hue - Living Room defaults (light on or switch press)
+      name: Hue - lving Room defaults (light on or switch press)
       description: >
         Applies your default color/brightness to Living Room Hue lights when:
         1) the light turns ON (manually via Hue), or
@@ -57,7 +57,7 @@ data:
                 - repeat
                 - long_release
         brightness:
-          name: Brightness (0–255)
+          name: Brightness (0-255)
           default: 180
           selector:
             number:
@@ -81,7 +81,7 @@ data:
               max: 500
               step: 1
         hs_hue:
-          name: HS – Hue (0–360)
+          name: HS - Hue (0-360)
           default: 30
           selector:
             number:
@@ -89,7 +89,7 @@ data:
               max: 360
               step: 1
         hs_sat:
-          name: HS – Saturation (0–100)
+          name: HS - Saturation (0-100)
           default: 30
           selector:
             number:
@@ -104,10 +104,10 @@ data:
               min: 0
               max: 5
               step: 0.1
-
+    
     mode: restart
     max_exceeded: silent
-
+    
     variables:
       only_when_manual: !input only_when_manual
       event_states: !input event_states
@@ -117,7 +117,7 @@ data:
       hs_hue: !input hs_hue
       hs_sat: !input hs_sat
       transition_secs: !input transition_secs
-
+    
     trigger:
       - id: light_on
         platform: state
@@ -125,13 +125,13 @@ data:
         to: "on"
         for:
           seconds: !input settle_seconds
-
+    
       - id: switch_event
         platform: state
         entity_id: !input living_room_switch_events
-
+    
     condition: []
-
+    
     action:
       - choose:
           # Branch A: Light turned ON (typically via Hue/manual)
@@ -168,7 +168,7 @@ data:
                           brightness: "{{ brightness | int }}"
                           hs_color: ["{{ hs_hue | float }}", "{{ hs_sat | float }}"]
                           transition: "{{ transition_secs | float }}"
-
+    
           # Branch B: Hue switch event entity fired
           - conditions:
               - condition: template
@@ -203,3 +203,4 @@ data:
                           brightness: "{{ brightness | int }}"
                           hs_color: ["{{ hs_hue | float }}", "{{ hs_sat | float }}"]
                           transition: "{{ transition_secs | float }}"
+
