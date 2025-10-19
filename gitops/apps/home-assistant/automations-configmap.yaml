@@ -247,3 +247,21 @@ data:
             importance: low
             sticky: true
 
+  living_room_night_scene.yaml: |
+    alias: Alex - Living Room Night Lighting (Scene)
+    id: alex_living_room_night_lighting_scene
+    description: Use a Hue/HA scene to avoid color flash on switch/light-on
+    use_blueprint:
+      path: _defaults/hue_light_defaults.yaml
+      input:
+        target_lights:
+          - light.living_room
+        switch_events:
+          - event.living_room_switch_button_1
+        only_when_manual: true
+        settle_seconds: 1
+        event_states: [initial_press, short_release]
+        color_mode: scene
+        scene_entity: scene.living_room_night_red
+        # brightness/hs/color_temp/transition are ignored in scene mode
+

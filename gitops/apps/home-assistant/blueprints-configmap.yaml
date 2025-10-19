@@ -10,15 +10,14 @@ data:
     blueprint:
       name: Hue - Light defaults (light on or switch press)
       description: >
-        Applies your default color/brightness to any Hue lights when:
-        1) the light turns ON (manually via Hue), or
-        2) your Hue switch event entity fires (e.g., event.living_room_switch_button_1).
-        For state-based turn-ons, can ignore HA-initiated calls using context.user_id.
+        Apply default color/brightness to Hue lights when:
+        1) the light turns ON (manual via Hue), or
+        2) a Hue switch event entity fires.
+        Optionally use a Hue/HA scene to avoid any color "flash".
       domain: automation
       input:
         target_lights:
           name: Target lights
-          description: Select the lights you want to apply defaults to
           selector:
             entity:
               domain: light
@@ -32,25 +31,25 @@ data:
               multiple: true
         only_when_manual:
           name: Only when manual (for light-on trigger)
-          description: Skip when HA turned the light on (uses context.user_id is none)
+          description: Skip when HA turned the light on (context.user_id is none)
           default: true
           selector:
             boolean: {}
+    
         settle_seconds:
           name: Settle seconds (for light-on trigger)
+          description: "Use >= 1s to avoid race with Hue bridge updates"
           default: 1
           selector:
             number:
-              min: 0
+              min: 1
               max: 5
               step: 1
               unit_of_measurement: s
+    
         event_states:
           name: Switch event states to react to
-          description: "Common: initial_press, short_release (leave as-is if unsure)"
-          default:
-            - initial_press
-            - short_release
+          default: [initial_press, short_release]
           selector:
             select:
               multiple: true
@@ -59,22 +58,28 @@ data:
                 - short_release
                 - repeat
                 - long_release
-        brightness:
-          name: Brightness (0-255)
-          default: 180
-          selector:
-            number:
-              min: 1
-              max: 255
-              step: 1
+    
         color_mode:
           name: Color mode
+          description: "Pick 'scene' to call a Hue/HA scene (prevents flash)."
           default: color_temp
           selector:
             select:
               options:
                 - color_temp
                 - hs
+                - scene
+    
+        # Scene mode inputs
+        scene_entity:
+          name: Scene entity (when color_mode = scene)
+          description: "e.g. scene.living_room_night_red (must exist in HA)"
+          default: ""
+          selector:
+            entity:
+              domain: scene
+    
+        # Color temp inputs
         color_temp_mireds:
           name: Color Temp (mireds)
           default: 350
@@ -83,6 +88,8 @@ data:
               min: 153
               max: 500
               step: 1
+    
+        # HS inputs
         hs_hue:
           name: HS - Hue (0-360)
           default: 30
@@ -99,6 +106,7 @@ data:
               min: 0
               max: 100
               step: 1
+    
         transition_secs:
           name: Transition (seconds)
           default: 0.4
@@ -107,6 +115,15 @@ data:
               min: 0
               max: 5
               step: 0.1
+    
+        brightness:
+          name: Brightness (1-255)
+          default: 180
+          selector:
+            number:
+              min: 1
+              max: 255
+              step: 1
     
     mode: restart
     max_exceeded: silent
@@ -120,6 +137,7 @@ data:
       hs_hue: !input hs_hue
       hs_sat: !input hs_sat
       transition_secs: !input transition_secs
+      scene_entity: !input scene_entity
     
     trigger:
       - id: light_on
@@ -137,7 +155,7 @@ data:
     
     action:
       - choose:
-          # Branch A: Light turned ON (typically via Hue/manual)
+          # A) Light turned ON (usually manual/Hue)
           - conditions:
               - condition: template
                 value_template: "{{ trigger.id == 'light_on' }}"
@@ -149,30 +167,31 @@ data:
                   {% endif %}
             sequence:
               - choose:
-                  - conditions:
-                      - condition: template
-                        value_template: "{{ color_mode == 'color_temp' }}"
+                  - conditions: "{{ color_mode == 'scene' and scene_entity != '' }}"
+                    sequence:
+                      - service: scene.turn_on
+                        target:
+                          entity_id: "{{ scene_entity }}"
+                  - conditions: "{{ color_mode == 'color_temp' }}"
                     sequence:
                       - service: light.turn_on
                         target:
                           entity_id: !input target_lights
                         data:
-                          brightness: "{{ brightness | int }}"
-                          color_temp: "{{ color_temp_mireds | int }}"
-                          transition: "{{ transition_secs | float }}"
-                  - conditions:
-                      - condition: template
-                        value_template: "{{ color_mode == 'hs' }}"
+                          brightness: {{ brightness | int }}
+                          color_temp: {{ color_temp_mireds | int }}
+                          transition: {{ transition_secs | float }}
+                  - conditions: "{{ color_mode == 'hs' }}"
                     sequence:
                       - service: light.turn_on
                         target:
                           entity_id: !input target_lights
                         data:
-                          brightness: "{{ brightness | int }}"
-                          hs_color: ["{{ hs_hue | float }}", "{{ hs_sat | float }}"]
-                          transition: "{{ transition_secs | float }}"
+                          brightness: {{ brightness | int }}
+                          hs_color: [{{ hs_hue | float }}, {{ hs_sat | float }}]
+                          transition: {{ transition_secs | float }}
     
-          # Branch B: Hue switch event entity fired
+          # B) Hue switch event fired
           - conditions:
               - condition: template
                 value_template: "{{ trigger.id == 'switch_event' }}"
@@ -182,28 +201,29 @@ data:
                   {{ trigger.to_state is not none and
                      trigger.to_state.state in event_states }}
             sequence:
-              - delay: "00:00:00.2"  # let Hue apply its ON, then override cleanly
+              - delay:
+                  seconds: 0.2  # let Hue toggle power, then override cleanly
               - choose:
-                  - conditions:
-                      - condition: template
-                        value_template: "{{ color_mode == 'color_temp' }}"
+                  - conditions: "{{ color_mode == 'scene' and scene_entity != '' }}"
+                    sequence:
+                      - service: scene.turn_on
+                        target:
+                          entity_id: "{{ scene_entity }}"
+                  - conditions: "{{ color_mode == 'color_temp' }}"
                     sequence:
                       - service: light.turn_on
                         target:
                           entity_id: !input target_lights
                         data:
-                          brightness: "{{ brightness | int }}"
-                          color_temp: "{{ color_temp_mireds | int }}"
-                          transition: "{{ transition_secs | float }}"
-                  - conditions:
-                      - condition: template
-                        value_template: "{{ color_mode == 'hs' }}"
+                          brightness: {{ brightness | int }}
+                          color_temp: {{ color_temp_mireds | int }}
+                          transition: {{ transition_secs | float }}
+                  - conditions: "{{ color_mode == 'hs' }}"
                     sequence:
                       - service: light.turn_on
                         target:
                           entity_id: !input target_lights
                         data:
-                          brightness: "{{ brightness | int }}"
-                          hs_color: ["{{ hs_hue | float }}", "{{ hs_sat | float }}"]
-                          transition: "{{ transition_secs | float }}"
-
+                          brightness: {{ brightness | int }}
+                          hs_color: [{{ hs_hue | float }}, {{ hs_sat | float }}]
+                          transition: {{ transition_secs | float }}
