@@ -227,7 +227,7 @@ data:
     id: alex_living_room_switch_control
     description: Control living room lights with Hue switch buttons
     use_blueprint:
-      path: homeassistant/hue_switch_control.yaml
+      path: _defaults/hue_switch_control.yaml
       input:
         target_lights:
           - light.living_room

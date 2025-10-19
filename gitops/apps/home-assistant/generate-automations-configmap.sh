@@ -80,4 +80,4 @@ else
 fi
 
 echo "ConfigMap generated: $OUTPUT_FILE"
-echo "To apply: kubectl apply -f $OUTPUT_FILE"
+echo "To apply: commit the changes and push to the repository"
