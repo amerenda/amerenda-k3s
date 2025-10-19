@@ -239,9 +239,7 @@ action:
                 sequence:
                   - service: light.turn_off
                     target:
-                      entity_id: >
-                        {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                        {{ all_lights }}
+                      domain: light
               - conditions:
                   - condition: template
                     value_template: "{{ button_1_long_action == 'custom_service' and custom_service != '' }}"
