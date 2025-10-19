@@ -125,8 +125,8 @@ data:
   alex_living_room_night_lighting.yaml: |
     alias: Alex - Living Room Night Lighting
     description: "Applies red night lighting to living room when lights turn on or switch is pressed during night hours"
-    use_blueprint:
-      path: _defaults/hue_living_room_defaults.yaml
+            use_blueprint:
+              path: _defaults/hue_light_defaults.yaml
       input:
         living_room_lights:
           - light.living_room

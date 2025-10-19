@@ -232,7 +232,7 @@ spec:
             - name: automations
               mountPath: /config/automations
             - name: blueprints-defaults
-              mountPath: /config/blueprints/automation/_defaults
+              mountPath: /config/blueprints/_defaults
               readOnly: true
           lifecycle:
             preStop:
