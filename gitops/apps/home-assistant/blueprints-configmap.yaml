@@ -436,10 +436,12 @@ data:
     trigger:
       - platform: event
         event_type: hue_event
-        event_data:
-          id: "{{ switch_entity.split('.')[-1].replace('_button_1', '_switch_button') }}"
     
-    condition: []
+    condition:
+      - condition: template
+        value_template: >
+          {% set expected_id = switch_entity.split('.')[-1].replace('_button_1', '_switch_button').replace('_button_2', '_switch_button').replace('_button_3', '_switch_button').replace('_button_4', '_switch_button') %}
+          {{ trigger.event.data.id == expected_id }}
     
     action:
       - choose:
