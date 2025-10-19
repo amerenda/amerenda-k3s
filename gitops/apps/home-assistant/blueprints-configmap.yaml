@@ -6,15 +6,15 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 data:
-  hue_light_defaults.yaml: |
+  hue_night_light_defaults.yaml: |
     blueprint:
-      name: Hue - Light defaults (light on or switch press)
+      name: Hue - Night Light Defaults
       description: >
-        Apply default color/brightness to Hue lights when:
+        Apply night light defaults to Hue lights when:
         1) the light turns ON (manual via Hue), or
         2) a Hue switch event entity fires.
-        Optionally use a Hue/HA scene to avoid any color "flash".
         Designed to work with the Hue Switch Control blueprint.
+        Focuses on night light settings with warm colors and low brightness.
       domain: automation
       input:
         target_lights:
@@ -94,7 +94,8 @@ data:
         # Color temp inputs
         color_temp_mireds:
           name: Color Temp (mireds)
-          default: 350
+          default: 500
+          description: "Higher values = warmer light (good for night)"
           selector:
             number:
               min: 153
@@ -105,6 +106,7 @@ data:
         hs_hue:
           name: HS - Hue (0-360)
           default: 30
+          description: "Warm orange/red hue for night light"
           selector:
             number:
               min: 0
@@ -112,7 +114,8 @@ data:
               step: 1
         hs_sat:
           name: HS - Saturation (0-100)
-          default: 30
+          default: 20
+          description: "Lower saturation for softer night light"
           selector:
             number:
               min: 0
@@ -121,7 +124,8 @@ data:
     
         transition_secs:
           name: Transition (seconds)
-          default: 0.4
+          default: 1.0
+          description: "Slower transition for night light"
           selector:
             number:
               min: 0
@@ -130,7 +134,8 @@ data:
     
         brightness:
           name: Brightness (1-255)
-          default: 180
+          default: 50
+          description: "Low brightness for night light"
           selector:
             number:
               min: 1
