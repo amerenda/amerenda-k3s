@@ -240,7 +240,9 @@ action:
                   - service: light.turn_off
                     target:
                       entity_id: >
-                        {% set hue_lights = states.light | selectattr('attributes.is_hue_group', 'eq', true) | map(attribute='entity_id') | list %}
+                        {% set hue_groups = states.light | selectattr('attributes.is_hue_group', 'eq', true) | map(attribute='entity_id') | list %}
+                        {% set hue_individual = states.light | selectattr('attributes.hue_type', 'defined') | map(attribute='entity_id') | list %}
+                        {% set hue_lights = hue_groups + hue_individual %}
                         {{ hue_lights }}
               - conditions:
                   - condition: template
