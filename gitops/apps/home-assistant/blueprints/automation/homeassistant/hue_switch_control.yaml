@@ -198,7 +198,18 @@ trigger:
 condition:
   - condition: template
     value_template: >
-      {% set expected_id = switch_entity.split('.')[-1].replace('_button_1', '_switch_button').replace('_button_2', '_switch_button').replace('_button_3', '_switch_button').replace('_button_4', '_switch_button') %}
+      {% set entity_name = switch_entity.split('.')[-1] %}
+      {% if entity_name.endswith('_button_1') %}
+        {% set expected_id = entity_name.replace('_button_1', '_switch_button') %}
+      {% elif entity_name.endswith('_button_2') %}
+        {% set expected_id = entity_name.replace('_button_2', '_switch_button') %}
+      {% elif entity_name.endswith('_button_3') %}
+        {% set expected_id = entity_name.replace('_button_3', '_switch_button') %}
+      {% elif entity_name.endswith('_button_4') %}
+        {% set expected_id = entity_name.replace('_button_4', '_switch_button') %}
+      {% else %}
+        {% set expected_id = entity_name %}
+      {% endif %}
       {{ trigger.event.data.id == expected_id }}
 
 action:
