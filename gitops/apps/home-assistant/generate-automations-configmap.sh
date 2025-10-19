@@ -18,6 +18,8 @@ kind: ConfigMap
 metadata:
   name: homeassistant-automations
   namespace: $NAMESPACE
+  annotations:
+    reloader.stakater.com/auto: "true"
 data:
 EOF
 
@@ -52,6 +54,8 @@ kind: ConfigMap
 metadata:
   name: ha-blueprints-defaults
   namespace: $NAMESPACE
+  annotations:
+    reloader.stakater.com/auto: "true"
 data:
 EOF
 
