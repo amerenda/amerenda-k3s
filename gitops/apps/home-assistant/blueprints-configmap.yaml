@@ -479,7 +479,7 @@ data:
                       - condition: template
                         value_template: "{{ button_1_long_action == 'all_lights_off' }}"
                     sequence:
-                      - service: light.turn_off
+                      - service: homeassistant.turn_off
                         target:
                           domain: light
                   - conditions:
