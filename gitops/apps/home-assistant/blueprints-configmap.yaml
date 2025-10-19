@@ -239,3 +239,255 @@ data:
                           brightness: "{{ brightness | int }}"
                           hs_color: ["{{ hs_hue | float }}", "{{ hs_sat | float }}"]
                           transition: "{{ transition_secs | float }}"
+  hue_switch_control.yaml: |
+    blueprint:
+      name: Hue - Switch Control (Generic)
+      description: >
+        Control Hue lights with a Hue switch/dimmer. Supports:
+        - Button 1: Toggle lights on/off
+        - Button 2: Brightness up
+        - Button 3: Brightness down  
+        - Button 4: Custom action (default: scene cycle)
+      domain: automation
+      input:
+        target_lights:
+          name: Target lights
+          description: Lights to control with this switch
+          selector:
+            entity:
+              domain: light
+              multiple: true
+        
+        switch_entity:
+          name: Hue switch event entity
+          description: e.g. event.living_room_switch_button_1
+          selector:
+            entity:
+              domain: event
+        
+        # Button 1: Toggle
+        button_1_toggle:
+          name: Button 1 - Toggle lights
+          description: Enable toggle on/off for button 1
+          default: true
+          selector:
+            boolean: {}
+        
+        # Button 2: Brightness up
+        button_2_brightness_up:
+          name: Button 2 - Brightness up
+          description: Enable brightness up for button 2
+          default: true
+          selector:
+            boolean: {}
+        
+        brightness_step:
+          name: Brightness step
+          description: How much to increase/decrease brightness
+          default: 25
+          selector:
+            number:
+              min: 1
+              max: 100
+              step: 1
+        
+        # Button 3: Brightness down
+        button_3_brightness_down:
+          name: Button 3 - Brightness down
+          description: Enable brightness down for button 3
+          default: true
+          selector:
+            boolean: {}
+        
+        # Button 4: Custom action
+        button_4_custom:
+          name: Button 4 - Custom action
+          description: Enable custom action for button 4
+          default: true
+          selector:
+            boolean: {}
+        
+        button_4_action:
+          name: Button 4 - Action type
+          description: What action to perform on button 4
+          default: scene_cycle
+          selector:
+            select:
+              options:
+                - scene_cycle
+                - scene_next
+                - scene_previous
+                - color_cycle
+                - custom_service
+        
+        # Scene cycling options
+        scene_entities:
+          name: Scenes to cycle through
+          description: List of scenes to cycle through (for scene_cycle/next/previous)
+          default: []
+          selector:
+            entity:
+              domain: scene
+              multiple: true
+        
+        # Custom service for button 4
+        custom_service:
+          name: Custom service (when action = custom_service)
+          description: Service to call for button 4 custom action
+          default: ""
+          selector:
+            text: {}
+        
+        custom_service_data:
+          name: Custom service data
+          description: Data to pass to custom service (YAML format)
+          default: "{}"
+          selector:
+            text: {}
+        
+        # Brightness limits
+        min_brightness:
+          name: Minimum brightness
+          description: Minimum brightness level (1-255)
+          default: 1
+          selector:
+            number:
+              min: 1
+              max: 255
+              step: 1
+        
+        max_brightness:
+          name: Maximum brightness
+          description: Maximum brightness level (1-255)
+          default: 255
+          selector:
+            number:
+              min: 1
+              max: 255
+              step: 1
+    
+    mode: restart
+    max_exceeded: silent
+    
+    variables:
+      target_lights: !input target_lights
+      switch_entity: !input switch_entity
+      button_1_toggle: !input button_1_toggle
+      button_2_brightness_up: !input button_2_brightness_up
+      button_3_brightness_down: !input button_3_brightness_down
+      button_4_custom: !input button_4_custom
+      button_4_action: !input button_4_action
+      scene_entities: !input scene_entities
+      custom_service: !input custom_service
+      custom_service_data: !input custom_service_data
+      brightness_step: !input brightness_step
+      min_brightness: !input min_brightness
+      max_brightness: !input max_brightness
+    
+    trigger:
+      - platform: state
+        entity_id: !input switch_entity
+    
+    condition: []
+    
+    action:
+      - choose:
+          # Button 1: Toggle lights
+          - conditions:
+              - condition: template
+                value_template: "{{ trigger.to_state.state == 'initial_press' }}"
+              - condition: template
+                value_template: "{{ button_1_toggle }}"
+            sequence:
+              - service: light.toggle
+                target:
+                  entity_id: !input target_lights
+          
+          # Button 2: Brightness up
+          - conditions:
+              - condition: template
+                value_template: "{{ trigger.to_state.state == 'initial_press' }}"
+              - condition: template
+                value_template: "{{ button_2_brightness_up }}"
+            sequence:
+              - service: light.turn_on
+                target:
+                  entity_id: !input target_lights
+                data:
+                  brightness: >
+                    {% set current = state_attr(target_lights[0], 'brightness') | int %}
+                    {% set new = current + brightness_step %}
+                    {% if new > max_brightness %}{{ max_brightness }}{% else %}{{ new }}{% endif %}
+          
+          # Button 3: Brightness down
+          - conditions:
+              - condition: template
+                value_template: "{{ trigger.to_state.state == 'initial_press' }}"
+              - condition: template
+                value_template: "{{ button_3_brightness_down }}"
+            sequence:
+              - service: light.turn_on
+                target:
+                  entity_id: !input target_lights
+                data:
+                  brightness: >
+                    {% set current = state_attr(target_lights[0], 'brightness') | int %}
+                    {% set new = current - brightness_step %}
+                    {% if new < min_brightness %}{{ min_brightness }}{% else %}{{ new }}{% endif %}
+          
+          # Button 4: Custom action
+          - conditions:
+              - condition: template
+                value_template: "{{ trigger.to_state.state == 'initial_press' }}"
+              - condition: template
+                value_template: "{{ button_4_custom }}"
+            sequence:
+              - choose:
+                  # Scene cycle
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ button_4_action == 'scene_cycle' }}"
+                    sequence:
+                      - service: scene.turn_on
+                        target:
+                          entity_id: "{{ scene_entities[0] if scene_entities else '' }}"
+                  
+                  # Scene next
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ button_4_action == 'scene_next' }}"
+                    sequence:
+                      - service: scene.turn_on
+                        target:
+                          entity_id: "{{ scene_entities[0] if scene_entities else '' }}"
+                  
+                  # Scene previous
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ button_4_action == 'scene_previous' }}"
+                    sequence:
+                      - service: scene.turn_on
+                        target:
+                          entity_id: "{{ scene_entities[0] if scene_entities else '' }}"
+                  
+                  # Color cycle
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ button_4_action == 'color_cycle' }}"
+                    sequence:
+                      - service: light.turn_on
+                        target:
+                          entity_id: !input target_lights
+                        data:
+                          hs_color: [0, 100]  # Red
+                  
+                  # Custom service
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ button_4_action == 'custom_service' and custom_service != '' }}"
+                    sequence:
+                      - service: "{{ custom_service }}"
+                        target:
+                          entity_id: !input target_lights
+                        data: "{{ custom_service_data | from_yaml }}"
+
