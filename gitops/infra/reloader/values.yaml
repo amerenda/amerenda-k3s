@@ -66,8 +66,8 @@ affinity: {}
 
 # Reloader specific configuration
 reloader:
-  # Watch on default namespace
-  watchGlobally: false
+  # Watch on all namespaces
+  watchGlobally: true
   
   # Log level
   logLevel: info
