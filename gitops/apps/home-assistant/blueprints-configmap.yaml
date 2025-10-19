@@ -479,7 +479,9 @@ data:
                       - condition: template
                         value_template: "{{ button_1_long_action == 'all_lights_off' }}"
                     sequence:
-                      - service: homeassistant.turn_off
+                      - service: light.turn_off
+                        target:
+                          entity_id: all
                   - conditions:
                       - condition: template
                         value_template: "{{ button_1_long_action == 'custom_service' and custom_service != '' }}"
