@@ -1,26 +1,26 @@
-alias: Living Room Switch Control
-id: living_room_switch_control
-description: Control living room lights with Hue switch buttons
+alias: Bedroom Switch Control
+id: bedroom_switch_control
+description: Control bedroom lights with Hue switch buttons
 use_blueprint:
   path: _defaults/hue_switch_control.yaml
   input:
     target_lights:
-      - light.living_room
-    switch_entity: event.living_room_switch_button_1
+      - light.bedroom
+    switch_entity: event.bedroom_switch_button_1
     button_1_toggle: true
     button_2_brightness_up: true
     button_3_brightness_down: true
     button_4_custom: true
     button_4_action: scene_cycle
     scene_entities:
-      - scene.living_room_nightlight
-      - scene.living_room_relax
-      - scene.living_room_energize
+      - scene.bedroom_nightlight
+      - scene.bedroom_relax
+      - scene.bedroom_energize
     button_1_long_press: true
     button_1_long_action: all_lights_off
     button_4_long_press: true
     button_4_long_action: room_relax_scene
-    room_relax_scene: scene.living_room_relax
+    room_relax_scene: scene.bedroom_relax
     brightness_step: 25
     min_brightness: 1
     max_brightness: 255
