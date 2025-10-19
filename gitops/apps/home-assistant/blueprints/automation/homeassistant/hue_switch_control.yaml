@@ -200,13 +200,13 @@ condition:
     value_template: >
       {% set entity_name = switch_entity.split('.')[-1] %}
       {% if entity_name.endswith('_button_1') %}
-        {% set expected_id = entity_name.replace('_button_1', '_switch_button') %}
+        {% set expected_id = entity_name.replace('_button_1', '_button') %}
       {% elif entity_name.endswith('_button_2') %}
-        {% set expected_id = entity_name.replace('_button_2', '_switch_button') %}
+        {% set expected_id = entity_name.replace('_button_2', '_button') %}
       {% elif entity_name.endswith('_button_3') %}
-        {% set expected_id = entity_name.replace('_button_3', '_switch_button') %}
+        {% set expected_id = entity_name.replace('_button_3', '_button') %}
       {% elif entity_name.endswith('_button_4') %}
-        {% set expected_id = entity_name.replace('_button_4', '_switch_button') %}
+        {% set expected_id = entity_name.replace('_button_4', '_button') %}
       {% else %}
         {% set expected_id = entity_name %}
       {% endif %}
