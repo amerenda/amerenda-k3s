@@ -9,10 +9,10 @@
 replicaCount: 1
 
 image:
-  repository: stakater/reloader
+  name: stakater/reloader
+  repository: ghcr.io/stakater/reloader
+  tag: v1.4.8
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
