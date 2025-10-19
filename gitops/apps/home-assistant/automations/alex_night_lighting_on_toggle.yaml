@@ -1,15 +1,11 @@
 alias: Alex - Night Lighting on Toggle
-mode: parallel
+mode: single
 triggers:
-  - trigger: state
-    entity_id:
-      - light.living_room
-      - light.bathroom
-      - light.bedroom
-      - light.hallway
-      - light.kitchen
-    from: "off"
-    to: "on"
+  - trigger: event
+    event_type: hue_event
+    event_data:
+      device_id: living_room_switch
+      button: 1
 variables:
   is_past_cutoff: >
     {% set wd = now().weekday() %}  {# Mon=0..Sun=6 #}
@@ -19,16 +15,10 @@ variables:
     {% else %}
       {{ current_hour >= 23 or current_hour < 6 }}
     {% endif %}
-  room_scenes:
-    light.living_room: scene.living_room_nightlight
-    light.bathroom: scene.bathroom_nightlight
-    light.bedroom: scene.bedroom_nightlight
-    light.hallway: scene.hallway_nightlight
-    light.kitchen: scene.kitchen_nightlight
-  room_scene: "{{ room_scenes[trigger.entity_id] }}"
+    {{ true }}
 conditions:
   - condition: template
     value_template: "{{ is_past_cutoff }}"
 actions:
   - action: scene.turn_on
-    target: { entity_id: "{{ room_scene }}" }
+    target: { entity_id: "scene.bedroom_nightlight" }
