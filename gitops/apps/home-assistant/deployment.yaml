@@ -15,7 +15,6 @@ spec:
       labels:
         app: homeassistant
     spec:
-      hostNetwork: true
       initContainers:
         - name: install-hacs
           image: alpine:3.20
