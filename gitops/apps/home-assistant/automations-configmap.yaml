@@ -222,7 +222,7 @@ data:
             importance: low
             sticky: true
 
-  bathroom_switch_control.yaml: |
+  switch_control_bathroom.yaml: |
     alias: Bathroom Switch Control
     id: bathroom_switch_control
     description: Control bathroom lights with Hue switch buttons
@@ -250,7 +250,7 @@ data:
         min_brightness: 1
         max_brightness: 255
 
-  bedroom_switch_control.yaml: |
+  switch_control_bedroom.yaml: |
     alias: Bedroom Switch Control
     id: bedroom_switch_control
     description: Control bedroom lights with Hue switch buttons
@@ -278,7 +278,7 @@ data:
         min_brightness: 1
         max_brightness: 255
 
-  hallway_switch_control.yaml: |
+  switch_control_hallway.yaml: |
     alias: Hallway Switch Control
     id: hallway_switch_control
     description: Control hallway lights with Hue switch buttons
@@ -306,7 +306,7 @@ data:
         min_brightness: 1
         max_brightness: 255
 
-  kitchen_switch_control.yaml: |
+  switch_control_kitchen.yaml: |
     alias: Kitchen Switch Control
     id: kitchen_switch_control
     description: Control kitchen lights with Hue switch buttons
@@ -334,7 +334,7 @@ data:
         min_brightness: 1
         max_brightness: 255
 
-  living_room_switch_control.yaml: |
+  switch_control_living_room.yaml: |
     alias: Living Room Switch Control
     id: living_room_switch_control
     description: Control living room lights with Hue switch buttons
