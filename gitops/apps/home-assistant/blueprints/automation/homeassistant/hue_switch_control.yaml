@@ -239,7 +239,12 @@ action:
                 sequence:
                   - service: light.turn_off
                     target:
-                      domain: light
+                      entity_id: >
+                        {% set hue_lights = states.light | selectattr('attributes.friendly_name', 'search', 'Hue') | map(attribute='entity_id') | list %}
+                        {% if hue_lights | length == 0 %}
+                          {% set hue_lights = states.light | selectattr('attributes.friendly_name', 'search', 'Philips') | map(attribute='entity_id') | list %}
+                        {% endif %}
+                        {{ hue_lights }}
               - conditions:
                   - condition: template
                     value_template: "{{ button_1_long_action == 'custom_service' and custom_service != '' }}"
