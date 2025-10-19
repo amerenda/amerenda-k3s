@@ -43,12 +43,13 @@ BLUEPRINTS_DIR="blueprints"
 if [ -d "$BLUEPRINTS_DIR" ]; then
     echo "Processing blueprints..."
     find "$BLUEPRINTS_DIR" -name "*.yaml" -type f | while read -r file; do
-        # Get relative path from blueprints directory
+        # Get relative path from blueprints directory and replace / with _
         rel_path="${file#$BLUEPRINTS_DIR/}"
-        echo "Processing blueprint: $rel_path..."
+        key_name="blueprints_${rel_path//\//_}"
+        echo "Processing blueprint: $rel_path (key: $key_name)..."
         
-        # Add the file to the ConfigMap with blueprints/ prefix
-        echo "  blueprints/$rel_path: |" >> "$OUTPUT_FILE"
+        # Add the file to the ConfigMap with blueprints_ prefix and _ instead of /
+        echo "  $key_name: |" >> "$OUTPUT_FILE"
         
         # Add the content with proper indentation
         sed 's/^/    /' "$file" >> "$OUTPUT_FILE"

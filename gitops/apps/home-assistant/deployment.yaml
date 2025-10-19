@@ -229,6 +229,8 @@ spec:
               mountPath: /config
             - name: automations
               mountPath: /config/automations
+            - name: blueprints
+              mountPath: /config/blueprints
           lifecycle:
             preStop:
               exec:
@@ -238,5 +240,8 @@ spec:
           persistentVolumeClaim:
             claimName: homeassistant-config
         - name: automations
+          configMap:
+            name: homeassistant-automations
+        - name: blueprints
           configMap:
             name: homeassistant-automations
