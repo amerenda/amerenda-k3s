@@ -5,6 +5,7 @@ blueprint:
     1) the light turns ON (manual via Hue), or
     2) a Hue switch event entity fires.
     Optionally use a Hue/HA scene to avoid any color "flash".
+    Designed to work with the Hue Switch Control blueprint.
   domain: automation
   input:
     target_lights:
@@ -49,6 +50,17 @@ blueprint:
             - short_release
             - repeat
             - long_release
+
+    switch_control_delay:
+      name: Switch control delay
+      description: "Delay after switch events to let switch control blueprint handle first (seconds)"
+      default: 0.3
+      selector:
+        number:
+          min: 0
+          max: 2
+          step: 0.1
+          unit_of_measurement: s
 
     color_mode:
       name: Color mode
@@ -122,6 +134,7 @@ max_exceeded: silent
 variables:
   only_when_manual: !input only_when_manual
   event_states: !input event_states
+  switch_control_delay: !input switch_control_delay
   color_mode: !input color_mode
   brightness: !input brightness
   color_temp_mireds: !input color_temp_mireds
@@ -139,10 +152,23 @@ trigger:
       seconds: !input settle_seconds
 
   - id: switch_event
-    platform: state
-    entity_id: !input switch_events
+    platform: event
+    event_type: hue_event
 
-condition: []
+condition:
+  - condition: template
+    value_template: >
+      {% if trigger.id == 'light_on' %}
+        true
+      {% else %}
+        {% set switch_entity_names = switch_events | map('split', '.') | map('last') | list %}
+        {% set entity_name = trigger.event.data.id %}
+        {% if entity_name in switch_entity_names %}
+          {{ trigger.event.data.type in event_states }}
+        {% else %}
+          false
+        {% endif %}
+      {% endif %}
 
 action:
   - choose:
@@ -192,14 +218,17 @@ action:
       - conditions:
           - condition: template
             value_template: "{{ trigger.id == 'switch_event' }}"
-          - condition: template
-            alias: "Only react to desired event states"
-            value_template: >
-              {{ trigger.to_state is not none and
-                 trigger.to_state.state in event_states }}
         sequence:
           - delay:
-              seconds: 0.2  # let Hue toggle power, then override cleanly
+              seconds: "{{ switch_control_delay | float }}"  # let switch control blueprint handle first
+          - condition: template
+            value_template: >
+              {% for light in target_lights %}
+                {% if is_state(light, 'on') %}
+                  {{ true }}
+                {% endif %}
+              {% endfor %}
+              {{ false }}
           - choose:
               - conditions:
                   - condition: template
