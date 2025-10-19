@@ -46,7 +46,7 @@ data:
               unit_of_measurement: s
         event_states:
           name: Switch event states to react to
-          description: Common: initial_press, short_release (leave as-is if unsure)
+          description: "Common: initial_press, short_release (leave as-is if unsure)"
           default:
             - initial_press
             - short_release
