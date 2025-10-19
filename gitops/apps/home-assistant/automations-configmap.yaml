@@ -124,7 +124,7 @@ data:
     alias: Alex - Living Room Night Lighting
     description: "Applies red night lighting to living room when lights turn on or switch is pressed during night hours"
     use_blueprint:
-      path: hue_living_room_defaults_blueprint.yaml
+      path: homeassistant/hue_living_room_defaults_blueprint.yaml
       input:
         living_room_lights:
           - light.living_room
@@ -245,7 +245,7 @@ data:
             importance: low
             sticky: true
 
-  hue_living_room_defaults_blueprint.yaml: |
+  blueprints/automation/homeassistant/hue_living_room_defaults_blueprint.yaml: |
     blueprint:
       name: Hue – Living Room defaults (light on or switch press)
       description: >

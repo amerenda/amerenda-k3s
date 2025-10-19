@@ -38,5 +38,25 @@ for file in "$AUTOMATIONS_DIR"/*.yaml; do
     fi
 done
 
+# Process blueprints directory
+BLUEPRINTS_DIR="blueprints"
+if [ -d "$BLUEPRINTS_DIR" ]; then
+    echo "Processing blueprints..."
+    find "$BLUEPRINTS_DIR" -name "*.yaml" -type f | while read -r file; do
+        # Get relative path from blueprints directory
+        rel_path="${file#$BLUEPRINTS_DIR/}"
+        echo "Processing blueprint: $rel_path..."
+        
+        # Add the file to the ConfigMap with blueprints/ prefix
+        echo "  blueprints/$rel_path: |" >> "$OUTPUT_FILE"
+        
+        # Add the content with proper indentation
+        sed 's/^/    /' "$file" >> "$OUTPUT_FILE"
+        
+        # Add a blank line between files
+        echo "" >> "$OUTPUT_FILE"
+    done
+fi
+
 echo "ConfigMap generated: $OUTPUT_FILE"
 echo "To apply: kubectl apply -f $OUTPUT_FILE"
