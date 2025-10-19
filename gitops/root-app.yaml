@@ -465,3 +465,42 @@ spec:
         duration: 5s
         factor: 2
         maxDuration: 3m
+
+---
+# Infrastructure: Reloader
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-reloader
+  namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"  # Install early - useful for watching config changes
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: default
+  sources:
+    - repoURL: https://stakater.github.io/stakater-charts
+      chart: reloader
+      targetRevision: 2.2.3
+      helm:
+        valueFiles:
+          - $values/gitops/infra/reloader/values.yaml
+    - repoURL: https://github.com/amerenda/amerenda-k3s.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
