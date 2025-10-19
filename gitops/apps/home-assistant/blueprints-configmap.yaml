@@ -74,14 +74,14 @@ data:
         night_start_time:
           name: Night start time
           description: "Time when night mode should start (24-hour format)"
-          default: "17:00"
+          default: "23:00"
           selector:
             time: {}
     
         night_end_time:
           name: Night end time
           description: "Time when night mode should end (24-hour format)"
-          default: "07:00"
+          default: "05:45"
           selector:
             time: {}
     
