@@ -1,0 +1,19 @@
+alias: Alex - Living Room Night Lighting
+description: "Applies red night lighting to living room when lights turn on or switch is pressed during night hours"
+use_blueprint:
+  path: hue_living_room_defaults_blueprint.yaml
+  input:
+    living_room_lights:
+      - light.living_room
+    living_room_switch_events:
+      - event.living_room_switch_button_1
+    only_when_manual: true
+    settle_seconds: 0
+    event_states:
+      - initial_press
+      - short_release
+    brightness: 26  # Very dim for night lighting
+    color_mode: hs
+    hs_hue: 0  # Red
+    hs_sat: 100  # Full saturation for deep red
+    transition_secs: 0.2
