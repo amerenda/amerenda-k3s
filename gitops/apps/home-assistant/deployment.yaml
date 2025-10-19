@@ -231,8 +231,9 @@ spec:
               mountPath: /config
             - name: automations
               mountPath: /config/automations
-            - name: blueprints
-              mountPath: /config/blueprints
+            - name: blueprints-defaults
+              mountPath: /config/blueprints/automation/_defaults
+              readOnly: true
           lifecycle:
             preStop:
               exec:
@@ -244,6 +245,6 @@ spec:
         - name: automations
           configMap:
             name: homeassistant-automations
-        - name: blueprints
+        - name: blueprints-defaults
           configMap:
-            name: homeassistant-automations
+            name: ha-blueprints-defaults
