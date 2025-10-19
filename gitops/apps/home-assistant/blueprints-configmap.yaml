@@ -538,7 +538,10 @@ data:
                     sequence:
                       - service: scene.turn_on
                         target:
-                          entity_id: "{{ scene_entities[0] if scene_entities else '' }}"
+                          entity_id: >
+                            {% set current_time = now().timestamp() %}
+                            {% set scene_index = (current_time | int) % scene_entities|length %}
+                            {{ scene_entities[scene_index] if scene_entities else '' }}
                   
                   # Scene next
                   - conditions:
@@ -547,7 +550,10 @@ data:
                     sequence:
                       - service: scene.turn_on
                         target:
-                          entity_id: "{{ scene_entities[1] if scene_entities|length > 1 else scene_entities[0] if scene_entities else '' }}"
+                          entity_id: >
+                            {% set current_time = now().timestamp() %}
+                            {% set scene_index = (current_time | int) % scene_entities|length %}
+                            {{ scene_entities[scene_index] if scene_entities else '' }}
                   
                   # Scene previous
                   - conditions:
