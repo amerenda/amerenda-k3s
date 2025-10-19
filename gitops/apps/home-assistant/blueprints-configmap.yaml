@@ -199,9 +199,14 @@ data:
               false
             {% endif %}
           {% endif %}
-      - condition: time
-        after: "{{ night_start_time }}"
-        before: "{{ night_end_time }}"
+      - condition: template
+        value_template: >
+          {% set now_time = now().strftime('%H:%M') %}
+          {% if night_start_time <= night_end_time %}
+            {{ now_time >= night_start_time and now_time <= night_end_time }}
+          {% else %}
+            {{ now_time >= night_start_time or now_time <= night_end_time }}
+          {% endif %}
     
     action:
       - choose:
