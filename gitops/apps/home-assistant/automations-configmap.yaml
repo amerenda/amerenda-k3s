@@ -239,6 +239,8 @@ data:
           - initial_press
           - short_release
         switch_control_delay: 0.3
+        night_start_time: "20:00"
+        night_end_time: "07:00"
         color_mode: color_temp
         color_temp_mireds: 500
         transition_secs: 1.0

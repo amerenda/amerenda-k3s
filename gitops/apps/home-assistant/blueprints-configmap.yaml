@@ -71,6 +71,20 @@ data:
               step: 0.1
               unit_of_measurement: s
     
+        night_start_time:
+          name: Night start time
+          description: "Time when night mode should start (24-hour format)"
+          default: "17:00"
+          selector:
+            time: {}
+    
+        night_end_time:
+          name: Night end time
+          description: "Time when night mode should end (24-hour format)"
+          default: "07:00"
+          selector:
+            time: {}
+    
         color_mode:
           name: Color mode
           description: "Pick 'scene' to call a Hue/HA scene (prevents flash)."
@@ -149,6 +163,8 @@ data:
       only_when_manual: !input only_when_manual
       event_states: !input event_states
       switch_control_delay: !input switch_control_delay
+      night_start_time: !input night_start_time
+      night_end_time: !input night_end_time
       color_mode: !input color_mode
       brightness: !input brightness
       color_temp_mireds: !input color_temp_mireds
@@ -183,6 +199,9 @@ data:
               false
             {% endif %}
           {% endif %}
+      - condition: time
+        after: "{{ night_start_time }}"
+        before: "{{ night_end_time }}"
     
     action:
       - choose:
@@ -215,7 +234,7 @@ data:
                         data:
                           brightness: "{{ brightness | int }}"
                           color_temp: "{{ color_temp_mireds | int }}"
-                          transition: "{{ transition_secs | float }}"
+                          transition: 0
                   - conditions:
                       - condition: template
                         value_template: "{{ color_mode == 'hs' }}"
@@ -226,7 +245,7 @@ data:
                         data:
                           brightness: "{{ brightness | int }}"
                           hs_color: ["{{ hs_hue | float }}", "{{ hs_sat | float }}"]
-                          transition: "{{ transition_secs | float }}"
+                          transition: 0
     
           # B) Hue switch event fired
           - conditions:
@@ -261,7 +280,7 @@ data:
                         data:
                           brightness: "{{ brightness | int }}"
                           color_temp: "{{ color_temp_mireds | int }}"
-                          transition: "{{ transition_secs | float }}"
+                          transition: 0
                   - conditions:
                       - condition: template
                         value_template: "{{ color_mode == 'hs' }}"
@@ -272,7 +291,7 @@ data:
                         data:
                           brightness: "{{ brightness | int }}"
                           hs_color: ["{{ hs_hue | float }}", "{{ hs_sat | float }}"]
-                          transition: "{{ transition_secs | float }}"
+                          transition: 0
   hue_switch_control.yaml: |
     blueprint:
       name: Hue - Switch Control (Generic)
