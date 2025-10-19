@@ -1,5 +1,5 @@
 blueprint:
-  name: Hue – Living Room defaults (light on or switch press)
+  name: Hue - lving Room defaults (light on or switch press)
   description: >
     Applies your default color/brightness to Living Room Hue lights when:
     1) the light turns ON (manually via Hue), or
