@@ -1,24 +1,2 @@
-alias: Alex - Night Lighting on Toggle
-mode: single
-triggers:
-  - trigger: event
-    event_type: hue_event
-    event_data:
-      device_id: living_room_switch
-      button: 1
-variables:
-  is_past_cutoff: >
-    {% set wd = now().weekday() %}  {# Mon=0..Sun=6 #}
-    {% set current_hour = now().hour %}
-    {% if wd in [4,5] %}
-      {{ current_hour >= 1 or current_hour < 6 }}
-    {% else %}
-      {{ current_hour >= 23 or current_hour < 6 }}
-    {% endif %}
-    {{ true }}
-conditions:
-  - condition: template
-    value_template: "{{ is_past_cutoff }}"
-actions:
-  - action: scene.turn_on
-    target: { entity_id: "scene.bedroom_nightlight" }
+# This automation has been replaced by alex_living_room_night_lighting.yaml
+# which uses the hue_living_room_defaults_blueprint.yaml blueprint
