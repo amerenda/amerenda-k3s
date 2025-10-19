@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: ha-blueprints-defaults
   namespace: home-assistant
+  annotations:
+    reloader.stakater.com/auto: "true"
 data:
   hue_living_room_defaults.yaml: |
     blueprint:
