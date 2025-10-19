@@ -1,0 +1,22 @@
+# Living Room Night Light Scene
+# This scene should be created in Home Assistant to prevent light flicker
+# 
+# To create this scene in Home Assistant:
+# 1. Go to Settings > Scenes
+# 2. Create new scene named "Living Room Nightlight"
+# 3. Set the following for light.living_room:
+#    - Brightness: 30 (or your preferred night brightness)
+#    - Color Temperature: 500 mireds (warmest)
+#    - Transition: 0 seconds (instant)
+#
+# The scene entity will be: scene.living_room_nightlight
+
+# Alternative: You can also create this scene via YAML in your Home Assistant configuration:
+# scenes:
+#   - name: "Living Room Nightlight"
+#     entities:
+#       light.living_room:
+#         state: on
+#         brightness: 30
+#         color_temp: 500
+#         transition: 0

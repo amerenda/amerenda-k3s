@@ -79,13 +79,13 @@ blueprint:
     color_mode:
       name: Color mode
       description: "Pick 'scene' to call a Hue/HA scene (prevents flash)."
-      default: color_temp
+      default: scene
       selector:
         select:
           options:
+            - scene
             - color_temp
             - hs
-            - scene
 
     # Scene mode inputs
     scene_entity:
