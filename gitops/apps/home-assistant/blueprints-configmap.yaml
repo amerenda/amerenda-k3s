@@ -406,7 +406,7 @@ data:
           # Button 2: Brightness up
           - conditions:
               - condition: template
-                value_template: "{{ trigger.to_state.state == 'initial_press' }}"
+                value_template: "{{ trigger.to_state.state == 'short_release' }}"
               - condition: template
                 value_template: "{{ button_2_brightness_up }}"
             sequence:
@@ -422,7 +422,7 @@ data:
           # Button 3: Brightness down
           - conditions:
               - condition: template
-                value_template: "{{ trigger.to_state.state == 'initial_press' }}"
+                value_template: "{{ trigger.to_state.state == 'short_release' }}"
               - condition: template
                 value_template: "{{ button_3_brightness_down }}"
             sequence:
@@ -438,7 +438,7 @@ data:
           # Button 4: Custom action
           - conditions:
               - condition: template
-                value_template: "{{ trigger.to_state.state == 'initial_press' }}"
+                value_template: "{{ trigger.to_state.state == 'short_release' }}"
               - condition: template
                 value_template: "{{ button_4_custom }}"
             sequence:
