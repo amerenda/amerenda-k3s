@@ -3,9 +3,9 @@ description: "Applies red night lighting to living room when lights turn on or s
 use_blueprint:
   path: _defaults/hue_light_defaults.yaml
   input:
-    living_room_lights:
+    target_lights:
       - light.living_room
-    living_room_switch_events:
+    switch_events:
       - event.living_room_switch_button_1
     only_when_manual: true
     settle_seconds: 0
