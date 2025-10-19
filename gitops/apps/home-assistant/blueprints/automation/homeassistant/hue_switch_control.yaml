@@ -78,6 +78,50 @@ blueprint:
             - color_cycle
             - custom_service
     
+    # Long press actions
+    button_1_long_press:
+      name: Button 1 - Long press action
+      description: Enable long press action for button 1
+      default: true
+      selector:
+        boolean: {}
+    
+    button_1_long_action:
+      name: Button 1 - Long press action type
+      description: What action to perform on button 1 long press
+      default: all_lights_off
+      selector:
+        select:
+          options:
+            - all_lights_off
+            - custom_service
+    
+    button_4_long_press:
+      name: Button 4 - Long press action
+      description: Enable long press action for button 4
+      default: true
+      selector:
+        boolean: {}
+    
+    button_4_long_action:
+      name: Button 4 - Long press action type
+      description: What action to perform on button 4 long press
+      default: room_relax_scene
+      selector:
+        select:
+          options:
+            - room_relax_scene
+            - custom_service
+    
+    # Long press scene
+    room_relax_scene:
+      name: Room relax scene
+      description: Scene to activate on button 4 long press (e.g. scene.living_room_relax)
+      default: ""
+      selector:
+        entity:
+          domain: scene
+    
     # Scene cycling options
     scene_entities:
       name: Scenes to cycle through
@@ -135,6 +179,11 @@ variables:
   button_3_brightness_down: !input button_3_brightness_down
   button_4_custom: !input button_4_custom
   button_4_action: !input button_4_action
+  button_1_long_press: !input button_1_long_press
+  button_1_long_action: !input button_1_long_action
+  button_4_long_press: !input button_4_long_press
+  button_4_long_action: !input button_4_long_action
+  room_relax_scene: !input room_relax_scene
   scene_entities: !input scene_entities
   custom_service: !input custom_service
   custom_service_data: !input custom_service_data
@@ -150,7 +199,7 @@ condition: []
 
 action:
   - choose:
-      # Button 1: Toggle lights
+      # Button 1: Toggle lights (short press)
       - conditions:
           - condition: template
             value_template: "{{ trigger.to_state.state == 'initial_press' }}"
@@ -160,6 +209,30 @@ action:
           - service: light.toggle
             target:
               entity_id: !input target_lights
+      
+      # Button 1: Long press action
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.to_state.state == 'long_release' }}"
+          - condition: template
+            value_template: "{{ button_1_long_press }}"
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ button_1_long_action == 'all_lights_off' }}"
+                sequence:
+                  - service: light.turn_off
+                    target:
+                      domain: light
+              - conditions:
+                  - condition: template
+                    value_template: "{{ button_1_long_action == 'custom_service' and custom_service != '' }}"
+                sequence:
+                  - service: "{{ custom_service }}"
+                    target:
+                      entity_id: !input target_lights
+                    data: "{{ custom_service_data }}"
       
       # Button 2: Brightness up
       - conditions:
@@ -243,6 +316,30 @@ action:
               - conditions:
                   - condition: template
                     value_template: "{{ button_4_action == 'custom_service' and custom_service != '' }}"
+                sequence:
+                  - service: "{{ custom_service }}"
+                    target:
+                      entity_id: !input target_lights
+                    data: "{{ custom_service_data }}"
+      
+      # Button 4: Long press action
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.to_state.state == 'long_release' }}"
+          - condition: template
+            value_template: "{{ button_4_long_press }}"
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ button_4_long_action == 'room_relax_scene' and room_relax_scene != '' }}"
+                sequence:
+                  - service: scene.turn_on
+                    target:
+                      entity_id: "{{ room_relax_scene }}"
+              - conditions:
+                  - condition: template
+                    value_template: "{{ button_4_long_action == 'custom_service' and custom_service != '' }}"
                 sequence:
                   - service: "{{ custom_service }}"
                     target:

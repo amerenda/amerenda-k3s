@@ -16,6 +16,11 @@ use_blueprint:
       - scene.living_room_nightlight
       - scene.living_room_relax
       - scene.living_room_energize
+    button_1_long_press: true
+    button_1_long_action: all_lights_off
+    button_4_long_press: true
+    button_4_long_action: room_relax_scene
+    room_relax_scene: scene.living_room_relax
     brightness_step: 25
     min_brightness: 1
     max_brightness: 255
