@@ -1,11 +1,10 @@
 blueprint:
   name: Hue - Night Light Defaults
   description: >
-    Apply night light defaults to Hue lights when:
-    1) the light turns ON (manual via Hue), or
-    2) a Hue switch event entity fires.
-    Designed to work with the Hue Switch Control blueprint.
+    Apply night light defaults to Hue lights when the light turns ON during the
+    configured night window. Designed to work with the Hue Switch Control blueprint.
     Focuses on night light settings with warm colors and low brightness.
+    Note: Switch events are not handled here. Use hue_switch_control.yaml for switch->on logic.
   domain: automation
   input:
     target_lights:
@@ -13,13 +12,6 @@ blueprint:
       selector:
         entity:
           domain: light
-          multiple: true
-    switch_events:
-      name: Hue switch event entities
-      description: e.g. event.living_room_switch_button_1
-      selector:
-        entity:
-          domain: event
           multiple: true
     only_when_manual:
       name: Only when manual (for light-on trigger)
@@ -37,29 +29,6 @@ blueprint:
           min: 1
           max: 5
           step: 1
-          unit_of_measurement: s
-
-    event_states:
-      name: Switch event states to react to
-      default: [initial_press, short_release]
-      selector:
-        select:
-          multiple: true
-          options:
-            - initial_press
-            - short_release
-            - repeat
-            - long_release
-
-    switch_control_delay:
-      name: Switch control delay
-      description: "Delay after switch events to let switch control blueprint handle first (seconds)"
-      default: 0.3
-      selector:
-        number:
-          min: 0
-          max: 2
-          step: 0.1
           unit_of_measurement: s
 
     night_start_time:
@@ -152,8 +121,6 @@ max_exceeded: silent
 
 variables:
   only_when_manual: !input only_when_manual
-  event_states: !input event_states
-  switch_control_delay: !input switch_control_delay
   night_start_time: !input night_start_time
   night_end_time: !input night_end_time
   color_mode: !input color_mode
@@ -172,24 +139,7 @@ trigger:
     for:
       seconds: !input settle_seconds
 
-  - id: switch_event
-    platform: event
-    event_type: hue_event
-
 condition:
-  - condition: template
-    value_template: >
-      {% if trigger.id == 'light_on' %}
-        true
-      {% else %}
-        {% set switch_entity_names = switch_events | map('split', '.') | map('last') | list %}
-        {% set entity_name = trigger.event.data.id %}
-        {% if entity_name in switch_entity_names %}
-          {{ trigger.event.data.type in event_states }}
-        {% else %}
-          false
-        {% endif %}
-      {% endif %}
   - condition: template
     value_template: >
       {% set now_time = now().strftime('%H:%M') %}
@@ -212,52 +162,6 @@ action:
               {% else %} {{ trigger.to_state.context.user_id is none }}
               {% endif %}
         sequence:
-          - choose:
-              - conditions:
-                  - condition: template
-                    value_template: "{{ color_mode == 'scene' and scene_entity != '' }}"
-                sequence:
-                  - service: scene.turn_on
-                    target:
-                      entity_id: "{{ scene_entity }}"
-              - conditions:
-                  - condition: template
-                    value_template: "{{ color_mode == 'color_temp' }}"
-                sequence:
-                  - service: light.turn_on
-                    target:
-                      entity_id: !input target_lights
-                    data:
-                      brightness: "{{ brightness | int }}"
-                      color_temp: "{{ color_temp_mireds | int }}"
-                      transition: 0
-              - conditions:
-                  - condition: template
-                    value_template: "{{ color_mode == 'hs' }}"
-                sequence:
-                  - service: light.turn_on
-                    target:
-                      entity_id: !input target_lights
-                    data:
-                      brightness: "{{ brightness | int }}"
-                      hs_color: ["{{ hs_hue | float }}", "{{ hs_sat | float }}"]
-                      transition: 0
-
-      # B) Hue switch event fired
-      - conditions:
-          - condition: template
-            value_template: "{{ trigger.id == 'switch_event' }}"
-        sequence:
-          - delay:
-              seconds: "{{ switch_control_delay | float }}"  # let switch control blueprint handle first
-          - condition: template
-            value_template: >
-              {% for light in target_lights %}
-                {% if is_state(light, 'on') %}
-                  {{ true }}
-                {% endif %}
-              {% endfor %}
-              {{ false }}
           - choose:
               - conditions:
                   - condition: template
