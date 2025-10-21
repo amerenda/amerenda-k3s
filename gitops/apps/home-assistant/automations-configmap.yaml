@@ -222,30 +222,6 @@ data:
             importance: low
             sticky: true
 
-  night_mode_living_room.yaml: |
-    alias: Night Mode - Living Room
-    id: night_mode_living_room
-    description: Apply night light defaults to living room lights when turned on
-    use_blueprint:
-      path: _defaults/hue_night_light_defaults.yaml
-      input:
-        target_lights:
-          - light.living_room
-        switch_events:
-          - event.living_room_switch_button_1
-        only_when_manual: true
-        settle_seconds: 1
-        event_states:
-          - initial_press
-          - short_release
-        switch_control_delay: 0.3
-        night_start_time: "06:45"
-        night_end_time: "05:45"
-        color_mode: scene
-        scene_entity: scene.living_room_nightlight
-        transition_secs: 1.0
-        brightness: 30
-
   switch_control_bathroom.yaml: |
     alias: Switch Control - Bathroom
     id: bathroom_switch_control
