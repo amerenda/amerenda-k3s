@@ -24,3 +24,12 @@ use_blueprint:
     brightness_step: 25
     min_brightness: 1
     max_brightness: 255
+    # Night mode settings
+    night_start_time: "07:00"
+    night_end_time: "05:45"
+    night_color_mode: scene
+    night_scene_entity: scene.living_room_nightlight
+    night_color_temp_mireds: 500
+    night_hs_hue: 30
+    night_hs_sat: 20
+    night_brightness: 50

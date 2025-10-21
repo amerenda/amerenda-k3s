@@ -372,6 +372,82 @@ data:
               max: 255
               step: 1
     
+        # Night mode settings
+        night_start_time:
+          name: Night start time
+          description: "Time when night mode should start (24-hour format)"
+          default: "23:00"
+          selector:
+            time: {}
+    
+        night_end_time:
+          name: Night end time
+          description: "Time when night mode should end (24-hour format)"
+          default: "05:45"
+          selector:
+            time: {}
+    
+        night_color_mode:
+          name: Night color mode
+          description: "Pick 'scene' to call a Hue/HA scene (prevents flash)."
+          default: scene
+          selector:
+            select:
+              options:
+                - scene
+                - color_temp
+                - hs
+    
+        # Night scene mode
+        night_scene_entity:
+          name: Night scene entity
+          description: "e.g. scene.living_room_night_red (must exist in HA)"
+          default: ""
+          selector:
+            entity:
+              domain: scene
+    
+        # Night color temp
+        night_color_temp_mireds:
+          name: Night Color Temp (mireds)
+          default: 500
+          description: "Higher values = warmer light (good for night)"
+          selector:
+            number:
+              min: 153
+              max: 500
+              step: 1
+    
+        # Night HS color
+        night_hs_hue:
+          name: Night HS - Hue (0-360)
+          default: 30
+          description: "Warm orange/red hue for night light"
+          selector:
+            number:
+              min: 0
+              max: 360
+              step: 1
+        night_hs_sat:
+          name: Night HS - Saturation (0-100)
+          default: 20
+          description: "Lower saturation for softer night light"
+          selector:
+            number:
+              min: 0
+              max: 100
+              step: 1
+    
+        night_brightness:
+          name: Night brightness (1-255)
+          default: 50
+          description: "Low brightness for night light"
+          selector:
+            number:
+              min: 1
+              max: 255
+              step: 1
+    
     mode: restart
     max_exceeded: silent
     
@@ -394,6 +470,14 @@ data:
       brightness_step: !input brightness_step
       min_brightness: !input min_brightness
       max_brightness: !input max_brightness
+      night_start_time: !input night_start_time
+      night_end_time: !input night_end_time
+      night_color_mode: !input night_color_mode
+      night_scene_entity: !input night_scene_entity
+      night_color_temp_mireds: !input night_color_temp_mireds
+      night_hs_hue: !input night_hs_hue
+      night_hs_sat: !input night_hs_sat
+      night_brightness: !input night_brightness
     
     trigger:
       - platform: event
@@ -425,9 +509,63 @@ data:
               - condition: template
                 value_template: "{{ button_1_toggle }}"
             sequence:
-              - service: light.toggle
-                target:
-                  entity_id: !input target_lights
+              - choose:
+                  # Check if it's night time
+                  - conditions:
+                      - condition: template
+                        value_template: >
+                          {% set now_time = now().strftime('%H:%M') %}
+                          {% if night_start_time <= night_end_time %}
+                            {{ now_time >= night_start_time and now_time <= night_end_time }}
+                          {% else %}
+                            {{ now_time >= night_start_time or now_time <= night_end_time }}
+                          {% endif %}
+                    sequence:
+                      # Night mode: Turn on with night color immediately
+                      - choose:
+                          - conditions:
+                              - condition: template
+                                value_template: "{{ night_color_mode == 'scene' and night_scene_entity != '' }}"
+                            sequence:
+                              - service: scene.turn_on
+                                target:
+                                  entity_id: "{{ night_scene_entity }}"
+                          - conditions:
+                              - condition: template
+                                value_template: "{{ night_color_mode == 'color_temp' }}"
+                            sequence:
+                              - service: light.turn_on
+                                target:
+                                  entity_id: !input target_lights
+                                data:
+                                  brightness: "{{ night_brightness | int }}"
+                                  color_temp: "{{ night_color_temp_mireds | int }}"
+                                  transition: 0
+                          - conditions:
+                              - condition: template
+                                value_template: "{{ night_color_mode == 'hs' }}"
+                            sequence:
+                              - service: light.turn_on
+                                target:
+                                  entity_id: !input target_lights
+                                data:
+                                  brightness: "{{ night_brightness | int }}"
+                                  hs_color: ["{{ night_hs_hue | float }}", "{{ night_hs_sat | float }}"]
+                                  transition: 0
+                  # Day mode: Simple toggle
+                  - conditions:
+                      - condition: template
+                        value_template: >
+                          {% set now_time = now().strftime('%H:%M') %}
+                          {% if night_start_time <= night_end_time %}
+                            {{ not (now_time >= night_start_time and now_time <= night_end_time) }}
+                          {% else %}
+                            {{ not (now_time >= night_start_time or now_time <= night_end_time) }}
+                          {% endif %}
+                    sequence:
+                      - service: light.toggle
+                        target:
+                          entity_id: !input target_lights
           
           # Button 1: Long press action
           - conditions:
