@@ -306,16 +306,18 @@ action:
             value_template: "{{ button_1_toggle }}"
         sequence:
           - choose:
-              # Check if it's night time
+              # Check if it's night time AND light is currently off
               - conditions:
                   - condition: template
                     value_template: >
                       {% set now_time = now().strftime('%H:%M') %}
+                      {% set is_night = false %}
                       {% if night_start_time <= night_end_time %}
-                        {{ now_time >= night_start_time and now_time <= night_end_time }}
+                        {% set is_night = now_time >= night_start_time and now_time <= night_end_time %}
                       {% else %}
-                        {{ now_time >= night_start_time or now_time <= night_end_time }}
+                        {% set is_night = now_time >= night_start_time or now_time <= night_end_time %}
                       {% endif %}
+                      {{ is_night and not is_state(target_lights[0], 'on') }}
                 sequence:
                   # Night mode: Turn on with night color immediately
                   - choose:
@@ -348,16 +350,18 @@ action:
                               brightness: "{{ night_brightness | int }}"
                               hs_color: ["{{ night_hs_hue | float }}", "{{ night_hs_sat | float }}"]
                               transition: 0
-              # Day mode: Simple toggle
+              # All other cases: Simple toggle (day time OR night time when light is already on)
               - conditions:
                   - condition: template
                     value_template: >
                       {% set now_time = now().strftime('%H:%M') %}
+                      {% set is_night = false %}
                       {% if night_start_time <= night_end_time %}
-                        {{ not (now_time >= night_start_time and now_time <= night_end_time) }}
+                        {% set is_night = now_time >= night_start_time and now_time <= night_end_time %}
                       {% else %}
-                        {{ not (now_time >= night_start_time or now_time <= night_end_time) }}
+                        {% set is_night = now_time >= night_start_time or now_time <= night_end_time %}
                       {% endif %}
+                      {{ not is_night or is_state(target_lights[0], 'on') }}
                 sequence:
                   - service: light.toggle
                     target:
