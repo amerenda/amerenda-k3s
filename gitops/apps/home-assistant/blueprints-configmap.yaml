@@ -373,6 +373,13 @@ data:
               step: 1
     
         # Night mode settings
+        night_mode_enabled:
+          name: Enable night mode
+          description: "Enable night scene behavior during night hours"
+          default: true
+          selector:
+            boolean: {}
+    
         night_start_time:
           name: Night start time
           description: "Time when night mode should start (24-hour format)"
@@ -470,6 +477,7 @@ data:
       brightness_step: !input brightness_step
       min_brightness: !input min_brightness
       max_brightness: !input max_brightness
+      night_mode_enabled: !input night_mode_enabled
       night_start_time: !input night_start_time
       night_end_time: !input night_end_time
       night_color_mode: !input night_color_mode
@@ -510,7 +518,7 @@ data:
                 value_template: "{{ button_1_toggle }}"
             sequence:
               - choose:
-                  # Check if it's night time AND light is currently off
+                  # Check if it's night time AND light is currently off AND night mode is enabled
                   - conditions:
                       - condition: template
                         value_template: >
@@ -521,7 +529,7 @@ data:
                           {% else %}
                             {% set is_night = now_time >= night_start_time or now_time <= night_end_time %}
                           {% endif %}
-                          {{ is_night and not is_state(target_lights[0], 'on') }}
+                          {{ night_mode_enabled and is_night and not is_state(target_lights[0], 'on') }}
                     sequence:
                       # Night mode: Turn on with night color immediately
                       - choose:
