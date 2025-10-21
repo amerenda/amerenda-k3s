@@ -35,6 +35,10 @@ extraArgs:
   - --rfc2136-zone=amer.home
   - --rfc2136-tsig-secret-alg=hmac-sha256
   - --rfc2136-tsig-axfr
+  - --interval=1m
+  - --sync-interval=1m
+  - --registry=txt
+  - --txt-owner-id=external-dns
 
 # Environment variables for TSIG secret
 env:
@@ -59,10 +63,13 @@ sources:
 # Policy for DNS record management
 policy: upsert-only
 
+# Additional optimization settings
+minEventSyncInterval: 1m
+
 # TXT record configuration
 txtOwnerId: "external-dns"
 txtPrefix: ""
 
 # Log level
-logLevel: debug
+logLevel: info
 logFormat: text

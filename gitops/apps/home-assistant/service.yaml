@@ -5,7 +5,7 @@ metadata:
   namespace: home-assistant
   annotations:
     external-dns.alpha.kubernetes.io/hostname: home.amer.home,ha.amer.home,homeassistant.amer.home
-    external-dns.alpha.kubernetes.io/ttl: "300"
+    external-dns.alpha.kubernetes.io/ttl: "3600"
 spec:
   type: LoadBalancer
   externalTrafficPolicy: Local

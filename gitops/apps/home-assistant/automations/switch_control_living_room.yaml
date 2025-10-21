@@ -26,7 +26,7 @@ use_blueprint:
     max_brightness: 255
     # Night mode settings
     night_mode_enabled: true
-    night_start_time: "07:00"
+    night_start_time: "23:00"
     night_end_time: "05:45"
     night_color_mode: scene
     night_scene_entity: scene.living_room_nightlight
