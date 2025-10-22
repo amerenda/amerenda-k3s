@@ -2,7 +2,7 @@
 # Official external-dns chart configuration for BIND9 integration
 
 # Replica count
-replicaCount: 1
+replicaCount: 3
 
 # Service account configuration
 resources:
@@ -21,8 +21,29 @@ serviceMonitor:
 
 # Pod disruption budget
 podDisruptionBudget:
-  enabled: false
+  enabled: true
   minAvailable: 1
+
+# Rolling update strategy
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 1
+
+# Pod anti-affinity for high availability
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm:
+        labelSelector:
+          matchExpressions:
+          - key: app.kubernetes.io/name
+            operator: In
+            values:
+            - external-dns
+        topologyKey: kubernetes.io/hostname
 
 # External DNS configuration
 provider:
