@@ -306,7 +306,7 @@ spec:
     path: gitops/infra/tailscale
   destination:
     server: https://kubernetes.default.svc
-    namespace: tailscale
+    namespace: default
   syncPolicy:
     automated:
       prune: true
