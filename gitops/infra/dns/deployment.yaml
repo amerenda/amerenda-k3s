@@ -6,7 +6,12 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 spec:
-  replicas: 1
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   selector:
     matchLabels:
       app: bind9
@@ -15,6 +20,18 @@ spec:
       labels:
         app: bind9
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - bind9
+              topologyKey: kubernetes.io/hostname
       initContainers:
       - name: init-zones
         image: busybox
@@ -60,6 +77,13 @@ spec:
         - name: dns-udp
           containerPort: 53
           protocol: UDP
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
         volumeMounts:
         - name: conf
           mountPath: /etc/bind
