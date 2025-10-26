@@ -157,7 +157,7 @@ spec:
               script: !include scripts.yaml
               scene: !include scenes.yaml
 
-              # Include schedule configuration
+              # Schedule configuration
               !include schedule/schedule_config.yaml
 
               # HTTP configuration for reverse proxy
