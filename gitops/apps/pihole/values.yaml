@@ -34,6 +34,12 @@ dnsmasq:
   upstreamServers:
     - server=/amer.home/10.100.20.241
     - server=/merenda.home.arpa/10.100.20.241
+  # Reduce cache time for better DNS updates
+  cacheSize: 1000
+  negTTL: 0
+  localTTL: 0
+  # Disable negative caching to force fresh lookups
+  noNegcache: true
 
 # Environment variables
 extraEnvVars:
@@ -41,6 +47,11 @@ extraEnvVars:
   TZ: "America/New_York"
   FTLCONF_LOCAL_IPV4: "10.100.20.240"
   PIHOLE_DNS_: "1.1.1.1;1.0.0.1;8.8.8.8;8.8.4.4"
+  # Force DNS cache refresh
+  CACHE_QUERY_MINIMUM_TTL: "0"
+  CACHE_QUERY_MAXIMUM_TTL: "300"
+  # Disable DNS caching for local domains
+  DNSMASQ_CACHE_SIZE: "0"
 
 # DoH (DNS over HTTPS) configuration
 doh:
