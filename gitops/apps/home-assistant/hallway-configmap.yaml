@@ -1,95 +1,86 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: ha-living-room-config
+  name: ha-hallway-config
   namespace: home-assistant
   annotations:
     reloader.stakater.com/auto: "true"
 data:
-  living_room_schedule.yaml: |
-    # Living Room Schedule Configuration
-    # Uses default schedule values with room-specific overrides
+  hallway_schedule.yaml: |
+    [0;34m[INFO][0m Generating schedule for room: hallway
+    # Hallway Schedule Configuration
+    # Generated from default schedule with room-specific overrides
     input_boolean:
-      living_room_schedule_enabled:
-        name: "Living Room Schedule Enabled"
-        icon: mdi:sofa
+      hallway_schedule_enabled:
+        name: "Hallway Schedule Enabled"
+        icon: mdi:corridor
         initial: true
-
+    
     input_datetime:
-      living_room_schedule_1_start:
-        name: "Living Room Morning Start"
+      hallway_schedule_1_start:
+        name: "Hallway Morning Start"
         icon: mdi:weather-sunrise
         has_time: true
         has_date: false
-        initial: "06:00"  # Default: 06:00
-      living_room_schedule_1_end:
-        name: "Living Room Morning End"
+        initial: "06:30"  # Default: 06:30
+      hallway_schedule_1_end:
+        name: "Hallway Morning End"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "09:30"  # Default: 09:30
+      hallway_schedule_2_start:
+        name: "Hallway Day Start"
         icon: mdi:weather-sunny
         has_time: true
         has_date: false
-        initial: "09:00"  # Default: 09:00
-      living_room_schedule_2_start:
-        name: "Living Room Day Start"
+        initial: "09:30"  # Default: 09:30
+      hallway_schedule_2_end:
+        name: "Hallway Day End"
         icon: mdi:weather-sunny
         has_time: true
         has_date: false
-        initial: "09:00"  # Default: 09:00
-      living_room_schedule_2_end:
-        name: "Living Room Day End"
+        initial: "17:30"  # Default: 17:30
+      hallway_schedule_3_start:
+        name: "Hallway Evening Start"
         icon: mdi:weather-sunset
         has_time: true
         has_date: false
-        initial: "17:00"  # Default: 17:00
-      living_room_schedule_3_start:
-        name: "Living Room Evening Start"
+        initial: "17:30"  # Default: 17:30
+      hallway_schedule_3_end:
+        name: "Hallway Evening End"
         icon: mdi:weather-sunset
         has_time: true
         has_date: false
-        initial: "17:00"  # Default: 17:00
-      living_room_schedule_3_end:
-        name: "Living Room Evening End"
+        initial: "21:30"  # Default: 21:30
+      hallway_schedule_4_start:
+        name: "Hallway Night Start"
         icon: mdi:weather-night
         has_time: true
         has_date: false
-        initial: "21:00"  # Default: 21:00
-      living_room_schedule_4_start:
-        name: "Living Room Night Start"
+        initial: "21:30"  # Default: 21:30
+      hallway_schedule_4_end:
+        name: "Hallway Night End"
         icon: mdi:weather-night
         has_time: true
         has_date: false
-        initial: "21:00"  # Default: 21:00
-      living_room_schedule_4_end:
-        name: "Living Room Night End"
+        initial: "23:30"  # Default: 23:30
+      hallway_schedule_5_start:
+        name: "Hallway Late Night Start"
         icon: mdi:weather-sunrise
         has_time: true
         has_date: false
-        initial: "23:00"  # Default: 23:00
-      living_room_schedule_5_start:
-        name: "Living Room Late Night Start"
+        initial: "23:30"  # Default: 23:30
+      hallway_schedule_5_end:
+        name: "Hallway Late Night End"
         icon: mdi:weather-sunrise
         has_time: true
         has_date: false
-        initial: "23:00"  # Default: 23:00
-      living_room_schedule_5_end:
-        name: "Living Room Late Night End"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "06:00"  # Default: 06:00
-
+        initial: "06:30"  # Default: 06:30
+    
     input_select:
-      room_schedule_selector:
-        name: "Select Room to Configure"
-        icon: mdi:home-edit
-        options:
-          - "living_room"
-          - "kitchen"
-          - "bedroom"
-          - "bathroom"
-          - "hallway"
-        initial: "living_room"
-      living_room_schedule_1_scene:
-        name: "Living Room Morning Scene"
+      hallway_schedule_1_scene:
+        name: "Hallway Morning Scene"
         icon: mdi:weather-sunrise
         options:
           - "energize"
@@ -99,8 +90,8 @@ data:
           - "read"
           - "dimmed"
         initial: "energize"  # Default: energize
-      living_room_schedule_2_scene:
-        name: "Living Room Day Scene"
+      hallway_schedule_2_scene:
+        name: "Hallway Day Scene"
         icon: mdi:weather-sunny
         options:
           - "energize"
@@ -110,8 +101,8 @@ data:
           - "read"
           - "dimmed"
         initial: "concentrate"  # Default: concentrate
-      living_room_schedule_3_scene:
-        name: "Living Room Evening Scene"
+      hallway_schedule_3_scene:
+        name: "Hallway Evening Scene"
         icon: mdi:weather-sunset
         options:
           - "energize"
@@ -121,8 +112,8 @@ data:
           - "read"
           - "dimmed"
         initial: "relax"  # Default: relax
-      living_room_schedule_4_scene:
-        name: "Living Room Night Scene"
+      hallway_schedule_4_scene:
+        name: "Hallway Night Scene"
         icon: mdi:weather-night
         options:
           - "energize"
@@ -132,8 +123,8 @@ data:
           - "read"
           - "dimmed"
         initial: "nightlight"  # Default: nightlight
-      living_room_schedule_5_scene:
-        name: "Living Room Late Night Scene"
+      hallway_schedule_5_scene:
+        name: "Hallway Late Night Scene"
         icon: mdi:weather-sunrise
         options:
           - "energize"
@@ -143,9 +134,9 @@ data:
           - "read"
           - "dimmed"
         initial: "nightlight"  # Default: nightlight
-      living_room_default_scene:
-        name: "Living Room Default Scene"
-        icon: mdi:sofa
+      hallway_default_scene:
+        name: "Hallway Default Scene"
+        icon: mdi:corridor
         options:
           - "energize"
           - "concentrate"

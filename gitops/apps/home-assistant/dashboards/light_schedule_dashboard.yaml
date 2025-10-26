@@ -1,0 +1,406 @@
+title: Room Schedule Control
+path: room-schedule-control
+icon: mdi:home-clock-outline
+views:
+  - title: Room Schedule Control
+    path: room-schedule-control
+    cards:
+      - type: vertical-stack
+        title: Per-Room Schedule Configuration
+        cards:
+          - type: entities
+            title: Room Selection
+            entities:
+              - entity: input_select.room_schedule_selector
+                name: Select Room to Configure
+                icon: mdi:home-edit
+          - type: conditional
+            conditions:
+              - entity: input_select.room_schedule_selector
+                state: living_room
+            card:
+              type: vertical-stack
+              title: Living Room Schedule Settings
+              cards:
+                - type: entities
+                  title: Living Room Schedule Control
+                  entities:
+                    - entity: input_boolean.living_room_schedule_enabled
+                      name: Enable Living Room Schedule
+                      icon: mdi:clock-outline
+                - type: entities
+                  title: Living Room Time Settings
+                  entities:
+                    - entity: input_datetime.living_room_schedule_1_start
+                      name: Morning Start
+                      icon: mdi:weather-sunrise
+                    - entity: input_datetime.living_room_schedule_1_end
+                      name: Morning End
+                      icon: mdi:weather-sunny
+                    - entity: input_datetime.living_room_schedule_2_start
+                      name: Day Start
+                      icon: mdi:weather-sunny
+                    - entity: input_datetime.living_room_schedule_2_end
+                      name: Day End
+                      icon: mdi:weather-sunset
+                    - entity: input_datetime.living_room_schedule_3_start
+                      name: Evening Start
+                      icon: mdi:weather-sunset
+                    - entity: input_datetime.living_room_schedule_3_end
+                      name: Evening End
+                      icon: mdi:weather-night
+                    - entity: input_datetime.living_room_schedule_4_start
+                      name: Night Start
+                      icon: mdi:weather-night
+                    - entity: input_datetime.living_room_schedule_4_end
+                      name: Night End
+                      icon: mdi:weather-sunrise
+                    - entity: input_datetime.living_room_schedule_5_start
+                      name: Late Night Start
+                      icon: mdi:weather-sunrise
+                    - entity: input_datetime.living_room_schedule_5_end
+                      name: Late Night End
+                      icon: mdi:weather-sunrise
+                - type: entities
+                  title: Living Room Scene Settings
+                  entities:
+                    - entity: input_select.living_room_schedule_1_scene
+                      name: Morning Scene
+                      icon: mdi:weather-sunrise
+                    - entity: input_select.living_room_schedule_2_scene
+                      name: Day Scene
+                      icon: mdi:weather-sunny
+                    - entity: input_select.living_room_schedule_3_scene
+                      name: Evening Scene
+                      icon: mdi:weather-sunset
+                    - entity: input_select.living_room_schedule_4_scene
+                      name: Night Scene
+                      icon: mdi:weather-night
+                    - entity: input_select.living_room_schedule_5_scene
+                      name: Late Night Scene
+                      icon: mdi:weather-sunrise
+                    - entity: input_select.living_room_default_scene
+                      name: Default Scene
+                      icon: mdi:lightbulb
+          - type: conditional
+            conditions:
+              - entity: input_select.room_schedule_selector
+                state: kitchen
+            card:
+              type: vertical-stack
+              title: Kitchen Schedule Settings
+              cards:
+                - type: entities
+                  title: Kitchen Schedule Control
+                  entities:
+                    - entity: input_boolean.kitchen_schedule_enabled
+                      name: Enable Kitchen Schedule
+                      icon: mdi:clock-outline
+                - type: entities
+                  title: Kitchen Time Settings
+                  entities:
+                    - entity: input_datetime.kitchen_schedule_1_start
+                      name: Morning Start
+                      icon: mdi:weather-sunrise
+                    - entity: input_datetime.kitchen_schedule_1_end
+                      name: Morning End
+                      icon: mdi:weather-sunny
+                    - entity: input_datetime.kitchen_schedule_2_start
+                      name: Day Start
+                      icon: mdi:weather-sunny
+                    - entity: input_datetime.kitchen_schedule_2_end
+                      name: Day End
+                      icon: mdi:weather-sunset
+                    - entity: input_datetime.kitchen_schedule_3_start
+                      name: Evening Start
+                      icon: mdi:weather-sunset
+                    - entity: input_datetime.kitchen_schedule_3_end
+                      name: Evening End
+                      icon: mdi:weather-night
+                    - entity: input_datetime.kitchen_schedule_4_start
+                      name: Night Start
+                      icon: mdi:weather-night
+                    - entity: input_datetime.kitchen_schedule_4_end
+                      name: Night End
+                      icon: mdi:weather-sunrise
+                    - entity: input_datetime.kitchen_schedule_5_start
+                      name: Late Night Start
+                      icon: mdi:weather-sunrise
+                    - entity: input_datetime.kitchen_schedule_5_end
+                      name: Late Night End
+                      icon: mdi:weather-sunrise
+                - type: entities
+                  title: Kitchen Scene Settings
+                  entities:
+                    - entity: input_select.kitchen_schedule_1_scene
+                      name: Morning Scene
+                      icon: mdi:weather-sunrise
+                    - entity: input_select.kitchen_schedule_2_scene
+                      name: Day Scene
+                      icon: mdi:weather-sunny
+                    - entity: input_select.kitchen_schedule_3_scene
+                      name: Evening Scene
+                      icon: mdi:weather-sunset
+                    - entity: input_select.kitchen_schedule_4_scene
+                      name: Night Scene
+                      icon: mdi:weather-night
+                    - entity: input_select.kitchen_schedule_5_scene
+                      name: Late Night Scene
+                      icon: mdi:weather-sunrise
+                    - entity: input_select.kitchen_default_scene
+                      name: Default Scene
+                      icon: mdi:lightbulb
+          - type: conditional
+            conditions:
+              - entity: input_select.room_schedule_selector
+                state: bedroom
+            card:
+              type: vertical-stack
+              title: Bedroom Schedule Settings
+              cards:
+                - type: entities
+                  title: Bedroom Schedule Control
+                  entities:
+                    - entity: input_boolean.bedroom_schedule_enabled
+                      name: Enable Bedroom Schedule
+                      icon: mdi:clock-outline
+                - type: entities
+                  title: Bedroom Time Settings
+                  entities:
+                    - entity: input_datetime.bedroom_schedule_1_start
+                      name: Morning Start
+                      icon: mdi:weather-sunrise
+                    - entity: input_datetime.bedroom_schedule_1_end
+                      name: Morning End
+                      icon: mdi:weather-sunny
+                    - entity: input_datetime.bedroom_schedule_2_start
+                      name: Day Start
+                      icon: mdi:weather-sunny
+                    - entity: input_datetime.bedroom_schedule_2_end
+                      name: Day End
+                      icon: mdi:weather-sunset
+                    - entity: input_datetime.bedroom_schedule_3_start
+                      name: Evening Start
+                      icon: mdi:weather-sunset
+                    - entity: input_datetime.bedroom_schedule_3_end
+                      name: Evening End
+                      icon: mdi:weather-night
+                    - entity: input_datetime.bedroom_schedule_4_start
+                      name: Night Start
+                      icon: mdi:weather-night
+                    - entity: input_datetime.bedroom_schedule_4_end
+                      name: Night End
+                      icon: mdi:weather-sunrise
+                    - entity: input_datetime.bedroom_schedule_5_start
+                      name: Late Night Start
+                      icon: mdi:weather-sunrise
+                    - entity: input_datetime.bedroom_schedule_5_end
+                      name: Late Night End
+                      icon: mdi:weather-sunrise
+                - type: entities
+                  title: Bedroom Scene Settings
+                  entities:
+                    - entity: input_select.bedroom_schedule_1_scene
+                      name: Morning Scene
+                      icon: mdi:weather-sunrise
+                    - entity: input_select.bedroom_schedule_2_scene
+                      name: Day Scene
+                      icon: mdi:weather-sunny
+                    - entity: input_select.bedroom_schedule_3_scene
+                      name: Evening Scene
+                      icon: mdi:weather-sunset
+                    - entity: input_select.bedroom_schedule_4_scene
+                      name: Night Scene
+                      icon: mdi:weather-night
+                    - entity: input_select.bedroom_schedule_5_scene
+                      name: Late Night Scene
+                      icon: mdi:weather-sunrise
+                    - entity: input_select.bedroom_default_scene
+                      name: Default Scene
+                      icon: mdi:lightbulb
+          - type: conditional
+            conditions:
+              - entity: input_select.room_schedule_selector
+                state: bathroom
+            card:
+              type: vertical-stack
+              title: Bathroom Schedule Settings
+              cards:
+                - type: entities
+                  title: Bathroom Schedule Control
+                  entities:
+                    - entity: input_boolean.bathroom_schedule_enabled
+                      name: Enable Bathroom Schedule
+                      icon: mdi:clock-outline
+                - type: entities
+                  title: Bathroom Time Settings
+                  entities:
+                    - entity: input_datetime.bathroom_schedule_1_start
+                      name: Morning Start
+                      icon: mdi:weather-sunrise
+                    - entity: input_datetime.bathroom_schedule_1_end
+                      name: Morning End
+                      icon: mdi:weather-sunny
+                    - entity: input_datetime.bathroom_schedule_2_start
+                      name: Day Start
+                      icon: mdi:weather-sunny
+                    - entity: input_datetime.bathroom_schedule_2_end
+                      name: Day End
+                      icon: mdi:weather-sunset
+                    - entity: input_datetime.bathroom_schedule_3_start
+                      name: Evening Start
+                      icon: mdi:weather-sunset
+                    - entity: input_datetime.bathroom_schedule_3_end
+                      name: Evening End
+                      icon: mdi:weather-night
+                    - entity: input_datetime.bathroom_schedule_4_start
+                      name: Night Start
+                      icon: mdi:weather-night
+                    - entity: input_datetime.bathroom_schedule_4_end
+                      name: Night End
+                      icon: mdi:weather-sunrise
+                    - entity: input_datetime.bathroom_schedule_5_start
+                      name: Late Night Start
+                      icon: mdi:weather-sunrise
+                    - entity: input_datetime.bathroom_schedule_5_end
+                      name: Late Night End
+                      icon: mdi:weather-sunrise
+                - type: entities
+                  title: Bathroom Scene Settings
+                  entities:
+                    - entity: input_select.bathroom_schedule_1_scene
+                      name: Morning Scene
+                      icon: mdi:weather-sunrise
+                    - entity: input_select.bathroom_schedule_2_scene
+                      name: Day Scene
+                      icon: mdi:weather-sunny
+                    - entity: input_select.bathroom_schedule_3_scene
+                      name: Evening Scene
+                      icon: mdi:weather-sunset
+                    - entity: input_select.bathroom_schedule_4_scene
+                      name: Night Scene
+                      icon: mdi:weather-night
+                    - entity: input_select.bathroom_schedule_5_scene
+                      name: Late Night Scene
+                      icon: mdi:weather-sunrise
+                    - entity: input_select.bathroom_default_scene
+                      name: Default Scene
+                      icon: mdi:lightbulb
+          - type: conditional
+            conditions:
+              - entity: input_select.room_schedule_selector
+                state: hallway
+            card:
+              type: vertical-stack
+              title: Hallway Schedule Settings
+              cards:
+                - type: entities
+                  title: Hallway Schedule Control
+                  entities:
+                    - entity: input_boolean.hallway_schedule_enabled
+                      name: Enable Hallway Schedule
+                      icon: mdi:clock-outline
+                - type: entities
+                  title: Hallway Time Settings
+                  entities:
+                    - entity: input_datetime.hallway_schedule_1_start
+                      name: Morning Start
+                      icon: mdi:weather-sunrise
+                    - entity: input_datetime.hallway_schedule_1_end
+                      name: Morning End
+                      icon: mdi:weather-sunny
+                    - entity: input_datetime.hallway_schedule_2_start
+                      name: Day Start
+                      icon: mdi:weather-sunny
+                    - entity: input_datetime.hallway_schedule_2_end
+                      name: Day End
+                      icon: mdi:weather-sunset
+                    - entity: input_datetime.hallway_schedule_3_start
+                      name: Evening Start
+                      icon: mdi:weather-sunset
+                    - entity: input_datetime.hallway_schedule_3_end
+                      name: Evening End
+                      icon: mdi:weather-night
+                    - entity: input_datetime.hallway_schedule_4_start
+                      name: Night Start
+                      icon: mdi:weather-night
+                    - entity: input_datetime.hallway_schedule_4_end
+                      name: Night End
+                      icon: mdi:weather-sunrise
+                    - entity: input_datetime.hallway_schedule_5_start
+                      name: Late Night Start
+                      icon: mdi:weather-sunrise
+                    - entity: input_datetime.hallway_schedule_5_end
+                      name: Late Night End
+                      icon: mdi:weather-sunrise
+                - type: entities
+                  title: Hallway Scene Settings
+                  entities:
+                    - entity: input_select.hallway_schedule_1_scene
+                      name: Morning Scene
+                      icon: mdi:weather-sunrise
+                    - entity: input_select.hallway_schedule_2_scene
+                      name: Day Scene
+                      icon: mdi:weather-sunny
+                    - entity: input_select.hallway_schedule_3_scene
+                      name: Evening Scene
+                      icon: mdi:weather-sunset
+                    - entity: input_select.hallway_schedule_4_scene
+                      name: Night Scene
+                      icon: mdi:weather-night
+                    - entity: input_select.hallway_schedule_5_scene
+                      name: Late Night Scene
+                      icon: mdi:weather-sunrise
+                    - entity: input_select.hallway_default_scene
+                      name: Default Scene
+                      icon: mdi:lightbulb
+          - type: markdown
+            content: >
+              ## Per-Room Schedule Configuration
+
+
+              **How to Use**:
+
+              1. **Select a Room**: Use the dropdown above to choose which
+              room's schedule you want to configure
+
+              2. **Enable Schedule**: Toggle the room's schedule on/off
+
+              3. **Set Times**: Configure the start and end times for each
+              schedule period
+
+              4. **Choose Scenes**: Select which scene should be active during
+              each time period
+
+
+              **Schedule Periods**:
+
+              - **Morning** (1): Energizing light for waking up
+
+              - **Day** (2): Focused light for daytime activities
+
+              - **Evening** (3): Relaxing light for winding down
+
+              - **Night** (4): Dim light for late evening
+
+              - **Late Night** (5): Very dim light for overnight
+
+
+              **Scene Options**:
+
+              - `energize` - Bright, energizing light
+
+              - `concentrate` - Focused light for work
+
+              - `relax` - Warm, cozy light
+
+              - `nightlight` - Dim light for night
+
+              - `read` - Reading-optimized light
+
+              - `dimmed` - Soft, dimmed light
+
+
+              **Note**: Times can cross midnight (e.g., 23:00-06:00). The
+              schedule only affects lights when they are turned on via the Hue
+              switch.
