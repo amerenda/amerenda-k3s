@@ -151,7 +151,7 @@ spec:
               
               # Include schedule configuration
               input_boolean: !include schedule/schedule_input_boolean.yaml
-              input_time: !include schedule/schedule_input_time.yaml
+              input_datetime: !include schedule/schedule_input_time.yaml
               input_select: !include schedule/schedule_input_select.yaml
               
               # Shell commands for photo cleanup
