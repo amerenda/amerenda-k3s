@@ -56,6 +56,7 @@ extraArgs:
   - --rfc2136-zone=amer.home
   - --rfc2136-tsig-secret-alg=hmac-sha256
   - --rfc2136-tsig-axfr
+  - --node-filter-type=ExternalIP
 
 # Environment variables for TSIG secret
 env:
@@ -76,6 +77,8 @@ excludeDomains: []
 # DNS record types to manage
 sources:
   - service
+  - node
+  - pod
 
 # Policy for DNS record management
 policy: upsert-only
