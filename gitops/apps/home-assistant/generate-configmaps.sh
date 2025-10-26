@@ -292,16 +292,15 @@ EOF
     fi
 }
 
-# Function to generate schedule ConfigMap
+# Function to generate schedule ConfigMap with all room entities
 generate_schedule_configmap() {
     local output_file="schedule-configmap.yaml"
     local config_dir="config"
     
-    if [ -d "$config_dir" ]; then
-        print_status "Generating schedule configuration ConfigMap..."
-        
-        # Start the schedule ConfigMap YAML
-        cat > "$output_file" << EOF
+    print_status "Generating unified schedule configuration ConfigMap..."
+    
+    # Start the schedule ConfigMap YAML
+    cat > "$output_file" << EOF
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -310,9 +309,145 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 data:
+  schedule_entities.yaml: |
+    # Unified Schedule Entities for All Rooms
+    # This file contains all schedule input entities for all rooms
+    
+    input_boolean:
+      # Global schedule control
+      global_schedule_enabled:
+        name: "Global Schedule Enabled"
+        icon: mdi:home-clock-outline
+        initial: true
+      
+      # Room-specific schedule controls
+      living_room_schedule_enabled:
+        name: "Living Room Schedule Enabled"
+        icon: mdi:sofa
+        initial: true
+      kitchen_schedule_enabled:
+        name: "Kitchen Schedule Enabled"
+        icon: mdi:chef-hat
+        initial: true
+      bedroom_schedule_enabled:
+        name: "Bedroom Schedule Enabled"
+        icon: mdi:bed
+        initial: true
+      bathroom_schedule_enabled:
+        name: "Bathroom Schedule Enabled"
+        icon: mdi:shower
+        initial: true
+      hallway_schedule_enabled:
+        name: "Hallway Schedule Enabled"
+        icon: mdi:corridor
+        initial: true
+    
+    input_datetime:
 EOF
 
-        # Process each YAML file in the config directory, excluding redundant files
+    # Generate datetime inputs for all rooms
+    local rooms=("living_room" "kitchen" "bedroom" "bathroom" "hallway")
+    local room_icons=("mdi:sofa" "mdi:chef-hat" "mdi:bed" "mdi:shower" "mdi:corridor")
+    
+    for i in "${!rooms[@]}"; do
+        local room="${rooms[$i]}"
+        local icon="${room_icons[$i]}"
+        
+        # Generate datetime inputs for each schedule period
+        for j in {1..5}; do
+            local period_name=""
+            local period_icon=""
+            case $j in
+                1) period_name="Morning"; period_icon="mdi:weather-sunrise" ;;
+                2) period_name="Day"; period_icon="mdi:weather-sunny" ;;
+                3) period_name="Evening"; period_icon="mdi:weather-sunset" ;;
+                4) period_name="Night"; period_icon="mdi:weather-night" ;;
+                5) period_name="Late Night"; period_icon="mdi:weather-sunrise" ;;
+            esac
+            
+            cat >> "$output_file" << EOF
+      ${room}_schedule_${j}_start:
+        name: "${room^} ${period_name} Start"
+        icon: ${period_icon}
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      ${room}_schedule_${j}_end:
+        name: "${room^} ${period_name} End"
+        icon: ${period_icon}
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+EOF
+        done
+    done
+
+    cat >> "$output_file" << EOF
+
+    input_select:
+      # Room selector for dashboard
+      room_schedule_selector:
+        name: "Select Room to Configure"
+        icon: mdi:home-edit
+        options:
+          - "living_room"
+          - "kitchen"
+          - "bedroom"
+          - "bathroom"
+          - "hallway"
+        initial: "living_room"
+EOF
+
+    # Generate select inputs for all rooms
+    for i in "${!rooms[@]}"; do
+        local room="${rooms[$i]}"
+        local icon="${room_icons[$i]}"
+        
+        # Generate scene selects for each schedule period
+        for j in {1..5}; do
+            local period_name=""
+            local period_icon=""
+            case $j in
+                1) period_name="Morning"; period_icon="mdi:weather-sunrise" ;;
+                2) period_name="Day"; period_icon="mdi:weather-sunny" ;;
+                3) period_name="Evening"; period_icon="mdi:weather-sunset" ;;
+                4) period_name="Night"; period_icon="mdi:weather-night" ;;
+                5) period_name="Late Night"; period_icon="mdi:weather-sunrise" ;;
+            esac
+            
+            cat >> "$output_file" << EOF
+      ${room}_schedule_${j}_scene:
+        name: "${room^} ${period_name} Scene"
+        icon: ${period_icon}
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+EOF
+        done
+        
+        # Generate default scene select
+        cat >> "$output_file" << EOF
+      ${room}_default_scene:
+        name: "${room^} Default Scene"
+        icon: ${icon}
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "relax"  # Default scene
+EOF
+    done
+
+    # Add other config files
+    if [ -d "$config_dir" ]; then
         find "$config_dir" -name "*.yaml" -type f | grep -v -E "(schedule_inputs\.yaml|schedule_input_.*\.yaml|schedule_config\.yaml|room_schedule_.*\.yaml|temp_.*\.yaml|living_room_schedule\.yaml)" | while read -r file; do
             local filename=$(basename "$file")
             print_status "Processing config: $filename"
@@ -326,14 +461,12 @@ EOF
             # Add a blank line between files
             echo "" >> "$output_file"
         done
-        
-        print_success "Schedule ConfigMap generated: $output_file"
-    else
-        print_warning "No config directory found, skipping schedule ConfigMap"
     fi
+    
+    print_success "Unified schedule ConfigMap generated: $output_file"
 }
 
-# Function to generate room-specific ConfigMap
+# Function to generate room-specific ConfigMap (overrides only)
 generate_room_configmap() {
     local room_name="$1"
     local overrides_file="$2"
@@ -344,26 +477,34 @@ generate_room_configmap() {
         return 1
     fi
     
-    print_status "Generating ${room_name} ConfigMap..."
+    print_status "Generating ${room_name} overrides ConfigMap..."
     
-    # Generate room schedule configuration
-    local room_config=$(generate_room_schedule "$room_name" "$overrides_file")
-    
-    # Create the ConfigMap
+    # Create a simple overrides ConfigMap
     cat > "$output_file" << EOF
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: ha-${room_name}-config
+  name: ha-${room_name}-overrides
   namespace: $NAMESPACE
   annotations:
     reloader.stakater.com/auto: "true"
 data:
-  ${room_name}_schedule.yaml: |
-$(echo "$room_config" | sed 's/^/    /')
+  ${room_name}_overrides.yaml: |
+    # ${room_name^} Schedule Overrides
+    # This file contains room-specific overrides for the default schedule
+    # Only include values that differ from the default schedule
+    
+    room_overrides:
+      ${room_name}:
+        # Add room-specific overrides here
+        # Example:
+        # schedule_1:
+        #   start_time: "05:30"
+        #   end_time: "08:30"
+        #   scene_suffix: "energize"
 EOF
     
-    print_success "Room ConfigMap generated: $output_file"
+    print_success "Room overrides ConfigMap generated: $output_file"
 }
 
 # Main execution

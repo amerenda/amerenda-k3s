@@ -6,6 +6,683 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 data:
+  schedule_entities.yaml: |
+    # Unified Schedule Entities for All Rooms
+    # This file contains all schedule input entities for all rooms
+    
+    input_boolean:
+      # Global schedule control
+      global_schedule_enabled:
+        name: "Global Schedule Enabled"
+        icon: mdi:home-clock-outline
+        initial: true
+      
+      # Room-specific schedule controls
+      living_room_schedule_enabled:
+        name: "Living Room Schedule Enabled"
+        icon: mdi:sofa
+        initial: true
+      kitchen_schedule_enabled:
+        name: "Kitchen Schedule Enabled"
+        icon: mdi:chef-hat
+        initial: true
+      bedroom_schedule_enabled:
+        name: "Bedroom Schedule Enabled"
+        icon: mdi:bed
+        initial: true
+      bathroom_schedule_enabled:
+        name: "Bathroom Schedule Enabled"
+        icon: mdi:shower
+        initial: true
+      hallway_schedule_enabled:
+        name: "Hallway Schedule Enabled"
+        icon: mdi:corridor
+        initial: true
+    
+    input_datetime:
+      living_room_schedule_1_start:
+        name: "Living_room Morning Start"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      living_room_schedule_1_end:
+        name: "Living_room Morning End"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      living_room_schedule_2_start:
+        name: "Living_room Day Start"
+        icon: mdi:weather-sunny
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      living_room_schedule_2_end:
+        name: "Living_room Day End"
+        icon: mdi:weather-sunny
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      living_room_schedule_3_start:
+        name: "Living_room Evening Start"
+        icon: mdi:weather-sunset
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      living_room_schedule_3_end:
+        name: "Living_room Evening End"
+        icon: mdi:weather-sunset
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      living_room_schedule_4_start:
+        name: "Living_room Night Start"
+        icon: mdi:weather-night
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      living_room_schedule_4_end:
+        name: "Living_room Night End"
+        icon: mdi:weather-night
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      living_room_schedule_5_start:
+        name: "Living_room Late Night Start"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      living_room_schedule_5_end:
+        name: "Living_room Late Night End"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      kitchen_schedule_1_start:
+        name: "Kitchen Morning Start"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      kitchen_schedule_1_end:
+        name: "Kitchen Morning End"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      kitchen_schedule_2_start:
+        name: "Kitchen Day Start"
+        icon: mdi:weather-sunny
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      kitchen_schedule_2_end:
+        name: "Kitchen Day End"
+        icon: mdi:weather-sunny
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      kitchen_schedule_3_start:
+        name: "Kitchen Evening Start"
+        icon: mdi:weather-sunset
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      kitchen_schedule_3_end:
+        name: "Kitchen Evening End"
+        icon: mdi:weather-sunset
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      kitchen_schedule_4_start:
+        name: "Kitchen Night Start"
+        icon: mdi:weather-night
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      kitchen_schedule_4_end:
+        name: "Kitchen Night End"
+        icon: mdi:weather-night
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      kitchen_schedule_5_start:
+        name: "Kitchen Late Night Start"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      kitchen_schedule_5_end:
+        name: "Kitchen Late Night End"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      bedroom_schedule_1_start:
+        name: "Bedroom Morning Start"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      bedroom_schedule_1_end:
+        name: "Bedroom Morning End"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      bedroom_schedule_2_start:
+        name: "Bedroom Day Start"
+        icon: mdi:weather-sunny
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      bedroom_schedule_2_end:
+        name: "Bedroom Day End"
+        icon: mdi:weather-sunny
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      bedroom_schedule_3_start:
+        name: "Bedroom Evening Start"
+        icon: mdi:weather-sunset
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      bedroom_schedule_3_end:
+        name: "Bedroom Evening End"
+        icon: mdi:weather-sunset
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      bedroom_schedule_4_start:
+        name: "Bedroom Night Start"
+        icon: mdi:weather-night
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      bedroom_schedule_4_end:
+        name: "Bedroom Night End"
+        icon: mdi:weather-night
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      bedroom_schedule_5_start:
+        name: "Bedroom Late Night Start"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      bedroom_schedule_5_end:
+        name: "Bedroom Late Night End"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      bathroom_schedule_1_start:
+        name: "Bathroom Morning Start"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      bathroom_schedule_1_end:
+        name: "Bathroom Morning End"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      bathroom_schedule_2_start:
+        name: "Bathroom Day Start"
+        icon: mdi:weather-sunny
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      bathroom_schedule_2_end:
+        name: "Bathroom Day End"
+        icon: mdi:weather-sunny
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      bathroom_schedule_3_start:
+        name: "Bathroom Evening Start"
+        icon: mdi:weather-sunset
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      bathroom_schedule_3_end:
+        name: "Bathroom Evening End"
+        icon: mdi:weather-sunset
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      bathroom_schedule_4_start:
+        name: "Bathroom Night Start"
+        icon: mdi:weather-night
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      bathroom_schedule_4_end:
+        name: "Bathroom Night End"
+        icon: mdi:weather-night
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      bathroom_schedule_5_start:
+        name: "Bathroom Late Night Start"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      bathroom_schedule_5_end:
+        name: "Bathroom Late Night End"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      hallway_schedule_1_start:
+        name: "Hallway Morning Start"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      hallway_schedule_1_end:
+        name: "Hallway Morning End"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      hallway_schedule_2_start:
+        name: "Hallway Day Start"
+        icon: mdi:weather-sunny
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      hallway_schedule_2_end:
+        name: "Hallway Day End"
+        icon: mdi:weather-sunny
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      hallway_schedule_3_start:
+        name: "Hallway Evening Start"
+        icon: mdi:weather-sunset
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      hallway_schedule_3_end:
+        name: "Hallway Evening End"
+        icon: mdi:weather-sunset
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      hallway_schedule_4_start:
+        name: "Hallway Night Start"
+        icon: mdi:weather-night
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      hallway_schedule_4_end:
+        name: "Hallway Night End"
+        icon: mdi:weather-night
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+      hallway_schedule_5_start:
+        name: "Hallway Late Night Start"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "06:00"  # Default time
+      hallway_schedule_5_end:
+        name: "Hallway Late Night End"
+        icon: mdi:weather-sunrise
+        has_time: true
+        has_date: false
+        initial: "09:00"  # Default time
+
+    input_select:
+      # Room selector for dashboard
+      room_schedule_selector:
+        name: "Select Room to Configure"
+        icon: mdi:home-edit
+        options:
+          - "living_room"
+          - "kitchen"
+          - "bedroom"
+          - "bathroom"
+          - "hallway"
+        initial: "living_room"
+      living_room_schedule_1_scene:
+        name: "Living_room Morning Scene"
+        icon: mdi:weather-sunrise
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      living_room_schedule_2_scene:
+        name: "Living_room Day Scene"
+        icon: mdi:weather-sunny
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      living_room_schedule_3_scene:
+        name: "Living_room Evening Scene"
+        icon: mdi:weather-sunset
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      living_room_schedule_4_scene:
+        name: "Living_room Night Scene"
+        icon: mdi:weather-night
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      living_room_schedule_5_scene:
+        name: "Living_room Late Night Scene"
+        icon: mdi:weather-sunrise
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      living_room_default_scene:
+        name: "Living_room Default Scene"
+        icon: mdi:sofa
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "relax"  # Default scene
+      kitchen_schedule_1_scene:
+        name: "Kitchen Morning Scene"
+        icon: mdi:weather-sunrise
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      kitchen_schedule_2_scene:
+        name: "Kitchen Day Scene"
+        icon: mdi:weather-sunny
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      kitchen_schedule_3_scene:
+        name: "Kitchen Evening Scene"
+        icon: mdi:weather-sunset
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      kitchen_schedule_4_scene:
+        name: "Kitchen Night Scene"
+        icon: mdi:weather-night
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      kitchen_schedule_5_scene:
+        name: "Kitchen Late Night Scene"
+        icon: mdi:weather-sunrise
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      kitchen_default_scene:
+        name: "Kitchen Default Scene"
+        icon: mdi:chef-hat
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "relax"  # Default scene
+      bedroom_schedule_1_scene:
+        name: "Bedroom Morning Scene"
+        icon: mdi:weather-sunrise
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      bedroom_schedule_2_scene:
+        name: "Bedroom Day Scene"
+        icon: mdi:weather-sunny
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      bedroom_schedule_3_scene:
+        name: "Bedroom Evening Scene"
+        icon: mdi:weather-sunset
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      bedroom_schedule_4_scene:
+        name: "Bedroom Night Scene"
+        icon: mdi:weather-night
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      bedroom_schedule_5_scene:
+        name: "Bedroom Late Night Scene"
+        icon: mdi:weather-sunrise
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      bedroom_default_scene:
+        name: "Bedroom Default Scene"
+        icon: mdi:bed
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "relax"  # Default scene
+      bathroom_schedule_1_scene:
+        name: "Bathroom Morning Scene"
+        icon: mdi:weather-sunrise
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      bathroom_schedule_2_scene:
+        name: "Bathroom Day Scene"
+        icon: mdi:weather-sunny
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      bathroom_schedule_3_scene:
+        name: "Bathroom Evening Scene"
+        icon: mdi:weather-sunset
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      bathroom_schedule_4_scene:
+        name: "Bathroom Night Scene"
+        icon: mdi:weather-night
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      bathroom_schedule_5_scene:
+        name: "Bathroom Late Night Scene"
+        icon: mdi:weather-sunrise
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      bathroom_default_scene:
+        name: "Bathroom Default Scene"
+        icon: mdi:shower
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "relax"  # Default scene
+      hallway_schedule_1_scene:
+        name: "Hallway Morning Scene"
+        icon: mdi:weather-sunrise
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      hallway_schedule_2_scene:
+        name: "Hallway Day Scene"
+        icon: mdi:weather-sunny
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      hallway_schedule_3_scene:
+        name: "Hallway Evening Scene"
+        icon: mdi:weather-sunset
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      hallway_schedule_4_scene:
+        name: "Hallway Night Scene"
+        icon: mdi:weather-night
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      hallway_schedule_5_scene:
+        name: "Hallway Late Night Scene"
+        icon: mdi:weather-sunrise
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"  # Default scene
+      hallway_default_scene:
+        name: "Hallway Default Scene"
+        icon: mdi:corridor
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "relax"  # Default scene
   room_overrides.yaml: |
     # Room-specific schedule overrides
     # This file allows you to override the default schedule for specific rooms
