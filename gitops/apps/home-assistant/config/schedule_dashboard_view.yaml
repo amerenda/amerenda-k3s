@@ -1,5 +1,5 @@
-# Dashboard configuration for schedule management
-# Add this to your Home Assistant dashboard
+# Schedule Dashboard View
+# This creates a dashboard view for schedule management
 
 title: "Light Schedule Control"
 path: schedule-control
