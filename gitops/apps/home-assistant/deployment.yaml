@@ -156,6 +156,9 @@ spec:
               automation ui: !include automations.yaml
               script: !include scripts.yaml
               scene: !include scenes.yaml
+              
+              # Living room schedule configuration
+              !include schedule/living_room_schedule.yaml
 
               # Schedule configuration
               input_boolean:

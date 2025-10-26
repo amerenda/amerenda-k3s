@@ -1,0 +1,136 @@
+# Living Room Schedule Configuration
+input_boolean:
+  living_room_schedule_enabled:
+    name: "Living Room Schedule Enabled"
+    icon: mdi:sofa
+    initial: true
+
+input_datetime:
+  living_room_schedule_1_start:
+    name: "Living Room Morning Start"
+    icon: mdi:weather-sunrise
+    has_time: true
+    has_date: false
+    initial: "06:00"
+  living_room_schedule_1_end:
+    name: "Living Room Morning End"
+    icon: mdi:weather-sunny
+    has_time: true
+    has_date: false
+    initial: "10:00"
+  living_room_schedule_2_start:
+    name: "Living Room Day Start"
+    icon: mdi:weather-sunny
+    has_time: true
+    has_date: false
+    initial: "10:00"
+  living_room_schedule_2_end:
+    name: "Living Room Day End"
+    icon: mdi:weather-sunset
+    has_time: true
+    has_date: false
+    initial: "18:00"
+  living_room_schedule_3_start:
+    name: "Living Room Evening Start"
+    icon: mdi:weather-sunset
+    has_time: true
+    has_date: false
+    initial: "18:00"
+  living_room_schedule_3_end:
+    name: "Living Room Evening End"
+    icon: mdi:weather-night
+    has_time: true
+    has_date: false
+    initial: "22:00"
+  living_room_schedule_4_start:
+    name: "Living Room Night Start"
+    icon: mdi:weather-night
+    has_time: true
+    has_date: false
+    initial: "22:00"
+  living_room_schedule_4_end:
+    name: "Living Room Night End"
+    icon: mdi:weather-sunrise
+    has_time: true
+    has_date: false
+    initial: "06:00"
+  living_room_schedule_5_start:
+    name: "Living Room Late Night Start"
+    icon: mdi:weather-sunrise
+    has_time: true
+    has_date: false
+    initial: "06:00"
+  living_room_schedule_5_end:
+    name: "Living Room Late Night End"
+    icon: mdi:weather-sunrise
+    has_time: true
+    has_date: false
+    initial: "06:00"
+
+input_select:
+  living_room_schedule_1_scene:
+    name: "Living Room Morning Scene"
+    icon: mdi:weather-sunrise
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "energize"
+  living_room_schedule_2_scene:
+    name: "Living Room Day Scene"
+    icon: mdi:weather-sunny
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "concentrate"
+  living_room_schedule_3_scene:
+    name: "Living Room Evening Scene"
+    icon: mdi:weather-sunset
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "relax"
+  living_room_schedule_4_scene:
+    name: "Living Room Night Scene"
+    icon: mdi:weather-night
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "nightlight"
+  living_room_schedule_5_scene:
+    name: "Living Room Late Night Scene"
+    icon: mdi:weather-sunrise
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "dimmed"
+  living_room_default_scene:
+    name: "Living Room Default Scene"
+    icon: mdi:sofa
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "relax"
