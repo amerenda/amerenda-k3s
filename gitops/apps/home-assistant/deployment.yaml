@@ -149,6 +149,14 @@ spec:
               input_datetime: !include schedule/schedule_input_time.yaml
               input_select: !include schedule/schedule_input_select.yaml
               
+              # HTTP configuration for reverse proxy
+              http:
+                use_x_forwarded_for: true
+                trusted_proxies:
+                  - 10.100.20.0/24
+                  - 10.43.0.0/16
+                  - 10.42.0.0/16
+              
               # Shell commands for photo cleanup
               shell_command:
                 cleanup_old_photos: 'find /config/www/pets -name "*.jpg" -mtime +30 -delete && find /config/www/intruders -name "*.jpg" -mtime +30 -delete'
@@ -223,10 +231,6 @@ spec:
           env:
             - name: TZ
               value: "America/New_York"
-            - name: HA_USE_X_FORWARDED_FOR
-              value: "true"
-            - name: HA_TRUSTED_PROXIES
-              value: "10.100.20.0/24"
           livenessProbe:
             exec:
               command:
