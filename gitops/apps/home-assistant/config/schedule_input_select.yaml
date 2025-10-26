@@ -68,7 +68,9 @@ default_scene:
     - "nightlight"
     - "read"
     - "dimmed"
-  initial: "relax"input_select:
+  initial: "relax"
+
+input_select:
   living_room_schedule_1_scene:
     name: "Living Room Morning Scene"
     icon: mdi:weather-sunrise

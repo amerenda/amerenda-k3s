@@ -68,6 +68,7 @@ schedule_5_end:
   has_time: true
   has_date: false
   initial: "06:00"
+
 input_datetime:
   living_room_schedule_1_start:
     name: "Living Room Morning Start"

@@ -1941,7 +1941,9 @@ data:
         - "nightlight"
         - "read"
         - "dimmed"
-      initial: "relax"input_select:
+      initial: "relax"
+    
+    input_select:
       living_room_schedule_1_scene:
         name: "Living Room Morning Scene"
         icon: mdi:weather-sunrise
@@ -2378,7 +2380,9 @@ data:
     time_schedule_enabled:
       name: "Enable Time-Based Scenes"
       icon: mdi:clock-outline
-      initial: trueinput_boolean:
+      initial: true
+    
+    input_boolean:
       living_room_schedule_enabled:
         name: "Enable Living Room Schedule"
         icon: mdi:clock-outline
@@ -2524,6 +2528,7 @@ data:
       has_time: true
       has_date: false
       initial: "06:00"
+    
     input_datetime:
       living_room_schedule_1_start:
         name: "Living Room Morning Start"
