@@ -11,7 +11,7 @@ dashboard:
       external-dns.alpha.kubernetes.io/ttl: "3600"
 
 # Replica count for high availability
-replicaCount: 2
+replicaCount: 1
 
 # Resource limits for Raspberry Pi
 resources:
