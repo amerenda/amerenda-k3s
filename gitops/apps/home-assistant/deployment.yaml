@@ -144,9 +144,6 @@ spec:
               script: !include scripts.yaml
               scene: !include scenes.yaml
               
-              # Include schedule configuration
-              schedule: !include schedule/schedule_config.yaml
-              
               # Shell commands for photo cleanup
               shell_command:
                 cleanup_old_photos: 'find /config/www/pets -name "*.jpg" -mtime +30 -delete && find /config/www/intruders -name "*.jpg" -mtime +30 -delete'
@@ -182,6 +179,27 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
+        - name: add-schedule-config
+          image: alpine:3.20
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh","-c"]
+          args:
+            - |
+              set -e
+              CONFIG_DIR="/config"
+              
+              # Add schedule configuration to the existing configuration.yaml
+              echo "" >> "${CONFIG_DIR}/configuration.yaml"
+              echo "# Include schedule configuration" >> "${CONFIG_DIR}/configuration.yaml"
+              echo "schedule: !include schedule/schedule_config.yaml" >> "${CONFIG_DIR}/configuration.yaml"
+              
+              echo "Schedule configuration added to configuration.yaml"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: schedule-config
+              mountPath: /config/schedule
+              readOnly: true
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
