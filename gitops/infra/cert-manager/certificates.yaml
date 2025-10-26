@@ -1,21 +1,3 @@
-# Wildcard certificate for alexmerenda.dev
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: alexmerenda-dev-wildcard
-  namespace: cert-manager
-  annotations:
-    argocd.argoproj.io/sync-wave: "22"  # After ClusterIssuer is created
-spec:
-  secretName: alexmerenda-dev-wildcard-tls
-  issuerRef:
-    name: letsencrypt-prod
-    kind: ClusterIssuer
-  dnsNames:
-  - "*.alexmerenda.dev"
-  - "alexmerenda.dev"
-
----
 # Wildcard certificate for amer.dev
 apiVersion: cert-manager.io/v1
 kind: Certificate
