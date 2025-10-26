@@ -6,15 +6,6 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 data:
-  schedule_config.yaml: |
-    # Schedule configuration includes
-    # This file will be included in the main configuration.yaml
-    
-    # Include schedule configuration files
-    input_boolean: !include schedule_inputs.yaml
-    input_time: !include schedule_inputs.yaml
-    input_select: !include schedule_inputs.yaml
-
   schedule_input_select.yaml: |
     input_select:
       schedule_1_scene:
