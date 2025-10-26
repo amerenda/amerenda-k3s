@@ -8,7 +8,7 @@ input_boolean:
     icon: mdi:clock-outline
     initial: true
 
-# Schedule 1: Morning
+# All schedule times
 input_time:
   schedule_1_start:
     name: "Morning Start Time"
@@ -19,9 +19,7 @@ input_time:
     name: "Morning End Time"
     icon: mdi:weather-sunny
     initial: "09:00"
-
-# Schedule 2: Day
-input_time:
+  
   schedule_2_start:
     name: "Day Start Time"
     icon: mdi:weather-sunny
@@ -31,9 +29,7 @@ input_time:
     name: "Day End Time"
     icon: mdi:weather-sunset
     initial: "17:00"
-
-# Schedule 3: Evening
-input_time:
+  
   schedule_3_start:
     name: "Evening Start Time"
     icon: mdi:weather-sunset
@@ -43,9 +39,7 @@ input_time:
     name: "Evening End Time"
     icon: mdi:weather-night
     initial: "21:00"
-
-# Schedule 4: Night
-input_time:
+  
   schedule_4_start:
     name: "Night Start Time"
     icon: mdi:weather-night
@@ -55,9 +49,7 @@ input_time:
     name: "Night End Time"
     icon: mdi:weather-night
     initial: "23:00"
-
-# Schedule 5: Late Night
-input_time:
+  
   schedule_5_start:
     name: "Late Night Start Time"
     icon: mdi:weather-night

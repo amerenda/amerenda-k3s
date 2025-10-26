@@ -2,6 +2,6 @@
 # This file will be included in the main configuration.yaml
 
 # Include schedule configuration files
-input_boolean: !include schedule/schedule_inputs.yaml
-input_time: !include schedule/schedule_inputs.yaml
-input_select: !include schedule/schedule_inputs.yaml
+input_boolean: !include schedule_inputs.yaml
+input_time: !include schedule_inputs.yaml
+input_select: !include schedule_inputs.yaml
