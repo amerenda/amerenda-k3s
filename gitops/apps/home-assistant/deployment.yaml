@@ -198,6 +198,12 @@ spec:
         - name: homeassistant
           image: ghcr.io/home-assistant/home-assistant:stable
           imagePullPolicy: IfNotPresent
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+                - NET_RAW
+                - NET_BROADCAST
           resources:
             requests:
               memory: "512Mi"
