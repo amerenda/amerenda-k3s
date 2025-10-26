@@ -360,6 +360,7 @@ data:
         icon: mdi:light-switch
         options:
           - "main_switch"
+          - "secondary_switch"
         initial: "main_switch"
       living_room_schedule_1_scene:
         name: "Living_room Morning Scene"
@@ -427,12 +428,6 @@ data:
           - "read"
           - "dimmed"
         initial: "relax"
-      living_room_switch_selector:
-        name: "Living_room Switch Selector"
-        icon: mdi:light-switch
-        options:
-          - "main_switch"
-        initial: "main_switch"
       living_room_switch_brightness_step:
         name: "Living_room Brightness Step"
         icon: mdi:brightness-6
@@ -602,12 +597,6 @@ data:
           - "read"
           - "dimmed"
         initial: "relax"
-      kitchen_switch_selector:
-        name: "Kitchen Switch Selector"
-        icon: mdi:light-switch
-        options:
-          - "main_switch"
-        initial: "main_switch"
       kitchen_switch_brightness_step:
         name: "Kitchen Brightness Step"
         icon: mdi:brightness-6
@@ -777,12 +766,6 @@ data:
           - "read"
           - "dimmed"
         initial: "relax"
-      bedroom_switch_selector:
-        name: "Bedroom Switch Selector"
-        icon: mdi:light-switch
-        options:
-          - "main_switch"
-        initial: "main_switch"
       bedroom_switch_brightness_step:
         name: "Bedroom Brightness Step"
         icon: mdi:brightness-6
@@ -952,12 +935,6 @@ data:
           - "read"
           - "dimmed"
         initial: "relax"
-      bathroom_switch_selector:
-        name: "Bathroom Switch Selector"
-        icon: mdi:light-switch
-        options:
-          - "main_switch"
-        initial: "main_switch"
       bathroom_switch_brightness_step:
         name: "Bathroom Brightness Step"
         icon: mdi:brightness-6
@@ -1127,13 +1104,6 @@ data:
           - "read"
           - "dimmed"
         initial: "relax"
-      hallway_switch_selector:
-        name: "Hallway Switch Selector"
-        icon: mdi:light-switch
-        options:
-          - "main_switch"
-          - "secondary_switch"
-        initial: "main_switch"
       hallway_switch_brightness_step:
         name: "Hallway Brightness Step"
         icon: mdi:brightness-6
@@ -1227,109 +1197,6 @@ data:
         initial: "scene_cycle"
       hallway_button_4_long:
         name: "Hallway Button 4 Long Press"
-        icon: mdi:palette-outline
-        options:
-          - "room_relax_scene"
-          - "scene_cycle"
-          - "scene_next"
-          - "scene_previous"
-          - "color_cycle"
-          - "all_lights_off"
-          - "room_lights_off"
-        initial: "room_relax_scene"
-      hallway_2_switch_brightness_step:
-        name: "Hallway Secondary_switch Brightness Step"
-        icon: mdi:brightness-6
-        options:
-          - "10"
-          - "15"
-          - "20"
-          - "25"
-          - "30"
-          - "35"
-          - "40"
-          - "50"
-        initial: "25"
-      hallway_2_switch_min_brightness:
-        name: "Hallway Secondary_switch Min Brightness"
-        icon: mdi:brightness-1
-        options:
-          - "1"
-          - "5"
-          - "10"
-          - "15"
-          - "20"
-          - "25"
-          - "30"
-        initial: "1"
-      hallway_2_switch_max_brightness:
-        name: "Hallway Secondary_switch Max Brightness"
-        icon: mdi:brightness-7
-        options:
-          - "200"
-          - "220"
-          - "240"
-          - "255"
-        initial: "255"
-      hallway_2_button_1_short:
-        name: "Hallway Secondary_switch Button 1 Short Press"
-        icon: mdi:lightbulb-on
-        options:
-          - "toggle_lights"
-          - "turn_on_lights"
-          - "turn_off_lights"
-          - "scene_cycle"
-          - "scene_next"
-          - "scene_previous"
-          - "color_cycle"
-        initial: "toggle_lights"
-      hallway_2_button_1_long:
-        name: "Hallway Secondary_switch Button 1 Long Press"
-        icon: mdi:lightbulb-off
-        options:
-          - "all_lights_off"
-          - "room_lights_off"
-          - "scene_cycle"
-          - "scene_next"
-          - "scene_previous"
-          - "color_cycle"
-        initial: "all_lights_off"
-      hallway_2_button_2_short:
-        name: "Hallway Secondary_switch Button 2 Short Press"
-        icon: mdi:brightness-7
-        options:
-          - "brightness_up"
-          - "brightness_down"
-          - "toggle_lights"
-          - "scene_cycle"
-          - "scene_next"
-          - "scene_previous"
-        initial: "brightness_up"
-      hallway_2_button_3_short:
-        name: "Hallway Secondary_switch Button 3 Short Press"
-        icon: mdi:brightness-1
-        options:
-          - "brightness_up"
-          - "brightness_down"
-          - "toggle_lights"
-          - "scene_cycle"
-          - "scene_next"
-          - "scene_previous"
-        initial: "brightness_down"
-      hallway_2_button_4_short:
-        name: "Hallway Secondary_switch Button 4 Short Press"
-        icon: mdi:palette
-        options:
-          - "scene_cycle"
-          - "scene_next"
-          - "scene_previous"
-          - "color_cycle"
-          - "toggle_lights"
-          - "brightness_up"
-          - "brightness_down"
-        initial: "scene_cycle"
-      hallway_2_button_4_long:
-        name: "Hallway Secondary_switch Button 4 Long Press"
         icon: mdi:palette-outline
         options:
           - "room_relax_scene"

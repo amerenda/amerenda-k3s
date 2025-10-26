@@ -63,7 +63,6 @@ views:
                     type: entities
                     title: Living Room Switch Configuration
                     entities:
-                      - entity: input_select.living_room_switch_selector
                       - entity: input_select.living_room_switch_brightness_step
                       - entity: input_select.living_room_switch_min_brightness
                       - entity: input_select.living_room_switch_max_brightness
@@ -118,7 +117,6 @@ views:
                     type: entities
                     title: Kitchen Switch Configuration
                     entities:
-                      - entity: input_select.kitchen_switch_selector
                       - entity: input_select.kitchen_switch_brightness_step
                       - entity: input_select.kitchen_switch_min_brightness
                       - entity: input_select.kitchen_switch_max_brightness
@@ -173,7 +171,6 @@ views:
                     type: entities
                     title: Bedroom Switch Configuration
                     entities:
-                      - entity: input_select.bedroom_switch_selector
                       - entity: input_select.bedroom_switch_brightness_step
                       - entity: input_select.bedroom_switch_min_brightness
                       - entity: input_select.bedroom_switch_max_brightness
@@ -228,7 +225,6 @@ views:
                     type: entities
                     title: Bathroom Switch Configuration
                     entities:
-                      - entity: input_select.bathroom_switch_selector
                       - entity: input_select.bathroom_switch_brightness_step
                       - entity: input_select.bathroom_switch_min_brightness
                       - entity: input_select.bathroom_switch_max_brightness
@@ -283,7 +279,6 @@ views:
                     type: entities
                     title: Hallway Main Switch Configuration
                     entities:
-                      - entity: input_select.hallway_switch_selector
                       - entity: input_select.hallway_switch_brightness_step
                       - entity: input_select.hallway_switch_min_brightness
                       - entity: input_select.hallway_switch_max_brightness
@@ -301,7 +296,6 @@ views:
                     type: entities
                     title: Hallway Secondary Switch Configuration
                     entities:
-                      - entity: input_select.hallway_switch_selector
                       - entity: input_select.hallway_2_switch_brightness_step
                       - entity: input_select.hallway_2_switch_min_brightness
                       - entity: input_select.hallway_2_switch_max_brightness

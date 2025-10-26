@@ -402,6 +402,7 @@ EOF
         icon: mdi:light-switch
         options:
           - "main_switch"
+          - "secondary_switch"
         initial: "main_switch"
 EOF
 
@@ -457,20 +458,8 @@ EOF
         initial: "${default_scene}"
 EOF
         
-        # Generate switch configuration entities
+        # Generate switch configuration entities (no individual room switch selectors - using global one)
         cat >> "$output_file" << EOF
-      ${room}_switch_selector:
-        name: "${room^} Switch Selector"
-        icon: mdi:light-switch
-        options:
-EOF
-        # Add switch options dynamically
-        IFS=',' read -ra switch_array <<< "$switches"
-        for switch in "${switch_array[@]}"; do
-            echo "          - \"${switch}\"" >> "$output_file"
-        done
-        cat >> "$output_file" << EOF
-        initial: "${switch_array[0]}"
       ${room}_switch_brightness_step:
         name: "${room^} Brightness Step"
         icon: mdi:brightness-6
