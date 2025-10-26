@@ -1,16 +1,17 @@
-schedule_1_scene:
-  name: "Morning Scene"
-  icon: mdi:weather-sunrise
-  options:
-    - "energize"
-    - "concentrate"
-    - "relax"
-    - "nightlight"
-    - "read"
-    - "dimmed"
-  initial: "energize"
+input_select:
+  schedule_1_scene:
+    name: "Morning Scene"
+    icon: mdi:weather-sunrise
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "energize"
 
-schedule_2_scene:
+  schedule_2_scene:
   name: "Day Scene"
   icon: mdi:weather-sunny
   options:
@@ -22,7 +23,7 @@ schedule_2_scene:
     - "dimmed"
   initial: "concentrate"
 
-schedule_3_scene:
+  schedule_3_scene:
   name: "Evening Scene"
   icon: mdi:weather-sunset
   options:
@@ -34,7 +35,7 @@ schedule_3_scene:
     - "dimmed"
   initial: "relax"
 
-schedule_4_scene:
+  schedule_4_scene:
   name: "Night Scene"
   icon: mdi:weather-night
   options:
@@ -46,7 +47,7 @@ schedule_4_scene:
     - "dimmed"
   initial: "nightlight"
 
-schedule_5_scene:
+  schedule_5_scene:
   name: "Late Night Scene"
   icon: mdi:weather-night
   options:
@@ -58,7 +59,7 @@ schedule_5_scene:
     - "dimmed"
   initial: "nightlight"
 
-default_scene:
+  default_scene:
   name: "Default Scene"
   icon: mdi:lightbulb
   options:
@@ -68,11 +69,367 @@ default_scene:
     - "nightlight"
     - "read"
     - "dimmed"
-  initial: "relax"
-
-input_select:
+  initial: "relax"input_select:
   living_room_schedule_1_scene:
     name: "Living Room Morning Scene"
+    icon: mdi:weather-sunrise
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "energize"
+
+  living_room_schedule_2_scene:
+    name: "Living Room Day Scene"
+    icon: mdi:weather-sunny
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "concentrate"
+
+  living_room_schedule_3_scene:
+    name: "Living Room Evening Scene"
+    icon: mdi:weather-sunset
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "relax"
+
+  living_room_schedule_4_scene:
+    name: "Living Room Night Scene"
+    icon: mdi:weather-night
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "nightlight"
+
+  living_room_schedule_5_scene:
+    name: "Living Room Late Night Scene"
+    icon: mdi:weather-night
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "nightlight"
+
+  living_room_default_scene:
+    name: "Living Room Default Scene"
+    icon: mdi:lightbulb
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "relax"
+
+  kitchen_schedule_1_scene:
+    name: "Kitchen Morning Scene"
+    icon: mdi:weather-sunrise
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "energize"
+
+  kitchen_schedule_2_scene:
+    name: "Kitchen Day Scene"
+    icon: mdi:weather-sunny
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "concentrate"
+
+  kitchen_schedule_3_scene:
+    name: "Kitchen Evening Scene"
+    icon: mdi:weather-sunset
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "relax"
+
+  kitchen_schedule_4_scene:
+    name: "Kitchen Night Scene"
+    icon: mdi:weather-night
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "nightlight"
+
+  kitchen_schedule_5_scene:
+    name: "Kitchen Late Night Scene"
+    icon: mdi:weather-night
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "nightlight"
+
+  kitchen_default_scene:
+    name: "Kitchen Default Scene"
+    icon: mdi:lightbulb
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "relax"
+
+  bedroom_schedule_1_scene:
+    name: "Bedroom Morning Scene"
+    icon: mdi:weather-sunrise
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "energize"
+
+  bedroom_schedule_2_scene:
+    name: "Bedroom Day Scene"
+    icon: mdi:weather-sunny
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "concentrate"
+
+  bedroom_schedule_3_scene:
+    name: "Bedroom Evening Scene"
+    icon: mdi:weather-sunset
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "relax"
+
+  bedroom_schedule_4_scene:
+    name: "Bedroom Night Scene"
+    icon: mdi:weather-night
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "nightlight"
+
+  bedroom_schedule_5_scene:
+    name: "Bedroom Late Night Scene"
+    icon: mdi:weather-night
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "nightlight"
+
+  bedroom_default_scene:
+    name: "Bedroom Default Scene"
+    icon: mdi:lightbulb
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "relax"
+
+  bathroom_schedule_1_scene:
+    name: "Bathroom Morning Scene"
+    icon: mdi:weather-sunrise
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "energize"
+
+  bathroom_schedule_2_scene:
+    name: "Bathroom Day Scene"
+    icon: mdi:weather-sunny
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "concentrate"
+
+  bathroom_schedule_3_scene:
+    name: "Bathroom Evening Scene"
+    icon: mdi:weather-sunset
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "relax"
+
+  bathroom_schedule_4_scene:
+    name: "Bathroom Night Scene"
+    icon: mdi:weather-night
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "nightlight"
+
+  bathroom_schedule_5_scene:
+    name: "Bathroom Late Night Scene"
+    icon: mdi:weather-night
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "nightlight"
+
+  bathroom_default_scene:
+    name: "Bathroom Default Scene"
+    icon: mdi:lightbulb
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "relax"
+
+  hallway_schedule_1_scene:
+    name: "Hallway Morning Scene"
+    icon: mdi:weather-sunrise
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "energize"
+
+  hallway_schedule_2_scene:
+    name: "Hallway Day Scene"
+    icon: mdi:weather-sunny
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "concentrate"
+
+  hallway_schedule_3_scene:
+    name: "Hallway Evening Scene"
+    icon: mdi:weather-sunset
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "relax"
+
+  hallway_schedule_4_scene:
+    name: "Hallway Night Scene"
+    icon: mdi:weather-night
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "nightlight"
+
+  hallway_schedule_5_scene:
+    name: "Hallway Late Night Scene"
+    icon: mdi:weather-night
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "nightlight"
+
+  hallway_default_scene:
+    name: "Hallway Default Scene"
+    icon: mdi:lightbulb
+    options:
+      - "energize"
+      - "concentrate"
+      - "relax"
+      - "nightlight"
+      - "read"
+      - "dimmed"
+    initial: "relax"
+
     icon: mdi:weather-sunrise
     options:
       - "energize"
