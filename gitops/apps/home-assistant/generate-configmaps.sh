@@ -349,6 +349,10 @@ EOF
     local rooms=("living_room" "kitchen" "bedroom" "bathroom" "hallway")
     local room_icons=("mdi:sofa" "mdi:chef-hat" "mdi:bed" "mdi:shower" "mdi:corridor")
     
+    # Default schedule values from default_schedule.yaml
+    local default_times=("06:00" "09:00" "17:00" "21:00" "23:00")
+    local default_end_times=("09:00" "17:00" "21:00" "23:00" "06:00")
+    
     for i in "${!rooms[@]}"; do
         local room="${rooms[$i]}"
         local icon="${room_icons[$i]}"
@@ -357,6 +361,9 @@ EOF
         for j in {1..5}; do
             local period_name=""
             local period_icon=""
+            local start_time="${default_times[$((j-1))]}"
+            local end_time="${default_end_times[$((j-1))]}"
+            
             case $j in
                 1) period_name="Morning"; period_icon="mdi:weather-sunrise" ;;
                 2) period_name="Day"; period_icon="mdi:weather-sunny" ;;
@@ -371,13 +378,13 @@ EOF
         icon: ${period_icon}
         has_time: true
         has_date: false
-        initial: "06:00"  # Default time
+        initial: "${start_time}"  # Default: ${start_time}
       ${room}_schedule_${j}_end:
         name: "${room^} ${period_name} End"
         icon: ${period_icon}
         has_time: true
         has_date: false
-        initial: "09:00"  # Default time
+        initial: "${end_time}"  # Default: ${end_time}
 EOF
         done
     done
@@ -399,6 +406,9 @@ EOF
 EOF
 
     # Generate select inputs for all rooms
+    local default_scenes=("energize" "concentrate" "relax" "nightlight" "nightlight")
+    local default_scene="relax"
+    
     for i in "${!rooms[@]}"; do
         local room="${rooms[$i]}"
         local icon="${room_icons[$i]}"
@@ -407,6 +417,8 @@ EOF
         for j in {1..5}; do
             local period_name=""
             local period_icon=""
+            local scene="${default_scenes[$((j-1))]}"
+            
             case $j in
                 1) period_name="Morning"; period_icon="mdi:weather-sunrise" ;;
                 2) period_name="Day"; period_icon="mdi:weather-sunny" ;;
@@ -426,7 +438,7 @@ EOF
           - "nightlight"
           - "read"
           - "dimmed"
-        initial: "energize"  # Default scene
+        initial: "${scene}"  # Default: ${scene}
 EOF
         done
         
@@ -442,7 +454,7 @@ EOF
           - "nightlight"
           - "read"
           - "dimmed"
-        initial: "relax"  # Default scene
+        initial: "${default_scene}"  # Default: ${default_scene}
 EOF
     done
 
