@@ -8,13 +8,14 @@ metadata:
 data:
   hue_switch_control.yaml: |
     blueprint:
-      name: Hue - Switch Control (Generic)
+      name: Hue - Switch Control (Multi-Schedule)
       description: >
         Control Hue lights with a Hue switch/dimmer. Supports:
-        - Button 1: Toggle lights on/off
+        - Button 1: Toggle lights on/off with time-based scene scheduling (5 time windows)
         - Button 2: Brightness up
         - Button 3: Brightness down  
         - Button 4: Custom action (default: scene cycle)
+        - Time-based scenes: Configure different scenes for morning, day, evening, night, and late night
       domain: automation
       input:
         target_lights:
@@ -177,88 +178,137 @@ data:
               max: 255
               step: 1
     
-        # Night mode settings
-        night_mode_enabled:
-          name: Enable night mode
-          description: "Enable night scene behavior during night hours"
+        # Time-based scene scheduling
+        time_schedule_enabled:
+          name: Enable time-based scenes
+          description: "Enable different scenes based on time of day"
           default: true
           selector:
             boolean: {}
     
-        night_start_time:
-          name: Night start time
-          description: "Time when night mode should start (24-hour format)"
-          default: "23:00"
+        # Schedule 1: Morning
+        schedule_1_start:
+          name: Schedule 1 - Start time
+          description: "Morning scene start time (24-hour format)"
+          default: "06:00"
           selector:
             time: {}
-    
-        night_end_time:
-          name: Night end time
-          description: "Time when night mode should end (24-hour format)"
-          default: "05:45"
+        
+        schedule_1_end:
+          name: Schedule 1 - End time
+          description: "Morning scene end time (24-hour format)"
+          default: "09:00"
           selector:
             time: {}
-    
-        night_color_mode:
-          name: Night color mode
-          description: "Pick 'scene' to call a Hue/HA scene (prevents flash)."
-          default: scene
-          selector:
-            select:
-              options:
-                - scene
-                - color_temp
-                - hs
-    
-        # Night scene mode
-        night_scene_entity:
-          name: Night scene entity
-          description: "e.g. scene.living_room_night_red (must exist in HA)"
+        
+        schedule_1_scene:
+          name: Schedule 1 - Scene
+          description: "Scene to activate during morning hours"
           default: ""
           selector:
             entity:
               domain: scene
     
-        # Night color temp
-        night_color_temp_mireds:
-          name: Night Color Temp (mireds)
-          default: 500
-          description: "Higher values = warmer light (good for night)"
+        # Schedule 2: Day
+        schedule_2_start:
+          name: Schedule 2 - Start time
+          description: "Day scene start time (24-hour format)"
+          default: "09:00"
           selector:
-            number:
-              min: 153
-              max: 500
-              step: 1
+            time: {}
+        
+        schedule_2_end:
+          name: Schedule 2 - End time
+          description: "Day scene end time (24-hour format)"
+          default: "17:00"
+          selector:
+            time: {}
+        
+        schedule_2_scene:
+          name: Schedule 2 - Scene
+          description: "Scene to activate during day hours"
+          default: ""
+          selector:
+            entity:
+              domain: scene
     
-        # Night HS color
-        night_hs_hue:
-          name: Night HS - Hue (0-360)
-          default: 30
-          description: "Warm orange/red hue for night light"
+        # Schedule 3: Evening
+        schedule_3_start:
+          name: Schedule 3 - Start time
+          description: "Evening scene start time (24-hour format)"
+          default: "17:00"
           selector:
-            number:
-              min: 0
-              max: 360
-              step: 1
-        night_hs_sat:
-          name: Night HS - Saturation (0-100)
-          default: 20
-          description: "Lower saturation for softer night light"
+            time: {}
+        
+        schedule_3_end:
+          name: Schedule 3 - End time
+          description: "Evening scene end time (24-hour format)"
+          default: "21:00"
           selector:
-            number:
-              min: 0
-              max: 100
-              step: 1
+            time: {}
+        
+        schedule_3_scene:
+          name: Schedule 3 - Scene
+          description: "Scene to activate during evening hours"
+          default: ""
+          selector:
+            entity:
+              domain: scene
     
-        night_brightness:
-          name: Night brightness (1-255)
-          default: 50
-          description: "Low brightness for night light"
+        # Schedule 4: Night
+        schedule_4_start:
+          name: Schedule 4 - Start time
+          description: "Night scene start time (24-hour format)"
+          default: "21:00"
           selector:
-            number:
-              min: 1
-              max: 255
-              step: 1
+            time: {}
+        
+        schedule_4_end:
+          name: Schedule 4 - End time
+          description: "Night scene end time (24-hour format)"
+          default: "23:00"
+          selector:
+            time: {}
+        
+        schedule_4_scene:
+          name: Schedule 4 - Scene
+          description: "Scene to activate during night hours"
+          default: ""
+          selector:
+            entity:
+              domain: scene
+    
+        # Schedule 5: Late Night
+        schedule_5_start:
+          name: Schedule 5 - Start time
+          description: "Late night scene start time (24-hour format)"
+          default: "23:00"
+          selector:
+            time: {}
+        
+        schedule_5_end:
+          name: Schedule 5 - End time
+          description: "Late night scene end time (24-hour format)"
+          default: "06:00"
+          selector:
+            time: {}
+        
+        schedule_5_scene:
+          name: Schedule 5 - Scene
+          description: "Scene to activate during late night hours"
+          default: ""
+          selector:
+            entity:
+              domain: scene
+    
+        # Fallback scene (when no schedule matches)
+        default_scene:
+          name: Default scene
+          description: "Scene to use when no time schedule matches"
+          default: ""
+          selector:
+            entity:
+              domain: scene
     
     mode: restart
     max_exceeded: silent
@@ -282,15 +332,23 @@ data:
       brightness_step: !input brightness_step
       min_brightness: !input min_brightness
       max_brightness: !input max_brightness
-      night_mode_enabled: !input night_mode_enabled
-      night_start_time: !input night_start_time
-      night_end_time: !input night_end_time
-      night_color_mode: !input night_color_mode
-      night_scene_entity: !input night_scene_entity
-      night_color_temp_mireds: !input night_color_temp_mireds
-      night_hs_hue: !input night_hs_hue
-      night_hs_sat: !input night_hs_sat
-      night_brightness: !input night_brightness
+      time_schedule_enabled: !input time_schedule_enabled
+      schedule_1_start: !input schedule_1_start
+      schedule_1_end: !input schedule_1_end
+      schedule_1_scene: !input schedule_1_scene
+      schedule_2_start: !input schedule_2_start
+      schedule_2_end: !input schedule_2_end
+      schedule_2_scene: !input schedule_2_scene
+      schedule_3_start: !input schedule_3_start
+      schedule_3_end: !input schedule_3_end
+      schedule_3_scene: !input schedule_3_scene
+      schedule_4_start: !input schedule_4_start
+      schedule_4_end: !input schedule_4_end
+      schedule_4_scene: !input schedule_4_scene
+      schedule_5_start: !input schedule_5_start
+      schedule_5_end: !input schedule_5_end
+      schedule_5_scene: !input schedule_5_scene
+      default_scene: !input default_scene
     
     trigger:
       - platform: event
@@ -323,62 +381,92 @@ data:
                 value_template: "{{ button_1_toggle }}"
             sequence:
               - choose:
-                  # Check if it's night time AND light is currently off AND night mode is enabled
+                  # Time-based scene mode: Turn on with appropriate scene based on current time
                   - conditions:
                       - condition: template
-                        value_template: >
-                          {% set now_time = now().strftime('%H:%M') %}
-                          {% set is_night = false %}
-                          {% if night_start_time <= night_end_time %}
-                            {% set is_night = now_time >= night_start_time and now_time <= night_end_time %}
-                          {% else %}
-                            {% set is_night = now_time >= night_start_time or now_time <= night_end_time %}
-                          {% endif %}
-                          {{ night_mode_enabled and is_night and not is_state(target_lights[0], 'on') }}
+                        value_template: "{{ time_schedule_enabled and not is_state(target_lights[0], 'on') }}"
                     sequence:
-                      # Night mode: Turn on with night color immediately
-                      - choose:
-                          - conditions:
-                              - condition: template
-                                value_template: "{{ night_color_mode == 'scene' and night_scene_entity != '' }}"
-                            sequence:
-                              - service: scene.turn_on
-                                target:
-                                  entity_id: "{{ night_scene_entity }}"
-                          - conditions:
-                              - condition: template
-                                value_template: "{{ night_color_mode == 'color_temp' }}"
-                            sequence:
-                              - service: light.turn_on
-                                target:
-                                  entity_id: !input target_lights
-                                data:
-                                  brightness: "{{ night_brightness | int }}"
-                                  color_temp: "{{ night_color_temp_mireds | int }}"
-                                  transition: 0
-                          - conditions:
-                              - condition: template
-                                value_template: "{{ night_color_mode == 'hs' }}"
-                            sequence:
-                              - service: light.turn_on
-                                target:
-                                  entity_id: !input target_lights
-                                data:
-                                  brightness: "{{ night_brightness | int }}"
-                                  hs_color: ["{{ night_hs_hue | float }}", "{{ night_hs_sat | float }}"]
-                                  transition: 0
-                  # All other cases: Simple toggle (day time OR night time when light is already on)
+                      - service: scene.turn_on
+                        target:
+                          entity_id: >
+                            {% set now_time = now().strftime('%H:%M') %}
+                            {% set current_scene = '' %}
+                            
+                            # Check Schedule 1 (Morning)
+                            {% if schedule_1_scene != '' %}
+                              {% if schedule_1_start <= schedule_1_end %}
+                                {% if now_time >= schedule_1_start and now_time <= schedule_1_end %}
+                                  {% set current_scene = schedule_1_scene %}
+                                {% endif %}
+                              {% else %}
+                                {% if now_time >= schedule_1_start or now_time <= schedule_1_end %}
+                                  {% set current_scene = schedule_1_scene %}
+                                {% endif %}
+                              {% endif %}
+                            {% endif %}
+                            
+                            # Check Schedule 2 (Day) - only if no scene found yet
+                            {% if current_scene == '' and schedule_2_scene != '' %}
+                              {% if schedule_2_start <= schedule_2_end %}
+                                {% if now_time >= schedule_2_start and now_time <= schedule_2_end %}
+                                  {% set current_scene = schedule_2_scene %}
+                                {% endif %}
+                              {% else %}
+                                {% if now_time >= schedule_2_start or now_time <= schedule_2_end %}
+                                  {% set current_scene = schedule_2_scene %}
+                                {% endif %}
+                              {% endif %}
+                            {% endif %}
+                            
+                            # Check Schedule 3 (Evening) - only if no scene found yet
+                            {% if current_scene == '' and schedule_3_scene != '' %}
+                              {% if schedule_3_start <= schedule_3_end %}
+                                {% if now_time >= schedule_3_start and now_time <= schedule_3_end %}
+                                  {% set current_scene = schedule_3_scene %}
+                                {% endif %}
+                              {% else %}
+                                {% if now_time >= schedule_3_start or now_time <= schedule_3_end %}
+                                  {% set current_scene = schedule_3_scene %}
+                                {% endif %}
+                              {% endif %}
+                            {% endif %}
+                            
+                            # Check Schedule 4 (Night) - only if no scene found yet
+                            {% if current_scene == '' and schedule_4_scene != '' %}
+                              {% if schedule_4_start <= schedule_4_end %}
+                                {% if now_time >= schedule_4_start and now_time <= schedule_4_end %}
+                                  {% set current_scene = schedule_4_scene %}
+                                {% endif %}
+                              {% else %}
+                                {% if now_time >= schedule_4_start or now_time <= schedule_4_end %}
+                                  {% set current_scene = schedule_4_scene %}
+                                {% endif %}
+                              {% endif %}
+                            {% endif %}
+                            
+                            # Check Schedule 5 (Late Night) - only if no scene found yet
+                            {% if current_scene == '' and schedule_5_scene != '' %}
+                              {% if schedule_5_start <= schedule_5_end %}
+                                {% if now_time >= schedule_5_start and now_time <= schedule_5_end %}
+                                  {% set current_scene = schedule_5_scene %}
+                                {% endif %}
+                              {% else %}
+                                {% if now_time >= schedule_5_start or now_time <= schedule_5_end %}
+                                  {% set current_scene = schedule_5_scene %}
+                                {% endif %}
+                              {% endif %}
+                            {% endif %}
+                            
+                            # Use default scene if no schedule matches
+                            {% if current_scene == '' %}
+                              {% set current_scene = default_scene %}
+                            {% endif %}
+                            
+                            {{ current_scene }}
+                  # All other cases: Simple toggle (when lights are already on or no time schedule)
                   - conditions:
                       - condition: template
-                        value_template: >
-                          {% set now_time = now().strftime('%H:%M') %}
-                          {% set is_night = false %}
-                          {% if night_start_time <= night_end_time %}
-                            {% set is_night = now_time >= night_start_time and now_time <= night_end_time %}
-                          {% else %}
-                            {% set is_night = now_time >= night_start_time or now_time <= night_end_time %}
-                          {% endif %}
-                          {{ not is_night or is_state(target_lights[0], 'on') }}
+                        value_template: "{{ not time_schedule_enabled or is_state(target_lights[0], 'on') }}"
                     sequence:
                       - service: light.toggle
                         target:
