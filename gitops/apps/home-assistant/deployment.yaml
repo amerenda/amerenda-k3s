@@ -158,7 +158,141 @@ spec:
               scene: !include scenes.yaml
 
               # Schedule configuration
-              !include schedule/schedule_entities.yaml
+              input_boolean:
+                time_schedule_enabled:
+                  name: "Enable Time-Based Scenes"
+                  icon: mdi:clock-outline
+                  initial: true
+
+              input_datetime:
+                schedule_1_start:
+                  name: "Morning Start Time"
+                  icon: mdi:weather-sunrise
+                  has_time: true
+                  has_date: false
+                  initial: "06:00"
+                schedule_1_end:
+                  name: "Morning End Time"
+                  icon: mdi:weather-sunny
+                  has_time: true
+                  has_date: false
+                  initial: "10:00"
+                schedule_2_start:
+                  name: "Day Start Time"
+                  icon: mdi:weather-sunny
+                  has_time: true
+                  has_date: false
+                  initial: "10:00"
+                schedule_2_end:
+                  name: "Day End Time"
+                  icon: mdi:weather-sunset
+                  has_time: true
+                  has_date: false
+                  initial: "18:00"
+                schedule_3_start:
+                  name: "Evening Start Time"
+                  icon: mdi:weather-sunset
+                  has_time: true
+                  has_date: false
+                  initial: "18:00"
+                schedule_3_end:
+                  name: "Evening End Time"
+                  icon: mdi:weather-night
+                  has_time: true
+                  has_date: false
+                  initial: "22:00"
+                schedule_4_start:
+                  name: "Night Start Time"
+                  icon: mdi:weather-night
+                  has_time: true
+                  has_date: false
+                  initial: "22:00"
+                schedule_4_end:
+                  name: "Night End Time"
+                  icon: mdi:weather-sunrise
+                  has_time: true
+                  has_date: false
+                  initial: "06:00"
+                schedule_5_start:
+                  name: "Late Night Start Time"
+                  icon: mdi:weather-sunrise
+                  has_time: true
+                  has_date: false
+                  initial: "06:00"
+                schedule_5_end:
+                  name: "Late Night End Time"
+                  icon: mdi:weather-sunrise
+                  has_time: true
+                  has_date: false
+                  initial: "06:00"
+
+              input_select:
+                schedule_1_scene:
+                  name: "Morning Scene"
+                  icon: mdi:weather-sunrise
+                  options:
+                    - "energize"
+                    - "concentrate"
+                    - "relax"
+                    - "nightlight"
+                    - "read"
+                    - "dimmed"
+                  initial: "energize"
+                schedule_2_scene:
+                  name: "Day Scene"
+                  icon: mdi:weather-sunny
+                  options:
+                    - "energize"
+                    - "concentrate"
+                    - "relax"
+                    - "nightlight"
+                    - "read"
+                    - "dimmed"
+                  initial: "concentrate"
+                schedule_3_scene:
+                  name: "Evening Scene"
+                  icon: mdi:weather-sunset
+                  options:
+                    - "energize"
+                    - "concentrate"
+                    - "relax"
+                    - "nightlight"
+                    - "read"
+                    - "dimmed"
+                  initial: "relax"
+                schedule_4_scene:
+                  name: "Night Scene"
+                  icon: mdi:weather-night
+                  options:
+                    - "energize"
+                    - "concentrate"
+                    - "relax"
+                    - "nightlight"
+                    - "read"
+                    - "dimmed"
+                  initial: "nightlight"
+                schedule_5_scene:
+                  name: "Late Night Scene"
+                  icon: mdi:weather-sunrise
+                  options:
+                    - "energize"
+                    - "concentrate"
+                    - "relax"
+                    - "nightlight"
+                    - "read"
+                    - "dimmed"
+                  initial: "dimmed"
+                default_scene:
+                  name: "Default Scene"
+                  icon: mdi:lightbulb
+                  options:
+                    - "energize"
+                    - "concentrate"
+                    - "relax"
+                    - "nightlight"
+                    - "read"
+                    - "dimmed"
+                  initial: "relax"
 
               # HTTP configuration for reverse proxy
               http:
@@ -204,9 +338,6 @@ spec:
             - name: config
               mountPath: /config
             - name: schedule-config
-              mountPath: /config/schedule
-              readOnly: true
-            - name: schedule-entities
               mountPath: /config/schedule
               readOnly: true
       affinity:
@@ -277,9 +408,6 @@ spec:
             - name: schedule-config
               mountPath: /config/schedule
               readOnly: true
-            - name: schedule-entities
-              mountPath: /config/schedule
-              readOnly: true
           lifecycle:
             preStop:
               exec:
@@ -297,6 +425,3 @@ spec:
         - name: schedule-config
           configMap:
             name: ha-schedule-config
-        - name: schedule-entities
-          configMap:
-            name: ha-schedule-entities
