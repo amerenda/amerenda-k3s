@@ -1,10 +1,29 @@
 # Per-room schedule input helpers
 # Generated automatically - do not edit manually
 
-# Living Room Schedule Configuration
 input_boolean:
   living_room_schedule_enabled:
     name: "Enable Living Room Schedule"
+    icon: mdi:clock-outline
+    initial: true
+
+  kitchen_schedule_enabled:
+    name: "Enable Kitchen Schedule"
+    icon: mdi:clock-outline
+    initial: true
+
+  bedroom_schedule_enabled:
+    name: "Enable Bedroom Schedule"
+    icon: mdi:clock-outline
+    initial: true
+
+  bathroom_schedule_enabled:
+    name: "Enable Bathroom Schedule"
+    icon: mdi:clock-outline
+    initial: true
+
+  hallway_schedule_enabled:
+    name: "Enable Hallway Schedule"
     icon: mdi:clock-outline
     initial: true
 
@@ -74,6 +93,286 @@ input_datetime:
 
   living_room_schedule_5_end:
     name: "Living Room Late Night End"
+    icon: mdi:weather-sunrise
+    has_time: true
+    has_date: false
+    initial: "06:00"
+
+  kitchen_schedule_1_start:
+    name: "Kitchen Morning Start"
+    icon: mdi:weather-sunrise
+    has_time: true
+    has_date: false
+    initial: "06:00"
+
+  kitchen_schedule_1_end:
+    name: "Kitchen Morning End"
+    icon: mdi:weather-sunny
+    has_time: true
+    has_date: false
+    initial: "09:00"
+
+  kitchen_schedule_2_start:
+    name: "Kitchen Day Start"
+    icon: mdi:weather-sunny
+    has_time: true
+    has_date: false
+    initial: "09:00"
+
+  kitchen_schedule_2_end:
+    name: "Kitchen Day End"
+    icon: mdi:weather-sunset
+    has_time: true
+    has_date: false
+    initial: "17:00"
+
+  kitchen_schedule_3_start:
+    name: "Kitchen Evening Start"
+    icon: mdi:weather-sunset
+    has_time: true
+    has_date: false
+    initial: "17:00"
+
+  kitchen_schedule_3_end:
+    name: "Kitchen Evening End"
+    icon: mdi:weather-night
+    has_time: true
+    has_date: false
+    initial: "21:00"
+
+  kitchen_schedule_4_start:
+    name: "Kitchen Night Start"
+    icon: mdi:weather-night
+    has_time: true
+    has_date: false
+    initial: "21:00"
+
+  kitchen_schedule_4_end:
+    name: "Kitchen Night End"
+    icon: mdi:weather-night
+    has_time: true
+    has_date: false
+    initial: "23:00"
+
+  kitchen_schedule_5_start:
+    name: "Kitchen Late Night Start"
+    icon: mdi:weather-night
+    has_time: true
+    has_date: false
+    initial: "23:00"
+
+  kitchen_schedule_5_end:
+    name: "Kitchen Late Night End"
+    icon: mdi:weather-sunrise
+    has_time: true
+    has_date: false
+    initial: "06:00"
+
+  bedroom_schedule_1_start:
+    name: "Bedroom Morning Start"
+    icon: mdi:weather-sunrise
+    has_time: true
+    has_date: false
+    initial: "06:00"
+
+  bedroom_schedule_1_end:
+    name: "Bedroom Morning End"
+    icon: mdi:weather-sunny
+    has_time: true
+    has_date: false
+    initial: "09:00"
+
+  bedroom_schedule_2_start:
+    name: "Bedroom Day Start"
+    icon: mdi:weather-sunny
+    has_time: true
+    has_date: false
+    initial: "09:00"
+
+  bedroom_schedule_2_end:
+    name: "Bedroom Day End"
+    icon: mdi:weather-sunset
+    has_time: true
+    has_date: false
+    initial: "17:00"
+
+  bedroom_schedule_3_start:
+    name: "Bedroom Evening Start"
+    icon: mdi:weather-sunset
+    has_time: true
+    has_date: false
+    initial: "17:00"
+
+  bedroom_schedule_3_end:
+    name: "Bedroom Evening End"
+    icon: mdi:weather-night
+    has_time: true
+    has_date: false
+    initial: "21:00"
+
+  bedroom_schedule_4_start:
+    name: "Bedroom Night Start"
+    icon: mdi:weather-night
+    has_time: true
+    has_date: false
+    initial: "21:00"
+
+  bedroom_schedule_4_end:
+    name: "Bedroom Night End"
+    icon: mdi:weather-night
+    has_time: true
+    has_date: false
+    initial: "23:00"
+
+  bedroom_schedule_5_start:
+    name: "Bedroom Late Night Start"
+    icon: mdi:weather-night
+    has_time: true
+    has_date: false
+    initial: "23:00"
+
+  bedroom_schedule_5_end:
+    name: "Bedroom Late Night End"
+    icon: mdi:weather-sunrise
+    has_time: true
+    has_date: false
+    initial: "06:00"
+
+  bathroom_schedule_1_start:
+    name: "Bathroom Morning Start"
+    icon: mdi:weather-sunrise
+    has_time: true
+    has_date: false
+    initial: "06:00"
+
+  bathroom_schedule_1_end:
+    name: "Bathroom Morning End"
+    icon: mdi:weather-sunny
+    has_time: true
+    has_date: false
+    initial: "09:00"
+
+  bathroom_schedule_2_start:
+    name: "Bathroom Day Start"
+    icon: mdi:weather-sunny
+    has_time: true
+    has_date: false
+    initial: "09:00"
+
+  bathroom_schedule_2_end:
+    name: "Bathroom Day End"
+    icon: mdi:weather-sunset
+    has_time: true
+    has_date: false
+    initial: "17:00"
+
+  bathroom_schedule_3_start:
+    name: "Bathroom Evening Start"
+    icon: mdi:weather-sunset
+    has_time: true
+    has_date: false
+    initial: "17:00"
+
+  bathroom_schedule_3_end:
+    name: "Bathroom Evening End"
+    icon: mdi:weather-night
+    has_time: true
+    has_date: false
+    initial: "21:00"
+
+  bathroom_schedule_4_start:
+    name: "Bathroom Night Start"
+    icon: mdi:weather-night
+    has_time: true
+    has_date: false
+    initial: "21:00"
+
+  bathroom_schedule_4_end:
+    name: "Bathroom Night End"
+    icon: mdi:weather-night
+    has_time: true
+    has_date: false
+    initial: "23:00"
+
+  bathroom_schedule_5_start:
+    name: "Bathroom Late Night Start"
+    icon: mdi:weather-night
+    has_time: true
+    has_date: false
+    initial: "23:00"
+
+  bathroom_schedule_5_end:
+    name: "Bathroom Late Night End"
+    icon: mdi:weather-sunrise
+    has_time: true
+    has_date: false
+    initial: "06:00"
+
+  hallway_schedule_1_start:
+    name: "Hallway Morning Start"
+    icon: mdi:weather-sunrise
+    has_time: true
+    has_date: false
+    initial: "06:00"
+
+  hallway_schedule_1_end:
+    name: "Hallway Morning End"
+    icon: mdi:weather-sunny
+    has_time: true
+    has_date: false
+    initial: "09:00"
+
+  hallway_schedule_2_start:
+    name: "Hallway Day Start"
+    icon: mdi:weather-sunny
+    has_time: true
+    has_date: false
+    initial: "09:00"
+
+  hallway_schedule_2_end:
+    name: "Hallway Day End"
+    icon: mdi:weather-sunset
+    has_time: true
+    has_date: false
+    initial: "17:00"
+
+  hallway_schedule_3_start:
+    name: "Hallway Evening Start"
+    icon: mdi:weather-sunset
+    has_time: true
+    has_date: false
+    initial: "17:00"
+
+  hallway_schedule_3_end:
+    name: "Hallway Evening End"
+    icon: mdi:weather-night
+    has_time: true
+    has_date: false
+    initial: "21:00"
+
+  hallway_schedule_4_start:
+    name: "Hallway Night Start"
+    icon: mdi:weather-night
+    has_time: true
+    has_date: false
+    initial: "21:00"
+
+  hallway_schedule_4_end:
+    name: "Hallway Night End"
+    icon: mdi:weather-night
+    has_time: true
+    has_date: false
+    initial: "23:00"
+
+  hallway_schedule_5_start:
+    name: "Hallway Late Night Start"
+    icon: mdi:weather-night
+    has_time: true
+    has_date: false
+    initial: "23:00"
+
+  hallway_schedule_5_end:
+    name: "Hallway Late Night End"
     icon: mdi:weather-sunrise
     has_time: true
     has_date: false
@@ -152,85 +451,6 @@ input_select:
       - "dimmed"
     initial: "relax"
 
-# Kitchen Schedule Configuration
-input_boolean:
-  kitchen_schedule_enabled:
-    name: "Enable Kitchen Schedule"
-    icon: mdi:clock-outline
-    initial: true
-
-input_datetime:
-  kitchen_schedule_1_start:
-    name: "Kitchen Morning Start"
-    icon: mdi:weather-sunrise
-    has_time: true
-    has_date: false
-    initial: "06:00"
-
-  kitchen_schedule_1_end:
-    name: "Kitchen Morning End"
-    icon: mdi:weather-sunny
-    has_time: true
-    has_date: false
-    initial: "09:00"
-
-  kitchen_schedule_2_start:
-    name: "Kitchen Day Start"
-    icon: mdi:weather-sunny
-    has_time: true
-    has_date: false
-    initial: "09:00"
-
-  kitchen_schedule_2_end:
-    name: "Kitchen Day End"
-    icon: mdi:weather-sunset
-    has_time: true
-    has_date: false
-    initial: "17:00"
-
-  kitchen_schedule_3_start:
-    name: "Kitchen Evening Start"
-    icon: mdi:weather-sunset
-    has_time: true
-    has_date: false
-    initial: "17:00"
-
-  kitchen_schedule_3_end:
-    name: "Kitchen Evening End"
-    icon: mdi:weather-night
-    has_time: true
-    has_date: false
-    initial: "21:00"
-
-  kitchen_schedule_4_start:
-    name: "Kitchen Night Start"
-    icon: mdi:weather-night
-    has_time: true
-    has_date: false
-    initial: "21:00"
-
-  kitchen_schedule_4_end:
-    name: "Kitchen Night End"
-    icon: mdi:weather-night
-    has_time: true
-    has_date: false
-    initial: "23:00"
-
-  kitchen_schedule_5_start:
-    name: "Kitchen Late Night Start"
-    icon: mdi:weather-night
-    has_time: true
-    has_date: false
-    initial: "23:00"
-
-  kitchen_schedule_5_end:
-    name: "Kitchen Late Night End"
-    icon: mdi:weather-sunrise
-    has_time: true
-    has_date: false
-    initial: "06:00"
-
-input_select:
   kitchen_schedule_1_scene:
     name: "Kitchen Morning Scene"
     icon: mdi:weather-sunrise
@@ -303,85 +523,6 @@ input_select:
       - "dimmed"
     initial: "relax"
 
-# Bedroom Schedule Configuration
-input_boolean:
-  bedroom_schedule_enabled:
-    name: "Enable Bedroom Schedule"
-    icon: mdi:clock-outline
-    initial: true
-
-input_datetime:
-  bedroom_schedule_1_start:
-    name: "Bedroom Morning Start"
-    icon: mdi:weather-sunrise
-    has_time: true
-    has_date: false
-    initial: "06:00"
-
-  bedroom_schedule_1_end:
-    name: "Bedroom Morning End"
-    icon: mdi:weather-sunny
-    has_time: true
-    has_date: false
-    initial: "09:00"
-
-  bedroom_schedule_2_start:
-    name: "Bedroom Day Start"
-    icon: mdi:weather-sunny
-    has_time: true
-    has_date: false
-    initial: "09:00"
-
-  bedroom_schedule_2_end:
-    name: "Bedroom Day End"
-    icon: mdi:weather-sunset
-    has_time: true
-    has_date: false
-    initial: "17:00"
-
-  bedroom_schedule_3_start:
-    name: "Bedroom Evening Start"
-    icon: mdi:weather-sunset
-    has_time: true
-    has_date: false
-    initial: "17:00"
-
-  bedroom_schedule_3_end:
-    name: "Bedroom Evening End"
-    icon: mdi:weather-night
-    has_time: true
-    has_date: false
-    initial: "21:00"
-
-  bedroom_schedule_4_start:
-    name: "Bedroom Night Start"
-    icon: mdi:weather-night
-    has_time: true
-    has_date: false
-    initial: "21:00"
-
-  bedroom_schedule_4_end:
-    name: "Bedroom Night End"
-    icon: mdi:weather-night
-    has_time: true
-    has_date: false
-    initial: "23:00"
-
-  bedroom_schedule_5_start:
-    name: "Bedroom Late Night Start"
-    icon: mdi:weather-night
-    has_time: true
-    has_date: false
-    initial: "23:00"
-
-  bedroom_schedule_5_end:
-    name: "Bedroom Late Night End"
-    icon: mdi:weather-sunrise
-    has_time: true
-    has_date: false
-    initial: "06:00"
-
-input_select:
   bedroom_schedule_1_scene:
     name: "Bedroom Morning Scene"
     icon: mdi:weather-sunrise
@@ -454,85 +595,6 @@ input_select:
       - "dimmed"
     initial: "relax"
 
-# Bathroom Schedule Configuration
-input_boolean:
-  bathroom_schedule_enabled:
-    name: "Enable Bathroom Schedule"
-    icon: mdi:clock-outline
-    initial: true
-
-input_datetime:
-  bathroom_schedule_1_start:
-    name: "Bathroom Morning Start"
-    icon: mdi:weather-sunrise
-    has_time: true
-    has_date: false
-    initial: "06:00"
-
-  bathroom_schedule_1_end:
-    name: "Bathroom Morning End"
-    icon: mdi:weather-sunny
-    has_time: true
-    has_date: false
-    initial: "09:00"
-
-  bathroom_schedule_2_start:
-    name: "Bathroom Day Start"
-    icon: mdi:weather-sunny
-    has_time: true
-    has_date: false
-    initial: "09:00"
-
-  bathroom_schedule_2_end:
-    name: "Bathroom Day End"
-    icon: mdi:weather-sunset
-    has_time: true
-    has_date: false
-    initial: "17:00"
-
-  bathroom_schedule_3_start:
-    name: "Bathroom Evening Start"
-    icon: mdi:weather-sunset
-    has_time: true
-    has_date: false
-    initial: "17:00"
-
-  bathroom_schedule_3_end:
-    name: "Bathroom Evening End"
-    icon: mdi:weather-night
-    has_time: true
-    has_date: false
-    initial: "21:00"
-
-  bathroom_schedule_4_start:
-    name: "Bathroom Night Start"
-    icon: mdi:weather-night
-    has_time: true
-    has_date: false
-    initial: "21:00"
-
-  bathroom_schedule_4_end:
-    name: "Bathroom Night End"
-    icon: mdi:weather-night
-    has_time: true
-    has_date: false
-    initial: "23:00"
-
-  bathroom_schedule_5_start:
-    name: "Bathroom Late Night Start"
-    icon: mdi:weather-night
-    has_time: true
-    has_date: false
-    initial: "23:00"
-
-  bathroom_schedule_5_end:
-    name: "Bathroom Late Night End"
-    icon: mdi:weather-sunrise
-    has_time: true
-    has_date: false
-    initial: "06:00"
-
-input_select:
   bathroom_schedule_1_scene:
     name: "Bathroom Morning Scene"
     icon: mdi:weather-sunrise
@@ -605,85 +667,6 @@ input_select:
       - "dimmed"
     initial: "relax"
 
-# Hallway Schedule Configuration
-input_boolean:
-  hallway_schedule_enabled:
-    name: "Enable Hallway Schedule"
-    icon: mdi:clock-outline
-    initial: true
-
-input_datetime:
-  hallway_schedule_1_start:
-    name: "Hallway Morning Start"
-    icon: mdi:weather-sunrise
-    has_time: true
-    has_date: false
-    initial: "06:00"
-
-  hallway_schedule_1_end:
-    name: "Hallway Morning End"
-    icon: mdi:weather-sunny
-    has_time: true
-    has_date: false
-    initial: "09:00"
-
-  hallway_schedule_2_start:
-    name: "Hallway Day Start"
-    icon: mdi:weather-sunny
-    has_time: true
-    has_date: false
-    initial: "09:00"
-
-  hallway_schedule_2_end:
-    name: "Hallway Day End"
-    icon: mdi:weather-sunset
-    has_time: true
-    has_date: false
-    initial: "17:00"
-
-  hallway_schedule_3_start:
-    name: "Hallway Evening Start"
-    icon: mdi:weather-sunset
-    has_time: true
-    has_date: false
-    initial: "17:00"
-
-  hallway_schedule_3_end:
-    name: "Hallway Evening End"
-    icon: mdi:weather-night
-    has_time: true
-    has_date: false
-    initial: "21:00"
-
-  hallway_schedule_4_start:
-    name: "Hallway Night Start"
-    icon: mdi:weather-night
-    has_time: true
-    has_date: false
-    initial: "21:00"
-
-  hallway_schedule_4_end:
-    name: "Hallway Night End"
-    icon: mdi:weather-night
-    has_time: true
-    has_date: false
-    initial: "23:00"
-
-  hallway_schedule_5_start:
-    name: "Hallway Late Night Start"
-    icon: mdi:weather-night
-    has_time: true
-    has_date: false
-    initial: "23:00"
-
-  hallway_schedule_5_end:
-    name: "Hallway Late Night End"
-    icon: mdi:weather-sunrise
-    has_time: true
-    has_date: false
-    initial: "06:00"
-
-input_select:
   hallway_schedule_1_scene:
     name: "Hallway Morning Scene"
     icon: mdi:weather-sunrise

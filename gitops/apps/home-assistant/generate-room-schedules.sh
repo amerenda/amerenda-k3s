@@ -17,22 +17,23 @@ cat > "$OUTPUT_FILE" << EOF
 
 EOF
 
-# Generate input helpers for each room
+# Generate input_boolean section
+echo "input_boolean:" >> "$OUTPUT_FILE"
 for room in "${ROOMS[@]}"; do
     room_display=$(echo "$room" | sed 's/_/ /g' | sed 's/\b\w/\U&/g')
     
-    echo "# $room_display Schedule Configuration" >> "$OUTPUT_FILE"
-    
-    # Boolean to enable/disable schedule for this room
-    echo "input_boolean:" >> "$OUTPUT_FILE"
     echo "  ${room}_schedule_enabled:" >> "$OUTPUT_FILE"
     echo "    name: \"Enable $room_display Schedule\"" >> "$OUTPUT_FILE"
     echo "    icon: mdi:clock-outline" >> "$OUTPUT_FILE"
     echo "    initial: true" >> "$OUTPUT_FILE"
     echo "" >> "$OUTPUT_FILE"
+done
+
+# Generate input_datetime section
+echo "input_datetime:" >> "$OUTPUT_FILE"
+for room in "${ROOMS[@]}"; do
+    room_display=$(echo "$room" | sed 's/_/ /g' | sed 's/\b\w/\U&/g')
     
-    # Time inputs for this room
-    echo "input_datetime:" >> "$OUTPUT_FILE"
     echo "  ${room}_schedule_1_start:" >> "$OUTPUT_FILE"
     echo "    name: \"$room_display Morning Start\"" >> "$OUTPUT_FILE"
     echo "    icon: mdi:weather-sunrise" >> "$OUTPUT_FILE"
@@ -103,9 +104,13 @@ for room in "${ROOMS[@]}"; do
     echo "    has_date: false" >> "$OUTPUT_FILE"
     echo "    initial: \"06:00\"" >> "$OUTPUT_FILE"
     echo "" >> "$OUTPUT_FILE"
+done
+
+# Generate input_select section
+echo "input_select:" >> "$OUTPUT_FILE"
+for room in "${ROOMS[@]}"; do
+    room_display=$(echo "$room" | sed 's/_/ /g' | sed 's/\b\w/\U&/g')
     
-    # Scene selectors for this room
-    echo "input_select:" >> "$OUTPUT_FILE"
     echo "  ${room}_schedule_1_scene:" >> "$OUTPUT_FILE"
     echo "    name: \"$room_display Morning Scene\"" >> "$OUTPUT_FILE"
     echo "    icon: mdi:weather-sunrise" >> "$OUTPUT_FILE"
