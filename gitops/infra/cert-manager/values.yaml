@@ -4,7 +4,7 @@
 # Global configuration
 global:
   leaderElection:
-    namespace: cert-manager
+    namespace: default
 
 # Install CRDs automatically
 installCRDs: true
