@@ -143,10 +143,8 @@ spec:
               script: !include scripts.yaml
               scene: !include scenes.yaml
               
-              # Include schedule configuration files
-              input_boolean: !include schedule/schedule_inputs.yaml
-              input_time: !include schedule/schedule_inputs.yaml
-              input_select: !include schedule/schedule_inputs.yaml
+              # Include schedule configuration
+              !include schedule/schedule_config.yaml
               
               # Shell commands for photo cleanup
               shell_command:
