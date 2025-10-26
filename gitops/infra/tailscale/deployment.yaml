@@ -45,7 +45,7 @@ metadata:
   name: tailscale
   namespace: default
 spec:
-  replicas: 2
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
