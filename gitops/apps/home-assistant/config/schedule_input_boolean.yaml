@@ -3,6 +3,7 @@ input_boolean:
     name: "Enable Time-Based Scenes"
     icon: mdi:clock-outline
     initial: true
+
   living_room_schedule_enabled:
     name: "Enable Living Room Schedule"
     icon: mdi:clock-outline
@@ -27,27 +28,3 @@ input_boolean:
     name: "Enable Hallway Schedule"
     icon: mdi:clock-outline
     initial: true
-
-    icon: mdi:clock-outline
-    initial: true
-
-  kitchen_schedule_enabled:
-    name: "Enable Kitchen Schedule"
-    icon: mdi:clock-outline
-    initial: true
-
-  bedroom_schedule_enabled:
-    name: "Enable Bedroom Schedule"
-    icon: mdi:clock-outline
-    initial: true
-
-  bathroom_schedule_enabled:
-    name: "Enable Bathroom Schedule"
-    icon: mdi:clock-outline
-    initial: true
-
-  hallway_schedule_enabled:
-    name: "Enable Hallway Schedule"
-    icon: mdi:clock-outline
-    initial: true
-
