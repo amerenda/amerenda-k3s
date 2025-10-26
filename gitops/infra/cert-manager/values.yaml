@@ -77,7 +77,9 @@ serviceLabels: {}
 # Extra arguments
 extraArgs: 
   - --enable-certificate-owner-ref=true
-  - --max-concurrent-challenges=10
+  - --max-concurrent-challenges=1
+  - --dns01-recursive-nameservers=8.8.8.8:53,1.1.1.1:53
+  - --dns01-recursive-nameservers-only
 
 # Extra environment variables
 extraEnv: []
