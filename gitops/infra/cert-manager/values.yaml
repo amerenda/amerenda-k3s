@@ -50,6 +50,8 @@ resources:
 serviceAccount:
   create: true
   annotations: {}
+  # Additional RBAC permissions for DigitalOcean DNS validation
+  automountServiceAccountToken: true
 
 # Node selector
 nodeSelector: {}
@@ -73,7 +75,9 @@ serviceAnnotations: {}
 serviceLabels: {}
 
 # Extra arguments
-extraArgs: []
+extraArgs: 
+  - --enable-certificate-owner-ref=true
+  - --max-concurrent-challenges=10
 
 # Extra environment variables
 extraEnv: []

@@ -36,26 +36,35 @@ This application is managed by ArgoCD and will be automatically deployed to the 
 
 ## Certificate Issuers
 
-After deployment, you can create ClusterIssuer or Issuer resources to configure certificate authorities like Let's Encrypt.
+This setup includes a pre-configured ClusterIssuer for Let's Encrypt using DigitalOcean DNS validation.
 
-Example ClusterIssuer for Let's Encrypt:
+### DigitalOcean DNS Validation
 
-```yaml
-apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-metadata:
-  name: letsencrypt-prod
-spec:
-  acme:
-    server: https://acme-v02.api.letsencrypt.org/directory
-    email: alex@amer.dev
-    privateKeySecretRef:
-      name: letsencrypt-prod
-    solvers:
-    - http01:
-        ingress:
-          class: nginx
-```
+The ClusterIssuer is configured to use DigitalOcean DNS for domain validation, which allows for:
+- Wildcard certificate support
+- No need for HTTP-01 challenges
+- Automatic domain validation via DNS records
+
+### Configured Domains
+
+The following domains are automatically configured with wildcard certificates:
+- `*.alexmerenda.dev` and `alexmerenda.dev`
+- `*.amer.dev` and `amer.dev`  
+- `*.amerenda.dev` and `amerenda.dev`
+
+### External Secret
+
+The DigitalOcean API key is managed via External Secrets:
+- **Secret Name**: `do-dns-api-key`
+- **Source**: Bitwarden secret `do-dns-api-key`
+- **Sync Wave**: 10 (high priority, after cert-manager bootstrap)
+
+### Certificate Resources
+
+Three Certificate resources are automatically created:
+- `alexmerenda-dev-wildcard` → `alexmerenda-dev-wildcard-tls` secret
+- `amer-dev-wildcard` → `amer-dev-wildcard-tls` secret
+- `amerenda-dev-wildcard` → `amerenda-dev-wildcard-tls` secret
 
 ## Monitoring
 

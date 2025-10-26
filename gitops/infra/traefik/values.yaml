@@ -36,18 +36,15 @@ globalArguments:
   - "--providers.kubernetescrd=true"
   - "--entrypoints.web.address=:80"
   - "--entrypoints.websecure.address=:443"
-  - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
-  - "--certificatesresolvers.letsencrypt.acme.email=admin@amer.home"
+  - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+  - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+  - "--certificatesresolvers.letsencrypt.acme.email=alex@amer.dev"
   - "--certificatesresolvers.letsencrypt.acme.storage=/data/acme.json"
 
 # Additional arguments for k3s optimization
 additionalArguments:
   - "--serversTransport.insecureSkipVerify=true"
-  - "--providers.kubernetesingress.allowCrossNamespace=true"
-  - "--providers.kubernetesingress.allowExternalNameServices=true"
   - "--providers.kubernetesingress.ingressClass=traefik"
-  - "--providers.kubernetescrd.allowCrossNamespace=true"
-  - "--providers.kubernetescrd.allowExternalNameServices=true"
 
 # Service configuration
 service:
