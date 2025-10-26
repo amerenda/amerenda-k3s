@@ -244,7 +244,7 @@ action:
               # Time-based scene mode: Turn on with appropriate scene based on current time
               - conditions:
                   - condition: template
-                    value_template: "{{ states('input_boolean.time_schedule_enabled') == 'on' and not is_state(target_lights[0], 'on') }}"
+                    value_template: "{{ states('input_boolean.' + room_name + '_schedule_enabled') == 'on' and not is_state(target_lights[0], 'on') }}"
                 sequence:
                   - service: scene.turn_on
                     target:
@@ -254,22 +254,22 @@ action:
                         {% set room = room_name %}
                         
                         {% if use_dashboard_schedule %}
-                          {% set s1_start = states('input_time.schedule_1_start') %}
-                          {% set s1_end = states('input_time.schedule_1_end') %}
-                          {% set s1_scene = states('input_select.schedule_1_scene') %}
-                          {% set s2_start = states('input_time.schedule_2_start') %}
-                          {% set s2_end = states('input_time.schedule_2_end') %}
-                          {% set s2_scene = states('input_select.schedule_2_scene') %}
-                          {% set s3_start = states('input_time.schedule_3_start') %}
-                          {% set s3_end = states('input_time.schedule_3_end') %}
-                          {% set s3_scene = states('input_select.schedule_3_scene') %}
-                          {% set s4_start = states('input_time.schedule_4_start') %}
-                          {% set s4_end = states('input_time.schedule_4_end') %}
-                          {% set s4_scene = states('input_select.schedule_4_scene') %}
-                          {% set s5_start = states('input_time.schedule_5_start') %}
-                          {% set s5_end = states('input_time.schedule_5_end') %}
-                          {% set s5_scene = states('input_select.schedule_5_scene') %}
-                          {% set default_scene = states('input_select.default_scene') %}
+                          {% set s1_start = states('input_datetime.' + room + '_schedule_1_start') %}
+                          {% set s1_end = states('input_datetime.' + room + '_schedule_1_end') %}
+                          {% set s1_scene = states('input_select.' + room + '_schedule_1_scene') %}
+                          {% set s2_start = states('input_datetime.' + room + '_schedule_2_start') %}
+                          {% set s2_end = states('input_datetime.' + room + '_schedule_2_end') %}
+                          {% set s2_scene = states('input_select.' + room + '_schedule_2_scene') %}
+                          {% set s3_start = states('input_datetime.' + room + '_schedule_3_start') %}
+                          {% set s3_end = states('input_datetime.' + room + '_schedule_3_end') %}
+                          {% set s3_scene = states('input_select.' + room + '_schedule_3_scene') %}
+                          {% set s4_start = states('input_datetime.' + room + '_schedule_4_start') %}
+                          {% set s4_end = states('input_datetime.' + room + '_schedule_4_end') %}
+                          {% set s4_scene = states('input_select.' + room + '_schedule_4_scene') %}
+                          {% set s5_start = states('input_datetime.' + room + '_schedule_5_start') %}
+                          {% set s5_end = states('input_datetime.' + room + '_schedule_5_end') %}
+                          {% set s5_scene = states('input_select.' + room + '_schedule_5_scene') %}
+                          {% set default_scene = states('input_select.' + room + '_default_scene') %}
                         {% else %}
                           {% set s1_start = '06:00' %}
                           {% set s1_end = '09:00' %}
@@ -357,7 +357,7 @@ action:
               # All other cases: Simple toggle (when lights are already on or no time schedule)
               - conditions:
                   - condition: template
-                    value_template: "{{ states('input_boolean.time_schedule_enabled') != 'on' or is_state(target_lights[0], 'on') }}"
+                    value_template: "{{ states('input_boolean.' + room_name + '_schedule_enabled') != 'on' or is_state(target_lights[0], 'on') }}"
                 sequence:
                   - service: light.toggle
                     target:
