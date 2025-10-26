@@ -144,7 +144,7 @@ spec:
               scene: !include scenes.yaml
               
               # Include schedule configuration
-              !include schedule/schedule_config.yaml
+              schedule: !include schedule/schedule_config.yaml
               
               # Shell commands for photo cleanup
               shell_command:
@@ -181,7 +181,6 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-      # --- Init step: install HACS into /config on your PVC ---
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
