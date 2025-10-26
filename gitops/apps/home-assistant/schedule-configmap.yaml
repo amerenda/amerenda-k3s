@@ -6,77 +6,70 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 data:
-  schedule_dashboard.yaml: |
-    # Dashboard configuration for schedule management
-    # Add this to your Home Assistant dashboard
+  room_overrides.yaml: |
+    # Room-specific schedule overrides
+    # This file allows you to override the default schedule for specific rooms
+    # Format: room_name -> schedule_number -> property -> value
     
-    title: "Light Schedule Control"
-    path: schedule-control
-    icon: mdi:clock-outline
-    views:
-      - title: "Schedule Control"
-        path: schedule-control
-        cards:
-          - type: vertical-stack
-            title: "Time-Based Scene Schedule"
-            cards:
-              - type: entities
-                title: "Schedule Settings"
-                entities:
-                  - entity: input_boolean.time_schedule_enabled
-                    name: "Enable Time-Based Scenes"
-                  - entity: input_datetime.schedule_1_start
-                    name: "Morning Start"
-                  - entity: input_datetime.schedule_1_end
-                    name: "Morning End"
-                  - entity: input_select.schedule_1_scene
-                    name: "Morning Scene"
-                  - entity: input_datetime.schedule_2_start
-                    name: "Day Start"
-                  - entity: input_datetime.schedule_2_end
-                    name: "Day End"
-                  - entity: input_select.schedule_2_scene
-                    name: "Day Scene"
-                  - entity: input_datetime.schedule_3_start
-                    name: "Evening Start"
-                  - entity: input_datetime.schedule_3_end
-                    name: "Evening End"
-                  - entity: input_select.schedule_3_scene
-                    name: "Evening Scene"
-                  - entity: input_datetime.schedule_4_start
-                    name: "Night Start"
-                  - entity: input_datetime.schedule_4_end
-                    name: "Night End"
-                  - entity: input_select.schedule_4_scene
-                    name: "Night Scene"
-                  - entity: input_datetime.schedule_5_start
-                    name: "Late Night Start"
-                  - entity: input_datetime.schedule_5_end
-                    name: "Late Night End"
-                  - entity: input_select.schedule_5_scene
-                    name: "Late Night Scene"
-                  - entity: input_select.default_scene
-                    name: "Default Scene"
-    
-              - type: markdown
-                content: |
-                  ## How to Use
-                  
-                  **Time-Based Scenes**: When enabled, pressing the switch button will activate different scenes based on the current time.
-                  
-                  **Scene Naming Convention**: 
-                  - Scenes should be named: `scene.{room_name}_{scene_type}`
-                  - Example: `scene.living_room_energize`, `scene.kitchen_relax`
-                  
-                  **Available Scene Types**:
-                  - `energize` - Bright, energizing light for morning
-                  - `concentrate` - Focused light for daytime work
-                  - `relax` - Warm, cozy light for evening
-                  - `nightlight` - Dim light for night/late night
-                  - `read` - Reading-optimized light
-                  - `dimmed` - Soft, dimmed light
-                  
-                  **Time Windows**: Configure when each scene should be active. Times can cross midnight (e.g., 23:00-06:00).
+    room_overrides:
+      # Example: Kitchen might have different morning hours
+      kitchen:
+        schedule_1:
+          start_time: "05:30"  # Earlier start for kitchen
+          end_time: "08:30"    # Earlier end for kitchen
+          scene_suffix: "energize"
+        schedule_2:
+          start_time: "08:30"  # Adjusted start time
+          end_time: "17:00"    # Same end time
+          scene_suffix: "concentrate"
+      
+      # Example: Bedroom might have different evening hours
+      bedroom:
+        schedule_3:
+          start_time: "18:00"  # Earlier evening start
+          end_time: "22:00"    # Earlier evening end
+          scene_suffix: "relax"
+        schedule_4:
+          start_time: "22:00"  # Later night start
+          end_time: "23:30"    # Later night end
+          scene_suffix: "nightlight"
+        schedule_5:
+          start_time: "23:30"  # Adjusted late night start
+          end_time: "06:00"    # Same late night end
+          scene_suffix: "nightlight"
+      
+      # Example: Bathroom might have different scene preferences
+      bathroom:
+        schedule_1:
+          scene_suffix: "energize"  # Keep energize for morning
+        schedule_2:
+          scene_suffix: "concentrate"  # Keep concentrate for day
+        schedule_3:
+          scene_suffix: "relax"  # Keep relax for evening
+        schedule_4:
+          scene_suffix: "nightlight"  # Keep nightlight for night
+        schedule_5:
+          scene_suffix: "nightlight"  # Keep nightlight for late night
+        default_scene_suffix: "nightlight"  # Different default for bathroom
+      
+      # Example: Hallway might have different timing
+      hallway:
+        schedule_1:
+          start_time: "06:30"  # Later morning start
+          end_time: "09:30"    # Later morning end
+        schedule_2:
+          start_time: "09:30"  # Adjusted day start
+          end_time: "17:30"    # Adjusted day end
+        schedule_3:
+          start_time: "17:30"  # Adjusted evening start
+          end_time: "21:30"    # Adjusted evening end
+        schedule_4:
+          start_time: "21:30"  # Adjusted night start
+          end_time: "23:30"    # Adjusted night end
+        schedule_5:
+          start_time: "23:30"  # Adjusted late night start
+          end_time: "06:30"    # Adjusted late night end
+
   default_schedule.yaml: |
     # Default Time-Based Scene Schedule Configuration
     # This file defines the default schedule for all rooms
@@ -124,142 +117,142 @@ data:
       #     start_time: "05:30"
       #     end_time: "08:30"
       #     scene_suffix: "energize"
+
   living_room_schedule.yaml: |
     # Living Room Schedule Configuration
-    # Uses default schedule values with room-specific overrides
     input_boolean:
       living_room_schedule_enabled:
         name: "Living Room Schedule Enabled"
         icon: mdi:sofa
         initial: true
-
-    input_datetime:
-      living_room_schedule_1_start:
-        name: "Living Room Morning Start"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "06:00"  # Default: 06:00
-      living_room_schedule_1_end:
-        name: "Living Room Morning End"
-        icon: mdi:weather-sunny
-        has_time: true
-        has_date: false
-        initial: "09:00"  # Default: 09:00
-      living_room_schedule_2_start:
-        name: "Living Room Day Start"
-        icon: mdi:weather-sunny
-        has_time: true
-        has_date: false
-        initial: "09:00"  # Default: 09:00
-      living_room_schedule_2_end:
-        name: "Living Room Day End"
-        icon: mdi:weather-sunset
-        has_time: true
-        has_date: false
-        initial: "17:00"  # Default: 17:00
-      living_room_schedule_3_start:
-        name: "Living Room Evening Start"
-        icon: mdi:weather-sunset
-        has_time: true
-        has_date: false
-        initial: "17:00"  # Default: 17:00
-      living_room_schedule_3_end:
-        name: "Living Room Evening End"
-        icon: mdi:weather-night
-        has_time: true
-        has_date: false
-        initial: "21:00"  # Default: 21:00
-      living_room_schedule_4_start:
-        name: "Living Room Night Start"
-        icon: mdi:weather-night
-        has_time: true
-        has_date: false
-        initial: "21:00"  # Default: 21:00
-      living_room_schedule_4_end:
-        name: "Living Room Night End"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "23:00"  # Default: 23:00
-      living_room_schedule_5_start:
-        name: "Living Room Late Night Start"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "23:00"  # Default: 23:00
-      living_room_schedule_5_end:
-        name: "Living Room Late Night End"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "06:00"  # Default: 06:00
-
-    input_select:
-      living_room_schedule_1_scene:
-        name: "Living Room Morning Scene"
-        icon: mdi:weather-sunrise
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-        initial: "energize"  # Default: energize
-      living_room_schedule_2_scene:
-        name: "Living Room Day Scene"
-        icon: mdi:weather-sunny
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-        initial: "concentrate"  # Default: concentrate
-      living_room_schedule_3_scene:
-        name: "Living Room Evening Scene"
-        icon: mdi:weather-sunset
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-        initial: "relax"  # Default: relax
-      living_room_schedule_4_scene:
-        name: "Living Room Night Scene"
-        icon: mdi:weather-night
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-        initial: "nightlight"  # Default: nightlight
-      living_room_schedule_5_scene:
-        name: "Living Room Late Night Scene"
-        icon: mdi:weather-sunrise
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-        initial: "nightlight"  # Default: nightlight
-      living_room_default_scene:
-        name: "Living Room Default Scene"
-        icon: mdi:sofa
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-        initial: "relax"  # Default: relax
+    
+        input_datetime:
+          living_room_schedule_1_start:
+            name: "Living Room Morning Start"
+            icon: mdi:weather-sunrise
+            has_time: true
+            has_date: false
+            initial: "06:00"  # Default: 06:00
+          living_room_schedule_1_end:
+            name: "Living Room Morning End"
+            icon: mdi:weather-sunny
+            has_time: true
+            has_date: false
+            initial: "09:00"  # Default: 09:00
+          living_room_schedule_2_start:
+            name: "Living Room Day Start"
+            icon: mdi:weather-sunny
+            has_time: true
+            has_date: false
+            initial: "09:00"  # Default: 09:00
+          living_room_schedule_2_end:
+            name: "Living Room Day End"
+            icon: mdi:weather-sunset
+            has_time: true
+            has_date: false
+            initial: "17:00"  # Default: 17:00
+          living_room_schedule_3_start:
+            name: "Living Room Evening Start"
+            icon: mdi:weather-sunset
+            has_time: true
+            has_date: false
+            initial: "17:00"  # Default: 17:00
+          living_room_schedule_3_end:
+            name: "Living Room Evening End"
+            icon: mdi:weather-night
+            has_time: true
+            has_date: false
+            initial: "21:00"  # Default: 21:00
+          living_room_schedule_4_start:
+            name: "Living Room Night Start"
+            icon: mdi:weather-night
+            has_time: true
+            has_date: false
+            initial: "21:00"  # Default: 21:00
+          living_room_schedule_4_end:
+            name: "Living Room Night End"
+            icon: mdi:weather-sunrise
+            has_time: true
+            has_date: false
+            initial: "23:00"  # Default: 23:00
+          living_room_schedule_5_start:
+            name: "Living Room Late Night Start"
+            icon: mdi:weather-sunrise
+            has_time: true
+            has_date: false
+            initial: "23:00"  # Default: 23:00
+          living_room_schedule_5_end:
+            name: "Living Room Late Night End"
+            icon: mdi:weather-sunrise
+            has_time: true
+            has_date: false
+            initial: "06:00"  # Default: 06:00
+    
+        input_select:
+          living_room_schedule_1_scene:
+            name: "Living Room Morning Scene"
+            icon: mdi:weather-sunrise
+            options:
+              - "energize"
+              - "concentrate"
+              - "relax"
+              - "nightlight"
+              - "read"
+              - "dimmed"
+            initial: "energize"  # Default: energize
+          living_room_schedule_2_scene:
+            name: "Living Room Day Scene"
+            icon: mdi:weather-sunny
+            options:
+              - "energize"
+              - "concentrate"
+              - "relax"
+              - "nightlight"
+              - "read"
+              - "dimmed"
+            initial: "concentrate"  # Default: concentrate
+          living_room_schedule_3_scene:
+            name: "Living Room Evening Scene"
+            icon: mdi:weather-sunset
+            options:
+              - "energize"
+              - "concentrate"
+              - "relax"
+              - "nightlight"
+              - "read"
+              - "dimmed"
+            initial: "relax"  # Default: relax
+          living_room_schedule_4_scene:
+            name: "Living Room Night Scene"
+            icon: mdi:weather-night
+            options:
+              - "energize"
+              - "concentrate"
+              - "relax"
+              - "nightlight"
+              - "read"
+              - "dimmed"
+            initial: "nightlight"  # Default: nightlight
+          living_room_schedule_5_scene:
+            name: "Living Room Late Night Scene"
+            icon: mdi:weather-sunrise
+            options:
+              - "energize"
+              - "concentrate"
+              - "relax"
+              - "nightlight"
+              - "read"
+              - "dimmed"
+            initial: "nightlight"  # Default: nightlight
+          living_room_default_scene:
+            name: "Living Room Default Scene"
+            icon: mdi:sofa
+            options:
+              - "energize"
+              - "concentrate"
+              - "relax"
+              - "nightlight"
+              - "read"
+              - "dimmed"
+            initial: "relax"  # Default: relax
 

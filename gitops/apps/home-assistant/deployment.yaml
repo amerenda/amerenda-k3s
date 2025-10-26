@@ -157,6 +157,8 @@ spec:
               script: !include scripts.yaml
               scene: !include scenes.yaml
 
+              # Living room schedule configuration will be loaded from ConfigMap
+
               # Schedule configuration
               input_boolean:
                 time_schedule_enabled:
@@ -294,142 +296,6 @@ spec:
                     - "dimmed"
                   initial: "relax"
 
-              # Living room schedule configuration
-              living_room_schedule_enabled:
-                name: "Living Room Schedule Enabled"
-                icon: mdi:sofa
-                initial: true
-
-              # Living room schedule times
-              living_room_schedule_1_start:
-                name: "Living Room Morning Start"
-                icon: mdi:weather-sunrise
-                has_time: true
-                has_date: false
-                initial: "06:00"
-              living_room_schedule_1_end:
-                name: "Living Room Morning End"
-                icon: mdi:weather-sunny
-                has_time: true
-                has_date: false
-                initial: "09:00"
-              living_room_schedule_2_start:
-                name: "Living Room Day Start"
-                icon: mdi:weather-sunny
-                has_time: true
-                has_date: false
-                initial: "09:00"
-              living_room_schedule_2_end:
-                name: "Living Room Day End"
-                icon: mdi:weather-sunset
-                has_time: true
-                has_date: false
-                initial: "17:00"
-              living_room_schedule_3_start:
-                name: "Living Room Evening Start"
-                icon: mdi:weather-sunset
-                has_time: true
-                has_date: false
-                initial: "17:00"
-              living_room_schedule_3_end:
-                name: "Living Room Evening End"
-                icon: mdi:weather-night
-                has_time: true
-                has_date: false
-                initial: "21:00"
-              living_room_schedule_4_start:
-                name: "Living Room Night Start"
-                icon: mdi:weather-night
-                has_time: true
-                has_date: false
-                initial: "21:00"
-              living_room_schedule_4_end:
-                name: "Living Room Night End"
-                icon: mdi:weather-sunrise
-                has_time: true
-                has_date: false
-                initial: "23:00"
-              living_room_schedule_5_start:
-                name: "Living Room Late Night Start"
-                icon: mdi:weather-sunrise
-                has_time: true
-                has_date: false
-                initial: "23:00"
-              living_room_schedule_5_end:
-                name: "Living Room Late Night End"
-                icon: mdi:weather-sunrise
-                has_time: true
-                has_date: false
-                initial: "06:00"
-
-              # Living room schedule scenes
-              living_room_schedule_1_scene:
-                name: "Living Room Morning Scene"
-                icon: mdi:weather-sunrise
-                options:
-                  - "energize"
-                  - "concentrate"
-                  - "relax"
-                  - "nightlight"
-                  - "read"
-                  - "dimmed"
-                initial: "energize"
-              living_room_schedule_2_scene:
-                name: "Living Room Day Scene"
-                icon: mdi:weather-sunny
-                options:
-                  - "energize"
-                  - "concentrate"
-                  - "relax"
-                  - "nightlight"
-                  - "read"
-                  - "dimmed"
-                initial: "concentrate"
-              living_room_schedule_3_scene:
-                name: "Living Room Evening Scene"
-                icon: mdi:weather-sunset
-                options:
-                  - "energize"
-                  - "concentrate"
-                  - "relax"
-                  - "nightlight"
-                  - "read"
-                  - "dimmed"
-                initial: "relax"
-              living_room_schedule_4_scene:
-                name: "Living Room Night Scene"
-                icon: mdi:weather-night
-                options:
-                  - "energize"
-                  - "concentrate"
-                  - "relax"
-                  - "nightlight"
-                  - "read"
-                  - "dimmed"
-                initial: "nightlight"
-              living_room_schedule_5_scene:
-                name: "Living Room Late Night Scene"
-                icon: mdi:weather-sunrise
-                options:
-                  - "energize"
-                  - "concentrate"
-                  - "relax"
-                  - "nightlight"
-                  - "read"
-                  - "dimmed"
-                initial: "nightlight"
-              living_room_default_scene:
-                name: "Living Room Default Scene"
-                icon: mdi:sofa
-                options:
-                  - "energize"
-                  - "concentrate"
-                  - "relax"
-                  - "nightlight"
-                  - "read"
-                  - "dimmed"
-                initial: "relax"
-
               # HTTP configuration for reverse proxy
               http:
                 use_x_forwarded_for: true
@@ -442,6 +308,11 @@ spec:
               shell_command:
                 cleanup_old_photos: 'find /config/www/pets -name "*.jpg" -mtime +30 -delete && find /config/www/intruders -name "*.jpg" -mtime +30 -delete'
               EOF
+              
+              # Append living room configuration
+              echo "" >> "${CONFIG_DIR}/configuration.yaml"
+              echo "# Living room schedule configuration" >> "${CONFIG_DIR}/configuration.yaml"
+              cat /config/living-room/living_room_schedule.yaml >> "${CONFIG_DIR}/configuration.yaml"
               
               # Create empty files for scripts, scenes, and automations
               echo "[]" > "${CONFIG_DIR}/scripts.yaml"
@@ -457,6 +328,9 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
+            - name: living-room-config
+              mountPath: /config/living-room
+              readOnly: true
         - name: validate-config
           image: ghcr.io/home-assistant/home-assistant:stable
           imagePullPolicy: IfNotPresent
@@ -544,6 +418,9 @@ spec:
             - name: schedule-config
               mountPath: /config/schedule
               readOnly: true
+            - name: living-room-config
+              mountPath: /config/living-room
+              readOnly: true
           lifecycle:
             preStop:
               exec:
@@ -561,3 +438,6 @@ spec:
         - name: schedule-config
           configMap:
             name: ha-schedule-config
+        - name: living-room-config
+          configMap:
+            name: ha-living-room-config
