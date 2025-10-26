@@ -7,7 +7,6 @@ metadata:
     reloader.stakater.com/auto: "true"
 data:
   hallway_schedule.yaml: |
-    [0;34m[INFO][0m Generating schedule for room: hallway
     # Hallway Schedule Configuration
     # Generated from default schedule with room-specific overrides
     input_boolean:

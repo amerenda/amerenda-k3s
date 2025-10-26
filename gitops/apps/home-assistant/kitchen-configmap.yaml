@@ -7,7 +7,6 @@ metadata:
     reloader.stakater.com/auto: "true"
 data:
   kitchen_schedule.yaml: |
-    [0;34m[INFO][0m Generating schedule for room: kitchen
     # Kitchen Schedule Configuration
     # Generated from default schedule with room-specific overrides
     input_boolean:

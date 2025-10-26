@@ -43,7 +43,7 @@ generate_room_schedule() {
         return 1
     fi
     
-    print_status "Generating schedule for room: $room_name"
+    print_status "Generating schedule for room: $room_name" >&2
     
     # Default schedule configuration
     local default_schedule='{
