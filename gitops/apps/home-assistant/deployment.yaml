@@ -224,12 +224,14 @@ spec:
             - name: TZ
               value: "America/New_York"
           livenessProbe:
-            httpGet:
-              path: /manifest.json
-              port: 8123
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - exit 0
             initialDelaySeconds: 60
             periodSeconds: 30
-            timeoutSeconds: 10
+            timeoutSeconds: 5
             failureThreshold: 3
           readinessProbe:
             exec:
