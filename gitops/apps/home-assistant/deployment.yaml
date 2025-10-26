@@ -156,11 +156,10 @@ spec:
               automation ui: !include automations.yaml
               script: !include scripts.yaml
               scene: !include scenes.yaml
-              
-# Include schedule configuration
-!include schedule/schedule_config.yaml
-              
-              
+
+              # Include schedule configuration
+              !include schedule/schedule_config.yaml
+
               # HTTP configuration for reverse proxy
               http:
                 use_x_forwarded_for: true
