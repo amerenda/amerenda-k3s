@@ -8,6 +8,18 @@ metadata:
 data:
   schedule_input_select.yaml: |
     input_select:
+      room_schedule_selector:
+        name: "Select Room to Configure"
+        icon: mdi:home-edit
+        options:
+          - "none"
+          - "living_room"
+          - "kitchen"
+          - "bedroom"
+          - "bathroom"
+          - "hallway"
+        initial: "none"
+    
       schedule_1_scene:
         name: "Morning Scene"
         icon: mdi:weather-sunrise
