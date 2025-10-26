@@ -1,4 +1,3 @@
-# Schedule select inputs
 input_select:
   schedule_1_scene:
     name: "Morning Scene"

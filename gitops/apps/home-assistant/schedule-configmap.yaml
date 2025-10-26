@@ -153,7 +153,6 @@ data:
     input_select: !include schedule_inputs.yaml
 
   schedule_input_select.yaml: |
-    # Schedule select inputs
     input_select:
       schedule_1_scene:
         name: "Morning Scene"
@@ -226,7 +225,6 @@ data:
           - "read"
           - "dimmed"
         initial: "relax"
-
   schedule_dashboard.yaml: |
     # Dashboard configuration for schedule management
     # Add this to your Home Assistant dashboard
@@ -297,13 +295,11 @@ data:
           **Time Windows**: Configure when each scene should be active. Times can cross midnight (e.g., 23:00-06:00).
 
   schedule_input_boolean.yaml: |
-    # Schedule boolean inputs
     input_boolean:
       time_schedule_enabled:
         name: "Enable Time-Based Scenes"
         icon: mdi:clock-outline
         initial: true
-
   default_schedule.yaml: |
     # Default Time-Based Scene Schedule Configuration
     # This file defines the default schedule for all rooms
