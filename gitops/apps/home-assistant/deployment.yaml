@@ -232,13 +232,15 @@ spec:
             timeoutSeconds: 10
             failureThreshold: 3
           readinessProbe:
-            httpGet:
-              path: /manifest.json
-              port: 8123
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 3
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - sleep 30 && exit 0
+            initialDelaySeconds: 0
+            periodSeconds: 60
+            timeoutSeconds: 35
+            failureThreshold: 1
           volumeMounts:
             - name: config
               mountPath: /config
