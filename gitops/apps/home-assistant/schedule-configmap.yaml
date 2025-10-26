@@ -353,6 +353,14 @@ data:
           - "bathroom"
           - "hallway"
         initial: "living_room"
+      
+      # Switch selector for dashboard (dynamically populated based on room)
+      room_switch_selector:
+        name: "Select Switch to Configure"
+        icon: mdi:light-switch
+        options:
+          - "main_switch"
+        initial: "main_switch"
       living_room_schedule_1_scene:
         name: "Living_room Morning Scene"
         icon: mdi:weather-sunrise
@@ -419,6 +427,46 @@ data:
           - "read"
           - "dimmed"
         initial: "relax"  # Default: relax
+      living_room_switch_selector:
+        name: "Living_room Switch Selector"
+        icon: mdi:light-switch
+        options:
+          - "main_switch"
+        initial: "main_switch"
+      living_room_switch_brightness_step:
+        name: "Living_room Brightness Step"
+        icon: mdi:brightness-6
+        options:
+          - "10"
+          - "15"
+          - "20"
+          - "25"
+          - "30"
+          - "35"
+          - "40"
+          - "50"
+        initial: "25"
+      living_room_switch_min_brightness:
+        name: "Living_room Min Brightness"
+        icon: mdi:brightness-1
+        options:
+          - "1"
+          - "5"
+          - "10"
+          - "15"
+          - "20"
+          - "25"
+          - "30"
+        initial: "1"
+      living_room_switch_max_brightness:
+        name: "Living_room Max Brightness"
+        icon: mdi:brightness-7
+        options:
+          - "200"
+          - "220"
+          - "240"
+          - "255"
+        initial: "255"
       kitchen_schedule_1_scene:
         name: "Kitchen Morning Scene"
         icon: mdi:weather-sunrise
@@ -485,6 +533,46 @@ data:
           - "read"
           - "dimmed"
         initial: "relax"  # Default: relax
+      kitchen_switch_selector:
+        name: "Kitchen Switch Selector"
+        icon: mdi:light-switch
+        options:
+          - "main_switch"
+        initial: "main_switch"
+      kitchen_switch_brightness_step:
+        name: "Kitchen Brightness Step"
+        icon: mdi:brightness-6
+        options:
+          - "10"
+          - "15"
+          - "20"
+          - "25"
+          - "30"
+          - "35"
+          - "40"
+          - "50"
+        initial: "25"
+      kitchen_switch_min_brightness:
+        name: "Kitchen Min Brightness"
+        icon: mdi:brightness-1
+        options:
+          - "1"
+          - "5"
+          - "10"
+          - "15"
+          - "20"
+          - "25"
+          - "30"
+        initial: "1"
+      kitchen_switch_max_brightness:
+        name: "Kitchen Max Brightness"
+        icon: mdi:brightness-7
+        options:
+          - "200"
+          - "220"
+          - "240"
+          - "255"
+        initial: "255"
       bedroom_schedule_1_scene:
         name: "Bedroom Morning Scene"
         icon: mdi:weather-sunrise
@@ -551,6 +639,46 @@ data:
           - "read"
           - "dimmed"
         initial: "relax"  # Default: relax
+      bedroom_switch_selector:
+        name: "Bedroom Switch Selector"
+        icon: mdi:light-switch
+        options:
+          - "main_switch"
+        initial: "main_switch"
+      bedroom_switch_brightness_step:
+        name: "Bedroom Brightness Step"
+        icon: mdi:brightness-6
+        options:
+          - "10"
+          - "15"
+          - "20"
+          - "25"
+          - "30"
+          - "35"
+          - "40"
+          - "50"
+        initial: "25"
+      bedroom_switch_min_brightness:
+        name: "Bedroom Min Brightness"
+        icon: mdi:brightness-1
+        options:
+          - "1"
+          - "5"
+          - "10"
+          - "15"
+          - "20"
+          - "25"
+          - "30"
+        initial: "1"
+      bedroom_switch_max_brightness:
+        name: "Bedroom Max Brightness"
+        icon: mdi:brightness-7
+        options:
+          - "200"
+          - "220"
+          - "240"
+          - "255"
+        initial: "255"
       bathroom_schedule_1_scene:
         name: "Bathroom Morning Scene"
         icon: mdi:weather-sunrise
@@ -617,6 +745,46 @@ data:
           - "read"
           - "dimmed"
         initial: "relax"  # Default: relax
+      bathroom_switch_selector:
+        name: "Bathroom Switch Selector"
+        icon: mdi:light-switch
+        options:
+          - "main_switch"
+        initial: "main_switch"
+      bathroom_switch_brightness_step:
+        name: "Bathroom Brightness Step"
+        icon: mdi:brightness-6
+        options:
+          - "10"
+          - "15"
+          - "20"
+          - "25"
+          - "30"
+          - "35"
+          - "40"
+          - "50"
+        initial: "25"
+      bathroom_switch_min_brightness:
+        name: "Bathroom Min Brightness"
+        icon: mdi:brightness-1
+        options:
+          - "1"
+          - "5"
+          - "10"
+          - "15"
+          - "20"
+          - "25"
+          - "30"
+        initial: "1"
+      bathroom_switch_max_brightness:
+        name: "Bathroom Max Brightness"
+        icon: mdi:brightness-7
+        options:
+          - "200"
+          - "220"
+          - "240"
+          - "255"
+        initial: "255"
       hallway_schedule_1_scene:
         name: "Hallway Morning Scene"
         icon: mdi:weather-sunrise
@@ -683,6 +851,46 @@ data:
           - "read"
           - "dimmed"
         initial: "relax"  # Default: relax
+      hallway_switch_selector:
+        name: "Hallway Switch Selector"
+        icon: mdi:light-switch
+        options:
+          - "main_switch"
+        initial: "main_switch"
+      hallway_switch_brightness_step:
+        name: "Hallway Brightness Step"
+        icon: mdi:brightness-6
+        options:
+          - "10"
+          - "15"
+          - "20"
+          - "25"
+          - "30"
+          - "35"
+          - "40"
+          - "50"
+        initial: "25"
+      hallway_switch_min_brightness:
+        name: "Hallway Min Brightness"
+        icon: mdi:brightness-1
+        options:
+          - "1"
+          - "5"
+          - "10"
+          - "15"
+          - "20"
+          - "25"
+          - "30"
+        initial: "1"
+      hallway_switch_max_brightness:
+        name: "Hallway Max Brightness"
+        icon: mdi:brightness-7
+        options:
+          - "200"
+          - "220"
+          - "240"
+          - "255"
+        initial: "255"
   room_overrides.yaml: |
     # Room-specific schedule overrides
     # This file allows you to override the default schedule for specific rooms

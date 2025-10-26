@@ -14,6 +14,9 @@ views:
               - entity: input_select.room_schedule_selector
                 name: Select Room to Configure
                 icon: mdi:home-edit
+              - entity: input_select.room_switch_selector
+                name: Select Switch to Configure
+                icon: mdi:light-switch
           - type: conditional
             conditions:
               - entity: input_select.room_schedule_selector
@@ -82,6 +85,26 @@ views:
                     - entity: input_select.living_room_default_scene
                       name: Default Scene
                       icon: mdi:lightbulb
+                - type: conditional
+                  conditions:
+                    - entity: input_select.room_switch_selector
+                      state: main_switch
+                  card:
+                    type: entities
+                    title: Living Room Switch Configuration
+                    entities:
+                      - entity: input_select.living_room_switch_selector
+                        name: Switch Type
+                        icon: mdi:light-switch
+                      - entity: input_select.living_room_switch_brightness_step
+                        name: Brightness Step
+                        icon: mdi:brightness-6
+                      - entity: input_select.living_room_switch_min_brightness
+                        name: Min Brightness
+                        icon: mdi:brightness-1
+                      - entity: input_select.living_room_switch_max_brightness
+                        name: Max Brightness
+                        icon: mdi:brightness-7
           - type: conditional
             conditions:
               - entity: input_select.room_schedule_selector
@@ -150,6 +173,26 @@ views:
                     - entity: input_select.kitchen_default_scene
                       name: Default Scene
                       icon: mdi:lightbulb
+                - type: conditional
+                  conditions:
+                    - entity: input_select.room_switch_selector
+                      state: main_switch
+                  card:
+                    type: entities
+                    title: Kitchen Switch Configuration
+                    entities:
+                      - entity: input_select.kitchen_switch_selector
+                        name: Switch Type
+                        icon: mdi:light-switch
+                      - entity: input_select.kitchen_switch_brightness_step
+                        name: Brightness Step
+                        icon: mdi:brightness-6
+                      - entity: input_select.kitchen_switch_min_brightness
+                        name: Min Brightness
+                        icon: mdi:brightness-1
+                      - entity: input_select.kitchen_switch_max_brightness
+                        name: Max Brightness
+                        icon: mdi:brightness-7
           - type: conditional
             conditions:
               - entity: input_select.room_schedule_selector
@@ -218,6 +261,26 @@ views:
                     - entity: input_select.bedroom_default_scene
                       name: Default Scene
                       icon: mdi:lightbulb
+                - type: conditional
+                  conditions:
+                    - entity: input_select.room_switch_selector
+                      state: main_switch
+                  card:
+                    type: entities
+                    title: Bedroom Switch Configuration
+                    entities:
+                      - entity: input_select.bedroom_switch_selector
+                        name: Switch Type
+                        icon: mdi:light-switch
+                      - entity: input_select.bedroom_switch_brightness_step
+                        name: Brightness Step
+                        icon: mdi:brightness-6
+                      - entity: input_select.bedroom_switch_min_brightness
+                        name: Min Brightness
+                        icon: mdi:brightness-1
+                      - entity: input_select.bedroom_switch_max_brightness
+                        name: Max Brightness
+                        icon: mdi:brightness-7
           - type: conditional
             conditions:
               - entity: input_select.room_schedule_selector
@@ -286,6 +349,26 @@ views:
                     - entity: input_select.bathroom_default_scene
                       name: Default Scene
                       icon: mdi:lightbulb
+                - type: conditional
+                  conditions:
+                    - entity: input_select.room_switch_selector
+                      state: main_switch
+                  card:
+                    type: entities
+                    title: Bathroom Switch Configuration
+                    entities:
+                      - entity: input_select.bathroom_switch_selector
+                        name: Switch Type
+                        icon: mdi:light-switch
+                      - entity: input_select.bathroom_switch_brightness_step
+                        name: Brightness Step
+                        icon: mdi:brightness-6
+                      - entity: input_select.bathroom_switch_min_brightness
+                        name: Min Brightness
+                        icon: mdi:brightness-1
+                      - entity: input_select.bathroom_switch_max_brightness
+                        name: Max Brightness
+                        icon: mdi:brightness-7
           - type: conditional
             conditions:
               - entity: input_select.room_schedule_selector
@@ -354,6 +437,26 @@ views:
                     - entity: input_select.hallway_default_scene
                       name: Default Scene
                       icon: mdi:lightbulb
+                - type: conditional
+                  conditions:
+                    - entity: input_select.room_switch_selector
+                      state: main_switch
+                  card:
+                    type: entities
+                    title: Hallway Switch Configuration
+                    entities:
+                      - entity: input_select.hallway_switch_selector
+                        name: Switch Type
+                        icon: mdi:light-switch
+                      - entity: input_select.hallway_switch_brightness_step
+                        name: Brightness Step
+                        icon: mdi:brightness-6
+                      - entity: input_select.hallway_switch_min_brightness
+                        name: Min Brightness
+                        icon: mdi:brightness-1
+                      - entity: input_select.hallway_switch_max_brightness
+                        name: Max Brightness
+                        icon: mdi:brightness-7
           - type: markdown
             content: >
               ## Per-Room Schedule Configuration
@@ -361,16 +464,22 @@ views:
 
               **How to Use**:
 
-              1. **Select a Room**: Use the dropdown above to choose which
+              1. **Select a Room**: Use the first dropdown to choose which
               room's schedule you want to configure
 
-              2. **Enable Schedule**: Toggle the room's schedule on/off
+              2. **Select a Switch**: Use the second dropdown to choose which
+              switch in that room to configure (currently only "main_switch")
 
-              3. **Set Times**: Configure the start and end times for each
+              3. **Enable Schedule**: Toggle the room's schedule on/off
+
+              4. **Set Times**: Configure the start and end times for each
               schedule period
 
-              4. **Choose Scenes**: Select which scene should be active during
+              5. **Choose Scenes**: Select which scene should be active during
               each time period
+
+              6. **Configure Switch**: Adjust brightness settings and switch
+              behavior for the selected switch
 
 
               **Schedule Periods**:
@@ -400,6 +509,14 @@ views:
 
               - `dimmed` - Soft, dimmed light
 
+
+              **Switch Configuration**:
+
+              - **Switch Type**: Currently only "main_switch" is available
+              - **Brightness Step**: How much to increase/decrease brightness
+                when using brightness up/down buttons (10-50)
+              - **Min Brightness**: Minimum brightness level (1-30)
+              - **Max Brightness**: Maximum brightness level (200-255)
 
               **Note**: Times can cross midnight (e.g., 23:00-06:00). The
               schedule only affects lights when they are turned on via the Hue

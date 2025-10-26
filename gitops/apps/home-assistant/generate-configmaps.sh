@@ -403,6 +403,14 @@ EOF
           - "bathroom"
           - "hallway"
         initial: "living_room"
+      
+      # Switch selector for dashboard (dynamically populated based on room)
+      room_switch_selector:
+        name: "Select Switch to Configure"
+        icon: mdi:light-switch
+        options:
+          - "main_switch"
+        initial: "main_switch"
 EOF
 
     # Generate select inputs for all rooms
@@ -455,6 +463,50 @@ EOF
           - "read"
           - "dimmed"
         initial: "${default_scene}"  # Default: ${default_scene}
+EOF
+        
+        # Generate switch configuration entities
+        cat >> "$output_file" << EOF
+      ${room}_switch_selector:
+        name: "${room^} Switch Selector"
+        icon: mdi:light-switch
+        options:
+          - "main_switch"
+        initial: "main_switch"
+      ${room}_switch_brightness_step:
+        name: "${room^} Brightness Step"
+        icon: mdi:brightness-6
+        options:
+          - "10"
+          - "15"
+          - "20"
+          - "25"
+          - "30"
+          - "35"
+          - "40"
+          - "50"
+        initial: "25"
+      ${room}_switch_min_brightness:
+        name: "${room^} Min Brightness"
+        icon: mdi:brightness-1
+        options:
+          - "1"
+          - "5"
+          - "10"
+          - "15"
+          - "20"
+          - "25"
+          - "30"
+        initial: "1"
+      ${room}_switch_max_brightness:
+        name: "${room^} Max Brightness"
+        icon: mdi:brightness-7
+        options:
+          - "200"
+          - "220"
+          - "240"
+          - "255"
+        initial: "255"
 EOF
     done
 
