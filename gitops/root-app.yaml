@@ -363,7 +363,7 @@ metadata:
   name: infra-cert-manager
   namespace: default
   annotations:
-    argocd.argoproj.io/sync-wave: "1"  # Install second - needed for TLS certificates
+    argocd.argoproj.io/sync-wave: "0"  # Install first - critical for TLS certificates
   finalizers:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
@@ -381,6 +381,39 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: cert-manager
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+---
+# Infrastructure: cert-manager External Resources
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-cert-manager-external
+  namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "20"  # Install last - after all infrastructure is ready
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/amerenda/amerenda-k3s.git
+    targetRevision: main
+    path: gitops/infra/cert-manager
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
   syncPolicy:
     automated:
       prune: true
