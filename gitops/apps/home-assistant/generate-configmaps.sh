@@ -396,14 +396,6 @@ EOF
           - "hallway"
         initial: "living_room"
       
-      # Switch selector for dashboard (dynamically populated based on room)
-      room_switch_selector:
-        name: "Select Switch to Configure"
-        icon: mdi:light-switch
-        options:
-          - "main_switch"
-          - "secondary_switch"
-        initial: "main_switch"
 EOF
 
     # Generate select inputs for all rooms
@@ -459,6 +451,9 @@ EOF
 EOF
         
         # Generate switch configuration entities (no individual room switch selectors - using global one)
+        # Create switch array from switches string
+        IFS=',' read -ra switch_array <<< "$switches"
+        
         cat >> "$output_file" << EOF
       ${room}_switch_brightness_step:
         name: "${room^} Brightness Step"
