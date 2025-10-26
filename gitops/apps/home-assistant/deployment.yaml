@@ -158,6 +158,74 @@ spec:
               echo "[]" > "${CONFIG_DIR}/scenes.yaml"
               echo "[]" > "${CONFIG_DIR}/automations.yaml"
               
+              # Create placeholder schedule files for validation
+              cat > "${CONFIG_DIR}/schedule/schedule_inputs.yaml" << 'EOF'
+# Placeholder file - will be replaced by ConfigMap mount
+# This file exists only for configuration validation
+input_boolean:
+  time_schedule_enabled:
+    name: "Enable Time-Based Scenes"
+    initial: true
+
+input_time:
+  schedule_1_start:
+    name: "Morning Start Time"
+    initial: "06:00"
+  schedule_1_end:
+    name: "Morning End Time"
+    initial: "09:00"
+  schedule_2_start:
+    name: "Day Start Time"
+    initial: "09:00"
+  schedule_2_end:
+    name: "Day End Time"
+    initial: "17:00"
+  schedule_3_start:
+    name: "Evening Start Time"
+    initial: "17:00"
+  schedule_3_end:
+    name: "Evening End Time"
+    initial: "21:00"
+  schedule_4_start:
+    name: "Night Start Time"
+    initial: "21:00"
+  schedule_4_end:
+    name: "Night End Time"
+    initial: "23:00"
+  schedule_5_start:
+    name: "Late Night Start Time"
+    initial: "23:00"
+  schedule_5_end:
+    name: "Late Night End Time"
+    initial: "06:00"
+
+input_select:
+  schedule_1_scene:
+    name: "Morning Scene"
+    options: ["energize", "concentrate", "relax", "nightlight", "read", "dimmed"]
+    initial: "energize"
+  schedule_2_scene:
+    name: "Day Scene"
+    options: ["energize", "concentrate", "relax", "nightlight", "read", "dimmed"]
+    initial: "concentrate"
+  schedule_3_scene:
+    name: "Evening Scene"
+    options: ["energize", "concentrate", "relax", "nightlight", "read", "dimmed"]
+    initial: "relax"
+  schedule_4_scene:
+    name: "Night Scene"
+    options: ["energize", "concentrate", "relax", "nightlight", "read", "dimmed"]
+    initial: "nightlight"
+  schedule_5_scene:
+    name: "Late Night Scene"
+    options: ["energize", "concentrate", "relax", "nightlight", "read", "dimmed"]
+    initial: "nightlight"
+  default_scene:
+    name: "Default Scene"
+    options: ["energize", "concentrate", "relax", "nightlight", "read", "dimmed"]
+    initial: "relax"
+EOF
+              
               # Note: Helper entities need to be created manually in the UI
               # Go to Settings → Devices & Services → Helpers
               # Create: Event Image Location (Text) and Event Image Timestamp (Text)
