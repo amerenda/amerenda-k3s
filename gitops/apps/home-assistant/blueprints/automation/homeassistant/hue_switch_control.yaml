@@ -383,7 +383,6 @@ action:
                         {% set now_time = now().strftime('%H:%M') %}
                         {% set current_scene = '' %}
                         
-                        # Check Schedule 1 (Morning)
                         {% if schedule_1_scene != '' %}
                           {% if schedule_1_start <= schedule_1_end %}
                             {% if now_time >= schedule_1_start and now_time <= schedule_1_end %}
@@ -396,7 +395,6 @@ action:
                           {% endif %}
                         {% endif %}
                         
-                        # Check Schedule 2 (Day) - only if no scene found yet
                         {% if current_scene == '' and schedule_2_scene != '' %}
                           {% if schedule_2_start <= schedule_2_end %}
                             {% if now_time >= schedule_2_start and now_time <= schedule_2_end %}
@@ -409,7 +407,6 @@ action:
                           {% endif %}
                         {% endif %}
                         
-                        # Check Schedule 3 (Evening) - only if no scene found yet
                         {% if current_scene == '' and schedule_3_scene != '' %}
                           {% if schedule_3_start <= schedule_3_end %}
                             {% if now_time >= schedule_3_start and now_time <= schedule_3_end %}
@@ -422,7 +419,6 @@ action:
                           {% endif %}
                         {% endif %}
                         
-                        # Check Schedule 4 (Night) - only if no scene found yet
                         {% if current_scene == '' and schedule_4_scene != '' %}
                           {% if schedule_4_start <= schedule_4_end %}
                             {% if now_time >= schedule_4_start and now_time <= schedule_4_end %}
@@ -435,7 +431,6 @@ action:
                           {% endif %}
                         {% endif %}
                         
-                        # Check Schedule 5 (Late Night) - only if no scene found yet
                         {% if current_scene == '' and schedule_5_scene != '' %}
                           {% if schedule_5_start <= schedule_5_end %}
                             {% if now_time >= schedule_5_start and now_time <= schedule_5_end %}
@@ -448,7 +443,6 @@ action:
                           {% endif %}
                         {% endif %}
                         
-                        # Use default scene if no schedule matches
                         {% if current_scene == '' %}
                           {% set current_scene = default_scene %}
                         {% endif %}
