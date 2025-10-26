@@ -47,7 +47,7 @@ globalArguments:
 # Additional arguments for k3s optimization
 additionalArguments:
   - "--serversTransport.insecureSkipVerify=true"
-  - "--providers.kubernetesingress.ingressClass=traefik"
+  - "--providers.kubernetesingress.ingressClass=infra-traefik"
 
 # Service configuration
 service:
