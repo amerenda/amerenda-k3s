@@ -169,137 +169,21 @@ blueprint:
           max: 255
           step: 1
 
-    # Time-based scene scheduling
-    time_schedule_enabled:
-      name: Enable time-based scenes
-      description: "Enable different scenes based on time of day"
+    # Room name for scene construction
+    room_name:
+      name: Room name
+      description: "Room name for scene construction (e.g., 'living_room', 'kitchen')"
+      default: "living_room"
+      selector:
+        text: {}
+
+    # Use dashboard-editable schedule (optional override)
+    use_dashboard_schedule:
+      name: Use dashboard schedule
+      description: "Use dashboard-editable schedule instead of hardcoded values"
       default: true
       selector:
         boolean: {}
-
-    # Schedule 1: Morning
-    schedule_1_start:
-      name: Schedule 1 - Start time
-      description: "Morning scene start time (24-hour format)"
-      default: "06:00"
-      selector:
-        time: {}
-    
-    schedule_1_end:
-      name: Schedule 1 - End time
-      description: "Morning scene end time (24-hour format)"
-      default: "09:00"
-      selector:
-        time: {}
-    
-    schedule_1_scene:
-      name: Schedule 1 - Scene
-      description: "Scene to activate during morning hours"
-      default: ""
-      selector:
-        entity:
-          domain: scene
-
-    # Schedule 2: Day
-    schedule_2_start:
-      name: Schedule 2 - Start time
-      description: "Day scene start time (24-hour format)"
-      default: "09:00"
-      selector:
-        time: {}
-    
-    schedule_2_end:
-      name: Schedule 2 - End time
-      description: "Day scene end time (24-hour format)"
-      default: "17:00"
-      selector:
-        time: {}
-    
-    schedule_2_scene:
-      name: Schedule 2 - Scene
-      description: "Scene to activate during day hours"
-      default: ""
-      selector:
-        entity:
-          domain: scene
-
-    # Schedule 3: Evening
-    schedule_3_start:
-      name: Schedule 3 - Start time
-      description: "Evening scene start time (24-hour format)"
-      default: "17:00"
-      selector:
-        time: {}
-    
-    schedule_3_end:
-      name: Schedule 3 - End time
-      description: "Evening scene end time (24-hour format)"
-      default: "21:00"
-      selector:
-        time: {}
-    
-    schedule_3_scene:
-      name: Schedule 3 - Scene
-      description: "Scene to activate during evening hours"
-      default: ""
-      selector:
-        entity:
-          domain: scene
-
-    # Schedule 4: Night
-    schedule_4_start:
-      name: Schedule 4 - Start time
-      description: "Night scene start time (24-hour format)"
-      default: "21:00"
-      selector:
-        time: {}
-    
-    schedule_4_end:
-      name: Schedule 4 - End time
-      description: "Night scene end time (24-hour format)"
-      default: "23:00"
-      selector:
-        time: {}
-    
-    schedule_4_scene:
-      name: Schedule 4 - Scene
-      description: "Scene to activate during night hours"
-      default: ""
-      selector:
-        entity:
-          domain: scene
-
-    # Schedule 5: Late Night
-    schedule_5_start:
-      name: Schedule 5 - Start time
-      description: "Late night scene start time (24-hour format)"
-      default: "23:00"
-      selector:
-        time: {}
-    
-    schedule_5_end:
-      name: Schedule 5 - End time
-      description: "Late night scene end time (24-hour format)"
-      default: "06:00"
-      selector:
-        time: {}
-    
-    schedule_5_scene:
-      name: Schedule 5 - Scene
-      description: "Scene to activate during late night hours"
-      default: ""
-      selector:
-        entity:
-          domain: scene
-
-    # Fallback scene (when no schedule matches)
-    default_scene:
-      name: Default scene
-      description: "Scene to use when no time schedule matches"
-      default: ""
-      selector:
-        entity:
-          domain: scene
 
 mode: restart
 max_exceeded: silent
@@ -323,23 +207,8 @@ variables:
   brightness_step: !input brightness_step
   min_brightness: !input min_brightness
   max_brightness: !input max_brightness
-  time_schedule_enabled: !input time_schedule_enabled
-  schedule_1_start: !input schedule_1_start
-  schedule_1_end: !input schedule_1_end
-  schedule_1_scene: !input schedule_1_scene
-  schedule_2_start: !input schedule_2_start
-  schedule_2_end: !input schedule_2_end
-  schedule_2_scene: !input schedule_2_scene
-  schedule_3_start: !input schedule_3_start
-  schedule_3_end: !input schedule_3_end
-  schedule_3_scene: !input schedule_3_scene
-  schedule_4_start: !input schedule_4_start
-  schedule_4_end: !input schedule_4_end
-  schedule_4_scene: !input schedule_4_scene
-  schedule_5_start: !input schedule_5_start
-  schedule_5_end: !input schedule_5_end
-  schedule_5_scene: !input schedule_5_scene
-  default_scene: !input default_scene
+  room_name: !input room_name
+  use_dashboard_schedule: !input use_dashboard_schedule
 
 trigger:
   - platform: event
@@ -375,83 +244,120 @@ action:
               # Time-based scene mode: Turn on with appropriate scene based on current time
               - conditions:
                   - condition: template
-                    value_template: "{{ time_schedule_enabled and not is_state(target_lights[0], 'on') }}"
+                    value_template: "{{ states('input_boolean.time_schedule_enabled') == 'on' and not is_state(target_lights[0], 'on') }}"
                 sequence:
                   - service: scene.turn_on
                     target:
                       entity_id: >
                         {% set now_time = now().strftime('%H:%M') %}
                         {% set current_scene = '' %}
+                        {% set room = room_name %}
                         
-                        {% if schedule_1_scene != '' %}
-                          {% if schedule_1_start <= schedule_1_end %}
-                            {% if now_time >= schedule_1_start and now_time <= schedule_1_end %}
-                              {% set current_scene = schedule_1_scene %}
+                        {% if use_dashboard_schedule %}
+                          {% set s1_start = states('input_time.schedule_1_start') %}
+                          {% set s1_end = states('input_time.schedule_1_end') %}
+                          {% set s1_scene = states('input_select.schedule_1_scene') %}
+                          {% set s2_start = states('input_time.schedule_2_start') %}
+                          {% set s2_end = states('input_time.schedule_2_end') %}
+                          {% set s2_scene = states('input_select.schedule_2_scene') %}
+                          {% set s3_start = states('input_time.schedule_3_start') %}
+                          {% set s3_end = states('input_time.schedule_3_end') %}
+                          {% set s3_scene = states('input_select.schedule_3_scene') %}
+                          {% set s4_start = states('input_time.schedule_4_start') %}
+                          {% set s4_end = states('input_time.schedule_4_end') %}
+                          {% set s4_scene = states('input_select.schedule_4_scene') %}
+                          {% set s5_start = states('input_time.schedule_5_start') %}
+                          {% set s5_end = states('input_time.schedule_5_end') %}
+                          {% set s5_scene = states('input_select.schedule_5_scene') %}
+                          {% set default_scene = states('input_select.default_scene') %}
+                        {% else %}
+                          {% set s1_start = '06:00' %}
+                          {% set s1_end = '09:00' %}
+                          {% set s1_scene = 'energize' %}
+                          {% set s2_start = '09:00' %}
+                          {% set s2_end = '17:00' %}
+                          {% set s2_scene = 'day' %}
+                          {% set s3_start = '17:00' %}
+                          {% set s3_end = '21:00' %}
+                          {% set s3_scene = 'relax' %}
+                          {% set s4_start = '21:00' %}
+                          {% set s4_end = '23:00' %}
+                          {% set s4_scene = 'nightlight' %}
+                          {% set s5_start = '23:00' %}
+                          {% set s5_end = '06:00' %}
+                          {% set s5_scene = 'nightlight' %}
+                          {% set default_scene = 'relax' %}
+                        {% endif %}
+                        
+                        {% if s1_scene != 'unknown' %}
+                          {% if s1_start <= s1_end %}
+                            {% if now_time >= s1_start and now_time <= s1_end %}
+                              {% set current_scene = 'scene.' + room + '_' + s1_scene %}
                             {% endif %}
                           {% else %}
-                            {% if now_time >= schedule_1_start or now_time <= schedule_1_end %}
-                              {% set current_scene = schedule_1_scene %}
+                            {% if now_time >= s1_start or now_time <= s1_end %}
+                              {% set current_scene = 'scene.' + room + '_' + s1_scene %}
                             {% endif %}
                           {% endif %}
                         {% endif %}
                         
-                        {% if current_scene == '' and schedule_2_scene != '' %}
-                          {% if schedule_2_start <= schedule_2_end %}
-                            {% if now_time >= schedule_2_start and now_time <= schedule_2_end %}
-                              {% set current_scene = schedule_2_scene %}
+                        {% if current_scene == '' and s2_scene != 'unknown' %}
+                          {% if s2_start <= s2_end %}
+                            {% if now_time >= s2_start and now_time <= s2_end %}
+                              {% set current_scene = 'scene.' + room + '_' + s2_scene %}
                             {% endif %}
                           {% else %}
-                            {% if now_time >= schedule_2_start or now_time <= schedule_2_end %}
-                              {% set current_scene = schedule_2_scene %}
+                            {% if now_time >= s2_start or now_time <= s2_end %}
+                              {% set current_scene = 'scene.' + room + '_' + s2_scene %}
                             {% endif %}
                           {% endif %}
                         {% endif %}
                         
-                        {% if current_scene == '' and schedule_3_scene != '' %}
-                          {% if schedule_3_start <= schedule_3_end %}
-                            {% if now_time >= schedule_3_start and now_time <= schedule_3_end %}
-                              {% set current_scene = schedule_3_scene %}
+                        {% if current_scene == '' and s3_scene != 'unknown' %}
+                          {% if s3_start <= s3_end %}
+                            {% if now_time >= s3_start and now_time <= s3_end %}
+                              {% set current_scene = 'scene.' + room + '_' + s3_scene %}
                             {% endif %}
                           {% else %}
-                            {% if now_time >= schedule_3_start or now_time <= schedule_3_end %}
-                              {% set current_scene = schedule_3_scene %}
+                            {% if now_time >= s3_start or now_time <= s3_end %}
+                              {% set current_scene = 'scene.' + room + '_' + s3_scene %}
                             {% endif %}
                           {% endif %}
                         {% endif %}
                         
-                        {% if current_scene == '' and schedule_4_scene != '' %}
-                          {% if schedule_4_start <= schedule_4_end %}
-                            {% if now_time >= schedule_4_start and now_time <= schedule_4_end %}
-                              {% set current_scene = schedule_4_scene %}
+                        {% if current_scene == '' and s4_scene != 'unknown' %}
+                          {% if s4_start <= s4_end %}
+                            {% if now_time >= s4_start and now_time <= s4_end %}
+                              {% set current_scene = 'scene.' + room + '_' + s4_scene %}
                             {% endif %}
                           {% else %}
-                            {% if now_time >= schedule_4_start or now_time <= schedule_4_end %}
-                              {% set current_scene = schedule_4_scene %}
+                            {% if now_time >= s4_start or now_time <= s4_end %}
+                              {% set current_scene = 'scene.' + room + '_' + s4_scene %}
                             {% endif %}
                           {% endif %}
                         {% endif %}
                         
-                        {% if current_scene == '' and schedule_5_scene != '' %}
-                          {% if schedule_5_start <= schedule_5_end %}
-                            {% if now_time >= schedule_5_start and now_time <= schedule_5_end %}
-                              {% set current_scene = schedule_5_scene %}
+                        {% if current_scene == '' and s5_scene != 'unknown' %}
+                          {% if s5_start <= s5_end %}
+                            {% if now_time >= s5_start and now_time <= s5_end %}
+                              {% set current_scene = 'scene.' + room + '_' + s5_scene %}
                             {% endif %}
                           {% else %}
-                            {% if now_time >= schedule_5_start or now_time <= schedule_5_end %}
-                              {% set current_scene = schedule_5_scene %}
+                            {% if now_time >= s5_start or now_time <= s5_end %}
+                              {% set current_scene = 'scene.' + room + '_' + s5_scene %}
                             {% endif %}
                           {% endif %}
                         {% endif %}
                         
                         {% if current_scene == '' %}
-                          {% set current_scene = default_scene %}
+                          {% set current_scene = 'scene.' + room + '_' + default_scene %}
                         {% endif %}
                         
                         {{ current_scene }}
               # All other cases: Simple toggle (when lights are already on or no time schedule)
               - conditions:
                   - condition: template
-                    value_template: "{{ not time_schedule_enabled or is_state(target_lights[0], 'on') }}"
+                    value_template: "{{ states('input_boolean.time_schedule_enabled') != 'on' or is_state(target_lights[0], 'on') }}"
                 sequence:
                   - service: light.toggle
                     target:

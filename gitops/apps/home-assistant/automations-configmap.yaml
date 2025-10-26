@@ -361,28 +361,7 @@ data:
         brightness_step: 25
         min_brightness: 1
         max_brightness: 255
-        # Time-based scene scheduling
-        time_schedule_enabled: true
-        # Schedule 1: Morning (06:00-09:00)
-        schedule_1_start: "06:00"
-        schedule_1_end: "09:00"
-        schedule_1_scene: scene.living_room_energize
-        # Schedule 2: Day (09:00-17:00)
-        schedule_2_start: "09:00"
-        schedule_2_end: "17:00"
-        schedule_2_scene: scene.living_room_day
-        # Schedule 3: Evening (17:00-21:00)
-        schedule_3_start: "17:00"
-        schedule_3_end: "21:00"
-        schedule_3_scene: scene.living_room_relax
-        # Schedule 4: Night (21:00-23:00)
-        schedule_4_start: "21:00"
-        schedule_4_end: "23:00"
-        schedule_4_scene: scene.living_room_nightlight
-        # Schedule 5: Late Night (23:00-06:00)
-        schedule_5_start: "23:00"
-        schedule_5_end: "06:00"
-        schedule_5_scene: scene.living_room_nightlight
-        # Default scene (fallback)
-        default_scene: scene.living_room_relax
+        # Room configuration for dynamic scene construction
+        room_name: "living_room"
+        use_dashboard_schedule: true
 

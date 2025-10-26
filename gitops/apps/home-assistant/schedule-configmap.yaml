@@ -1,0 +1,270 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ha-schedule-config
+  namespace: home-assistant
+  annotations:
+    reloader.stakater.com/auto: "true"
+data:
+  schedule_inputs.yaml: |
+    # Dashboard-editable schedule configuration
+    # These input helpers can be edited from the Home Assistant dashboard
+    
+    # Global schedule enable/disable
+    input_boolean:
+      time_schedule_enabled:
+        name: "Enable Time-Based Scenes"
+        icon: mdi:clock-outline
+        initial: true
+    
+    # Schedule 1: Morning
+    input_time:
+      schedule_1_start:
+        name: "Morning Start Time"
+        icon: mdi:weather-sunrise
+        initial: "06:00"
+      
+      schedule_1_end:
+        name: "Morning End Time"
+        icon: mdi:weather-sunny
+        initial: "09:00"
+    
+    # Schedule 2: Day
+    input_time:
+      schedule_2_start:
+        name: "Day Start Time"
+        icon: mdi:weather-sunny
+        initial: "09:00"
+      
+      schedule_2_end:
+        name: "Day End Time"
+        icon: mdi:weather-sunset
+        initial: "17:00"
+    
+    # Schedule 3: Evening
+    input_time:
+      schedule_3_start:
+        name: "Evening Start Time"
+        icon: mdi:weather-sunset
+        initial: "17:00"
+      
+      schedule_3_end:
+        name: "Evening End Time"
+        icon: mdi:weather-night
+        initial: "21:00"
+    
+    # Schedule 4: Night
+    input_time:
+      schedule_4_start:
+        name: "Night Start Time"
+        icon: mdi:weather-night
+        initial: "21:00"
+      
+      schedule_4_end:
+        name: "Night End Time"
+        icon: mdi:weather-night
+        initial: "23:00"
+    
+    # Schedule 5: Late Night
+    input_time:
+      schedule_5_start:
+        name: "Late Night Start Time"
+        icon: mdi:weather-night
+        initial: "23:00"
+      
+      schedule_5_end:
+        name: "Late Night End Time"
+        icon: mdi:weather-sunrise
+        initial: "06:00"
+    
+    # Scene selectors for each schedule
+    input_select:
+      schedule_1_scene:
+        name: "Morning Scene"
+        icon: mdi:weather-sunrise
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"
+      
+      schedule_2_scene:
+        name: "Day Scene"
+        icon: mdi:weather-sunny
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "concentrate"
+      
+      schedule_3_scene:
+        name: "Evening Scene"
+        icon: mdi:weather-sunset
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "relax"
+      
+      schedule_4_scene:
+        name: "Night Scene"
+        icon: mdi:weather-night
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "nightlight"
+      
+      schedule_5_scene:
+        name: "Late Night Scene"
+        icon: mdi:weather-night
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "nightlight"
+      
+      default_scene:
+        name: "Default Scene"
+        icon: mdi:lightbulb
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "relax"
+
+  schedule_dashboard.yaml: |
+    # Dashboard configuration for schedule management
+    # Add this to your Home Assistant dashboard
+    
+    title: "Light Schedule Control"
+    path: schedule-control
+    icon: mdi:clock-outline
+    cards:
+      - type: vertical-stack
+        title: "Time-Based Scene Schedule"
+        cards:
+          - type: entities
+            title: "Schedule Settings"
+            entities:
+              - entity: input_boolean.time_schedule_enabled
+                name: "Enable Time-Based Scenes"
+              - entity: input_time.schedule_1_start
+                name: "Morning Start"
+              - entity: input_time.schedule_1_end
+                name: "Morning End"
+              - entity: input_select.schedule_1_scene
+                name: "Morning Scene"
+              - entity: input_time.schedule_2_start
+                name: "Day Start"
+              - entity: input_time.schedule_2_end
+                name: "Day End"
+              - entity: input_select.schedule_2_scene
+                name: "Day Scene"
+              - entity: input_time.schedule_3_start
+                name: "Evening Start"
+              - entity: input_time.schedule_3_end
+                name: "Evening End"
+              - entity: input_select.schedule_3_scene
+                name: "Evening Scene"
+              - entity: input_time.schedule_4_start
+                name: "Night Start"
+              - entity: input_time.schedule_4_end
+                name: "Night End"
+              - entity: input_select.schedule_4_scene
+                name: "Night Scene"
+              - entity: input_time.schedule_5_start
+                name: "Late Night Start"
+              - entity: input_time.schedule_5_end
+                name: "Late Night End"
+              - entity: input_select.schedule_5_scene
+                name: "Late Night Scene"
+              - entity: input_select.default_scene
+                name: "Default Scene"
+    
+      - type: markdown
+        content: |
+          ## How to Use
+          
+          **Time-Based Scenes**: When enabled, pressing the switch button will activate different scenes based on the current time.
+          
+          **Scene Naming Convention**: 
+          - Scenes should be named: `scene.{room_name}_{scene_type}`
+          - Example: `scene.living_room_energize`, `scene.kitchen_relax`
+          
+          **Available Scene Types**:
+          - `energize` - Bright, energizing light for morning
+          - `concentrate` - Focused light for daytime work
+          - `relax` - Warm, cozy light for evening
+          - `nightlight` - Dim light for night/late night
+          - `read` - Reading-optimized light
+          - `dimmed` - Soft, dimmed light
+          
+          **Time Windows**: Configure when each scene should be active. Times can cross midnight (e.g., 23:00-06:00).
+
+  default_schedule.yaml: |
+    # Default Time-Based Scene Schedule Configuration
+    # This file defines the default schedule for all rooms
+    # Can be overridden per room in individual automation files
+    
+    default_schedule:
+      # Schedule 1: Morning (06:00-09:00)
+      schedule_1:
+        start_time: "06:00"
+        end_time: "09:00"
+        scene_suffix: "energize"  # Will be prefixed with room name
+      
+      # Schedule 2: Day (09:00-17:00)
+      schedule_2:
+        start_time: "09:00"
+        end_time: "17:00"
+        scene_suffix: "concentrate"
+      
+      # Schedule 3: Evening (17:00-21:00)
+      schedule_3:
+        start_time: "17:00"
+        end_time: "21:00"
+        scene_suffix: "relax"
+      
+      # Schedule 4: Night (21:00-23:00)
+      schedule_4:
+        start_time: "21:00"
+        end_time: "23:00"
+        scene_suffix: "nightlight"
+      
+      # Schedule 5: Late Night (23:00-06:00)
+      schedule_5:
+        start_time: "23:00"
+        end_time: "06:00"
+        scene_suffix: "nightlight"
+      
+      # Default fallback scene
+      default_scene_suffix: "relax"
+    
+    # Room-specific overrides (optional)
+    room_overrides:
+      # Example: Kitchen might have different morning time
+      # kitchen:
+      #   schedule_1:
+      #     start_time: "05:30"
+      #     end_time: "08:30"
+      #     scene_suffix: "energize"
+

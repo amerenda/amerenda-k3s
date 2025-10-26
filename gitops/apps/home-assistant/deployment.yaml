@@ -125,6 +125,7 @@ spec:
               mkdir -p "${CONFIG_DIR}/automations"
               mkdir -p "${CONFIG_DIR}/scripts"
               mkdir -p "${CONFIG_DIR}/scenes"
+              mkdir -p "${CONFIG_DIR}/schedule"
               mkdir -p "${CONFIG_DIR}/www/pets"
               mkdir -p "${CONFIG_DIR}/www/intruders"
               
@@ -141,6 +142,11 @@ spec:
               automation ui: !include automations.yaml
               script: !include scripts.yaml
               scene: !include scenes.yaml
+              
+              # Include schedule configuration files
+              input_boolean: !include schedule/schedule_inputs.yaml
+              input_time: !include schedule/schedule_inputs.yaml
+              input_select: !include schedule/schedule_inputs.yaml
               
               # Shell commands for photo cleanup
               shell_command:
@@ -234,6 +240,9 @@ spec:
             - name: blueprints-defaults
               mountPath: /config/blueprints/automation/_defaults
               readOnly: true
+            - name: schedule-config
+              mountPath: /config/schedule
+              readOnly: true
           lifecycle:
             preStop:
               exec:
@@ -248,3 +257,6 @@ spec:
         - name: blueprints-defaults
           configMap:
             name: ha-blueprints-defaults
+        - name: schedule-config
+          configMap:
+            name: ha-schedule-config

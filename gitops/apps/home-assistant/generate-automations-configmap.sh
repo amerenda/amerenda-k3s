@@ -79,5 +79,44 @@ else
     echo "No blueprints directory found, skipping blueprints ConfigMap"
 fi
 
+# Generate schedule configuration ConfigMap
+CONFIG_DIR="config"
+SCHEDULE_OUTPUT="schedule-configmap.yaml"
+
+if [ -d "$CONFIG_DIR" ]; then
+    echo "Generating schedule configuration ConfigMap..."
+    
+    # Start the schedule ConfigMap YAML
+    cat > "$SCHEDULE_OUTPUT" << EOF
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ha-schedule-config
+  namespace: $NAMESPACE
+  annotations:
+    reloader.stakater.com/auto: "true"
+data:
+EOF
+
+    # Process each YAML file in the config directory
+    find "$CONFIG_DIR" -name "*.yaml" -type f | while read -r file; do
+        filename=$(basename "$file")
+        echo "Processing config: $filename..."
+        
+        # Add the file to the ConfigMap
+        echo "  $filename: |" >> "$SCHEDULE_OUTPUT"
+        
+        # Add the content with proper indentation
+        sed 's/^/    /' "$file" >> "$SCHEDULE_OUTPUT"
+        
+        # Add a blank line between files
+        echo "" >> "$SCHEDULE_OUTPUT"
+    done
+    
+    echo "Schedule ConfigMap generated: $SCHEDULE_OUTPUT"
+else
+    echo "No config directory found, skipping schedule ConfigMap"
+fi
+
 echo "ConfigMap generated: $OUTPUT_FILE"
 echo "To apply: commit the changes and push to the repository"
