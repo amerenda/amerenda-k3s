@@ -5,7 +5,7 @@ metadata:
   name: alexmerenda-dev-wildcard
   namespace: cert-manager
   annotations:
-    argocd.argoproj.io/sync-wave: "12"  # After ClusterIssuer is created
+    argocd.argoproj.io/sync-wave: "22"  # After ClusterIssuer is created
 spec:
   secretName: alexmerenda-dev-wildcard-tls
   issuerRef:
@@ -23,7 +23,7 @@ metadata:
   name: amer-dev-wildcard
   namespace: cert-manager
   annotations:
-    argocd.argoproj.io/sync-wave: "12"  # After ClusterIssuer is created
+    argocd.argoproj.io/sync-wave: "22"  # After ClusterIssuer is created
 spec:
   secretName: amer-dev-wildcard-tls
   issuerRef:
@@ -41,7 +41,7 @@ metadata:
   name: amerenda-dev-wildcard
   namespace: cert-manager
   annotations:
-    argocd.argoproj.io/sync-wave: "12"  # After ClusterIssuer is created
+    argocd.argoproj.io/sync-wave: "22"  # After ClusterIssuer is created
 spec:
   secretName: amerenda-dev-wildcard-tls
   issuerRef:

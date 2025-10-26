@@ -3,7 +3,7 @@ kind: ClusterIssuer
 metadata:
   name: letsencrypt-prod
   annotations:
-    argocd.argoproj.io/sync-wave: "11"  # After the external secret is created
+    argocd.argoproj.io/sync-wave: "21"  # After the external secret is created
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
