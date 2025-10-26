@@ -1,0 +1,99 @@
+# Traefik Ingress Controller Configuration
+# Optimized for k3s on Raspberry Pi
+
+# Enable Traefik dashboard
+dashboard:
+  enabled: true
+  service:
+    type: LoadBalancer
+    annotations:
+      external-dns.alpha.kubernetes.io/hostname: traefik.amer.home
+      external-dns.alpha.kubernetes.io/ttl: "3600"
+
+# Resource limits for Raspberry Pi
+resources:
+  limits:
+    cpu: 200m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 64Mi
+
+# Enable metrics for monitoring
+metrics:
+  prometheus:
+    enabled: true
+
+# Global configuration
+globalArguments:
+  - "--global.checkNewVersion=false"
+  - "--global.sendAnonymousUsage=false"
+  - "--log.level=INFO"
+  - "--accesslog=true"
+  - "--api.dashboard=true"
+  - "--api.insecure=true"
+  - "--providers.kubernetesingress=true"
+  - "--providers.kubernetescrd=true"
+  - "--entrypoints.web.address=:80"
+  - "--entrypoints.websecure.address=:443"
+  - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+  - "--certificatesresolvers.letsencrypt.acme.email=admin@amer.home"
+  - "--certificatesresolvers.letsencrypt.acme.storage=/data/acme.json"
+
+# Additional arguments for k3s optimization
+additionalArguments:
+  - "--serversTransport.insecureSkipVerify=true"
+  - "--providers.kubernetesingress.allowCrossNamespace=true"
+  - "--providers.kubernetesingress.allowExternalNameServices=true"
+  - "--providers.kubernetesingress.ingressClass=traefik"
+  - "--providers.kubernetescrd.allowCrossNamespace=true"
+  - "--providers.kubernetescrd.allowExternalNameServices=true"
+
+# Service configuration
+service:
+  type: LoadBalancer
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: traefik.amer.home
+    external-dns.alpha.kubernetes.io/ttl: "3600"
+
+# Pod disruption budget for high availability
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+# Node selector for Raspberry Pi nodes
+nodeSelector:
+  kubernetes.io/arch: arm64
+
+# Tolerations for any taints
+tolerations: []
+
+# Affinity for better distribution
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm:
+        labelSelector:
+          matchExpressions:
+          - key: app.kubernetes.io/name
+            operator: In
+            values:
+            - traefik
+        topologyKey: kubernetes.io/hostname
+
+# Security context
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: false
+  runAsNonRoot: true
+  runAsUser: 65532
+
+# Persistence for ACME certificates
+persistence:
+  enabled: true
+  storageClass: "longhorn"
+  accessMode: ReadWriteOnce
+  size: 5Gi

@@ -79,6 +79,7 @@ sources:
   - service
   - node
   - pod
+  - ingress
 
 # Policy for DNS record management
 policy: upsert-only
