@@ -5,8 +5,6 @@ metadata:
   namespace: home-assistant
   annotations:
     reloader.stakater.com/auto: "true"
-    external-dns.alpha.kubernetes.io/hostname: home.amer.home,ha.amer.home,homeassistant.amer.home
-    external-dns.alpha.kubernetes.io/ttl: "3600"
 spec:
   replicas: 1
   selector:
@@ -16,9 +14,6 @@ spec:
     metadata:
       labels:
         app: homeassistant
-      annotations:
-        external-dns.alpha.kubernetes.io/hostname: home.amer.home,ha.amer.home,homeassistant.amer.home
-        external-dns.alpha.kubernetes.io/ttl: "3600"
     spec:
       hostNetwork: true
       initContainers:
