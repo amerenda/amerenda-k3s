@@ -6,6 +6,170 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 data:
+  room_schedule_config.yaml: |
+    blueprint:
+      name: "Room Schedule Configuration"
+      description: "Creates per-room schedule input helpers for time-based scene selection"
+      domain: automation
+      input:
+        room_name:
+          name: "Room Name"
+          description: "Name of the room (e.g., living_room, kitchen, bedroom)"
+          selector:
+            text:
+        room_display_name:
+          name: "Room Display Name"
+          description: "Display name for the room (e.g., Living Room, Kitchen, Bedroom)"
+          selector:
+            text:
+        enable_schedule:
+          name: "Enable Schedule for Room"
+          description: "Whether to enable time-based scheduling for this room"
+          default: true
+          selector:
+            boolean:
+        morning_start:
+          name: "Morning Start Time"
+          description: "Start time for morning schedule"
+          default: "06:00"
+          selector:
+            time:
+        morning_end:
+          name: "Morning End Time"
+          description: "End time for morning schedule"
+          default: "09:00"
+          selector:
+            time:
+        morning_scene:
+          name: "Morning Scene Type"
+          description: "Scene type for morning period"
+          default: "energize"
+          selector:
+            select:
+              options:
+                - "energize"
+                - "concentrate"
+                - "relax"
+                - "nightlight"
+                - "read"
+                - "dimmed"
+        day_start:
+          name: "Day Start Time"
+          description: "Start time for day schedule"
+          default: "09:00"
+          selector:
+            time:
+        day_end:
+          name: "Day End Time"
+          description: "End time for day schedule"
+          default: "17:00"
+          selector:
+            time:
+        day_scene:
+          name: "Day Scene Type"
+          description: "Scene type for day period"
+          default: "concentrate"
+          selector:
+            select:
+              options:
+                - "energize"
+                - "concentrate"
+                - "relax"
+                - "nightlight"
+                - "read"
+                - "dimmed"
+        evening_start:
+          name: "Evening Start Time"
+          description: "Start time for evening schedule"
+          default: "17:00"
+          selector:
+            time:
+        evening_end:
+          name: "Evening End Time"
+          description: "End time for evening schedule"
+          default: "21:00"
+          selector:
+            time:
+        evening_scene:
+          name: "Evening Scene Type"
+          description: "Scene type for evening period"
+          default: "relax"
+          selector:
+            select:
+              options:
+                - "energize"
+                - "concentrate"
+                - "relax"
+                - "nightlight"
+                - "read"
+                - "dimmed"
+        night_start:
+          name: "Night Start Time"
+          description: "Start time for night schedule"
+          default: "21:00"
+          selector:
+            time:
+        night_end:
+          name: "Night End Time"
+          description: "End time for night schedule"
+          default: "23:00"
+          selector:
+            time:
+        night_scene:
+          name: "Night Scene Type"
+          description: "Scene type for night period"
+          default: "nightlight"
+          selector:
+            select:
+              options:
+                - "energize"
+                - "concentrate"
+                - "relax"
+                - "nightlight"
+                - "read"
+                - "dimmed"
+        late_night_start:
+          name: "Late Night Start Time"
+          description: "Start time for late night schedule"
+          default: "23:00"
+          selector:
+            time:
+        late_night_end:
+          name: "Late Night End Time"
+          description: "End time for late night schedule"
+          default: "06:00"
+          selector:
+            time:
+        late_night_scene:
+          name: "Late Night Scene Type"
+          description: "Scene type for late night period"
+          default: "nightlight"
+          selector:
+            select:
+              options:
+                - "energize"
+                - "concentrate"
+                - "relax"
+                - "nightlight"
+                - "read"
+                - "dimmed"
+        default_scene:
+          name: "Default Scene Type"
+          description: "Default scene type when schedule is disabled"
+          default: "relax"
+          selector:
+            select:
+              options:
+                - "energize"
+                - "concentrate"
+                - "relax"
+                - "nightlight"
+                - "read"
+                - "dimmed"
+    
+    # This blueprint doesn't create an automation, it's used to generate input helpers
+    # The actual automation logic is handled by the switch control blueprint
+
   hue_switch_control.yaml: |
     blueprint:
       name: Hue - Switch Control (Multi-Schedule)

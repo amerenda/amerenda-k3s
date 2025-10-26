@@ -162,6 +162,9 @@ spec:
               input_datetime: !include schedule/schedule_input_time.yaml
               input_select: !include schedule/schedule_input_select.yaml
               
+              # Include per-room schedule configuration
+              !include schedule/room_schedule_inputs.yaml
+              
               # HTTP configuration for reverse proxy
               http:
                 use_x_forwarded_for: true
