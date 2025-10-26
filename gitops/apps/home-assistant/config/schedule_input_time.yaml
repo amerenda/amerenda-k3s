@@ -1,0 +1,51 @@
+# Schedule time inputs
+input_time:
+  schedule_1_start:
+    name: "Morning Start Time"
+    icon: mdi:weather-sunrise
+    initial: "06:00"
+  
+  schedule_1_end:
+    name: "Morning End Time"
+    icon: mdi:weather-sunny
+    initial: "09:00"
+  
+  schedule_2_start:
+    name: "Day Start Time"
+    icon: mdi:weather-sunny
+    initial: "09:00"
+  
+  schedule_2_end:
+    name: "Day End Time"
+    icon: mdi:weather-sunset
+    initial: "17:00"
+  
+  schedule_3_start:
+    name: "Evening Start Time"
+    icon: mdi:weather-sunset
+    initial: "17:00"
+  
+  schedule_3_end:
+    name: "Evening End Time"
+    icon: mdi:weather-night
+    initial: "21:00"
+  
+  schedule_4_start:
+    name: "Night Start Time"
+    icon: mdi:weather-night
+    initial: "21:00"
+  
+  schedule_4_end:
+    name: "Night End Time"
+    icon: mdi:weather-night
+    initial: "23:00"
+  
+  schedule_5_start:
+    name: "Late Night Start Time"
+    icon: mdi:weather-night
+    initial: "23:00"
+  
+  schedule_5_end:
+    name: "Late Night End Time"
+    icon: mdi:weather-sunrise
+    initial: "06:00"

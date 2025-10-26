@@ -152,6 +152,81 @@ data:
     input_time: !include schedule_inputs.yaml
     input_select: !include schedule_inputs.yaml
 
+  schedule_input_select.yaml: |
+    # Schedule select inputs
+    input_select:
+      schedule_1_scene:
+        name: "Morning Scene"
+        icon: mdi:weather-sunrise
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "energize"
+      
+      schedule_2_scene:
+        name: "Day Scene"
+        icon: mdi:weather-sunny
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "concentrate"
+      
+      schedule_3_scene:
+        name: "Evening Scene"
+        icon: mdi:weather-sunset
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "relax"
+      
+      schedule_4_scene:
+        name: "Night Scene"
+        icon: mdi:weather-night
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "nightlight"
+      
+      schedule_5_scene:
+        name: "Late Night Scene"
+        icon: mdi:weather-night
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "nightlight"
+      
+      default_scene:
+        name: "Default Scene"
+        icon: mdi:lightbulb
+        options:
+          - "energize"
+          - "concentrate"
+          - "relax"
+          - "nightlight"
+          - "read"
+          - "dimmed"
+        initial: "relax"
+
   schedule_dashboard.yaml: |
     # Dashboard configuration for schedule management
     # Add this to your Home Assistant dashboard
@@ -221,6 +296,14 @@ data:
           
           **Time Windows**: Configure when each scene should be active. Times can cross midnight (e.g., 23:00-06:00).
 
+  schedule_input_boolean.yaml: |
+    # Schedule boolean inputs
+    input_boolean:
+      time_schedule_enabled:
+        name: "Enable Time-Based Scenes"
+        icon: mdi:clock-outline
+        initial: true
+
   default_schedule.yaml: |
     # Default Time-Based Scene Schedule Configuration
     # This file defines the default schedule for all rooms
@@ -268,4 +351,57 @@ data:
       #     start_time: "05:30"
       #     end_time: "08:30"
       #     scene_suffix: "energize"
+
+  schedule_input_time.yaml: |
+    # Schedule time inputs
+    input_time:
+      schedule_1_start:
+        name: "Morning Start Time"
+        icon: mdi:weather-sunrise
+        initial: "06:00"
+      
+      schedule_1_end:
+        name: "Morning End Time"
+        icon: mdi:weather-sunny
+        initial: "09:00"
+      
+      schedule_2_start:
+        name: "Day Start Time"
+        icon: mdi:weather-sunny
+        initial: "09:00"
+      
+      schedule_2_end:
+        name: "Day End Time"
+        icon: mdi:weather-sunset
+        initial: "17:00"
+      
+      schedule_3_start:
+        name: "Evening Start Time"
+        icon: mdi:weather-sunset
+        initial: "17:00"
+      
+      schedule_3_end:
+        name: "Evening End Time"
+        icon: mdi:weather-night
+        initial: "21:00"
+      
+      schedule_4_start:
+        name: "Night Start Time"
+        icon: mdi:weather-night
+        initial: "21:00"
+      
+      schedule_4_end:
+        name: "Night End Time"
+        icon: mdi:weather-night
+        initial: "23:00"
+      
+      schedule_5_start:
+        name: "Late Night Start Time"
+        icon: mdi:weather-night
+        initial: "23:00"
+      
+      schedule_5_end:
+        name: "Late Night End Time"
+        icon: mdi:weather-sunrise
+        initial: "06:00"
 

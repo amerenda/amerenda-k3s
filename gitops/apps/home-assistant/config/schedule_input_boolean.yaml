@@ -1,0 +1,6 @@
+# Schedule boolean inputs
+input_boolean:
+  time_schedule_enabled:
+    name: "Enable Time-Based Scenes"
+    icon: mdi:clock-outline
+    initial: true
