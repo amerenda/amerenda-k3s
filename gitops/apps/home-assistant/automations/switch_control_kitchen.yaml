@@ -24,3 +24,6 @@ use_blueprint:
     brightness_step: 25
     min_brightness: 1
     max_brightness: 255
+    # Room configuration for dynamic scene construction
+    room_name: "kitchen"
+    use_dashboard_schedule: true
