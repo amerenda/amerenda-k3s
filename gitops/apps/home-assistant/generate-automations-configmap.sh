@@ -99,7 +99,7 @@ data:
 EOF
 
     # Process each YAML file in the config directory, excluding redundant files
-    find "$CONFIG_DIR" -name "*.yaml" -type f | grep -v "schedule_inputs.yaml" | while read -r file; do
+    find "$CONFIG_DIR" -name "*.yaml" -type f | grep -v -E "(schedule_inputs\.yaml|room_schedule_.*\.yaml|temp_.*\.yaml)" | while read -r file; do
         filename=$(basename "$file")
         echo "Processing config: $filename..."
         
