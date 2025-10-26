@@ -223,6 +223,10 @@ spec:
           env:
             - name: TZ
               value: "America/New_York"
+            - name: HA_USE_X_FORWARDED_FOR
+              value: "true"
+            - name: HA_TRUSTED_PROXIES
+              value: "10.100.20.0/24"
           livenessProbe:
             exec:
               command:
