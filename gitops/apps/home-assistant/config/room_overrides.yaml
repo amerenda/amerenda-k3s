@@ -1,0 +1,62 @@
+# Room-specific schedule overrides
+# This file allows you to override the default schedule for specific rooms
+# Format: room_name -> schedule_number -> property -> value
+
+room_overrides:
+  # Example: Kitchen might have different morning hours
+  kitchen:
+    schedule_1:
+      start_time: "05:30"  # Earlier start for kitchen
+      end_time: "08:30"    # Earlier end for kitchen
+      scene_suffix: "energize"
+    schedule_2:
+      start_time: "08:30"  # Adjusted start time
+      end_time: "17:00"    # Same end time
+      scene_suffix: "concentrate"
+  
+  # Example: Bedroom might have different evening hours
+  bedroom:
+    schedule_3:
+      start_time: "18:00"  # Earlier evening start
+      end_time: "22:00"    # Earlier evening end
+      scene_suffix: "relax"
+    schedule_4:
+      start_time: "22:00"  # Later night start
+      end_time: "23:30"    # Later night end
+      scene_suffix: "nightlight"
+    schedule_5:
+      start_time: "23:30"  # Adjusted late night start
+      end_time: "06:00"    # Same late night end
+      scene_suffix: "nightlight"
+  
+  # Example: Bathroom might have different scene preferences
+  bathroom:
+    schedule_1:
+      scene_suffix: "energize"  # Keep energize for morning
+    schedule_2:
+      scene_suffix: "concentrate"  # Keep concentrate for day
+    schedule_3:
+      scene_suffix: "relax"  # Keep relax for evening
+    schedule_4:
+      scene_suffix: "nightlight"  # Keep nightlight for night
+    schedule_5:
+      scene_suffix: "nightlight"  # Keep nightlight for late night
+    default_scene_suffix: "nightlight"  # Different default for bathroom
+  
+  # Example: Hallway might have different timing
+  hallway:
+    schedule_1:
+      start_time: "06:30"  # Later morning start
+      end_time: "09:30"    # Later morning end
+    schedule_2:
+      start_time: "09:30"  # Adjusted day start
+      end_time: "17:30"    # Adjusted day end
+    schedule_3:
+      start_time: "17:30"  # Adjusted evening start
+      end_time: "21:30"    # Adjusted evening end
+    schedule_4:
+      start_time: "21:30"  # Adjusted night start
+      end_time: "23:30"    # Adjusted night end
+    schedule_5:
+      start_time: "23:30"  # Adjusted late night start
+      end_time: "06:30"    # Adjusted late night end
