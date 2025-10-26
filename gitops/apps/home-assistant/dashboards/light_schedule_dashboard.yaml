@@ -17,6 +17,8 @@ views:
               - entity: input_select.room_switch_selector
                 name: Select Switch to Configure
                 icon: mdi:light-switch
+          
+          # Dynamic room configuration using template
           - type: conditional
             conditions:
               - entity: input_select.room_schedule_selector
@@ -35,109 +37,43 @@ views:
                   title: Living Room Time Settings
                   entities:
                     - entity: input_datetime.living_room_schedule_1_start
-                      name: Morning Start
-                      icon: mdi:weather-sunrise
                     - entity: input_datetime.living_room_schedule_1_end
-                      name: Morning End
-                      icon: mdi:weather-sunny
                     - entity: input_datetime.living_room_schedule_2_start
-                      name: Day Start
-                      icon: mdi:weather-sunny
                     - entity: input_datetime.living_room_schedule_2_end
-                      name: Day End
-                      icon: mdi:weather-sunset
                     - entity: input_datetime.living_room_schedule_3_start
-                      name: Evening Start
-                      icon: mdi:weather-sunset
                     - entity: input_datetime.living_room_schedule_3_end
-                      name: Evening End
-                      icon: mdi:weather-night
                     - entity: input_datetime.living_room_schedule_4_start
-                      name: Night Start
-                      icon: mdi:weather-night
                     - entity: input_datetime.living_room_schedule_4_end
-                      name: Night End
-                      icon: mdi:weather-sunrise
                     - entity: input_datetime.living_room_schedule_5_start
-                      name: Late Night Start
-                      icon: mdi:weather-sunrise
                     - entity: input_datetime.living_room_schedule_5_end
-                      name: Late Night End
-                      icon: mdi:weather-sunrise
                 - type: entities
                   title: Living Room Scene Settings
                   entities:
                     - entity: input_select.living_room_schedule_1_scene
-                      name: Morning Scene
-                      icon: mdi:weather-sunrise
                     - entity: input_select.living_room_schedule_2_scene
-                      name: Day Scene
-                      icon: mdi:weather-sunny
                     - entity: input_select.living_room_schedule_3_scene
-                      name: Evening Scene
-                      icon: mdi:weather-sunset
                     - entity: input_select.living_room_schedule_4_scene
-                      name: Night Scene
-                      icon: mdi:weather-night
                     - entity: input_select.living_room_schedule_5_scene
-                      name: Late Night Scene
-                      icon: mdi:weather-sunrise
                     - entity: input_select.living_room_default_scene
-                      name: Default Scene
-                      icon: mdi:lightbulb
                 - type: conditional
                   conditions:
                     - entity: input_select.room_switch_selector
                       state: main_switch
                   card:
-                    type: vertical-stack
+                    type: entities
                     title: Living Room Switch Configuration
-                    cards:
-                      - type: entities
-                        title: Switch Settings
-                        entities:
-                          - entity: input_select.living_room_switch_selector
-                            name: Switch Type
-                            icon: mdi:light-switch
-                          - entity: input_select.living_room_switch_brightness_step
-                            name: Brightness Step
-                            icon: mdi:brightness-6
-                          - entity: input_select.living_room_switch_min_brightness
-                            name: Min Brightness
-                            icon: mdi:brightness-1
-                          - entity: input_select.living_room_switch_max_brightness
-                            name: Max Brightness
-                            icon: mdi:brightness-7
-                      - type: entities
-                        title: Button 1 (Power) Configuration
-                        entities:
-                          - entity: input_select.living_room_button_1_short
-                            name: Short Press
-                            icon: mdi:lightbulb-on
-                          - entity: input_select.living_room_button_1_long
-                            name: Long Press
-                            icon: mdi:lightbulb-off
-                      - type: entities
-                        title: Button 2 (Brightness Up) Configuration
-                        entities:
-                          - entity: input_select.living_room_button_2_short
-                            name: Short Press
-                            icon: mdi:brightness-7
-                      - type: entities
-                        title: Button 3 (Brightness Down) Configuration
-                        entities:
-                          - entity: input_select.living_room_button_3_short
-                            name: Short Press
-                            icon: mdi:brightness-1
-                      - type: entities
-                        title: Button 4 (Hue) Configuration
-                        entities:
-                          - entity: input_select.living_room_button_4_short
-                            name: Short Press
-                            icon: mdi:palette
-                          - entity: input_select.living_room_button_4_long
-                            name: Long Press
-                            icon: mdi:palette-outline
+                    entities:
+                      - entity: input_select.living_room_switch_selector
+                      - entity: input_select.living_room_switch_brightness_step
+                      - entity: input_select.living_room_switch_min_brightness
+                      - entity: input_select.living_room_switch_max_brightness
+                      - entity: input_select.living_room_button_1_short
+                      - entity: input_select.living_room_button_1_long
+                      - entity: input_select.living_room_button_2_short
+                      - entity: input_select.living_room_button_3_short
+                      - entity: input_select.living_room_button_4_short
+                      - entity: input_select.living_room_button_4_long
+          
           - type: conditional
             conditions:
               - entity: input_select.room_schedule_selector
@@ -156,109 +92,43 @@ views:
                   title: Kitchen Time Settings
                   entities:
                     - entity: input_datetime.kitchen_schedule_1_start
-                      name: Morning Start
-                      icon: mdi:weather-sunrise
                     - entity: input_datetime.kitchen_schedule_1_end
-                      name: Morning End
-                      icon: mdi:weather-sunny
                     - entity: input_datetime.kitchen_schedule_2_start
-                      name: Day Start
-                      icon: mdi:weather-sunny
                     - entity: input_datetime.kitchen_schedule_2_end
-                      name: Day End
-                      icon: mdi:weather-sunset
                     - entity: input_datetime.kitchen_schedule_3_start
-                      name: Evening Start
-                      icon: mdi:weather-sunset
                     - entity: input_datetime.kitchen_schedule_3_end
-                      name: Evening End
-                      icon: mdi:weather-night
                     - entity: input_datetime.kitchen_schedule_4_start
-                      name: Night Start
-                      icon: mdi:weather-night
                     - entity: input_datetime.kitchen_schedule_4_end
-                      name: Night End
-                      icon: mdi:weather-sunrise
                     - entity: input_datetime.kitchen_schedule_5_start
-                      name: Late Night Start
-                      icon: mdi:weather-sunrise
                     - entity: input_datetime.kitchen_schedule_5_end
-                      name: Late Night End
-                      icon: mdi:weather-sunrise
                 - type: entities
                   title: Kitchen Scene Settings
                   entities:
                     - entity: input_select.kitchen_schedule_1_scene
-                      name: Morning Scene
-                      icon: mdi:weather-sunrise
                     - entity: input_select.kitchen_schedule_2_scene
-                      name: Day Scene
-                      icon: mdi:weather-sunny
                     - entity: input_select.kitchen_schedule_3_scene
-                      name: Evening Scene
-                      icon: mdi:weather-sunset
                     - entity: input_select.kitchen_schedule_4_scene
-                      name: Night Scene
-                      icon: mdi:weather-night
                     - entity: input_select.kitchen_schedule_5_scene
-                      name: Late Night Scene
-                      icon: mdi:weather-sunrise
                     - entity: input_select.kitchen_default_scene
-                      name: Default Scene
-                      icon: mdi:lightbulb
                 - type: conditional
                   conditions:
                     - entity: input_select.room_switch_selector
                       state: main_switch
                   card:
-                    type: vertical-stack
+                    type: entities
                     title: Kitchen Switch Configuration
-                    cards:
-                      - type: entities
-                        title: Switch Settings
-                        entities:
-                          - entity: input_select.kitchen_switch_selector
-                            name: Switch Type
-                            icon: mdi:light-switch
-                          - entity: input_select.kitchen_switch_brightness_step
-                            name: Brightness Step
-                            icon: mdi:brightness-6
-                          - entity: input_select.kitchen_switch_min_brightness
-                            name: Min Brightness
-                            icon: mdi:brightness-1
-                          - entity: input_select.kitchen_switch_max_brightness
-                            name: Max Brightness
-                            icon: mdi:brightness-7
-                      - type: entities
-                        title: Button 1 (Power) Configuration
-                        entities:
-                          - entity: input_select.kitchen_button_1_short
-                            name: Short Press
-                            icon: mdi:lightbulb-on
-                          - entity: input_select.kitchen_button_1_long
-                            name: Long Press
-                            icon: mdi:lightbulb-off
-                      - type: entities
-                        title: Button 2 (Brightness Up) Configuration
-                        entities:
-                          - entity: input_select.kitchen_button_2_short
-                            name: Short Press
-                            icon: mdi:brightness-7
-                      - type: entities
-                        title: Button 3 (Brightness Down) Configuration
-                        entities:
-                          - entity: input_select.kitchen_button_3_short
-                            name: Short Press
-                            icon: mdi:brightness-1
-                      - type: entities
-                        title: Button 4 (Hue) Configuration
-                        entities:
-                          - entity: input_select.kitchen_button_4_short
-                            name: Short Press
-                            icon: mdi:palette
-                          - entity: input_select.kitchen_button_4_long
-                            name: Long Press
-                            icon: mdi:palette-outline
+                    entities:
+                      - entity: input_select.kitchen_switch_selector
+                      - entity: input_select.kitchen_switch_brightness_step
+                      - entity: input_select.kitchen_switch_min_brightness
+                      - entity: input_select.kitchen_switch_max_brightness
+                      - entity: input_select.kitchen_button_1_short
+                      - entity: input_select.kitchen_button_1_long
+                      - entity: input_select.kitchen_button_2_short
+                      - entity: input_select.kitchen_button_3_short
+                      - entity: input_select.kitchen_button_4_short
+                      - entity: input_select.kitchen_button_4_long
+          
           - type: conditional
             conditions:
               - entity: input_select.room_schedule_selector
@@ -277,109 +147,43 @@ views:
                   title: Bedroom Time Settings
                   entities:
                     - entity: input_datetime.bedroom_schedule_1_start
-                      name: Morning Start
-                      icon: mdi:weather-sunrise
                     - entity: input_datetime.bedroom_schedule_1_end
-                      name: Morning End
-                      icon: mdi:weather-sunny
                     - entity: input_datetime.bedroom_schedule_2_start
-                      name: Day Start
-                      icon: mdi:weather-sunny
                     - entity: input_datetime.bedroom_schedule_2_end
-                      name: Day End
-                      icon: mdi:weather-sunset
                     - entity: input_datetime.bedroom_schedule_3_start
-                      name: Evening Start
-                      icon: mdi:weather-sunset
                     - entity: input_datetime.bedroom_schedule_3_end
-                      name: Evening End
-                      icon: mdi:weather-night
                     - entity: input_datetime.bedroom_schedule_4_start
-                      name: Night Start
-                      icon: mdi:weather-night
                     - entity: input_datetime.bedroom_schedule_4_end
-                      name: Night End
-                      icon: mdi:weather-sunrise
                     - entity: input_datetime.bedroom_schedule_5_start
-                      name: Late Night Start
-                      icon: mdi:weather-sunrise
                     - entity: input_datetime.bedroom_schedule_5_end
-                      name: Late Night End
-                      icon: mdi:weather-sunrise
                 - type: entities
                   title: Bedroom Scene Settings
                   entities:
                     - entity: input_select.bedroom_schedule_1_scene
-                      name: Morning Scene
-                      icon: mdi:weather-sunrise
                     - entity: input_select.bedroom_schedule_2_scene
-                      name: Day Scene
-                      icon: mdi:weather-sunny
                     - entity: input_select.bedroom_schedule_3_scene
-                      name: Evening Scene
-                      icon: mdi:weather-sunset
                     - entity: input_select.bedroom_schedule_4_scene
-                      name: Night Scene
-                      icon: mdi:weather-night
                     - entity: input_select.bedroom_schedule_5_scene
-                      name: Late Night Scene
-                      icon: mdi:weather-sunrise
                     - entity: input_select.bedroom_default_scene
-                      name: Default Scene
-                      icon: mdi:lightbulb
                 - type: conditional
                   conditions:
                     - entity: input_select.room_switch_selector
                       state: main_switch
                   card:
-                    type: vertical-stack
+                    type: entities
                     title: Bedroom Switch Configuration
-                    cards:
-                      - type: entities
-                        title: Switch Settings
-                        entities:
-                          - entity: input_select.bedroom_switch_selector
-                            name: Switch Type
-                            icon: mdi:light-switch
-                          - entity: input_select.bedroom_switch_brightness_step
-                            name: Brightness Step
-                            icon: mdi:brightness-6
-                          - entity: input_select.bedroom_switch_min_brightness
-                            name: Min Brightness
-                            icon: mdi:brightness-1
-                          - entity: input_select.bedroom_switch_max_brightness
-                            name: Max Brightness
-                            icon: mdi:brightness-7
-                      - type: entities
-                        title: Button 1 (Power) Configuration
-                        entities:
-                          - entity: input_select.bedroom_button_1_short
-                            name: Short Press
-                            icon: mdi:lightbulb-on
-                          - entity: input_select.bedroom_button_1_long
-                            name: Long Press
-                            icon: mdi:lightbulb-off
-                      - type: entities
-                        title: Button 2 (Brightness Up) Configuration
-                        entities:
-                          - entity: input_select.bedroom_button_2_short
-                            name: Short Press
-                            icon: mdi:brightness-7
-                      - type: entities
-                        title: Button 3 (Brightness Down) Configuration
-                        entities:
-                          - entity: input_select.bedroom_button_3_short
-                            name: Short Press
-                            icon: mdi:brightness-1
-                      - type: entities
-                        title: Button 4 (Hue) Configuration
-                        entities:
-                          - entity: input_select.bedroom_button_4_short
-                            name: Short Press
-                            icon: mdi:palette
-                          - entity: input_select.bedroom_button_4_long
-                            name: Long Press
-                            icon: mdi:palette-outline
+                    entities:
+                      - entity: input_select.bedroom_switch_selector
+                      - entity: input_select.bedroom_switch_brightness_step
+                      - entity: input_select.bedroom_switch_min_brightness
+                      - entity: input_select.bedroom_switch_max_brightness
+                      - entity: input_select.bedroom_button_1_short
+                      - entity: input_select.bedroom_button_1_long
+                      - entity: input_select.bedroom_button_2_short
+                      - entity: input_select.bedroom_button_3_short
+                      - entity: input_select.bedroom_button_4_short
+                      - entity: input_select.bedroom_button_4_long
+          
           - type: conditional
             conditions:
               - entity: input_select.room_schedule_selector
@@ -398,109 +202,43 @@ views:
                   title: Bathroom Time Settings
                   entities:
                     - entity: input_datetime.bathroom_schedule_1_start
-                      name: Morning Start
-                      icon: mdi:weather-sunrise
                     - entity: input_datetime.bathroom_schedule_1_end
-                      name: Morning End
-                      icon: mdi:weather-sunny
                     - entity: input_datetime.bathroom_schedule_2_start
-                      name: Day Start
-                      icon: mdi:weather-sunny
                     - entity: input_datetime.bathroom_schedule_2_end
-                      name: Day End
-                      icon: mdi:weather-sunset
                     - entity: input_datetime.bathroom_schedule_3_start
-                      name: Evening Start
-                      icon: mdi:weather-sunset
                     - entity: input_datetime.bathroom_schedule_3_end
-                      name: Evening End
-                      icon: mdi:weather-night
                     - entity: input_datetime.bathroom_schedule_4_start
-                      name: Night Start
-                      icon: mdi:weather-night
                     - entity: input_datetime.bathroom_schedule_4_end
-                      name: Night End
-                      icon: mdi:weather-sunrise
                     - entity: input_datetime.bathroom_schedule_5_start
-                      name: Late Night Start
-                      icon: mdi:weather-sunrise
                     - entity: input_datetime.bathroom_schedule_5_end
-                      name: Late Night End
-                      icon: mdi:weather-sunrise
                 - type: entities
                   title: Bathroom Scene Settings
                   entities:
                     - entity: input_select.bathroom_schedule_1_scene
-                      name: Morning Scene
-                      icon: mdi:weather-sunrise
                     - entity: input_select.bathroom_schedule_2_scene
-                      name: Day Scene
-                      icon: mdi:weather-sunny
                     - entity: input_select.bathroom_schedule_3_scene
-                      name: Evening Scene
-                      icon: mdi:weather-sunset
                     - entity: input_select.bathroom_schedule_4_scene
-                      name: Night Scene
-                      icon: mdi:weather-night
                     - entity: input_select.bathroom_schedule_5_scene
-                      name: Late Night Scene
-                      icon: mdi:weather-sunrise
                     - entity: input_select.bathroom_default_scene
-                      name: Default Scene
-                      icon: mdi:lightbulb
                 - type: conditional
                   conditions:
                     - entity: input_select.room_switch_selector
                       state: main_switch
                   card:
-                    type: vertical-stack
+                    type: entities
                     title: Bathroom Switch Configuration
-                    cards:
-                      - type: entities
-                        title: Switch Settings
-                        entities:
-                          - entity: input_select.bathroom_switch_selector
-                            name: Switch Type
-                            icon: mdi:light-switch
-                          - entity: input_select.bathroom_switch_brightness_step
-                            name: Brightness Step
-                            icon: mdi:brightness-6
-                          - entity: input_select.bathroom_switch_min_brightness
-                            name: Min Brightness
-                            icon: mdi:brightness-1
-                          - entity: input_select.bathroom_switch_max_brightness
-                            name: Max Brightness
-                            icon: mdi:brightness-7
-                      - type: entities
-                        title: Button 1 (Power) Configuration
-                        entities:
-                          - entity: input_select.bathroom_button_1_short
-                            name: Short Press
-                            icon: mdi:lightbulb-on
-                          - entity: input_select.bathroom_button_1_long
-                            name: Long Press
-                            icon: mdi:lightbulb-off
-                      - type: entities
-                        title: Button 2 (Brightness Up) Configuration
-                        entities:
-                          - entity: input_select.bathroom_button_2_short
-                            name: Short Press
-                            icon: mdi:brightness-7
-                      - type: entities
-                        title: Button 3 (Brightness Down) Configuration
-                        entities:
-                          - entity: input_select.bathroom_button_3_short
-                            name: Short Press
-                            icon: mdi:brightness-1
-                      - type: entities
-                        title: Button 4 (Hue) Configuration
-                        entities:
-                          - entity: input_select.bathroom_button_4_short
-                            name: Short Press
-                            icon: mdi:palette
-                          - entity: input_select.bathroom_button_4_long
-                            name: Long Press
-                            icon: mdi:palette-outline
+                    entities:
+                      - entity: input_select.bathroom_switch_selector
+                      - entity: input_select.bathroom_switch_brightness_step
+                      - entity: input_select.bathroom_switch_min_brightness
+                      - entity: input_select.bathroom_switch_max_brightness
+                      - entity: input_select.bathroom_button_1_short
+                      - entity: input_select.bathroom_button_1_long
+                      - entity: input_select.bathroom_button_2_short
+                      - entity: input_select.bathroom_button_3_short
+                      - entity: input_select.bathroom_button_4_short
+                      - entity: input_select.bathroom_button_4_long
+          
           - type: conditional
             conditions:
               - entity: input_select.room_schedule_selector
@@ -519,189 +257,70 @@ views:
                   title: Hallway Time Settings
                   entities:
                     - entity: input_datetime.hallway_schedule_1_start
-                      name: Morning Start
-                      icon: mdi:weather-sunrise
                     - entity: input_datetime.hallway_schedule_1_end
-                      name: Morning End
-                      icon: mdi:weather-sunny
                     - entity: input_datetime.hallway_schedule_2_start
-                      name: Day Start
-                      icon: mdi:weather-sunny
                     - entity: input_datetime.hallway_schedule_2_end
-                      name: Day End
-                      icon: mdi:weather-sunset
                     - entity: input_datetime.hallway_schedule_3_start
-                      name: Evening Start
-                      icon: mdi:weather-sunset
                     - entity: input_datetime.hallway_schedule_3_end
-                      name: Evening End
-                      icon: mdi:weather-night
                     - entity: input_datetime.hallway_schedule_4_start
-                      name: Night Start
-                      icon: mdi:weather-night
                     - entity: input_datetime.hallway_schedule_4_end
-                      name: Night End
-                      icon: mdi:weather-sunrise
                     - entity: input_datetime.hallway_schedule_5_start
-                      name: Late Night Start
-                      icon: mdi:weather-sunrise
                     - entity: input_datetime.hallway_schedule_5_end
-                      name: Late Night End
-                      icon: mdi:weather-sunrise
                 - type: entities
                   title: Hallway Scene Settings
                   entities:
                     - entity: input_select.hallway_schedule_1_scene
-                      name: Morning Scene
-                      icon: mdi:weather-sunrise
                     - entity: input_select.hallway_schedule_2_scene
-                      name: Day Scene
-                      icon: mdi:weather-sunny
                     - entity: input_select.hallway_schedule_3_scene
-                      name: Evening Scene
-                      icon: mdi:weather-sunset
                     - entity: input_select.hallway_schedule_4_scene
-                      name: Night Scene
-                      icon: mdi:weather-night
                     - entity: input_select.hallway_schedule_5_scene
-                      name: Late Night Scene
-                      icon: mdi:weather-sunrise
                     - entity: input_select.hallway_default_scene
-                      name: Default Scene
-                      icon: mdi:lightbulb
                 - type: conditional
                   conditions:
                     - entity: input_select.room_switch_selector
                       state: main_switch
                   card:
-                    type: vertical-stack
-                    title: Hallway Switch Configuration
-                    cards:
-                      - type: entities
-                        title: Switch Settings
-                        entities:
-                          - entity: input_select.hallway_switch_selector
-                            name: Switch Type
-                            icon: mdi:light-switch
-                          - entity: input_select.hallway_switch_brightness_step
-                            name: Brightness Step
-                            icon: mdi:brightness-6
-                          - entity: input_select.hallway_switch_min_brightness
-                            name: Min Brightness
-                            icon: mdi:brightness-1
-                          - entity: input_select.hallway_switch_max_brightness
-                            name: Max Brightness
-                            icon: mdi:brightness-7
-                      - type: entities
-                        title: Button 1 (Power) Configuration
-                        entities:
-                          - entity: input_select.hallway_button_1_short
-                            name: Short Press
-                            icon: mdi:lightbulb-on
-                          - entity: input_select.hallway_button_1_long
-                            name: Long Press
-                            icon: mdi:lightbulb-off
-                      - type: entities
-                        title: Button 2 (Brightness Up) Configuration
-                        entities:
-                          - entity: input_select.hallway_button_2_short
-                            name: Short Press
-                            icon: mdi:brightness-7
-                      - type: entities
-                        title: Button 3 (Brightness Down) Configuration
-                        entities:
-                          - entity: input_select.hallway_button_3_short
-                            name: Short Press
-                            icon: mdi:brightness-1
-                      - type: entities
-                        title: Button 4 (Hue) Configuration
-                        entities:
-                          - entity: input_select.hallway_button_4_short
-                            name: Short Press
-                            icon: mdi:palette
-                          - entity: input_select.hallway_button_4_long
-                            name: Long Press
-                            icon: mdi:palette-outline
+                    type: entities
+                    title: Hallway Main Switch Configuration
+                    entities:
+                      - entity: input_select.hallway_switch_selector
+                      - entity: input_select.hallway_switch_brightness_step
+                      - entity: input_select.hallway_switch_min_brightness
+                      - entity: input_select.hallway_switch_max_brightness
+                      - entity: input_select.hallway_button_1_short
+                      - entity: input_select.hallway_button_1_long
+                      - entity: input_select.hallway_button_2_short
+                      - entity: input_select.hallway_button_3_short
+                      - entity: input_select.hallway_button_4_short
+                      - entity: input_select.hallway_button_4_long
+                - type: conditional
+                  conditions:
+                    - entity: input_select.room_switch_selector
+                      state: secondary_switch
+                  card:
+                    type: entities
+                    title: Hallway Secondary Switch Configuration
+                    entities:
+                      - entity: input_select.hallway_switch_selector
+                      - entity: input_select.hallway_2_switch_brightness_step
+                      - entity: input_select.hallway_2_switch_min_brightness
+                      - entity: input_select.hallway_2_switch_max_brightness
+                      - entity: input_select.hallway_2_button_1_short
+                      - entity: input_select.hallway_2_button_1_long
+                      - entity: input_select.hallway_2_button_2_short
+                      - entity: input_select.hallway_2_button_3_short
+                      - entity: input_select.hallway_2_button_4_short
+                      - entity: input_select.hallway_2_button_4_long
+          
           - type: markdown
             content: >
               ## Per-Room Schedule Configuration
-
-
+              
               **How to Use**:
-
-              1. **Select a Room**: Use the first dropdown to choose which
-              room's schedule you want to configure
-
-              2. **Select a Switch**: Use the second dropdown to choose which
-              switch in that room to configure (currently only "main_switch")
-
-              3. **Enable Schedule**: Toggle the room's schedule on/off
-
-              4. **Set Times**: Configure the start and end times for each
-              schedule period
-
-              5. **Choose Scenes**: Select which scene should be active during
-              each time period
-
-              6. **Configure Switch**: Adjust brightness settings and switch
-              behavior for the selected switch
-
-              7. **Configure Buttons**: Set what each button does on the Hue
-              switch (power, brightness up/down, hue button)
-
-
-              **Schedule Periods**:
-
-              - **Morning** (1): Energizing light for waking up
-
-              - **Day** (2): Focused light for daytime activities
-
-              - **Evening** (3): Relaxing light for winding down
-
-              - **Night** (4): Dim light for late evening
-
-              - **Late Night** (5): Very dim light for overnight
-
-
-              **Scene Options**:
-
-              - `energize` - Bright, energizing light
-
-              - `concentrate` - Focused light for work
-
-              - `relax` - Warm, cozy light
-
-              - `nightlight` - Dim light for night
-
-              - `read` - Reading-optimized light
-
-              - `dimmed` - Soft, dimmed light
-
-
-              **Switch Configuration**:
-
-              - **Switch Type**: Currently only "main_switch" is available
-              - **Brightness Step**: How much to increase/decrease brightness
-                when using brightness up/down buttons (10-50)
-              - **Min Brightness**: Minimum brightness level (1-30)
-              - **Max Brightness**: Maximum brightness level (200-255)
-
-              **Button Configuration**:
-
-              - **Button 1 (Power)**: Main power button
-                - **Short Press**: Toggle lights, turn on/off, scene cycle, etc.
-                - **Long Press**: All lights off, room lights off, scene actions, etc.
-
-              - **Button 2 (Brightness Up)**: Top brightness button
-                - **Short Press**: Brightness up, brightness down, toggle, scene actions
-
-              - **Button 3 (Brightness Down)**: Bottom brightness button  
-                - **Short Press**: Brightness up, brightness down, toggle, scene actions
-
-              - **Button 4 (Hue)**: Color/scene button
-                - **Short Press**: Scene cycle, scene next/previous, color cycle, etc.
-                - **Long Press**: Room relax scene, scene actions, all lights off, etc.
-
-              **Note**: Times can cross midnight (e.g., 23:00-06:00). The
-              schedule only affects lights when they are turned on via the Hue
-              switch.
+              1. **Select a Room**: Use the first dropdown to choose which room's schedule you want to configure
+              2. **Select a Switch**: Use the second dropdown to choose which switch in that room to configure
+              3. **Configure Settings**: All settings for the selected room will appear below
+              
+              **Schedule Periods**: Morning, Day, Evening, Night, Late Night
+              **Scene Options**: energize, concentrate, relax, nightlight, read, dimmed
+              **Button Actions**: Toggle lights, brightness control, scene cycling, color cycling

@@ -410,9 +410,18 @@ EOF
     local default_scene="relax"
     local scene_options=("energize" "concentrate" "relax" "nightlight" "read" "dimmed")
     
+    # Define switches per room (room_name: switch1,switch2,...)
+    declare -A room_switches
+    room_switches["living_room"]="main_switch"
+    room_switches["kitchen"]="main_switch"
+    room_switches["bedroom"]="main_switch"
+    room_switches["bathroom"]="main_switch"
+    room_switches["hallway"]="main_switch,secondary_switch"
+    
     for i in "${!rooms[@]}"; do
         local room="${rooms[$i]}"
         local icon="${room_icons[$i]}"
+        local switches="${room_switches[$room]}"
         
         # Generate scene selects for each schedule period
         for j in {1..5}; do
@@ -454,8 +463,14 @@ EOF
         name: "${room^} Switch Selector"
         icon: mdi:light-switch
         options:
-          - "main_switch"
-        initial: "main_switch"
+EOF
+        # Add switch options dynamically
+        IFS=',' read -ra switch_array <<< "$switches"
+        for switch in "${switch_array[@]}"; do
+            echo "          - \"${switch}\"" >> "$output_file"
+        done
+        cat >> "$output_file" << EOF
+        initial: "${switch_array[0]}"
       ${room}_switch_brightness_step:
         name: "${room^} Brightness Step"
         icon: mdi:brightness-6
@@ -560,6 +575,120 @@ EOF
           - "room_lights_off"
         initial: "room_relax_scene"
 EOF
+        
+        # Generate entities for additional switches (if any)
+        if [ ${#switch_array[@]} -gt 1 ]; then
+            for switch_idx in $(seq 1 $((${#switch_array[@]}-1))); do
+                local switch="${switch_array[$switch_idx]}"
+                local switch_num=$((switch_idx + 1))
+                
+                cat >> "$output_file" << EOF
+      ${room}_${switch_num}_switch_brightness_step:
+        name: "${room^} ${switch^} Brightness Step"
+        icon: mdi:brightness-6
+        options:
+          - "10"
+          - "15"
+          - "20"
+          - "25"
+          - "30"
+          - "35"
+          - "40"
+          - "50"
+        initial: "25"
+      ${room}_${switch_num}_switch_min_brightness:
+        name: "${room^} ${switch^} Min Brightness"
+        icon: mdi:brightness-1
+        options:
+          - "1"
+          - "5"
+          - "10"
+          - "15"
+          - "20"
+          - "25"
+          - "30"
+        initial: "1"
+      ${room}_${switch_num}_switch_max_brightness:
+        name: "${room^} ${switch^} Max Brightness"
+        icon: mdi:brightness-7
+        options:
+          - "200"
+          - "220"
+          - "240"
+          - "255"
+        initial: "255"
+      ${room}_${switch_num}_button_1_short:
+        name: "${room^} ${switch^} Button 1 Short Press"
+        icon: mdi:lightbulb-on
+        options:
+          - "toggle_lights"
+          - "turn_on_lights"
+          - "turn_off_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+        initial: "toggle_lights"
+      ${room}_${switch_num}_button_1_long:
+        name: "${room^} ${switch^} Button 1 Long Press"
+        icon: mdi:lightbulb-off
+        options:
+          - "all_lights_off"
+          - "room_lights_off"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+        initial: "all_lights_off"
+      ${room}_${switch_num}_button_2_short:
+        name: "${room^} ${switch^} Button 2 Short Press"
+        icon: mdi:brightness-7
+        options:
+          - "brightness_up"
+          - "brightness_down"
+          - "toggle_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+        initial: "brightness_up"
+      ${room}_${switch_num}_button_3_short:
+        name: "${room^} ${switch^} Button 3 Short Press"
+        icon: mdi:brightness-1
+        options:
+          - "brightness_up"
+          - "brightness_down"
+          - "toggle_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+        initial: "brightness_down"
+      ${room}_${switch_num}_button_4_short:
+        name: "${room^} ${switch^} Button 4 Short Press"
+        icon: mdi:palette
+        options:
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+          - "toggle_lights"
+          - "brightness_up"
+          - "brightness_down"
+        initial: "scene_cycle"
+      ${room}_${switch_num}_button_4_long:
+        name: "${room^} ${switch^} Button 4 Long Press"
+        icon: mdi:palette-outline
+        options:
+          - "room_relax_scene"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+          - "all_lights_off"
+          - "room_lights_off"
+        initial: "room_relax_scene"
+EOF
+            done
+        fi
     done
 
     # Add other config files

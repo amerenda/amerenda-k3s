@@ -1,0 +1,29 @@
+alias: Switch Control - Hallway 2
+id: hallway_2_switch_control
+description: Control hallway lights with second Hue switch buttons
+use_blueprint:
+  path: _defaults/hue_switch_control.yaml
+  input:
+    target_lights:
+      - light.hallway
+    switch_entity: event.hallway_switch_button_2
+    button_1_toggle: true
+    button_2_brightness_up: true
+    button_3_brightness_down: true
+    button_4_custom: true
+    button_4_action: scene_cycle
+    scene_entities:
+      - scene.hallway_nightlight
+      - scene.hallway_relax
+      - scene.hallway_energize
+    button_1_long_press: true
+    button_1_long_action: all_lights_off
+    button_4_long_press: true
+    button_4_long_action: room_relax_scene
+    room_relax_scene: scene.hallway_relax
+    brightness_step: 25
+    min_brightness: 1
+    max_brightness: 255
+    # Room configuration for dynamic scene construction
+    room_name: "hallway"
+    use_dashboard_schedule: true
