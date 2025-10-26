@@ -2,6 +2,8 @@
 
 This system allows you to create room-specific schedules that inherit from a default schedule but can be overridden per room.
 
+> **📚 Related Documentation**: See [README-includes.md](README-includes.md) for guidance on handling Home Assistant includes in Kubernetes ConfigMaps.
+
 ## How It Works
 
 1. **Default Schedule**: All rooms start with the same default schedule defined in `default_schedule.yaml`
