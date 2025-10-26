@@ -4,8 +4,7 @@ metadata:
   name: homeassistant-ingress
   namespace: home-assistant
   annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.entrypoints: web
     external-dns.alpha.kubernetes.io/hostname: home.amer.home,ha.amer.home,homeassistant.amer.home
     external-dns.alpha.kubernetes.io/ttl: "3600"
 spec:
@@ -41,9 +40,3 @@ spec:
             name: homeassistant
             port:
               number: 8123
-  tls:
-  - hosts:
-    - home.amer.home
-    - ha.amer.home
-    - homeassistant.amer.home
-    secretName: homeassistant-tls
