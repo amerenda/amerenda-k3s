@@ -19,6 +19,8 @@ spec:
     metadata:
       labels:
         app: bind9
+      annotations:
+        reloader.stakater.com/search: "true"
     spec:
       affinity:
         podAntiAffinity:
