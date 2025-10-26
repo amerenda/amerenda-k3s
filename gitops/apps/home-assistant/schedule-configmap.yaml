@@ -467,6 +467,75 @@ data:
           - "240"
           - "255"
         initial: "255"
+      living_room_button_1_short:
+        name: "Living_room Button 1 Short Press"
+        icon: mdi:lightbulb-on
+        options:
+          - "toggle_lights"
+          - "turn_on_lights"
+          - "turn_off_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+        initial: "toggle_lights"
+      living_room_button_1_long:
+        name: "Living_room Button 1 Long Press"
+        icon: mdi:lightbulb-off
+        options:
+          - "all_lights_off"
+          - "room_lights_off"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+        initial: "all_lights_off"
+      living_room_button_2_short:
+        name: "Living_room Button 2 Short Press"
+        icon: mdi:brightness-7
+        options:
+          - "brightness_up"
+          - "brightness_down"
+          - "toggle_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+        initial: "brightness_up"
+      living_room_button_3_short:
+        name: "Living_room Button 3 Short Press"
+        icon: mdi:brightness-1
+        options:
+          - "brightness_up"
+          - "brightness_down"
+          - "toggle_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+        initial: "brightness_down"
+      living_room_button_4_short:
+        name: "Living_room Button 4 Short Press"
+        icon: mdi:palette
+        options:
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+          - "toggle_lights"
+          - "brightness_up"
+          - "brightness_down"
+        initial: "scene_cycle"
+      living_room_button_4_long:
+        name: "Living_room Button 4 Long Press"
+        icon: mdi:palette-outline
+        options:
+          - "room_relax_scene"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+          - "all_lights_off"
+          - "room_lights_off"
+        initial: "room_relax_scene"
       kitchen_schedule_1_scene:
         name: "Kitchen Morning Scene"
         icon: mdi:weather-sunrise
@@ -573,6 +642,75 @@ data:
           - "240"
           - "255"
         initial: "255"
+      kitchen_button_1_short:
+        name: "Kitchen Button 1 Short Press"
+        icon: mdi:lightbulb-on
+        options:
+          - "toggle_lights"
+          - "turn_on_lights"
+          - "turn_off_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+        initial: "toggle_lights"
+      kitchen_button_1_long:
+        name: "Kitchen Button 1 Long Press"
+        icon: mdi:lightbulb-off
+        options:
+          - "all_lights_off"
+          - "room_lights_off"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+        initial: "all_lights_off"
+      kitchen_button_2_short:
+        name: "Kitchen Button 2 Short Press"
+        icon: mdi:brightness-7
+        options:
+          - "brightness_up"
+          - "brightness_down"
+          - "toggle_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+        initial: "brightness_up"
+      kitchen_button_3_short:
+        name: "Kitchen Button 3 Short Press"
+        icon: mdi:brightness-1
+        options:
+          - "brightness_up"
+          - "brightness_down"
+          - "toggle_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+        initial: "brightness_down"
+      kitchen_button_4_short:
+        name: "Kitchen Button 4 Short Press"
+        icon: mdi:palette
+        options:
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+          - "toggle_lights"
+          - "brightness_up"
+          - "brightness_down"
+        initial: "scene_cycle"
+      kitchen_button_4_long:
+        name: "Kitchen Button 4 Long Press"
+        icon: mdi:palette-outline
+        options:
+          - "room_relax_scene"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+          - "all_lights_off"
+          - "room_lights_off"
+        initial: "room_relax_scene"
       bedroom_schedule_1_scene:
         name: "Bedroom Morning Scene"
         icon: mdi:weather-sunrise
@@ -679,6 +817,75 @@ data:
           - "240"
           - "255"
         initial: "255"
+      bedroom_button_1_short:
+        name: "Bedroom Button 1 Short Press"
+        icon: mdi:lightbulb-on
+        options:
+          - "toggle_lights"
+          - "turn_on_lights"
+          - "turn_off_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+        initial: "toggle_lights"
+      bedroom_button_1_long:
+        name: "Bedroom Button 1 Long Press"
+        icon: mdi:lightbulb-off
+        options:
+          - "all_lights_off"
+          - "room_lights_off"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+        initial: "all_lights_off"
+      bedroom_button_2_short:
+        name: "Bedroom Button 2 Short Press"
+        icon: mdi:brightness-7
+        options:
+          - "brightness_up"
+          - "brightness_down"
+          - "toggle_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+        initial: "brightness_up"
+      bedroom_button_3_short:
+        name: "Bedroom Button 3 Short Press"
+        icon: mdi:brightness-1
+        options:
+          - "brightness_up"
+          - "brightness_down"
+          - "toggle_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+        initial: "brightness_down"
+      bedroom_button_4_short:
+        name: "Bedroom Button 4 Short Press"
+        icon: mdi:palette
+        options:
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+          - "toggle_lights"
+          - "brightness_up"
+          - "brightness_down"
+        initial: "scene_cycle"
+      bedroom_button_4_long:
+        name: "Bedroom Button 4 Long Press"
+        icon: mdi:palette-outline
+        options:
+          - "room_relax_scene"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+          - "all_lights_off"
+          - "room_lights_off"
+        initial: "room_relax_scene"
       bathroom_schedule_1_scene:
         name: "Bathroom Morning Scene"
         icon: mdi:weather-sunrise
@@ -785,6 +992,75 @@ data:
           - "240"
           - "255"
         initial: "255"
+      bathroom_button_1_short:
+        name: "Bathroom Button 1 Short Press"
+        icon: mdi:lightbulb-on
+        options:
+          - "toggle_lights"
+          - "turn_on_lights"
+          - "turn_off_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+        initial: "toggle_lights"
+      bathroom_button_1_long:
+        name: "Bathroom Button 1 Long Press"
+        icon: mdi:lightbulb-off
+        options:
+          - "all_lights_off"
+          - "room_lights_off"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+        initial: "all_lights_off"
+      bathroom_button_2_short:
+        name: "Bathroom Button 2 Short Press"
+        icon: mdi:brightness-7
+        options:
+          - "brightness_up"
+          - "brightness_down"
+          - "toggle_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+        initial: "brightness_up"
+      bathroom_button_3_short:
+        name: "Bathroom Button 3 Short Press"
+        icon: mdi:brightness-1
+        options:
+          - "brightness_up"
+          - "brightness_down"
+          - "toggle_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+        initial: "brightness_down"
+      bathroom_button_4_short:
+        name: "Bathroom Button 4 Short Press"
+        icon: mdi:palette
+        options:
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+          - "toggle_lights"
+          - "brightness_up"
+          - "brightness_down"
+        initial: "scene_cycle"
+      bathroom_button_4_long:
+        name: "Bathroom Button 4 Long Press"
+        icon: mdi:palette-outline
+        options:
+          - "room_relax_scene"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+          - "all_lights_off"
+          - "room_lights_off"
+        initial: "room_relax_scene"
       hallway_schedule_1_scene:
         name: "Hallway Morning Scene"
         icon: mdi:weather-sunrise
@@ -891,6 +1167,75 @@ data:
           - "240"
           - "255"
         initial: "255"
+      hallway_button_1_short:
+        name: "Hallway Button 1 Short Press"
+        icon: mdi:lightbulb-on
+        options:
+          - "toggle_lights"
+          - "turn_on_lights"
+          - "turn_off_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+        initial: "toggle_lights"
+      hallway_button_1_long:
+        name: "Hallway Button 1 Long Press"
+        icon: mdi:lightbulb-off
+        options:
+          - "all_lights_off"
+          - "room_lights_off"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+        initial: "all_lights_off"
+      hallway_button_2_short:
+        name: "Hallway Button 2 Short Press"
+        icon: mdi:brightness-7
+        options:
+          - "brightness_up"
+          - "brightness_down"
+          - "toggle_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+        initial: "brightness_up"
+      hallway_button_3_short:
+        name: "Hallway Button 3 Short Press"
+        icon: mdi:brightness-1
+        options:
+          - "brightness_up"
+          - "brightness_down"
+          - "toggle_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+        initial: "brightness_down"
+      hallway_button_4_short:
+        name: "Hallway Button 4 Short Press"
+        icon: mdi:palette
+        options:
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+          - "toggle_lights"
+          - "brightness_up"
+          - "brightness_down"
+        initial: "scene_cycle"
+      hallway_button_4_long:
+        name: "Hallway Button 4 Long Press"
+        icon: mdi:palette-outline
+        options:
+          - "room_relax_scene"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+          - "all_lights_off"
+          - "room_lights_off"
+        initial: "room_relax_scene"
   room_overrides.yaml: |
     # Room-specific schedule overrides
     # This file allows you to override the default schedule for specific rooms

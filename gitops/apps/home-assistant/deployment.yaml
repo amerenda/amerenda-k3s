@@ -267,7 +267,7 @@ spec:
               command:
                 - /bin/sh
                 - -c
-                - sleep 30 && exit 0
+                - exit 0
             initialDelaySeconds: 0
             periodSeconds: 60
             timeoutSeconds: 35

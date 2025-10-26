@@ -90,21 +90,54 @@ views:
                     - entity: input_select.room_switch_selector
                       state: main_switch
                   card:
-                    type: entities
+                    type: vertical-stack
                     title: Living Room Switch Configuration
-                    entities:
-                      - entity: input_select.living_room_switch_selector
-                        name: Switch Type
-                        icon: mdi:light-switch
-                      - entity: input_select.living_room_switch_brightness_step
-                        name: Brightness Step
-                        icon: mdi:brightness-6
-                      - entity: input_select.living_room_switch_min_brightness
-                        name: Min Brightness
-                        icon: mdi:brightness-1
-                      - entity: input_select.living_room_switch_max_brightness
-                        name: Max Brightness
-                        icon: mdi:brightness-7
+                    cards:
+                      - type: entities
+                        title: Switch Settings
+                        entities:
+                          - entity: input_select.living_room_switch_selector
+                            name: Switch Type
+                            icon: mdi:light-switch
+                          - entity: input_select.living_room_switch_brightness_step
+                            name: Brightness Step
+                            icon: mdi:brightness-6
+                          - entity: input_select.living_room_switch_min_brightness
+                            name: Min Brightness
+                            icon: mdi:brightness-1
+                          - entity: input_select.living_room_switch_max_brightness
+                            name: Max Brightness
+                            icon: mdi:brightness-7
+                      - type: entities
+                        title: Button 1 (Power) Configuration
+                        entities:
+                          - entity: input_select.living_room_button_1_short
+                            name: Short Press
+                            icon: mdi:lightbulb-on
+                          - entity: input_select.living_room_button_1_long
+                            name: Long Press
+                            icon: mdi:lightbulb-off
+                      - type: entities
+                        title: Button 2 (Brightness Up) Configuration
+                        entities:
+                          - entity: input_select.living_room_button_2_short
+                            name: Short Press
+                            icon: mdi:brightness-7
+                      - type: entities
+                        title: Button 3 (Brightness Down) Configuration
+                        entities:
+                          - entity: input_select.living_room_button_3_short
+                            name: Short Press
+                            icon: mdi:brightness-1
+                      - type: entities
+                        title: Button 4 (Hue) Configuration
+                        entities:
+                          - entity: input_select.living_room_button_4_short
+                            name: Short Press
+                            icon: mdi:palette
+                          - entity: input_select.living_room_button_4_long
+                            name: Long Press
+                            icon: mdi:palette-outline
           - type: conditional
             conditions:
               - entity: input_select.room_schedule_selector
@@ -178,21 +211,54 @@ views:
                     - entity: input_select.room_switch_selector
                       state: main_switch
                   card:
-                    type: entities
+                    type: vertical-stack
                     title: Kitchen Switch Configuration
-                    entities:
-                      - entity: input_select.kitchen_switch_selector
-                        name: Switch Type
-                        icon: mdi:light-switch
-                      - entity: input_select.kitchen_switch_brightness_step
-                        name: Brightness Step
-                        icon: mdi:brightness-6
-                      - entity: input_select.kitchen_switch_min_brightness
-                        name: Min Brightness
-                        icon: mdi:brightness-1
-                      - entity: input_select.kitchen_switch_max_brightness
-                        name: Max Brightness
-                        icon: mdi:brightness-7
+                    cards:
+                      - type: entities
+                        title: Switch Settings
+                        entities:
+                          - entity: input_select.kitchen_switch_selector
+                            name: Switch Type
+                            icon: mdi:light-switch
+                          - entity: input_select.kitchen_switch_brightness_step
+                            name: Brightness Step
+                            icon: mdi:brightness-6
+                          - entity: input_select.kitchen_switch_min_brightness
+                            name: Min Brightness
+                            icon: mdi:brightness-1
+                          - entity: input_select.kitchen_switch_max_brightness
+                            name: Max Brightness
+                            icon: mdi:brightness-7
+                      - type: entities
+                        title: Button 1 (Power) Configuration
+                        entities:
+                          - entity: input_select.kitchen_button_1_short
+                            name: Short Press
+                            icon: mdi:lightbulb-on
+                          - entity: input_select.kitchen_button_1_long
+                            name: Long Press
+                            icon: mdi:lightbulb-off
+                      - type: entities
+                        title: Button 2 (Brightness Up) Configuration
+                        entities:
+                          - entity: input_select.kitchen_button_2_short
+                            name: Short Press
+                            icon: mdi:brightness-7
+                      - type: entities
+                        title: Button 3 (Brightness Down) Configuration
+                        entities:
+                          - entity: input_select.kitchen_button_3_short
+                            name: Short Press
+                            icon: mdi:brightness-1
+                      - type: entities
+                        title: Button 4 (Hue) Configuration
+                        entities:
+                          - entity: input_select.kitchen_button_4_short
+                            name: Short Press
+                            icon: mdi:palette
+                          - entity: input_select.kitchen_button_4_long
+                            name: Long Press
+                            icon: mdi:palette-outline
           - type: conditional
             conditions:
               - entity: input_select.room_schedule_selector
@@ -266,21 +332,54 @@ views:
                     - entity: input_select.room_switch_selector
                       state: main_switch
                   card:
-                    type: entities
+                    type: vertical-stack
                     title: Bedroom Switch Configuration
-                    entities:
-                      - entity: input_select.bedroom_switch_selector
-                        name: Switch Type
-                        icon: mdi:light-switch
-                      - entity: input_select.bedroom_switch_brightness_step
-                        name: Brightness Step
-                        icon: mdi:brightness-6
-                      - entity: input_select.bedroom_switch_min_brightness
-                        name: Min Brightness
-                        icon: mdi:brightness-1
-                      - entity: input_select.bedroom_switch_max_brightness
-                        name: Max Brightness
-                        icon: mdi:brightness-7
+                    cards:
+                      - type: entities
+                        title: Switch Settings
+                        entities:
+                          - entity: input_select.bedroom_switch_selector
+                            name: Switch Type
+                            icon: mdi:light-switch
+                          - entity: input_select.bedroom_switch_brightness_step
+                            name: Brightness Step
+                            icon: mdi:brightness-6
+                          - entity: input_select.bedroom_switch_min_brightness
+                            name: Min Brightness
+                            icon: mdi:brightness-1
+                          - entity: input_select.bedroom_switch_max_brightness
+                            name: Max Brightness
+                            icon: mdi:brightness-7
+                      - type: entities
+                        title: Button 1 (Power) Configuration
+                        entities:
+                          - entity: input_select.bedroom_button_1_short
+                            name: Short Press
+                            icon: mdi:lightbulb-on
+                          - entity: input_select.bedroom_button_1_long
+                            name: Long Press
+                            icon: mdi:lightbulb-off
+                      - type: entities
+                        title: Button 2 (Brightness Up) Configuration
+                        entities:
+                          - entity: input_select.bedroom_button_2_short
+                            name: Short Press
+                            icon: mdi:brightness-7
+                      - type: entities
+                        title: Button 3 (Brightness Down) Configuration
+                        entities:
+                          - entity: input_select.bedroom_button_3_short
+                            name: Short Press
+                            icon: mdi:brightness-1
+                      - type: entities
+                        title: Button 4 (Hue) Configuration
+                        entities:
+                          - entity: input_select.bedroom_button_4_short
+                            name: Short Press
+                            icon: mdi:palette
+                          - entity: input_select.bedroom_button_4_long
+                            name: Long Press
+                            icon: mdi:palette-outline
           - type: conditional
             conditions:
               - entity: input_select.room_schedule_selector
@@ -354,21 +453,54 @@ views:
                     - entity: input_select.room_switch_selector
                       state: main_switch
                   card:
-                    type: entities
+                    type: vertical-stack
                     title: Bathroom Switch Configuration
-                    entities:
-                      - entity: input_select.bathroom_switch_selector
-                        name: Switch Type
-                        icon: mdi:light-switch
-                      - entity: input_select.bathroom_switch_brightness_step
-                        name: Brightness Step
-                        icon: mdi:brightness-6
-                      - entity: input_select.bathroom_switch_min_brightness
-                        name: Min Brightness
-                        icon: mdi:brightness-1
-                      - entity: input_select.bathroom_switch_max_brightness
-                        name: Max Brightness
-                        icon: mdi:brightness-7
+                    cards:
+                      - type: entities
+                        title: Switch Settings
+                        entities:
+                          - entity: input_select.bathroom_switch_selector
+                            name: Switch Type
+                            icon: mdi:light-switch
+                          - entity: input_select.bathroom_switch_brightness_step
+                            name: Brightness Step
+                            icon: mdi:brightness-6
+                          - entity: input_select.bathroom_switch_min_brightness
+                            name: Min Brightness
+                            icon: mdi:brightness-1
+                          - entity: input_select.bathroom_switch_max_brightness
+                            name: Max Brightness
+                            icon: mdi:brightness-7
+                      - type: entities
+                        title: Button 1 (Power) Configuration
+                        entities:
+                          - entity: input_select.bathroom_button_1_short
+                            name: Short Press
+                            icon: mdi:lightbulb-on
+                          - entity: input_select.bathroom_button_1_long
+                            name: Long Press
+                            icon: mdi:lightbulb-off
+                      - type: entities
+                        title: Button 2 (Brightness Up) Configuration
+                        entities:
+                          - entity: input_select.bathroom_button_2_short
+                            name: Short Press
+                            icon: mdi:brightness-7
+                      - type: entities
+                        title: Button 3 (Brightness Down) Configuration
+                        entities:
+                          - entity: input_select.bathroom_button_3_short
+                            name: Short Press
+                            icon: mdi:brightness-1
+                      - type: entities
+                        title: Button 4 (Hue) Configuration
+                        entities:
+                          - entity: input_select.bathroom_button_4_short
+                            name: Short Press
+                            icon: mdi:palette
+                          - entity: input_select.bathroom_button_4_long
+                            name: Long Press
+                            icon: mdi:palette-outline
           - type: conditional
             conditions:
               - entity: input_select.room_schedule_selector
@@ -442,21 +574,54 @@ views:
                     - entity: input_select.room_switch_selector
                       state: main_switch
                   card:
-                    type: entities
+                    type: vertical-stack
                     title: Hallway Switch Configuration
-                    entities:
-                      - entity: input_select.hallway_switch_selector
-                        name: Switch Type
-                        icon: mdi:light-switch
-                      - entity: input_select.hallway_switch_brightness_step
-                        name: Brightness Step
-                        icon: mdi:brightness-6
-                      - entity: input_select.hallway_switch_min_brightness
-                        name: Min Brightness
-                        icon: mdi:brightness-1
-                      - entity: input_select.hallway_switch_max_brightness
-                        name: Max Brightness
-                        icon: mdi:brightness-7
+                    cards:
+                      - type: entities
+                        title: Switch Settings
+                        entities:
+                          - entity: input_select.hallway_switch_selector
+                            name: Switch Type
+                            icon: mdi:light-switch
+                          - entity: input_select.hallway_switch_brightness_step
+                            name: Brightness Step
+                            icon: mdi:brightness-6
+                          - entity: input_select.hallway_switch_min_brightness
+                            name: Min Brightness
+                            icon: mdi:brightness-1
+                          - entity: input_select.hallway_switch_max_brightness
+                            name: Max Brightness
+                            icon: mdi:brightness-7
+                      - type: entities
+                        title: Button 1 (Power) Configuration
+                        entities:
+                          - entity: input_select.hallway_button_1_short
+                            name: Short Press
+                            icon: mdi:lightbulb-on
+                          - entity: input_select.hallway_button_1_long
+                            name: Long Press
+                            icon: mdi:lightbulb-off
+                      - type: entities
+                        title: Button 2 (Brightness Up) Configuration
+                        entities:
+                          - entity: input_select.hallway_button_2_short
+                            name: Short Press
+                            icon: mdi:brightness-7
+                      - type: entities
+                        title: Button 3 (Brightness Down) Configuration
+                        entities:
+                          - entity: input_select.hallway_button_3_short
+                            name: Short Press
+                            icon: mdi:brightness-1
+                      - type: entities
+                        title: Button 4 (Hue) Configuration
+                        entities:
+                          - entity: input_select.hallway_button_4_short
+                            name: Short Press
+                            icon: mdi:palette
+                          - entity: input_select.hallway_button_4_long
+                            name: Long Press
+                            icon: mdi:palette-outline
           - type: markdown
             content: >
               ## Per-Room Schedule Configuration
@@ -480,6 +645,9 @@ views:
 
               6. **Configure Switch**: Adjust brightness settings and switch
               behavior for the selected switch
+
+              7. **Configure Buttons**: Set what each button does on the Hue
+              switch (power, brightness up/down, hue button)
 
 
               **Schedule Periods**:
@@ -517,6 +685,22 @@ views:
                 when using brightness up/down buttons (10-50)
               - **Min Brightness**: Minimum brightness level (1-30)
               - **Max Brightness**: Maximum brightness level (200-255)
+
+              **Button Configuration**:
+
+              - **Button 1 (Power)**: Main power button
+                - **Short Press**: Toggle lights, turn on/off, scene cycle, etc.
+                - **Long Press**: All lights off, room lights off, scene actions, etc.
+
+              - **Button 2 (Brightness Up)**: Top brightness button
+                - **Short Press**: Brightness up, brightness down, toggle, scene actions
+
+              - **Button 3 (Brightness Down)**: Bottom brightness button  
+                - **Short Press**: Brightness up, brightness down, toggle, scene actions
+
+              - **Button 4 (Hue)**: Color/scene button
+                - **Short Press**: Scene cycle, scene next/previous, color cycle, etc.
+                - **Long Press**: Room relax scene, scene actions, all lights off, etc.
 
               **Note**: Times can cross midnight (e.g., 23:00-06:00). The
               schedule only affects lights when they are turned on via the Hue

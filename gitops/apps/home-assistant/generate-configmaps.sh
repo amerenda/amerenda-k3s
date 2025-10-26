@@ -507,6 +507,75 @@ EOF
           - "240"
           - "255"
         initial: "255"
+      ${room}_button_1_short:
+        name: "${room^} Button 1 Short Press"
+        icon: mdi:lightbulb-on
+        options:
+          - "toggle_lights"
+          - "turn_on_lights"
+          - "turn_off_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+        initial: "toggle_lights"
+      ${room}_button_1_long:
+        name: "${room^} Button 1 Long Press"
+        icon: mdi:lightbulb-off
+        options:
+          - "all_lights_off"
+          - "room_lights_off"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+        initial: "all_lights_off"
+      ${room}_button_2_short:
+        name: "${room^} Button 2 Short Press"
+        icon: mdi:brightness-7
+        options:
+          - "brightness_up"
+          - "brightness_down"
+          - "toggle_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+        initial: "brightness_up"
+      ${room}_button_3_short:
+        name: "${room^} Button 3 Short Press"
+        icon: mdi:brightness-1
+        options:
+          - "brightness_up"
+          - "brightness_down"
+          - "toggle_lights"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+        initial: "brightness_down"
+      ${room}_button_4_short:
+        name: "${room^} Button 4 Short Press"
+        icon: mdi:palette
+        options:
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+          - "toggle_lights"
+          - "brightness_up"
+          - "brightness_down"
+        initial: "scene_cycle"
+      ${room}_button_4_long:
+        name: "${room^} Button 4 Long Press"
+        icon: mdi:palette-outline
+        options:
+          - "room_relax_scene"
+          - "scene_cycle"
+          - "scene_next"
+          - "scene_previous"
+          - "color_cycle"
+          - "all_lights_off"
+          - "room_lights_off"
+        initial: "room_relax_scene"
 EOF
     done
 
