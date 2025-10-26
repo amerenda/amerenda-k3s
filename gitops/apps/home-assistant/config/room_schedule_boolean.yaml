@@ -1,7 +1,4 @@
-time_schedule_enabled:
-  name: "Enable Time-Based Scenes"
-  icon: mdi:clock-outline
-  initial: trueinput_boolean:
+input_boolean:
   living_room_schedule_enabled:
     name: "Enable Living Room Schedule"
     icon: mdi:clock-outline
