@@ -145,7 +145,7 @@ spec:
               scene: !include scenes.yaml
               
               # Include schedule configuration
-              schedule: !include schedule/schedule_config.yaml
+              !include schedule/schedule_config.yaml
               
               # Shell commands for photo cleanup
               shell_command:
