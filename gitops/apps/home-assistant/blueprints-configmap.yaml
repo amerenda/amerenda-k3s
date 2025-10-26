@@ -678,3 +678,143 @@ data:
                           entity_id: !input target_lights
                         data: "{{ custom_service_data }}"
 
+  dashboard_room_card.yaml: |
+    blueprint:
+      name: "Room Schedule Card"
+      description: "Generates a room schedule configuration card for the dashboard"
+      domain: dashboard
+      input:
+        room_name:
+          name: "Room Name"
+          description: "Name of the room (e.g., living_room, kitchen, bedroom)"
+          selector:
+            text:
+        room_display_name:
+          name: "Room Display Name"
+          description: "Display name for the room (e.g., Living Room, Kitchen, Bedroom)"
+          selector:
+            text:
+        room_icon:
+          name: "Room Icon"
+          description: "Icon for the room"
+          default: "mdi:home"
+          selector:
+            icon:
+      card:
+        type: vertical-stack
+        title: "{{ room_display_name }} Schedule Settings"
+        cards:
+          - type: entities
+            title: "{{ room_display_name }} Schedule Control"
+            entities:
+              - entity: "input_boolean.{{ room_name }}_schedule_enabled"
+                name: "Enable {{ room_display_name }} Schedule"
+                icon: mdi:clock-outline
+          - type: entities
+            title: "{{ room_display_name }} Time Settings"
+            entities:
+              - entity: "input_datetime.{{ room_name }}_schedule_1_start"
+                name: "Morning Start"
+                icon: mdi:weather-sunrise
+              - entity: "input_datetime.{{ room_name }}_schedule_1_end"
+                name: "Morning End"
+                icon: mdi:weather-sunny
+              - entity: "input_datetime.{{ room_name }}_schedule_2_start"
+                name: "Day Start"
+                icon: mdi:weather-sunny
+              - entity: "input_datetime.{{ room_name }}_schedule_2_end"
+                name: "Day End"
+                icon: mdi:weather-sunset
+              - entity: "input_datetime.{{ room_name }}_schedule_3_start"
+                name: "Evening Start"
+                icon: mdi:weather-sunset
+              - entity: "input_datetime.{{ room_name }}_schedule_3_end"
+                name: "Evening End"
+                icon: mdi:weather-night
+              - entity: "input_datetime.{{ room_name }}_schedule_4_start"
+                name: "Night Start"
+                icon: mdi:weather-night
+              - entity: "input_datetime.{{ room_name }}_schedule_4_end"
+                name: "Night End"
+                icon: mdi:weather-sunrise
+              - entity: "input_datetime.{{ room_name }}_schedule_5_start"
+                name: "Late Night Start"
+                icon: mdi:weather-sunrise
+              - entity: "input_datetime.{{ room_name }}_schedule_5_end"
+                name: "Late Night End"
+                icon: mdi:weather-sunrise
+          - type: entities
+            title: "{{ room_display_name }} Scene Settings"
+            entities:
+              - entity: "input_select.{{ room_name }}_schedule_1_scene"
+                name: "Morning Scene"
+                icon: mdi:weather-sunrise
+              - entity: "input_select.{{ room_name }}_schedule_2_scene"
+                name: "Day Scene"
+                icon: mdi:weather-sunny
+              - entity: "input_select.{{ room_name }}_schedule_3_scene"
+                name: "Evening Scene"
+                icon: mdi:weather-sunset
+              - entity: "input_select.{{ room_name }}_schedule_4_scene"
+                name: "Night Scene"
+                icon: mdi:weather-night
+              - entity: "input_select.{{ room_name }}_schedule_5_scene"
+                name: "Late Night Scene"
+                icon: mdi:weather-sunrise
+              - entity: "input_select.{{ room_name }}_default_scene"
+                name: "Default Scene"
+                icon: mdi:lightbulb
+          - type: conditional
+            conditions:
+              - entity: input_select.room_switch_selector
+                state: main_switch
+            card:
+              type: vertical-stack
+              title: "{{ room_display_name }} Switch Configuration"
+              cards:
+                - type: entities
+                  title: "Switch Settings"
+                  entities:
+                    - entity: "input_select.{{ room_name }}_switch_selector"
+                      name: "Switch Type"
+                      icon: mdi:light-switch
+                    - entity: "input_select.{{ room_name }}_switch_brightness_step"
+                      name: "Brightness Step"
+                      icon: mdi:brightness-6
+                    - entity: "input_select.{{ room_name }}_switch_min_brightness"
+                      name: "Min Brightness"
+                      icon: mdi:brightness-1
+                    - entity: "input_select.{{ room_name }}_switch_max_brightness"
+                      name: "Max Brightness"
+                      icon: mdi:brightness-7
+                - type: entities
+                  title: "Button 1 (Power) Configuration"
+                  entities:
+                    - entity: "input_select.{{ room_name }}_button_1_short"
+                      name: "Short Press"
+                      icon: mdi:lightbulb-on
+                    - entity: "input_select.{{ room_name }}_button_1_long"
+                      name: "Long Press"
+                      icon: mdi:lightbulb-off
+                - type: entities
+                  title: "Button 2 (Brightness Up) Configuration"
+                  entities:
+                    - entity: "input_select.{{ room_name }}_button_2_short"
+                      name: "Short Press"
+                      icon: mdi:brightness-7
+                - type: entities
+                  title: "Button 3 (Brightness Down) Configuration"
+                  entities:
+                    - entity: "input_select.{{ room_name }}_button_3_short"
+                      name: "Short Press"
+                      icon: mdi:brightness-1
+                - type: entities
+                  title: "Button 4 (Hue) Configuration"
+                  entities:
+                    - entity: "input_select.{{ room_name }}_button_4_short"
+                      name: "Short Press"
+                      icon: mdi:palette
+                    - entity: "input_select.{{ room_name }}_button_4_long"
+                      name: "Long Press"
+                      icon: mdi:palette-outline
+

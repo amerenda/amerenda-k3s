@@ -345,32 +345,24 @@ data:
     input_datetime:
 EOF
 
-    # Generate datetime inputs for all rooms
+    # Generate datetime inputs for all rooms using a more efficient approach
     local rooms=("living_room" "kitchen" "bedroom" "bathroom" "hallway")
     local room_icons=("mdi:sofa" "mdi:chef-hat" "mdi:bed" "mdi:shower" "mdi:corridor")
     
     # Default schedule values from default_schedule.yaml
     local default_times=("06:00" "09:00" "17:00" "21:00" "23:00")
     local default_end_times=("09:00" "17:00" "21:00" "23:00" "06:00")
+    local period_names=("Morning" "Day" "Evening" "Night" "Late Night")
+    local period_icons=("mdi:weather-sunrise" "mdi:weather-sunny" "mdi:weather-sunset" "mdi:weather-night" "mdi:weather-sunrise")
     
+    # Generate all datetime inputs in one loop
     for i in "${!rooms[@]}"; do
         local room="${rooms[$i]}"
-        local icon="${room_icons[$i]}"
-        
-        # Generate datetime inputs for each schedule period
         for j in {1..5}; do
-            local period_name=""
-            local period_icon=""
+            local period_name="${period_names[$((j-1))]}"
+            local period_icon="${period_icons[$((j-1))]}"
             local start_time="${default_times[$((j-1))]}"
             local end_time="${default_end_times[$((j-1))]}"
-            
-            case $j in
-                1) period_name="Morning"; period_icon="mdi:weather-sunrise" ;;
-                2) period_name="Day"; period_icon="mdi:weather-sunny" ;;
-                3) period_name="Evening"; period_icon="mdi:weather-sunset" ;;
-                4) period_name="Night"; period_icon="mdi:weather-night" ;;
-                5) period_name="Late Night"; period_icon="mdi:weather-sunrise" ;;
-            esac
             
             cat >> "$output_file" << EOF
       ${room}_schedule_${j}_start:
@@ -378,13 +370,13 @@ EOF
         icon: ${period_icon}
         has_time: true
         has_date: false
-        initial: "${start_time}"  # Default: ${start_time}
+        initial: "${start_time}"
       ${room}_schedule_${j}_end:
         name: "${room^} ${period_name} End"
         icon: ${period_icon}
         has_time: true
         has_date: false
-        initial: "${end_time}"  # Default: ${end_time}
+        initial: "${end_time}"
 EOF
         done
     done
@@ -416,6 +408,7 @@ EOF
     # Generate select inputs for all rooms
     local default_scenes=("energize" "concentrate" "relax" "nightlight" "nightlight")
     local default_scene="relax"
+    local scene_options=("energize" "concentrate" "relax" "nightlight" "read" "dimmed")
     
     for i in "${!rooms[@]}"; do
         local room="${rooms[$i]}"
@@ -423,30 +416,21 @@ EOF
         
         # Generate scene selects for each schedule period
         for j in {1..5}; do
-            local period_name=""
-            local period_icon=""
+            local period_name="${period_names[$((j-1))]}"
+            local period_icon="${period_icons[$((j-1))]}"
             local scene="${default_scenes[$((j-1))]}"
-            
-            case $j in
-                1) period_name="Morning"; period_icon="mdi:weather-sunrise" ;;
-                2) period_name="Day"; period_icon="mdi:weather-sunny" ;;
-                3) period_name="Evening"; period_icon="mdi:weather-sunset" ;;
-                4) period_name="Night"; period_icon="mdi:weather-night" ;;
-                5) period_name="Late Night"; period_icon="mdi:weather-sunrise" ;;
-            esac
             
             cat >> "$output_file" << EOF
       ${room}_schedule_${j}_scene:
         name: "${room^} ${period_name} Scene"
         icon: ${period_icon}
         options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-        initial: "${scene}"  # Default: ${scene}
+EOF
+            for option in "${scene_options[@]}"; do
+                echo "          - \"${option}\"" >> "$output_file"
+            done
+            cat >> "$output_file" << EOF
+        initial: "${scene}"
 EOF
         done
         
@@ -456,13 +440,12 @@ EOF
         name: "${room^} Default Scene"
         icon: ${icon}
         options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-        initial: "${default_scene}"  # Default: ${default_scene}
+EOF
+        for option in "${scene_options[@]}"; do
+            echo "          - \"${option}\"" >> "$output_file"
+        done
+        cat >> "$output_file" << EOF
+        initial: "${default_scene}"
 EOF
         
         # Generate switch configuration entities
