@@ -1,0 +1,12 @@
+alias: Motion Activated Lights - Hallway
+id: motion_hallway
+description: Turn on hallway lights with time-appropriate scenes when motion is detected
+use_blueprint:
+  path: _defaults/motion_activated_lights.yaml
+  input:
+    room_name: "hallway"
+    motion_sensor: binary_sensor.hallway_motion
+    target_lights:
+      - light.hallway
+    delay_off: 2
+    use_schedule: true

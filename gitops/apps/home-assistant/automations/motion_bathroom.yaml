@@ -1,0 +1,12 @@
+alias: Motion Activated Lights - Bathroom
+id: motion_bathroom
+description: Turn on bathroom lights with time-appropriate scenes when motion is detected
+use_blueprint:
+  path: _defaults/motion_activated_lights.yaml
+  input:
+    room_name: "bathroom"
+    motion_sensor: binary_sensor.bathroom_motion
+    target_lights:
+      - light.bathroom
+    delay_off: 3
+    use_schedule: true

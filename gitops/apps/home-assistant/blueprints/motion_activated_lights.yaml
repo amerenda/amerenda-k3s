@@ -1,0 +1,130 @@
+blueprint:
+  name: Motion Activated Lights
+  description: Turn on lights with time-appropriate scenes when motion is detected
+  domain: automation
+  input:
+    room_name:
+      name: Room Name
+      description: Name of the room (e.g., living_room, kitchen, bedroom, bathroom, hallway)
+      selector:
+        text:
+    motion_sensor:
+      name: Motion Sensor
+      description: Entity ID of the motion sensor
+      selector:
+        entity:
+          domain: binary_sensor
+    target_lights:
+      name: Target Lights
+      description: List of lights to control
+      selector:
+        target:
+          entity:
+            domain: light
+    delay_off:
+      name: Turn Off Delay
+      description: How long to wait before turning off lights after no motion (minutes)
+      default: 5
+      selector:
+        number:
+          min: 1
+          max: 60
+          unit_of_measurement: minutes
+    use_schedule:
+      name: Use Schedule
+      description: Whether to use the room's schedule settings for scene selection
+      default: true
+      selector:
+        boolean:
+
+trigger:
+  - platform: state
+    entity_id: !input motion_sensor
+    to: "on"
+
+condition:
+  - condition: state
+    entity_id: input_boolean.{{ room_name }}_schedule_enabled
+    state: "on"
+
+action:
+  - choose:
+      # Schedule 1: Morning (06:00-09:00)
+      - conditions:
+          - condition: time
+            after: "06:00:00"
+            before: "09:00:00"
+        sequence:
+          - service: scene.turn_on
+            target:
+              entity_id: scene.{{ room_name }}_{{ states('input_select.' + room_name + '_schedule_1_scene') }}
+            data:
+              transition: 2
+      
+      # Schedule 2: Day (09:00-17:00)
+      - conditions:
+          - condition: time
+            after: "09:00:00"
+            before: "17:00:00"
+        sequence:
+          - service: scene.turn_on
+            target:
+              entity_id: scene.{{ room_name }}_{{ states('input_select.' + room_name + '_schedule_2_scene') }}
+            data:
+              transition: 2
+      
+      # Schedule 3: Evening (17:00-21:00)
+      - conditions:
+          - condition: time
+            after: "17:00:00"
+            before: "21:00:00"
+        sequence:
+          - service: scene.turn_on
+            target:
+              entity_id: scene.{{ room_name }}_{{ states('input_select.' + room_name + '_schedule_3_scene') }}
+            data:
+              transition: 2
+      
+      # Schedule 4: Night (21:00-23:00)
+      - conditions:
+          - condition: time
+            after: "21:00:00"
+            before: "23:00:00"
+        sequence:
+          - service: scene.turn_on
+            target:
+              entity_id: scene.{{ room_name }}_{{ states('input_select.' + room_name + '_schedule_4_scene') }}
+            data:
+              transition: 2
+      
+      # Schedule 5: Late Night (23:00-06:00)
+      - conditions:
+          - condition: time
+            after: "23:00:00"
+            before: "06:00:00"
+        sequence:
+          - service: scene.turn_on
+            target:
+              entity_id: scene.{{ room_name }}_{{ states('input_select.' + room_name + '_schedule_5_scene') }}
+            data:
+              transition: 2
+      
+      # Default fallback
+      - sequence:
+          - service: scene.turn_on
+            target:
+              entity_id: scene.{{ room_name }}_{{ states('input_select.' + room_name + '_default_scene') }}
+            data:
+              transition: 2
+
+  # Turn off lights after delay
+  - delay: "{{ delay_off }}:00"
+  - condition: state
+    entity_id: !input motion_sensor
+    state: "off"
+  - service: light.turn_off
+    target: !input target_lights
+    data:
+      transition: 5
+
+mode: restart
