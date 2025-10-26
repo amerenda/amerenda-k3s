@@ -16,8 +16,6 @@ spec:
           tokenSecretRef:
             name: do-dns-api-key
             key: api-key
-          propagationTimeout: 300s
-          pollingInterval: 30s
       selector:
         dnsNames:
         - "*.alexmerenda.dev"
