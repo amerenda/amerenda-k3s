@@ -8,7 +8,7 @@ metadata:
     external-dns.alpha.kubernetes.io/hostname: home.amer.home,ha.amer.home,homeassistant.amer.home
     external-dns.alpha.kubernetes.io/ttl: "3600"
 spec:
-  ingressClassName: traefik
+  ingressClassName: infra-traefik
   rules:
   - host: home.amer.home
     http:
