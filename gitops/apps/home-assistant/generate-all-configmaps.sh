@@ -237,12 +237,14 @@ EOF
         has_time: true
         has_date: false
         initial: "${start_time}"
+        restore_value: true
       ${room}_schedule_${j}_end:
         name: "${room^} ${period_name} End"
         icon: ${period_icon}
         has_time: true
         has_date: false
         initial: "${end_time}"
+        restore_value: true
 EOF
         done
     done
@@ -289,6 +291,7 @@ EOF
           - "dimmed"
           - "custom"
         initial: "${scene}"
+        restore_value: true
 EOF
         done
         
@@ -308,6 +311,7 @@ EOF
           - "dimmed"
           - "custom"
         initial: "${default_scene}"
+        restore_value: true
 EOF
     done
 
@@ -542,6 +546,7 @@ EOF
         name: "${room^} ${period_name} Custom Scene"
         icon: ${period_icon}
         initial: ""
+        restore_value: true
 EOF
         done
         
@@ -551,6 +556,7 @@ EOF
         name: "${room^} Default Custom Scene"
         icon: ${icon}
         initial: ""
+        restore_value: true
 EOF
     done
 
