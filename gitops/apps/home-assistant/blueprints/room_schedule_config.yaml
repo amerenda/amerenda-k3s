@@ -44,6 +44,13 @@ blueprint:
             - "nightlight"
             - "read"
             - "dimmed"
+            - "custom"
+    morning_custom_scene:
+      name: "Morning Custom Scene"
+      description: "Custom scene name for morning period (only used if Morning Scene Type is 'custom')"
+      default: ""
+      selector:
+        text:
     day_start:
       name: "Day Start Time"
       description: "Start time for day schedule"
@@ -69,6 +76,13 @@ blueprint:
             - "nightlight"
             - "read"
             - "dimmed"
+            - "custom"
+    day_custom_scene:
+      name: "Day Custom Scene"
+      description: "Custom scene name for day period (only used if Day Scene Type is 'custom')"
+      default: ""
+      selector:
+        text:
     evening_start:
       name: "Evening Start Time"
       description: "Start time for evening schedule"
@@ -94,6 +108,13 @@ blueprint:
             - "nightlight"
             - "read"
             - "dimmed"
+            - "custom"
+    evening_custom_scene:
+      name: "Evening Custom Scene"
+      description: "Custom scene name for evening period (only used if Evening Scene Type is 'custom')"
+      default: ""
+      selector:
+        text:
     night_start:
       name: "Night Start Time"
       description: "Start time for night schedule"
@@ -119,6 +140,13 @@ blueprint:
             - "nightlight"
             - "read"
             - "dimmed"
+            - "custom"
+    night_custom_scene:
+      name: "Night Custom Scene"
+      description: "Custom scene name for night period (only used if Night Scene Type is 'custom')"
+      default: ""
+      selector:
+        text:
     late_night_start:
       name: "Late Night Start Time"
       description: "Start time for late night schedule"
@@ -144,6 +172,13 @@ blueprint:
             - "nightlight"
             - "read"
             - "dimmed"
+            - "custom"
+    late_night_custom_scene:
+      name: "Late Night Custom Scene"
+      description: "Custom scene name for late night period (only used if Late Night Scene Type is 'custom')"
+      default: ""
+      selector:
+        text:
     default_scene:
       name: "Default Scene Type"
       description: "Default scene type when schedule is disabled"
@@ -157,6 +192,13 @@ blueprint:
             - "nightlight"
             - "read"
             - "dimmed"
+            - "custom"
+    default_custom_scene:
+      name: "Default Custom Scene"
+      description: "Custom scene name for default (only used if Default Scene Type is 'custom')"
+      default: ""
+      selector:
+        text:
 
 # This blueprint doesn't create an automation, it's used to generate input helpers
 # The actual automation logic is handled by the switch control blueprint
