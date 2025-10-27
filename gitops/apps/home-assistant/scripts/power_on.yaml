@@ -18,19 +18,19 @@ scheduled_light_on:
         default_s4: "22:00:00"
 
         use_custom: >-
-          {{ custom_schedule_enabled is defined and is_state(custom_schedule_enabled, 'on') }}
+          {{ (custom_schedule_enabled is defined) and is_state(custom_schedule_enabled, 'on') }}
 
         s1_str: >-
-          {% set v = states(custom_s1_start) if use_custom else default_s1 %}
+          {% set v = states(custom_s1_start | default('')) if use_custom else default_s1 %}
           {{ default_s1 if v in ['unknown','unavailable','', None] else v }}
         s2_str: >-
-          {% set v = states(custom_s2_start) if use_custom else default_s2 %}
+          {% set v = states(custom_s2_start | default('')) if use_custom else default_s2 %}
           {{ default_s2 if v in ['unknown','unavailable','', None] else v }}
         s3_str: >-
-          {% set v = states(custom_s3_start) if use_custom else default_s3 %}
+          {% set v = states(custom_s3_start | default('')) if use_custom else default_s3 %}
           {{ default_s3 if v in ['unknown','unavailable','', None] else v }}
         s4_str: >-
-          {% set v = states(custom_s4_start) if use_custom else default_s4 %}
+          {% set v = states(custom_s4_start | default('')) if use_custom else default_s4 %}
           {{ default_s4 if v in ['unknown','unavailable','', None] else v }}
 
         now_ts: "{{ as_timestamp(now()) }}"
@@ -45,20 +45,21 @@ scheduled_light_on:
           {% elif now_ts >= s3 and now_ts < s4 %}evening
           {% else %}night{% endif %}
 
-        _override_select: "{{ 'input_select.' ~ room_key ~ '_' ~ slot ~ '_scene' }}"
+        _override_select: "{{ 'input_select.' ~ (room_key | default('')) ~ '_' ~ slot ~ '_scene' }}"
         _override_val: >-
-          {% set val = states(_override_select) %}
+          {% set val = states(_override_select) if room_key | default('') else '' %}
           {{ '' if val in ['unknown','unavailable','', None] else val }}
 
-        default_scene_entity_id: "scene.{{ room_key }}_{{ slot }}"
+        default_scene_entity_id: "scene.{{ room_key | default('') }}_{{ slot }}"
         scene_to_activate: "{{ _override_val if _override_val else default_scene_entity_id }}"
-        scene_exists: "{{ scene_to_activate in (states.scene | map(attribute='entity_id') | list) }}"
+        scene_exists: "{{ scene_to_activate in (states.scene | map(attribute='entity_id') | list) if scene_to_activate else false }}"
 
-        preferred_room_light: "light.{{ room_key }}"
+        preferred_room_light: "light.{{ room_key | default('') }}"
         all_lights: "{{ states.light | map(attribute='entity_id') | list }}"
         dynamic_fallback: >-
+          {% set fb = fallback_lights | default('') %}
           {% if preferred_room_light in all_lights %}{{ preferred_room_light }}
-          {% elif fallback_lights is defined and fallback_lights in all_lights %}{{ fallback_lights }}
+          {% elif fb in all_lights %}{{ fb }}
           {% else %}{{ '' }}{% endif %}
     - choose:
         - conditions: "{{ scene_exists }}"

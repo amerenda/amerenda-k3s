@@ -8,15 +8,15 @@ room_toggle:
       description: Entity or group to control (entity_id, list, or target)
   sequence:
     - variables:
-        # Normalize to a list but keep original ids for targeting
         _ids: >-
-          {% if target_lights is mapping and 'entity_id' in target_lights %}
-            {{ target_lights.entity_id }}
+          {% set tl = target_lights | default('') %}
+          {% if tl is mapping and 'entity_id' in tl %}
+            {{ tl.entity_id }}
           {% else %}
-            {{ target_lights }}
+            {{ tl }}
           {% endif %}
         id_list: >-
-          {% if _ids is string %}
+          {% if _ids is string and _ids != '' %}
             {{ [_ids] }}
           {% elif _ids is sequence and _ids is not string %}
             {{ _ids | list }}
@@ -34,6 +34,5 @@ room_toggle:
       default:
         - service: script.scheduled_light_on
           data:
-            room_key: "{{ room_key }}"
-            # provide usable fallback if scene is missing
+            room_key: "{{ room_key | default('') }}"
             fallback_lights: "{{ id_list[0] if id_list|length>0 else '' }}"
