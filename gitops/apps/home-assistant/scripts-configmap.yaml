@@ -89,45 +89,33 @@ data:
                   data:
                     name: "scheduled_light_on"
                     message: "Scene '{{ scene_to_activate }}' missing; no fallback light entity available"
-  room_toggle.yaml: |
-    room_toggle:
-      alias: Room Toggle (smart)
-      mode: parallel
-      fields:
-        room_key:
-          description: Short name for the room (e.g., living_room)
-        target_lights:
-          description: Entity or group to control (entity_id, list, or target)
-      sequence:
-        - variables:
-            _ids: >-
-              {% set tl = target_lights | default('') %}
-              {% if tl is mapping and 'entity_id' in tl %}
-                {{ tl.entity_id }}
-              {% else %}
-                {{ tl }}
-              {% endif %}
-            id_list: >-
-              {% if _ids is string and _ids != '' %}
-                {{ [_ids] }}
-              {% elif _ids is sequence and _ids is not string %}
-                {{ _ids | list }}
-              {% else %}
-                {{ [] }}
-              {% endif %}
-            expanded: "{{ expand(id_list) }}"
-            any_on: "{{ expanded | selectattr('state','eq','on') | list | count > 0 }}"
-        - choose:
-            - conditions: "{{ any_on }}"
-              sequence:
-                - service: light.turn_off
-                  target:
-                    entity_id: "{{ id_list }}"
-          default:
-            - service: script.scheduled_light_on
-              data:
-                room_key: "{{ room_key | default('') }}"
-                fallback_lights: "{{ id_list[0] if id_list|length>0 else '' }}"
+  room_toggle.yaml: "room_toggle:\n  alias: Room Toggle (smart)\n  mode: parallel\n
+    \ fields:\n    room_key:\n      description: Short name for the room (e.g., living_room)\n
+    \   target_lights:\n      description: Entity or group to control (entity_id,
+    list, or target)\n  sequence:\n    - variables:\n        _ids: >-\n          {%
+    set tl = target_lights | default('') %}\n          {% if tl is mapping and 'entity_id'
+    in tl %}\n            {{ tl.entity_id }}\n          {% else %}\n            {{
+    tl }}\n          {% endif %}\n        id_list: >-\n          {% if _ids is string
+    and _ids != '' %}\n            {{ [_ids] }}\n          {% elif _ids is sequence
+    and _ids is not string %}\n            {{ _ids | list }}\n          {% else %}\n
+    \           {{ [] }}\n          {% endif %}\n        \n        # Check group state
+    directly (for Hue groups that don't expand)\n        group_on: >-\n          {%
+    if id_list | length == 1 %}\n            {{ is_state(id_list[0], 'on') }}\n          {%
+    else %}\n            {{ false }}\n          {% endif %}\n        \n        # Check
+    member entities via expand (for normal groups)\n        expanded: \"{{ expand(id_list)
+    }}\"\n        members_on: \"{{ expanded | selectattr('state','eq','on') | list
+    | count > 0 }}\"\n        \n        # Check member entities via state_attr (for
+    Hue groups)\n        attr_members: >-\n          {% if id_list | length == 1 %}\n
+    \           {{ state_attr(id_list[0], 'entity_id') | default([]) }}\n          {%
+    else %}\n            {{ [] }}\n          {% endif %}\n        attr_members_on:
+    \"{{ expand(attr_members) | selectattr('state','eq','on') | list | count > 0 }}\"\n
+    \       \n        # Any method indicates lights are on\n        any_on: \"{{ group_on
+    or members_on or attr_members_on }}\"\n    - choose:\n        - conditions: \"{{
+    any_on }}\"\n          sequence:\n            - service: light.turn_off\n              target:\n
+    \               entity_id: \"{{ id_list }}\"\n      default:\n        - service:
+    script.scheduled_light_on\n          data:\n            room_key: \"{{ room_key
+    | default('') }}\"\n            fallback_lights: \"{{ id_list[0] if id_list|length>0
+    else '' }}\"\n"
 kind: ConfigMap
 metadata:
   name: homeassistant-scripts
