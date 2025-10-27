@@ -273,15 +273,16 @@ data:
         button_3_brightness_down: true
         button_4_custom: true
         button_4_action: scene_cycle
-        scene_entities:
           - scene.bedroom_nightlight
           - scene.bedroom_relax
           - scene.bedroom_energize
+          - scene.bedroom_concentrate
+          - scene.bedroom_read
         button_1_long_press: true
         button_1_long_action: all_lights_off
         button_4_long_press: true
         button_4_long_action: room_relax_scene
-        room_relax_scene: scene.bedroom_relax
+        room_relax_scene: scene.scene.bedroom_sunset_allure
         brightness_step: 25
         min_brightness: 1
         max_brightness: 255
@@ -401,11 +402,13 @@ data:
           - scene.living_room_nightlight
           - scene.living_room_relax
           - scene.living_room_energize
+          - scene.living_room_concentrate
+          - scene.living_room_read
         button_1_long_press: true
         button_1_long_action: all_lights_off
         button_4_long_press: true
         button_4_long_action: room_relax_scene
-        room_relax_scene: scene.living_room_relax
+        room_relax_scene: scene.home_movie
         brightness_step: 25
         min_brightness: 1
         max_brightness: 255
