@@ -1,6 +1,10 @@
 apiVersion: v1
 data:
   bathroom.yaml: |
+    # Template for input_select helpers per room
+    # Usage:
+    #   jinja2 input_select_template.yaml.j2 -D room=bedroom > input_select/bedroom.yaml
+
     bathroom_morning_scene:
       name: Bathroom Morning scene
       options:
@@ -34,6 +38,10 @@ data:
         - scene.bathroom_morning
       initial: scene.bathroom_night
   bedroom.yaml: |
+    # Template for input_select helpers per room
+    # Usage:
+    #   jinja2 input_select_template.yaml.j2 -D room=bedroom > input_select/bedroom.yaml
+
     bedroom_morning_scene:
       name: Bedroom Morning scene
       options:
@@ -67,6 +75,10 @@ data:
         - scene.bedroom_morning
       initial: scene.bedroom_night
   hallway.yaml: |
+    # Template for input_select helpers per room
+    # Usage:
+    #   jinja2 input_select_template.yaml.j2 -D room=bedroom > input_select/bedroom.yaml
+
     hallway_morning_scene:
       name: Hallway Morning scene
       options:
@@ -100,6 +112,10 @@ data:
         - scene.hallway_morning
       initial: scene.hallway_night
   kitchen.yaml: |
+    # Template for input_select helpers per room
+    # Usage:
+    #   jinja2 input_select_template.yaml.j2 -D room=bedroom > input_select/bedroom.yaml
+
     kitchen_morning_scene:
       name: Kitchen Morning scene
       options:
@@ -133,6 +149,10 @@ data:
         - scene.kitchen_morning
       initial: scene.kitchen_night
   living_room.yaml: |
+    # Template for input_select helpers per room
+    # Usage:
+    #   jinja2 input_select_template.yaml.j2 -D room=bedroom > input_select/bedroom.yaml
+
     living_room_morning_scene:
       name: Living Room Morning scene
       options:

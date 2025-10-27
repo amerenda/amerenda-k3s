@@ -1,24 +1,28 @@
+# Template for input_boolean helpers per room
+# Usage:
+#   jinja2 input_boolean_template.yaml.j2 -D room=bedroom > input_boolean/bedroom.yaml
+
 living_room_custom_schedule:
-  name: Living Room – Use custom schedule
+  name: Living Room - Use custom schedule
 living_room_motion_enabled:
-  name: Living Room – Motion Control Enabled
+  name: Living Room - Motion Control Enabled
 living_room_timer_enabled:
-  name: Living Room – Timer Control Enabled
+  name: Living Room - Timer Control Enabled
 
 enable_living_room_morning:
-  name: Living Room – Timer Morning Enabled
+  name: Living Room - Timer Morning Enabled
 enable_living_room_day:
-  name: Living Room – Timer Day Enabled
+  name: Living Room - Timer Day Enabled
 enable_living_room_evening:
-  name: Living Room – Timer Evening Enabled
+  name: Living Room - Timer Evening Enabled
 enable_living_room_night:
-  name: Living Room – Timer Night Enabled
+  name: Living Room - Timer Night Enabled
 
 auto_on_living_room_morning:
-  name: Living Room – Timer Morning Auto-on
+  name: Living Room - Timer Morning Auto-on
 auto_on_living_room_day:
-  name: Living Room – Timer Day Auto-on
+  name: Living Room - Timer Day Auto-on
 auto_on_living_room_evening:
-  name: Living Room – Timer Evening Auto-on
+  name: Living Room - Timer Evening Auto-on
 auto_on_living_room_night:
-  name: Living Room – Timer Night Auto-on
+  name: Living Room - Timer Night Auto-on

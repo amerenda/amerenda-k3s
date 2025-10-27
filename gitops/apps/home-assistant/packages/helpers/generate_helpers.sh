@@ -38,3 +38,40 @@ echo "  input_boolean/ - Boolean switches and toggles"
 echo "  input_datetime/ - Time pickers for schedule windows"
 echo "  input_select/ - Scene selection dropdowns"
 echo "  input_number/ - Brightness and numeric controls"
+
+echo ""
+echo "Generating ConfigMaps..."
+
+# Generate ConfigMaps for each domain
+CONFIGMAP_DIR="$SCRIPT_DIR/../.."
+
+echo "Generating input-boolean ConfigMap..."
+kubectl create configmap homeassistant-helpers-input-boolean \
+  --from-file="$OUTPUT_DIR/input_boolean" \
+  --dry-run=client \
+  -o yaml > "$CONFIGMAP_DIR/helpers-input-boolean-configmap.yaml"
+
+echo "Generating input-datetime ConfigMap..."
+kubectl create configmap homeassistant-helpers-input-datetime \
+  --from-file="$OUTPUT_DIR/input_datetime" \
+  --dry-run=client \
+  -o yaml > "$CONFIGMAP_DIR/helpers-input-datetime-configmap.yaml"
+
+echo "Generating input-select ConfigMap..."
+kubectl create configmap homeassistant-helpers-input-select \
+  --from-file="$OUTPUT_DIR/input_select" \
+  --dry-run=client \
+  -o yaml > "$CONFIGMAP_DIR/helpers-input-select-configmap.yaml"
+
+echo "Generating input-number ConfigMap..."
+kubectl create configmap homeassistant-helpers-input-number \
+  --from-file="$OUTPUT_DIR/input_number" \
+  --dry-run=client \
+  -o yaml > "$CONFIGMAP_DIR/helpers-input-number-configmap.yaml"
+
+echo ""
+echo "All ConfigMaps generated:"
+echo "  helpers-input-boolean-configmap.yaml"
+echo "  helpers-input-datetime-configmap.yaml"
+echo "  helpers-input-select-configmap.yaml"
+echo "  helpers-input-number-configmap.yaml"

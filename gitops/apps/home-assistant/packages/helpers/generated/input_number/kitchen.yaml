@@ -1,3 +1,7 @@
+# Template for input_number helpers per room
+# Usage:
+#   jinja2 input_number_template.yaml.j2 -D room=bedroom > input_number/bedroom.yaml
+
 kitchen_brightness_step_pct:
   name: Kitchen Brightness step (%)
   min: 1

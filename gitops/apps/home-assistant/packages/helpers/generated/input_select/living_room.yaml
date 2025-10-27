@@ -1,3 +1,7 @@
+# Template for input_select helpers per room
+# Usage:
+#   jinja2 input_select_template.yaml.j2 -D room=bedroom > input_select/bedroom.yaml
+
 living_room_morning_scene:
   name: Living Room Morning scene
   options:

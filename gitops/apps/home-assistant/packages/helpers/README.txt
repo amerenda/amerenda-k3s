@@ -6,7 +6,7 @@ Usage:
 1) Install Jinja2 CLI:
    pip install jinja2-cli
 
-2) Run the script:
+2) Generate helper files and ConfigMaps:
    bash generate_helpers.sh
 
 Output:
@@ -14,6 +14,10 @@ Output:
 - ./generated/input_datetime/<room>.yaml
 - ./generated/input_select/<room>.yaml
 - ./generated/input_number/<room>.yaml
+- ../../helpers-input-boolean-configmap.yaml
+- ../../helpers-input-datetime-configmap.yaml
+- ../../helpers-input-select-configmap.yaml
+- ../../helpers-input-number-configmap.yaml
 
 Each domain includes:
 - input_boolean: custom_schedule, motion_enabled, timer_enabled, per-window enabled/auto_on

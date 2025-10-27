@@ -1,3 +1,7 @@
+# Template for input_datetime helpers per room
+# Usage:
+#   jinja2 input_datetime_template.yaml.j2 -D room=bedroom > input_datetime/bedroom.yaml
+
 bathroom_s1_start:
   name: Bathroom Morning start
   has_time: true
