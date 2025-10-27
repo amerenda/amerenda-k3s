@@ -47,11 +47,17 @@ views:
                   title: Living Room Scene Settings
                   entities:
                     - entity: input_select.living_room_schedule_1_scene
+                    - entity: input_text.living_room_schedule_1_custom_scene
                     - entity: input_select.living_room_schedule_2_scene
+                    - entity: input_text.living_room_schedule_2_custom_scene
                     - entity: input_select.living_room_schedule_3_scene
+                    - entity: input_text.living_room_schedule_3_custom_scene
                     - entity: input_select.living_room_schedule_4_scene
+                    - entity: input_text.living_room_schedule_4_custom_scene
                     - entity: input_select.living_room_schedule_5_scene
+                    - entity: input_text.living_room_schedule_5_custom_scene
                     - entity: input_select.living_room_default_scene
+                    - entity: input_text.living_room_default_custom_scene
                 - type: entities
                   title: Living Room Switch Configuration
                   entities:
@@ -96,11 +102,17 @@ views:
                   title: Kitchen Scene Settings
                   entities:
                     - entity: input_select.kitchen_schedule_1_scene
+                    - entity: input_text.kitchen_schedule_1_custom_scene
                     - entity: input_select.kitchen_schedule_2_scene
+                    - entity: input_text.kitchen_schedule_2_custom_scene
                     - entity: input_select.kitchen_schedule_3_scene
+                    - entity: input_text.kitchen_schedule_3_custom_scene
                     - entity: input_select.kitchen_schedule_4_scene
+                    - entity: input_text.kitchen_schedule_4_custom_scene
                     - entity: input_select.kitchen_schedule_5_scene
+                    - entity: input_text.kitchen_schedule_5_custom_scene
                     - entity: input_select.kitchen_default_scene
+                    - entity: input_text.kitchen_default_custom_scene
                 - type: entities
                   title: Kitchen Switch Configuration
                   entities:
@@ -145,11 +157,17 @@ views:
                   title: Bedroom Scene Settings
                   entities:
                     - entity: input_select.bedroom_schedule_1_scene
+                    - entity: input_text.bedroom_schedule_1_custom_scene
                     - entity: input_select.bedroom_schedule_2_scene
+                    - entity: input_text.bedroom_schedule_2_custom_scene
                     - entity: input_select.bedroom_schedule_3_scene
+                    - entity: input_text.bedroom_schedule_3_custom_scene
                     - entity: input_select.bedroom_schedule_4_scene
+                    - entity: input_text.bedroom_schedule_4_custom_scene
                     - entity: input_select.bedroom_schedule_5_scene
+                    - entity: input_text.bedroom_schedule_5_custom_scene
                     - entity: input_select.bedroom_default_scene
+                    - entity: input_text.bedroom_default_custom_scene
                 - type: entities
                   title: Bedroom Switch Configuration
                   entities:
@@ -194,11 +212,17 @@ views:
                   title: Bathroom Scene Settings
                   entities:
                     - entity: input_select.bathroom_schedule_1_scene
+                    - entity: input_text.bathroom_schedule_1_custom_scene
                     - entity: input_select.bathroom_schedule_2_scene
+                    - entity: input_text.bathroom_schedule_2_custom_scene
                     - entity: input_select.bathroom_schedule_3_scene
+                    - entity: input_text.bathroom_schedule_3_custom_scene
                     - entity: input_select.bathroom_schedule_4_scene
+                    - entity: input_text.bathroom_schedule_4_custom_scene
                     - entity: input_select.bathroom_schedule_5_scene
+                    - entity: input_text.bathroom_schedule_5_custom_scene
                     - entity: input_select.bathroom_default_scene
+                    - entity: input_text.bathroom_default_custom_scene
                 - type: entities
                   title: Bathroom Switch Configuration
                   entities:
@@ -243,11 +267,17 @@ views:
                   title: Hallway Scene Settings
                   entities:
                     - entity: input_select.hallway_schedule_1_scene
+                    - entity: input_text.hallway_schedule_1_custom_scene
                     - entity: input_select.hallway_schedule_2_scene
+                    - entity: input_text.hallway_schedule_2_custom_scene
                     - entity: input_select.hallway_schedule_3_scene
+                    - entity: input_text.hallway_schedule_3_custom_scene
                     - entity: input_select.hallway_schedule_4_scene
+                    - entity: input_text.hallway_schedule_4_custom_scene
                     - entity: input_select.hallway_schedule_5_scene
+                    - entity: input_text.hallway_schedule_5_custom_scene
                     - entity: input_select.hallway_default_scene
+                    - entity: input_text.hallway_default_custom_scene
                 - type: entities
                   title: Hallway Main Switch Configuration
                   entities:

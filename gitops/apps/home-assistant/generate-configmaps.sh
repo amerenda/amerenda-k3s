@@ -431,8 +431,13 @@ EOF
             for option in "${scene_options[@]}"; do
                 echo "          - \"${option}\"" >> "$output_file"
             done
+            echo "          - \"custom\"" >> "$output_file"
             cat >> "$output_file" << EOF
         initial: "${scene}"
+      ${room}_schedule_${j}_custom_scene:
+        name: "${room^} ${period_name} Custom Scene"
+        icon: ${period_icon}
+        initial: ""
 EOF
         done
         
@@ -446,8 +451,13 @@ EOF
         for option in "${scene_options[@]}"; do
             echo "          - \"${option}\"" >> "$output_file"
         done
+        echo "          - \"custom\"" >> "$output_file"
         cat >> "$output_file" << EOF
         initial: "${default_scene}"
+      ${room}_default_custom_scene:
+        name: "${room^} Default Custom Scene"
+        icon: ${icon}
+        initial: ""
 EOF
         
         # Generate switch configuration entities (no individual room switch selectors - using global one)
