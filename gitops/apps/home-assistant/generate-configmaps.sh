@@ -403,6 +403,12 @@ EOF
     local default_scene="relax"
     local scene_options=("energize" "concentrate" "relax" "nightlight" "read" "dimmed")
     
+    # Add input_text section header
+    cat >> "$output_file" << EOF
+
+input_text:
+EOF
+    
     # Define switches per room (room_name: switch1,switch2,...)
     declare -A room_switches
     room_switches["living_room"]="main_switch"
@@ -434,10 +440,19 @@ EOF
             echo "          - \"custom\"" >> "$output_file"
             cat >> "$output_file" << EOF
         initial: "${scene}"
-      ${room}_schedule_${j}_custom_scene:
-        name: "${room^} ${period_name} Custom Scene"
-        icon: ${period_icon}
-        initial: ""
+EOF
+        done
+        
+        # Generate custom scene text inputs
+        for j in {1..5}; do
+            local period_name="${period_names[$((j-1))]}"
+            local period_icon="${period_icons[$((j-1))]}"
+            
+            cat >> "$output_file" << EOF
+  ${room}_schedule_${j}_custom_scene:
+    name: "${room^} ${period_name} Custom Scene"
+    icon: ${period_icon}
+    initial: ""
 EOF
         done
         
@@ -454,10 +469,14 @@ EOF
         echo "          - \"custom\"" >> "$output_file"
         cat >> "$output_file" << EOF
         initial: "${default_scene}"
-      ${room}_default_custom_scene:
-        name: "${room^} Default Custom Scene"
-        icon: ${icon}
-        initial: ""
+EOF
+        
+        # Generate default custom scene text input
+        cat >> "$output_file" << EOF
+  ${room}_default_custom_scene:
+    name: "${room^} Default Custom Scene"
+    icon: ${icon}
+    initial: ""
 EOF
         
         # Generate switch configuration entities (no individual room switch selectors - using global one)

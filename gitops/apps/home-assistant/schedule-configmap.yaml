@@ -354,6 +354,8 @@ data:
           - "hallway"
         initial: "living_room"
       
+
+input_text:
       living_room_schedule_1_scene:
         name: "Living_room Morning Scene"
         icon: mdi:weather-sunrise
@@ -366,10 +368,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "energize"
-      living_room_schedule_1_custom_scene:
-        name: "Living_room Morning Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
       living_room_schedule_2_scene:
         name: "Living_room Day Scene"
         icon: mdi:weather-sunny
@@ -382,10 +380,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "concentrate"
-      living_room_schedule_2_custom_scene:
-        name: "Living_room Day Custom Scene"
-        icon: mdi:weather-sunny
-        initial: ""
       living_room_schedule_3_scene:
         name: "Living_room Evening Scene"
         icon: mdi:weather-sunset
@@ -398,10 +392,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "relax"
-      living_room_schedule_3_custom_scene:
-        name: "Living_room Evening Custom Scene"
-        icon: mdi:weather-sunset
-        initial: ""
       living_room_schedule_4_scene:
         name: "Living_room Night Scene"
         icon: mdi:weather-night
@@ -414,10 +404,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "nightlight"
-      living_room_schedule_4_custom_scene:
-        name: "Living_room Night Custom Scene"
-        icon: mdi:weather-night
-        initial: ""
       living_room_schedule_5_scene:
         name: "Living_room Late Night Scene"
         icon: mdi:weather-sunrise
@@ -430,10 +416,26 @@ data:
           - "dimmed"
           - "custom"
         initial: "nightlight"
-      living_room_schedule_5_custom_scene:
-        name: "Living_room Late Night Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
+  living_room_schedule_1_custom_scene:
+    name: "Living_room Morning Custom Scene"
+    icon: mdi:weather-sunrise
+    initial: ""
+  living_room_schedule_2_custom_scene:
+    name: "Living_room Day Custom Scene"
+    icon: mdi:weather-sunny
+    initial: ""
+  living_room_schedule_3_custom_scene:
+    name: "Living_room Evening Custom Scene"
+    icon: mdi:weather-sunset
+    initial: ""
+  living_room_schedule_4_custom_scene:
+    name: "Living_room Night Custom Scene"
+    icon: mdi:weather-night
+    initial: ""
+  living_room_schedule_5_custom_scene:
+    name: "Living_room Late Night Custom Scene"
+    icon: mdi:weather-sunrise
+    initial: ""
       living_room_default_scene:
         name: "Living_room Default Scene"
         icon: mdi:sofa
@@ -446,10 +448,10 @@ data:
           - "dimmed"
           - "custom"
         initial: "relax"
-      living_room_default_custom_scene:
-        name: "Living_room Default Custom Scene"
-        icon: mdi:sofa
-        initial: ""
+  living_room_default_custom_scene:
+    name: "Living_room Default Custom Scene"
+    icon: mdi:sofa
+    initial: ""
       living_room_switch_brightness_step:
         name: "Living_room Brightness Step"
         icon: mdi:brightness-6
@@ -565,10 +567,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "energize"
-      kitchen_schedule_1_custom_scene:
-        name: "Kitchen Morning Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
       kitchen_schedule_2_scene:
         name: "Kitchen Day Scene"
         icon: mdi:weather-sunny
@@ -581,10 +579,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "concentrate"
-      kitchen_schedule_2_custom_scene:
-        name: "Kitchen Day Custom Scene"
-        icon: mdi:weather-sunny
-        initial: ""
       kitchen_schedule_3_scene:
         name: "Kitchen Evening Scene"
         icon: mdi:weather-sunset
@@ -597,10 +591,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "relax"
-      kitchen_schedule_3_custom_scene:
-        name: "Kitchen Evening Custom Scene"
-        icon: mdi:weather-sunset
-        initial: ""
       kitchen_schedule_4_scene:
         name: "Kitchen Night Scene"
         icon: mdi:weather-night
@@ -613,10 +603,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "nightlight"
-      kitchen_schedule_4_custom_scene:
-        name: "Kitchen Night Custom Scene"
-        icon: mdi:weather-night
-        initial: ""
       kitchen_schedule_5_scene:
         name: "Kitchen Late Night Scene"
         icon: mdi:weather-sunrise
@@ -629,10 +615,26 @@ data:
           - "dimmed"
           - "custom"
         initial: "nightlight"
-      kitchen_schedule_5_custom_scene:
-        name: "Kitchen Late Night Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
+  kitchen_schedule_1_custom_scene:
+    name: "Kitchen Morning Custom Scene"
+    icon: mdi:weather-sunrise
+    initial: ""
+  kitchen_schedule_2_custom_scene:
+    name: "Kitchen Day Custom Scene"
+    icon: mdi:weather-sunny
+    initial: ""
+  kitchen_schedule_3_custom_scene:
+    name: "Kitchen Evening Custom Scene"
+    icon: mdi:weather-sunset
+    initial: ""
+  kitchen_schedule_4_custom_scene:
+    name: "Kitchen Night Custom Scene"
+    icon: mdi:weather-night
+    initial: ""
+  kitchen_schedule_5_custom_scene:
+    name: "Kitchen Late Night Custom Scene"
+    icon: mdi:weather-sunrise
+    initial: ""
       kitchen_default_scene:
         name: "Kitchen Default Scene"
         icon: mdi:chef-hat
@@ -645,10 +647,10 @@ data:
           - "dimmed"
           - "custom"
         initial: "relax"
-      kitchen_default_custom_scene:
-        name: "Kitchen Default Custom Scene"
-        icon: mdi:chef-hat
-        initial: ""
+  kitchen_default_custom_scene:
+    name: "Kitchen Default Custom Scene"
+    icon: mdi:chef-hat
+    initial: ""
       kitchen_switch_brightness_step:
         name: "Kitchen Brightness Step"
         icon: mdi:brightness-6
@@ -764,10 +766,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "energize"
-      bedroom_schedule_1_custom_scene:
-        name: "Bedroom Morning Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
       bedroom_schedule_2_scene:
         name: "Bedroom Day Scene"
         icon: mdi:weather-sunny
@@ -780,10 +778,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "concentrate"
-      bedroom_schedule_2_custom_scene:
-        name: "Bedroom Day Custom Scene"
-        icon: mdi:weather-sunny
-        initial: ""
       bedroom_schedule_3_scene:
         name: "Bedroom Evening Scene"
         icon: mdi:weather-sunset
@@ -796,10 +790,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "relax"
-      bedroom_schedule_3_custom_scene:
-        name: "Bedroom Evening Custom Scene"
-        icon: mdi:weather-sunset
-        initial: ""
       bedroom_schedule_4_scene:
         name: "Bedroom Night Scene"
         icon: mdi:weather-night
@@ -812,10 +802,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "nightlight"
-      bedroom_schedule_4_custom_scene:
-        name: "Bedroom Night Custom Scene"
-        icon: mdi:weather-night
-        initial: ""
       bedroom_schedule_5_scene:
         name: "Bedroom Late Night Scene"
         icon: mdi:weather-sunrise
@@ -828,10 +814,26 @@ data:
           - "dimmed"
           - "custom"
         initial: "nightlight"
-      bedroom_schedule_5_custom_scene:
-        name: "Bedroom Late Night Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
+  bedroom_schedule_1_custom_scene:
+    name: "Bedroom Morning Custom Scene"
+    icon: mdi:weather-sunrise
+    initial: ""
+  bedroom_schedule_2_custom_scene:
+    name: "Bedroom Day Custom Scene"
+    icon: mdi:weather-sunny
+    initial: ""
+  bedroom_schedule_3_custom_scene:
+    name: "Bedroom Evening Custom Scene"
+    icon: mdi:weather-sunset
+    initial: ""
+  bedroom_schedule_4_custom_scene:
+    name: "Bedroom Night Custom Scene"
+    icon: mdi:weather-night
+    initial: ""
+  bedroom_schedule_5_custom_scene:
+    name: "Bedroom Late Night Custom Scene"
+    icon: mdi:weather-sunrise
+    initial: ""
       bedroom_default_scene:
         name: "Bedroom Default Scene"
         icon: mdi:bed
@@ -844,10 +846,10 @@ data:
           - "dimmed"
           - "custom"
         initial: "relax"
-      bedroom_default_custom_scene:
-        name: "Bedroom Default Custom Scene"
-        icon: mdi:bed
-        initial: ""
+  bedroom_default_custom_scene:
+    name: "Bedroom Default Custom Scene"
+    icon: mdi:bed
+    initial: ""
       bedroom_switch_brightness_step:
         name: "Bedroom Brightness Step"
         icon: mdi:brightness-6
@@ -963,10 +965,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "energize"
-      bathroom_schedule_1_custom_scene:
-        name: "Bathroom Morning Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
       bathroom_schedule_2_scene:
         name: "Bathroom Day Scene"
         icon: mdi:weather-sunny
@@ -979,10 +977,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "concentrate"
-      bathroom_schedule_2_custom_scene:
-        name: "Bathroom Day Custom Scene"
-        icon: mdi:weather-sunny
-        initial: ""
       bathroom_schedule_3_scene:
         name: "Bathroom Evening Scene"
         icon: mdi:weather-sunset
@@ -995,10 +989,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "relax"
-      bathroom_schedule_3_custom_scene:
-        name: "Bathroom Evening Custom Scene"
-        icon: mdi:weather-sunset
-        initial: ""
       bathroom_schedule_4_scene:
         name: "Bathroom Night Scene"
         icon: mdi:weather-night
@@ -1011,10 +1001,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "nightlight"
-      bathroom_schedule_4_custom_scene:
-        name: "Bathroom Night Custom Scene"
-        icon: mdi:weather-night
-        initial: ""
       bathroom_schedule_5_scene:
         name: "Bathroom Late Night Scene"
         icon: mdi:weather-sunrise
@@ -1027,10 +1013,26 @@ data:
           - "dimmed"
           - "custom"
         initial: "nightlight"
-      bathroom_schedule_5_custom_scene:
-        name: "Bathroom Late Night Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
+  bathroom_schedule_1_custom_scene:
+    name: "Bathroom Morning Custom Scene"
+    icon: mdi:weather-sunrise
+    initial: ""
+  bathroom_schedule_2_custom_scene:
+    name: "Bathroom Day Custom Scene"
+    icon: mdi:weather-sunny
+    initial: ""
+  bathroom_schedule_3_custom_scene:
+    name: "Bathroom Evening Custom Scene"
+    icon: mdi:weather-sunset
+    initial: ""
+  bathroom_schedule_4_custom_scene:
+    name: "Bathroom Night Custom Scene"
+    icon: mdi:weather-night
+    initial: ""
+  bathroom_schedule_5_custom_scene:
+    name: "Bathroom Late Night Custom Scene"
+    icon: mdi:weather-sunrise
+    initial: ""
       bathroom_default_scene:
         name: "Bathroom Default Scene"
         icon: mdi:shower
@@ -1043,10 +1045,10 @@ data:
           - "dimmed"
           - "custom"
         initial: "relax"
-      bathroom_default_custom_scene:
-        name: "Bathroom Default Custom Scene"
-        icon: mdi:shower
-        initial: ""
+  bathroom_default_custom_scene:
+    name: "Bathroom Default Custom Scene"
+    icon: mdi:shower
+    initial: ""
       bathroom_switch_brightness_step:
         name: "Bathroom Brightness Step"
         icon: mdi:brightness-6
@@ -1162,10 +1164,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "energize"
-      hallway_schedule_1_custom_scene:
-        name: "Hallway Morning Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
       hallway_schedule_2_scene:
         name: "Hallway Day Scene"
         icon: mdi:weather-sunny
@@ -1178,10 +1176,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "concentrate"
-      hallway_schedule_2_custom_scene:
-        name: "Hallway Day Custom Scene"
-        icon: mdi:weather-sunny
-        initial: ""
       hallway_schedule_3_scene:
         name: "Hallway Evening Scene"
         icon: mdi:weather-sunset
@@ -1194,10 +1188,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "relax"
-      hallway_schedule_3_custom_scene:
-        name: "Hallway Evening Custom Scene"
-        icon: mdi:weather-sunset
-        initial: ""
       hallway_schedule_4_scene:
         name: "Hallway Night Scene"
         icon: mdi:weather-night
@@ -1210,10 +1200,6 @@ data:
           - "dimmed"
           - "custom"
         initial: "nightlight"
-      hallway_schedule_4_custom_scene:
-        name: "Hallway Night Custom Scene"
-        icon: mdi:weather-night
-        initial: ""
       hallway_schedule_5_scene:
         name: "Hallway Late Night Scene"
         icon: mdi:weather-sunrise
@@ -1226,10 +1212,26 @@ data:
           - "dimmed"
           - "custom"
         initial: "nightlight"
-      hallway_schedule_5_custom_scene:
-        name: "Hallway Late Night Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
+  hallway_schedule_1_custom_scene:
+    name: "Hallway Morning Custom Scene"
+    icon: mdi:weather-sunrise
+    initial: ""
+  hallway_schedule_2_custom_scene:
+    name: "Hallway Day Custom Scene"
+    icon: mdi:weather-sunny
+    initial: ""
+  hallway_schedule_3_custom_scene:
+    name: "Hallway Evening Custom Scene"
+    icon: mdi:weather-sunset
+    initial: ""
+  hallway_schedule_4_custom_scene:
+    name: "Hallway Night Custom Scene"
+    icon: mdi:weather-night
+    initial: ""
+  hallway_schedule_5_custom_scene:
+    name: "Hallway Late Night Custom Scene"
+    icon: mdi:weather-sunrise
+    initial: ""
       hallway_default_scene:
         name: "Hallway Default Scene"
         icon: mdi:corridor
@@ -1242,10 +1244,10 @@ data:
           - "dimmed"
           - "custom"
         initial: "relax"
-      hallway_default_custom_scene:
-        name: "Hallway Default Custom Scene"
-        icon: mdi:corridor
-        initial: ""
+  hallway_default_custom_scene:
+    name: "Hallway Default Custom Scene"
+    icon: mdi:corridor
+    initial: ""
       hallway_switch_brightness_step:
         name: "Hallway Brightness Step"
         icon: mdi:brightness-6
