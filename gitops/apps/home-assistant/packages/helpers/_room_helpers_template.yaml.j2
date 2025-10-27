@@ -98,3 +98,32 @@ input_number:
     step: 1
     unit_of_measurement: "%"
     initial: 100
+
+  {{ room }}_morning_auto_off:
+    name: {{ room|replace('_',' ')|title }} Morning auto-off (min)
+    min: 1
+    max: 60
+    step: 1
+    unit_of_measurement: "min"
+    initial: 5
+  {{ room }}_day_auto_off:
+    name: {{ room|replace('_',' ')|title }} Day auto-off (min)
+    min: 1
+    max: 60
+    step: 1
+    unit_of_measurement: "min"
+    initial: 10
+  {{ room }}_evening_auto_off:
+    name: {{ room|replace('_',' ')|title }} Evening auto-off (min)
+    min: 1
+    max: 60
+    step: 1
+    unit_of_measurement: "min"
+    initial: 15
+  {{ room }}_night_auto_off:
+    name: {{ room|replace('_',' ')|title }} Night auto-off (min)
+    min: 1
+    max: 60
+    step: 1
+    unit_of_measurement: "min"
+    initial: 30

@@ -23,3 +23,32 @@ hallway_max_brightness_pct:
   step: 1
   unit_of_measurement: "%"
   initial: 100
+
+hallway_morning_auto_off:
+  name: Hallway Morning auto-off (min)
+  min: 1
+  max: 60
+  step: 1
+  unit_of_measurement: "min"
+  initial: 5
+hallway_day_auto_off:
+  name: Hallway Day auto-off (min)
+  min: 1
+  max: 60
+  step: 1
+  unit_of_measurement: "min"
+  initial: 10
+hallway_evening_auto_off:
+  name: Hallway Evening auto-off (min)
+  min: 1
+  max: 60
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+hallway_night_auto_off:
+  name: Hallway Night auto-off (min)
+  min: 1
+  max: 60
+  step: 1
+  unit_of_measurement: "min"
+  initial: 30

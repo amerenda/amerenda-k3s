@@ -23,3 +23,32 @@ kitchen_max_brightness_pct:
   step: 1
   unit_of_measurement: "%"
   initial: 100
+
+kitchen_morning_auto_off:
+  name: Kitchen Morning auto-off (min)
+  min: 1
+  max: 60
+  step: 1
+  unit_of_measurement: "min"
+  initial: 5
+kitchen_day_auto_off:
+  name: Kitchen Day auto-off (min)
+  min: 1
+  max: 60
+  step: 1
+  unit_of_measurement: "min"
+  initial: 10
+kitchen_evening_auto_off:
+  name: Kitchen Evening auto-off (min)
+  min: 1
+  max: 60
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+kitchen_night_auto_off:
+  name: Kitchen Night auto-off (min)
+  min: 1
+  max: 60
+  step: 1
+  unit_of_measurement: "min"
+  initial: 30

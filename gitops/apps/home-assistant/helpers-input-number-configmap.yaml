@@ -26,6 +26,35 @@ data:
       step: 1
       unit_of_measurement: "%"
       initial: 100
+
+    bathroom_morning_auto_off:
+      name: Bathroom Morning auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 5
+    bathroom_day_auto_off:
+      name: Bathroom Day auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 10
+    bathroom_evening_auto_off:
+      name: Bathroom Evening auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    bathroom_night_auto_off:
+      name: Bathroom Night auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 30
   bedroom.yaml: |
     # Template for input_number helpers per room
     # Usage:
@@ -52,6 +81,35 @@ data:
       step: 1
       unit_of_measurement: "%"
       initial: 100
+
+    bedroom_morning_auto_off:
+      name: Bedroom Morning auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 5
+    bedroom_day_auto_off:
+      name: Bedroom Day auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 10
+    bedroom_evening_auto_off:
+      name: Bedroom Evening auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    bedroom_night_auto_off:
+      name: Bedroom Night auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 30
   hallway.yaml: |
     # Template for input_number helpers per room
     # Usage:
@@ -78,6 +136,35 @@ data:
       step: 1
       unit_of_measurement: "%"
       initial: 100
+
+    hallway_morning_auto_off:
+      name: Hallway Morning auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 5
+    hallway_day_auto_off:
+      name: Hallway Day auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 10
+    hallway_evening_auto_off:
+      name: Hallway Evening auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    hallway_night_auto_off:
+      name: Hallway Night auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 30
   kitchen.yaml: |
     # Template for input_number helpers per room
     # Usage:
@@ -104,6 +191,35 @@ data:
       step: 1
       unit_of_measurement: "%"
       initial: 100
+
+    kitchen_morning_auto_off:
+      name: Kitchen Morning auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 5
+    kitchen_day_auto_off:
+      name: Kitchen Day auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 10
+    kitchen_evening_auto_off:
+      name: Kitchen Evening auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    kitchen_night_auto_off:
+      name: Kitchen Night auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 30
   living_room.yaml: |
     # Template for input_number helpers per room
     # Usage:
@@ -130,6 +246,35 @@ data:
       step: 1
       unit_of_measurement: "%"
       initial: 100
+
+    living_room_morning_auto_off:
+      name: Living Room Morning auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 5
+    living_room_day_auto_off:
+      name: Living Room Day auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 10
+    living_room_evening_auto_off:
+      name: Living Room Evening auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    living_room_night_auto_off:
+      name: Living Room Night auto-off (min)
+      min: 1
+      max: 60
+      step: 1
+      unit_of_measurement: "min"
+      initial: 30
 kind: ConfigMap
 metadata:
   name: homeassistant-helpers-input-number

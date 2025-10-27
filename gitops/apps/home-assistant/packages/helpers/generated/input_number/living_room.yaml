@@ -23,3 +23,32 @@ living_room_max_brightness_pct:
   step: 1
   unit_of_measurement: "%"
   initial: 100
+
+living_room_morning_auto_off:
+  name: Living Room Morning auto-off (min)
+  min: 1
+  max: 60
+  step: 1
+  unit_of_measurement: "min"
+  initial: 5
+living_room_day_auto_off:
+  name: Living Room Day auto-off (min)
+  min: 1
+  max: 60
+  step: 1
+  unit_of_measurement: "min"
+  initial: 10
+living_room_evening_auto_off:
+  name: Living Room Evening auto-off (min)
+  min: 1
+  max: 60
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+living_room_night_auto_off:
+  name: Living Room Night auto-off (min)
+  min: 1
+  max: 60
+  step: 1
+  unit_of_measurement: "min"
+  initial: 30

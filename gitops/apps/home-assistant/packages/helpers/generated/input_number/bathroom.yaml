@@ -23,3 +23,32 @@ bathroom_max_brightness_pct:
   step: 1
   unit_of_measurement: "%"
   initial: 100
+
+bathroom_morning_auto_off:
+  name: Bathroom Morning auto-off (min)
+  min: 1
+  max: 60
+  step: 1
+  unit_of_measurement: "min"
+  initial: 5
+bathroom_day_auto_off:
+  name: Bathroom Day auto-off (min)
+  min: 1
+  max: 60
+  step: 1
+  unit_of_measurement: "min"
+  initial: 10
+bathroom_evening_auto_off:
+  name: Bathroom Evening auto-off (min)
+  min: 1
+  max: 60
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+bathroom_night_auto_off:
+  name: Bathroom Night auto-off (min)
+  min: 1
+  max: 60
+  step: 1
+  unit_of_measurement: "min"
+  initial: 30
