@@ -3,36 +3,37 @@ room_toggle:
   mode: parallel
   fields:
     room_key:
-      description: Short name used in scene IDs (e.g., 'living_room')
-      example: living_room
+      description: e.g., living_room
     target_lights:
-      description: Entity or group of lights to control
-      example: light.living_room_lights
+      description: Light or group to control (entity_id, list, or target)
   sequence:
     - variables:
-        # Accept string, list, or target dict; normalize to list of entity_ids
-        _entities: >-
+        # Normalize to a flat list of entity_ids without losing the original group
+        _ids: >-
           {% if target_lights is mapping and 'entity_id' in target_lights %}
             {{ target_lights.entity_id }}
           {% else %}
             {{ target_lights }}
           {% endif %}
-        lights: >-
-          {% if _entities is string %}
-            {{ expand([_entities]) }}
-          {% elif _entities is sequence %}
-            {{ expand(_entities) }}
-          {% else %}
-            {{ expand([]) }}
+        _list: >-
+          {% if _ids is string %}{{ [_ids] }}
+          {% elif _ids is sequence %}{{ _ids }}
+          {% else %}{{ [] }}
           {% endif %}
-        any_on: "{{ lights | selectattr('state','eq','on') | list | count > 0 }}"
+        # Expanded states (for member lights) plus originals (for group state)
+        _expanded: "{{ expand(_list) }}"
+        _expanded_ids: "{{ _expanded | map(attribute='entity_id') | list }}"
+        _all_ids: "{{ (_list + _expanded_ids) | unique | list }}"
+        any_on: >-
+          {{ expand(_all_ids) | selectattr('state','eq','on') | list | count > 0 }}
     - choose:
         - conditions: "{{ any_on }}"
           sequence:
             - service: light.turn_off
               target:
-                entity_id: "{{ lights | map(attribute='entity_id') | list }}"
+                entity_id: "{{ _all_ids }}"
       default:
         - service: script.scheduled_light_on
           data:
             room_key: "{{ room_key }}"
+            fallback_lights: "{{ _list | first if _list|length>0 else '' }}"

@@ -2,20 +2,15 @@ scheduled_light_on:
   alias: Scheduled Light On (safe)
   mode: restart
   fields:
-    room_key:
-      description: e.g. living_room
-      example: living_room
-    custom_schedule_enabled:
-      required: false
-    custom_s1_start:
-      required: false
-    custom_s2_start:
-      required: false
-    custom_s3_start:
-      required: false
-    custom_s4_start:
-      required: false
-    transition:
+    room_key: {}
+    custom_schedule_enabled: { required: false }
+    custom_s1_start: { required: false }
+    custom_s2_start: { required: false }
+    custom_s3_start: { required: false }
+    custom_s4_start: { required: false }
+    transition: { required: false }
+    fallback_lights:
+      description: Optional light/group to turn on if scene missing
       required: false
   sequence:
     - variables:
@@ -27,7 +22,6 @@ scheduled_light_on:
         use_custom: >-
           {{ custom_schedule_enabled is defined and is_state(custom_schedule_enabled, 'on') }}
 
-        # Use states() *safely*; guard unknown/unavailable/empty
         s1_str: >-
           {% set v = states(custom_s1_start) if use_custom else default_s1 %}
           {{ default_s1 if v in ['unknown','unavailable','', None] else v }}
@@ -53,20 +47,28 @@ scheduled_light_on:
           {% elif now_ts >= s3 and now_ts < s4 %}evening
           {% else %}night{% endif %}
 
-        # If the input_select exists and contains a valid scene entity_id, use it.
         _override_select: "{{ 'input_select.' ~ room_key ~ '_' ~ slot ~ '_scene' }}"
         _override_val: >-
           {% set val = states(_override_select) %}
           {{ '' if val in ['unknown','unavailable','', None] else val }}
 
         default_scene_entity_id: "scene.{{ room_key }}_{{ slot }}"
-        scene_to_activate: >-
-          {% set candidate = _override_val if _override_val else default_scene_entity_id %}
-          {{ candidate }}
+        scene_to_activate: "{{ _override_val if _override_val else default_scene_entity_id }}"
 
-        # Verify the candidate actually exists in HA's state machine
-        scene_exists: >-
-          {{ scene_to_activate in states.scene | map(attribute='entity_id') | list }}
+        all_scenes: "{{ states.scene | map(attribute='entity_id') | list }}"
+        scene_exists: "{{ scene_to_activate in all_scenes }}"
+
+        # Dynamic fallback: prefer light.<room_key>, then light.<room_key>_lights, else provided fallback_lights
+        _light_room: "light.{{ room_key }}"
+        _light_room_lights: "light.{{ room_key }}_lights"
+        _all_lights: "{{ states.light | map(attribute='entity_id') | list }}"
+        dynamic_fallback: >-
+          {% if _light_room in _all_lights %}{{ _light_room }}
+          {% elif _light_room_lights in _all_lights %}{{ _light_room_lights }}
+          {% elif fallback_lights is defined and fallback_lights and fallback_lights in _all_lights %}
+            {{ fallback_lights }}
+          {% else %}{{ '' }}
+          {% endif %}
     - choose:
         - conditions: "{{ scene_exists }}"
           sequence:
@@ -76,13 +78,19 @@ scheduled_light_on:
               target:
                 entity_id: "{{ scene_to_activate }}"
       default:
-        # Fallback to a best-effort: turn on the room's lights if scene missing
-        - service: light.turn_on
-          target:
-            entity_id: "light.{{ room_key }}_lights"
-        - service: logbook.log
-          data:
-            name: "scheduled_light_on"
-            message: >-
-              Scene '{{ scene_to_activate }}' not found; fell back to light.turn_on
-            entity_id: "light.{{ room_key }}_lights"
+        - choose:
+            - conditions: "{{ dynamic_fallback != '' }}"
+              sequence:
+                - service: light.turn_on
+                  target:
+                    entity_id: "{{ dynamic_fallback }}"
+                - service: logbook.log
+                  data:
+                    name: "scheduled_light_on"
+                    message: "Scene '{{ scene_to_activate }}' missing; used '{{ dynamic_fallback }}'"
+                    entity_id: "{{ dynamic_fallback }}"
+          default:
+            - service: logbook.log
+              data:
+                name: "scheduled_light_on"
+                message: "Scene '{{ scene_to_activate }}' missing; no fallback light entity available"
