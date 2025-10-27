@@ -1,0 +1,12 @@
+bathroom_s1_start:
+  name: Bathroom Morning start
+  has_time: true
+bathroom_s2_start:
+  name: Bathroom Day start
+  has_time: true
+bathroom_s3_start:
+  name: Bathroom Evening start
+  has_time: true
+bathroom_s4_start:
+  name: Bathroom Night start
+  has_time: true

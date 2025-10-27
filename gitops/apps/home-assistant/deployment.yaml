@@ -139,9 +139,11 @@ spec:
               mkdir -p "${CONFIG_DIR}/automations"
               mkdir -p "${CONFIG_DIR}/scripts"
               mkdir -p "${CONFIG_DIR}/scenes"
-              mkdir -p "${CONFIG_DIR}/schedule"
+              mkdir -p "${CONFIG_DIR}/views"
               mkdir -p "${CONFIG_DIR}/www/pets"
               mkdir -p "${CONFIG_DIR}/www/intruders"
+              mkdir -p "${CONFIG_DIR}/helpers"
+              mkdir -p "${CONFIG_DIR}/dashboards"
               
               # Create default configuration.yaml
               cat > "${CONFIG_DIR}/configuration.yaml" << 'EOF'
@@ -155,11 +157,25 @@ spec:
               automation: !include_dir_list automations/
               automation ui: !include automations.yaml
               script: !include scripts.yaml
+              script manual: !include_dir_list scripts/
               scene: !include scenes.yaml
-
-              # Living room schedule configuration will be loaded from ConfigMap
-
-              # Schedule configuration is loaded from ConfigMap via schedule_entities.yaml
+              
+              # Input helpers organized by domain type
+              input_boolean: !include_dir_merge_named helpers/input_boolean/
+              input_datetime: !include_dir_merge_named helpers/input_datetime/
+              input_select: !include_dir_merge_named helpers/input_select/
+              input_number: !include_dir_merge_named helpers/input_number/
+              
+              # Lovelace dashboard configuration (hybrid mode)
+              lovelace:
+                mode: storage
+                dashboards:
+                  lighting-config:
+                    mode: yaml
+                    title: Lighting Configuration
+                    icon: mdi:lightbulb-group
+                    show_in_sidebar: true
+                    filename: dashboards/views/living_room_lighting.yaml
 
               # HTTP configuration for reverse proxy
               http:
@@ -174,15 +190,17 @@ spec:
                 cleanup_old_photos: 'find /config/www/pets -name "*.jpg" -mtime +30 -delete && find /config/www/intruders -name "*.jpg" -mtime +30 -delete'
               EOF
               
-              # Append schedule entities configuration
-              echo "" >> "${CONFIG_DIR}/configuration.yaml"
-              echo "# Schedule entities for all rooms" >> "${CONFIG_DIR}/configuration.yaml"
-              cat /config/schedule/schedule_entities.yaml >> "${CONFIG_DIR}/configuration.yaml"
-              
-              # Create empty files for scripts, scenes, and automations
-              echo "[]" > "${CONFIG_DIR}/scripts.yaml"
-              echo "[]" > "${CONFIG_DIR}/scenes.yaml"
-              echo "[]" > "${CONFIG_DIR}/automations.yaml"
+              # Create empty files for scripts, scenes, and automations only if they don't exist or are empty
+              # This preserves UI-created automations, scripts, and scenes
+              if [ ! -f "${CONFIG_DIR}/scripts.yaml" ] || [ ! -s "${CONFIG_DIR}/scripts.yaml" ]; then
+                echo "[]" > "${CONFIG_DIR}/scripts.yaml"
+              fi
+              if [ ! -f "${CONFIG_DIR}/scenes.yaml" ] || [ ! -s "${CONFIG_DIR}/scenes.yaml" ]; then
+                echo "[]" > "${CONFIG_DIR}/scenes.yaml"
+              fi
+              if [ ! -f "${CONFIG_DIR}/automations.yaml" ] || [ ! -s "${CONFIG_DIR}/automations.yaml" ]; then
+                echo "[]" > "${CONFIG_DIR}/automations.yaml"
+              fi
               
               
               # Set proper permissions for www directories
@@ -193,9 +211,6 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-            - name: schedule-config
-              mountPath: /config/schedule
-              readOnly: true
         - name: validate-config
           image: ghcr.io/home-assistant/home-assistant:stable
           imagePullPolicy: IfNotPresent
@@ -212,9 +227,6 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-            - name: schedule-config
-              mountPath: /config/schedule
-              readOnly: true
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -277,11 +289,26 @@ spec:
               mountPath: /config
             - name: automations
               mountPath: /config/automations
-            - name: blueprints-defaults
+            - name: blueprints
               mountPath: /config/blueprints/automation/_defaults
               readOnly: true
-            - name: schedule-config
-              mountPath: /config/schedule
+            - name: helpers-input-boolean
+              mountPath: /config/helpers/input_boolean
+              readOnly: true
+            - name: helpers-input-datetime
+              mountPath: /config/helpers/input_datetime
+              readOnly: true
+            - name: helpers-input-select
+              mountPath: /config/helpers/input_select
+              readOnly: true
+            - name: helpers-input-number
+              mountPath: /config/helpers/input_number
+              readOnly: true
+            - name: dashboards
+              mountPath: /config/dashboards/views
+              readOnly: true
+            - name: scripts
+              mountPath: /config/scripts
               readOnly: true
           lifecycle:
             preStop:
@@ -294,9 +321,24 @@ spec:
         - name: automations
           configMap:
             name: homeassistant-automations
-        - name: blueprints-defaults
+        - name: blueprints
           configMap:
-            name: ha-blueprints-defaults
-        - name: schedule-config
+            name: homeassistant-blueprints
+        - name: helpers-input-boolean
           configMap:
-            name: ha-schedule-config
+            name: homeassistant-helpers-input-boolean
+        - name: helpers-input-datetime
+          configMap:
+            name: homeassistant-helpers-input-datetime
+        - name: helpers-input-select
+          configMap:
+            name: homeassistant-helpers-input-select
+        - name: helpers-input-number
+          configMap:
+            name: homeassistant-helpers-input-number
+        - name: dashboards
+          configMap:
+            name: homeassistant-dashboards
+        - name: scripts
+          configMap:
+            name: homeassistant-scripts

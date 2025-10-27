@@ -1,0 +1,70 @@
+apiVersion: v1
+data:
+  bathroom.yaml: |
+    bathroom_s1_start:
+      name: Bathroom Morning start
+      has_time: true
+    bathroom_s2_start:
+      name: Bathroom Day start
+      has_time: true
+    bathroom_s3_start:
+      name: Bathroom Evening start
+      has_time: true
+    bathroom_s4_start:
+      name: Bathroom Night start
+      has_time: true
+  bedroom.yaml: |
+    bedroom_s1_start:
+      name: Bedroom Morning start
+      has_time: true
+    bedroom_s2_start:
+      name: Bedroom Day start
+      has_time: true
+    bedroom_s3_start:
+      name: Bedroom Evening start
+      has_time: true
+    bedroom_s4_start:
+      name: Bedroom Night start
+      has_time: true
+  hallway.yaml: |
+    hallway_s1_start:
+      name: Hallway Morning start
+      has_time: true
+    hallway_s2_start:
+      name: Hallway Day start
+      has_time: true
+    hallway_s3_start:
+      name: Hallway Evening start
+      has_time: true
+    hallway_s4_start:
+      name: Hallway Night start
+      has_time: true
+  kitchen.yaml: |
+    kitchen_s1_start:
+      name: Kitchen Morning start
+      has_time: true
+    kitchen_s2_start:
+      name: Kitchen Day start
+      has_time: true
+    kitchen_s3_start:
+      name: Kitchen Evening start
+      has_time: true
+    kitchen_s4_start:
+      name: Kitchen Night start
+      has_time: true
+  living_room.yaml: |
+    living_room_s1_start:
+      name: Living Room Morning start
+      has_time: true
+    living_room_s2_start:
+      name: Living Room Day start
+      has_time: true
+    living_room_s3_start:
+      name: Living Room Evening start
+      has_time: true
+    living_room_s4_start:
+      name: Living Room Night start
+      has_time: true
+kind: ConfigMap
+metadata:
+  name: homeassistant-helpers-input-datetime

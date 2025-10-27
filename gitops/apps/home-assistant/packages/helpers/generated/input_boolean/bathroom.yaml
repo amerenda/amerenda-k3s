@@ -1,0 +1,24 @@
+bathroom_custom_schedule:
+  name: Bathroom – Use custom schedule
+bathroom_motion_enabled:
+  name: Bathroom – Motion Control Enabled
+bathroom_timer_enabled:
+  name: Bathroom – Timer Control Enabled
+
+enable_bathroom_morning:
+  name: Bathroom – Timer Morning Enabled
+enable_bathroom_day:
+  name: Bathroom – Timer Day Enabled
+enable_bathroom_evening:
+  name: Bathroom – Timer Evening Enabled
+enable_bathroom_night:
+  name: Bathroom – Timer Night Enabled
+
+auto_on_bathroom_morning:
+  name: Bathroom – Timer Morning Auto-on
+auto_on_bathroom_day:
+  name: Bathroom – Timer Day Auto-on
+auto_on_bathroom_evening:
+  name: Bathroom – Timer Evening Auto-on
+auto_on_bathroom_night:
+  name: Bathroom – Timer Night Auto-on

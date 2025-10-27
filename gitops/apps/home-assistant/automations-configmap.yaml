@@ -1,10 +1,4 @@
 apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: homeassistant-automations
-  namespace: home-assistant
-  annotations:
-    reloader.stakater.com/auto: "true"
 data:
   alex_camera_privacy_away.yaml: |
     alias: Alex - Camera Privacy (Away)
@@ -25,7 +19,6 @@ data:
           entity_id:
             - switch.bedroom_privacy_mode
             - switch.living_room_privacy_mode
-
   alex_camera_privacy_home.yaml: |
     alias: Alex - Camera Privacy (Home)
     mode: restart
@@ -45,7 +38,6 @@ data:
           entity_id:
             - switch.bedroom_privacy_mode
             - switch.living_room_privacy_mode
-
   alex_cleanup_old_photos.yaml: |
     alias: Alex - Cleanup Old Photos (30+ days)
     mode: single
@@ -56,7 +48,6 @@ data:
     actions:
       - service: shell_command.cleanup_old_photos
         data: {}
-
   alex_reolink_human_detect_alert.yaml: |
     alias: Alex - Reolink Human Alert (Away)
     mode: queued
@@ -103,7 +94,6 @@ data:
             tag: "human-{{ slug }}"
             importance: high
             sticky: true
-
   alex_reolink_pet_detect_snapshot.yaml: |
     alias: Alex - Reolink Pet Snapshot (Away)
     mode: queued
@@ -156,193 +146,27 @@ data:
             tag: "pet-{{ slug }}"
             importance: low
             sticky: true
+  generate-automations-configmap.sh: |
+    #!/bin/bash
+    # generate-automations-configmap.sh
+    # Generates ConfigMap manifest from automation YAML files in the automations/ directory
 
-  switch_control_bathroom.yaml: |
-    alias: Switch Control - Bathroom
-    id: bathroom_switch_control
-    description: Control bathroom lights with Hue switch buttons
-    use_blueprint:
-      path: _defaults/hue_switch_control.yaml
-      input:
-        target_lights:
-          - light.bathroom
-        switch_entity: event.bathroom_switch_button_1
-        button_1_toggle: true
-        button_2_brightness_up: true
-        button_3_brightness_down: true
-        button_4_custom: true
-        button_4_action: scene_cycle
-        scene_entities:
-          - scene.bathroom_nightlight
-          - scene.bathroom_relax
-          - scene.bathroom_energize
-        button_1_long_press: true
-        button_1_long_action: all_lights_off
-        button_4_long_press: true
-        button_4_long_action: room_relax_scene
-        room_relax_scene: scene.bathroom_relax
-        brightness_step: 25
-        min_brightness: 1
-        max_brightness: 255
-        # Room configuration for dynamic scene construction
-        room_name: "bathroom"
-        use_dashboard_schedule: true
+    set -euo pipefail
 
-  switch_control_bedroom.yaml: |
-    alias: Switch Control - Bedroom
-    id: bedroom_switch_control
-    description: Control bedroom lights with Hue switch buttons
-    use_blueprint:
-      path: _defaults/hue_switch_control.yaml
-      input:
-        target_lights:
-          - light.bedroom
-        switch_entity: event.bedroom_switch_button_1
-        button_1_toggle: true
-        button_2_brightness_up: true
-        button_3_brightness_down: true
-        button_4_custom: true
-        button_4_action: scene_cycle
-          - scene.bedroom_nightlight
-          - scene.bedroom_relax
-          - scene.bedroom_energize
-          - scene.bedroom_concentrate
-          - scene.bedroom_read
-        button_1_long_press: true
-        button_1_long_action: all_lights_off
-        button_4_long_press: true
-        button_4_long_action: room_relax_scene
-        room_relax_scene: scene.scene.bedroom_sunset_allure
-        brightness_step: 25
-        min_brightness: 1
-        max_brightness: 255
-        # Room configuration for dynamic scene construction
-        room_name: "bedroom"
-        use_dashboard_schedule: true
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    OUTPUT_FILE="$SCRIPT_DIR/../automations-configmap.yaml"
 
-  switch_control_hallway.yaml: |
-    alias: Switch Control - Hallway
-    id: hallway_switch_control
-    description: Control hallway lights with Hue switch buttons
-    use_blueprint:
-      path: _defaults/hue_switch_control.yaml
-      input:
-        target_lights:
-          - light.hallway
-        switch_entity: event.hallway_switch_button_1
-        button_1_toggle: true
-        button_2_brightness_up: true
-        button_3_brightness_down: true
-        button_4_custom: true
-        button_4_action: scene_cycle
-        scene_entities:
-          - scene.hallway_nightlight
-          - scene.hallway_relax
-          - scene.hallway_energize
-        button_1_long_press: true
-        button_1_long_action: all_lights_off
-        button_4_long_press: true
-        button_4_long_action: room_relax_scene
-        room_relax_scene: scene.hallway_relax
-        brightness_step: 25
-        min_brightness: 1
-        max_brightness: 255
-        # Room configuration for dynamic scene construction
-        room_name: "hallway"
-        use_dashboard_schedule: true
+    echo "Generating automations ConfigMap..."
 
-  switch_control_hallway_2.yaml: |
-    alias: Switch Control - Hallway 2
-    id: hallway_2_switch_control
-    description: Control hallway lights with second Hue switch buttons
-    use_blueprint:
-      path: _defaults/hue_switch_control.yaml
-      input:
-        target_lights:
-          - light.hallway
-        switch_entity: event.hallway_switch_button_2
-        button_1_toggle: true
-        button_2_brightness_up: true
-        button_3_brightness_down: true
-        button_4_custom: true
-        button_4_action: scene_cycle
-        scene_entities:
-          - scene.hallway_nightlight
-          - scene.hallway_relax
-          - scene.hallway_energize
-        button_1_long_press: true
-        button_1_long_action: all_lights_off
-        button_4_long_press: true
-        button_4_long_action: room_relax_scene
-        room_relax_scene: scene.hallway_relax
-        brightness_step: 25
-        min_brightness: 1
-        max_brightness: 255
-        # Room configuration for dynamic scene construction
-        room_name: "hallway"
-        use_dashboard_schedule: true
+    # Create ConfigMap from automations directory
+    kubectl create configmap homeassistant-automations \
+      --from-file="$SCRIPT_DIR/" \
+      --dry-run=client \
+      -o yaml > "$OUTPUT_FILE"
 
-  switch_control_kitchen.yaml: |
-    alias: Switch Control - Kitchen
-    id: kitchen_switch_control
-    description: Control kitchen lights with Hue switch buttons
-    use_blueprint:
-      path: _defaults/hue_switch_control.yaml
-      input:
-        target_lights:
-          - light.kitchen
-        switch_entity: event.kitchen_switch_button_1
-        button_1_toggle: true
-        button_2_brightness_up: true
-        button_3_brightness_down: true
-        button_4_custom: true
-        button_4_action: scene_cycle
-        scene_entities:
-          - scene.kitchen_nightlight
-          - scene.kitchen_relax
-          - scene.kitchen_energize
-        button_1_long_press: true
-        button_1_long_action: all_lights_off
-        button_4_long_press: true
-        button_4_long_action: room_relax_scene
-        room_relax_scene: scene.kitchen_relax
-        brightness_step: 25
-        min_brightness: 1
-        max_brightness: 255
-        # Room configuration for dynamic scene construction
-        room_name: "kitchen"
-        use_dashboard_schedule: true
-
-  switch_control_living_room.yaml: |
-    alias: Switch Control - Living Room
-    id: living_room_switch_control
-    description: Control living room lights with Hue switch buttons
-    use_blueprint:
-      path: _defaults/hue_switch_control.yaml
-      input:
-        target_lights:
-          - light.living_room
-        switch_entity: event.living_room_switch_button_1
-        button_1_toggle: true
-        button_2_brightness_up: true
-        button_3_brightness_down: true
-        button_4_custom: true
-        button_4_action: scene_cycle
-        scene_entities:
-          - scene.living_room_nightlight
-          - scene.living_room_relax
-          - scene.living_room_energize
-          - scene.living_room_concentrate
-          - scene.living_room_read
-        button_1_long_press: true
-        button_1_long_action: all_lights_off
-        button_4_long_press: true
-        button_4_long_action: room_relax_scene
-        room_relax_scene: scene.home_movie
-        brightness_step: 25
-        min_brightness: 1
-        max_brightness: 255
-        # Room configuration for dynamic scene construction
-        room_name: "living_room"
-        use_dashboard_schedule: true
-
+    echo "Automations ConfigMap generated: $OUTPUT_FILE"
+    echo "ConfigMap includes:"
+    ls -1 "$SCRIPT_DIR"/*.yaml | sed 's/^/  /'
+kind: ConfigMap
+metadata:
+  name: homeassistant-automations

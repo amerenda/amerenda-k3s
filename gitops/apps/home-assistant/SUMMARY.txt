@@ -1,0 +1,11 @@
+Home Assistant Lighting Control — Patched Unified DRY Package (with dynamic brightness helpers)
+
+Switch blueprint now supports optional per-room brightness helpers:
+- input_number.<room>_brightness_step_pct
+- input_number.<room>_min_brightness_pct
+- input_number.<room>_max_brightness_pct
+
+If these are provided in the blueprint inputs, the switch uses them live; otherwise it falls back to the
+static 'Fallback brightness step (%)' and 1%/100% for min/max.
+
+Everything else remains as in the previous patched package.

@@ -1,0 +1,126 @@
+apiVersion: v1
+data:
+  power_on.yaml: |
+    scheduled_light_on:
+      alias: Scheduled Light On (by room key; uses optional per-room scene overrides)
+      mode: restart
+      fields:
+        room_key:
+          description: Short name used in scene IDs (e.g., 'living_room')
+          example: living_room
+        custom_schedule_enabled:
+          description: input_boolean that enables per-room time windows
+          required: false
+        custom_s1_start:
+          description: input_datetime Morning start (time-only)
+          required: false
+        custom_s2_start:
+          description: input_datetime Day start (time-only)
+          required: false
+        custom_s3_start:
+          description: input_datetime Evening start (time-only)
+          required: false
+        custom_s4_start:
+          description: input_datetime Night start (time-only)
+          required: false
+        transition:
+          description: Optional fade time in seconds
+          required: false
+      sequence:
+        - variables:
+            default_s1: "06:00:00"
+            default_s2: "09:00:00"
+            default_s3: "17:00:00"
+            default_s4: "22:00:00"
+
+            use_custom: >-
+              {{ custom_schedule_enabled is defined and is_state(custom_schedule_enabled, 'on') }}
+
+            s1_str: >-
+              {% set v = states(custom_s1_start) if use_custom else default_s1 %}
+              {% if v in ['unknown','unavailable',''] %}{{ default_s1 }}{% else %}{{ v }}{% endif %}
+            s2_str: >-
+              {% set v = states(custom_s2_start) if use_custom else default_s2 %}
+              {% if v in ['unknown','unavailable',''] %}{{ default_s2 }}{% else %}{{ v }}{% endif %}
+            s3_str: >-
+              {% set v = states(custom_s3_start) if use_custom else default_s3 %}
+              {% if v in ['unknown','unavailable',''] %}{{ default_s3 }}{% else %}{{ v }}{% endif %}
+            s4_str: >-
+              {% set v = states(custom_s4_start) if use_custom else default_s4 %}
+              {% if v in ['unknown','unavailable',''] %}{{ default_s4 }}{% else %}{{ v }}{% endif %}
+
+            now_ts: "{{ as_timestamp(now()) }}"
+            s1: "{{ as_timestamp(today_at(s1_str)) }}"
+            s2: "{{ as_timestamp(today_at(s2_str)) }}"
+            s3: "{{ as_timestamp(today_at(s3_str)) }}"
+            s4: "{{ as_timestamp(today_at(s4_str)) }}"
+
+            slot: >-
+              {% if now_ts >= s1 and now_ts < s2 %}morning
+              {% elif now_ts >= s2 and now_ts < s3 %}day
+              {% elif now_ts >= s3 and now_ts < s4 %}evening
+              {% else %}night{% endif %}
+
+            override_entity_id: >-
+              {% set sel = 'input_select.' ~ room_key ~ '_' ~ slot ~ '_scene' %}
+              {% if states(sel) not in ['unknown','unavailable', None, ''] %}
+                {{ states(sel) }}
+              {% else %}{{ '' }}{% endif %}
+
+            default_scene_entity_id: "scene.{{ room_key }}_{{ slot }}"
+            scene_to_activate: "{{ override_entity_id if override_entity_id else default_scene_entity_id }}"
+        - service: scene.turn_on
+          data:
+            transition: "{{ transition | default(0) }}"
+          target:
+            entity_id: "{{ scene_to_activate }}"
+  room_toggle.yaml: |
+    room_toggle:
+      alias: Room Toggle (scheduled when turning on)
+      mode: restart
+      fields:
+        room_key:
+          description: Room key used by scenes
+        target_lights:
+          description: Target lights (entity_id or list, or a target object with entity_id)
+        custom_schedule_enabled:
+          required: false
+        custom_s1_start:
+          required: false
+        custom_s2_start:
+          required: false
+        custom_s3_start:
+          required: false
+        custom_s4_start:
+          required: false
+
+      sequence:
+        - variables:
+            targets: >-
+              {% if target_lights is mapping and 'entity_id' in target_lights %}
+                {{ target_lights.entity_id }}
+              {% else %}
+                {{ target_lights }}
+              {% endif %}
+            any_on: >-
+              {{ expand(targets) | selectattr('state','eq','on') | list | count > 0 if targets else false }}
+
+        - choose:
+            - conditions: "{{ any_on }}"
+              sequence:
+                - service: light.turn_off
+                  target:
+                    entity_id: "{{ targets }}"
+            - conditions: []
+              sequence:
+                - service: script.scheduled_light_on
+                  data:
+                    room_key: "{{ room_key }}"
+                    custom_schedule_enabled: "{{ custom_schedule_enabled | default(none) }}"
+                    custom_s1_start: "{{ custom_s1_start | default(none) }}"
+                    custom_s2_start: "{{ custom_s2_start | default(none) }}"
+                    custom_s3_start: "{{ custom_s3_start | default(none) }}"
+                    custom_s4_start: "{{ custom_s4_start | default(none) }}"
+kind: ConfigMap
+metadata:
+  name: homeassistant-scripts

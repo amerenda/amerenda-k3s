@@ -1,0 +1,12 @@
+bedroom_s1_start:
+  name: Bedroom Morning start
+  has_time: true
+bedroom_s2_start:
+  name: Bedroom Day start
+  has_time: true
+bedroom_s3_start:
+  name: Bedroom Evening start
+  has_time: true
+bedroom_s4_start:
+  name: Bedroom Night start
+  has_time: true

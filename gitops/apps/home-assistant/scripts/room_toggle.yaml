@@ -1,0 +1,46 @@
+room_toggle:
+  alias: Room Toggle (scheduled when turning on)
+  mode: restart
+  fields:
+    room_key:
+      description: Room key used by scenes
+    target_lights:
+      description: Target lights (entity_id or list, or a target object with entity_id)
+    custom_schedule_enabled:
+      required: false
+    custom_s1_start:
+      required: false
+    custom_s2_start:
+      required: false
+    custom_s3_start:
+      required: false
+    custom_s4_start:
+      required: false
+
+  sequence:
+    - variables:
+        targets: >-
+          {% if target_lights is mapping and 'entity_id' in target_lights %}
+            {{ target_lights.entity_id }}
+          {% else %}
+            {{ target_lights }}
+          {% endif %}
+        any_on: >-
+          {{ expand(targets) | selectattr('state','eq','on') | list | count > 0 if targets else false }}
+
+    - choose:
+        - conditions: "{{ any_on }}"
+          sequence:
+            - service: light.turn_off
+              target:
+                entity_id: "{{ targets }}"
+        - conditions: []
+          sequence:
+            - service: script.scheduled_light_on
+              data:
+                room_key: "{{ room_key }}"
+                custom_schedule_enabled: "{{ custom_schedule_enabled | default(none) }}"
+                custom_s1_start: "{{ custom_s1_start | default(none) }}"
+                custom_s2_start: "{{ custom_s2_start | default(none) }}"
+                custom_s3_start: "{{ custom_s3_start | default(none) }}"
+                custom_s4_start: "{{ custom_s4_start | default(none) }}"

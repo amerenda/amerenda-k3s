@@ -1,0 +1,21 @@
+living_room_brightness_step_pct:
+  name: Living Room Brightness step (%)
+  min: 1
+  max: 50
+  step: 1
+  unit_of_measurement: "%"
+  initial: 10
+living_room_min_brightness_pct:
+  name: Living Room Min brightness (%)
+  min: 1
+  max: 100
+  step: 1
+  unit_of_measurement: "%"
+  initial: 1
+living_room_max_brightness_pct:
+  name: Living Room Max brightness (%)
+  min: 1
+  max: 100
+  step: 1
+  unit_of_measurement: "%"
+  initial: 100

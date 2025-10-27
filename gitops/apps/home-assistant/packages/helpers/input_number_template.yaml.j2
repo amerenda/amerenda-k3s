@@ -1,0 +1,25 @@
+# Template for input_number helpers per room
+# Usage:
+#   jinja2 input_number_template.yaml.j2 -D room=bedroom > input_number/bedroom.yaml
+
+{{ room }}_brightness_step_pct:
+  name: {{ room|replace('_',' ')|title }} Brightness step (%)
+  min: 1
+  max: 50
+  step: 1
+  unit_of_measurement: "%"
+  initial: 10
+{{ room }}_min_brightness_pct:
+  name: {{ room|replace('_',' ')|title }} Min brightness (%)
+  min: 1
+  max: 100
+  step: 1
+  unit_of_measurement: "%"
+  initial: 1
+{{ room }}_max_brightness_pct:
+  name: {{ room|replace('_',' ')|title }} Max brightness (%)
+  min: 1
+  max: 100
+  step: 1
+  unit_of_measurement: "%"
+  initial: 100

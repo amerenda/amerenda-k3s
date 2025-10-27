@@ -1,0 +1,24 @@
+living_room_custom_schedule:
+  name: Living Room – Use custom schedule
+living_room_motion_enabled:
+  name: Living Room – Motion Control Enabled
+living_room_timer_enabled:
+  name: Living Room – Timer Control Enabled
+
+enable_living_room_morning:
+  name: Living Room – Timer Morning Enabled
+enable_living_room_day:
+  name: Living Room – Timer Day Enabled
+enable_living_room_evening:
+  name: Living Room – Timer Evening Enabled
+enable_living_room_night:
+  name: Living Room – Timer Night Enabled
+
+auto_on_living_room_morning:
+  name: Living Room – Timer Morning Auto-on
+auto_on_living_room_day:
+  name: Living Room – Timer Day Auto-on
+auto_on_living_room_evening:
+  name: Living Room – Timer Evening Auto-on
+auto_on_living_room_night:
+  name: Living Room – Timer Night Auto-on

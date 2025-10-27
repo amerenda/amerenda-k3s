@@ -1,0 +1,12 @@
+kitchen_s1_start:
+  name: Kitchen Morning start
+  has_time: true
+kitchen_s2_start:
+  name: Kitchen Day start
+  has_time: true
+kitchen_s3_start:
+  name: Kitchen Evening start
+  has_time: true
+kitchen_s4_start:
+  name: Kitchen Night start
+  has_time: true

@@ -1,0 +1,12 @@
+hallway_s1_start:
+  name: Hallway Morning start
+  has_time: true
+hallway_s2_start:
+  name: Hallway Day start
+  has_time: true
+hallway_s3_start:
+  name: Hallway Evening start
+  has_time: true
+hallway_s4_start:
+  name: Hallway Night start
+  has_time: true

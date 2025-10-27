@@ -1,0 +1,86 @@
+apiVersion: v1
+data:
+  living_room_lighting.yaml: |
+    title: Lighting – Living Room
+    path: lighting-living-room
+    icon: mdi:lightbulb-group
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: |
+              ## Living Room – Lighting
+              Control schedule, scenes, and brightness for the living room.
+          - type: entities
+            title: Schedule
+            show_header_toggle: false
+            entities:
+              - entity: input_boolean.living_room_custom_schedule
+                name: Use custom schedule
+              - entity: input_datetime.living_room_s1_start
+                name: Morning starts
+              - entity: input_datetime.living_room_s2_start
+                name: Day starts
+              - entity: input_datetime.living_room_s3_start
+                name: Evening starts
+              - entity: input_datetime.living_room_s4_start
+                name: Night starts
+          - type: entities
+            title: Scenes per window
+            show_header_toggle: false
+            entities:
+              - entity: input_select.living_room_morning_scene
+                name: Morning scene
+              - entity: input_select.living_room_day_scene
+                name: Day scene
+              - entity: input_select.living_room_evening_scene
+                name: Evening scene
+              - entity: input_select.living_room_night_scene
+                name: Night scene
+          - type: entities
+            title: Brightness controls
+            show_header_toggle: false
+            entities:
+              - entity: input_number.living_room_brightness_step_pct
+                name: Step (%)
+              - entity: input_number.living_room_min_brightness_pct
+                name: Min (%)
+              - entity: input_number.living_room_max_brightness_pct
+                name: Max (%)
+          - type: entities
+            title: Timer settings
+            show_header_toggle: false
+            entities:
+              - entity: input_boolean.enable_living_room_morning
+                name: Morning enabled
+              - entity: input_boolean.auto_on_living_room_morning
+                name: Morning auto-on
+              - entity: input_boolean.enable_living_room_day
+                name: Day enabled
+              - entity: input_boolean.auto_on_living_room_day
+                name: Day auto-on
+              - entity: input_boolean.enable_living_room_evening
+                name: Evening enabled
+              - entity: input_boolean.auto_on_living_room_evening
+                name: Evening auto-on
+              - entity: input_boolean.enable_living_room_night
+                name: Night enabled
+              - entity: input_boolean.auto_on_living_room_night
+                name: Night auto-on
+          - type: entities
+            title: Motion (extras for this room)
+            show_header_toggle: false
+            entities:
+              - entity: input_boolean.living_room_motion_enabled
+                name: Motion control enabled
+              - entity: input_number.living_room_morning_auto_off
+                name: Morning auto-off (min)
+              - entity: input_number.living_room_day_auto_off
+                name: Day auto-off (min)
+              - entity: input_number.living_room_evening_auto_off
+                name: Evening auto-off (min)
+              - entity: input_number.living_room_night_auto_off
+                name: Night auto-off (min)
+kind: ConfigMap
+metadata:
+  name: homeassistant-dashboards

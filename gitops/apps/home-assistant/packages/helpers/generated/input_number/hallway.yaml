@@ -1,0 +1,21 @@
+hallway_brightness_step_pct:
+  name: Hallway Brightness step (%)
+  min: 1
+  max: 50
+  step: 1
+  unit_of_measurement: "%"
+  initial: 10
+hallway_min_brightness_pct:
+  name: Hallway Min brightness (%)
+  min: 1
+  max: 100
+  step: 1
+  unit_of_measurement: "%"
+  initial: 1
+hallway_max_brightness_pct:
+  name: Hallway Max brightness (%)
+  min: 1
+  max: 100
+  step: 1
+  unit_of_measurement: "%"
+  initial: 100

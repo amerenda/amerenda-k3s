@@ -1,0 +1,24 @@
+hallway_custom_schedule:
+  name: Hallway – Use custom schedule
+hallway_motion_enabled:
+  name: Hallway – Motion Control Enabled
+hallway_timer_enabled:
+  name: Hallway – Timer Control Enabled
+
+enable_hallway_morning:
+  name: Hallway – Timer Morning Enabled
+enable_hallway_day:
+  name: Hallway – Timer Day Enabled
+enable_hallway_evening:
+  name: Hallway – Timer Evening Enabled
+enable_hallway_night:
+  name: Hallway – Timer Night Enabled
+
+auto_on_hallway_morning:
+  name: Hallway – Timer Morning Auto-on
+auto_on_hallway_day:
+  name: Hallway – Timer Day Auto-on
+auto_on_hallway_evening:
+  name: Hallway – Timer Evening Auto-on
+auto_on_hallway_night:
+  name: Hallway – Timer Night Auto-on

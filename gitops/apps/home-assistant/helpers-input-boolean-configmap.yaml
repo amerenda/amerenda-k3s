@@ -1,0 +1,130 @@
+apiVersion: v1
+data:
+  bathroom.yaml: |
+    bathroom_custom_schedule:
+      name: Bathroom – Use custom schedule
+    bathroom_motion_enabled:
+      name: Bathroom – Motion Control Enabled
+    bathroom_timer_enabled:
+      name: Bathroom – Timer Control Enabled
+
+    enable_bathroom_morning:
+      name: Bathroom – Timer Morning Enabled
+    enable_bathroom_day:
+      name: Bathroom – Timer Day Enabled
+    enable_bathroom_evening:
+      name: Bathroom – Timer Evening Enabled
+    enable_bathroom_night:
+      name: Bathroom – Timer Night Enabled
+
+    auto_on_bathroom_morning:
+      name: Bathroom – Timer Morning Auto-on
+    auto_on_bathroom_day:
+      name: Bathroom – Timer Day Auto-on
+    auto_on_bathroom_evening:
+      name: Bathroom – Timer Evening Auto-on
+    auto_on_bathroom_night:
+      name: Bathroom – Timer Night Auto-on
+  bedroom.yaml: |
+    bedroom_custom_schedule:
+      name: Bedroom – Use custom schedule
+    bedroom_motion_enabled:
+      name: Bedroom – Motion Control Enabled
+    bedroom_timer_enabled:
+      name: Bedroom – Timer Control Enabled
+
+    enable_bedroom_morning:
+      name: Bedroom – Timer Morning Enabled
+    enable_bedroom_day:
+      name: Bedroom – Timer Day Enabled
+    enable_bedroom_evening:
+      name: Bedroom – Timer Evening Enabled
+    enable_bedroom_night:
+      name: Bedroom – Timer Night Enabled
+
+    auto_on_bedroom_morning:
+      name: Bedroom – Timer Morning Auto-on
+    auto_on_bedroom_day:
+      name: Bedroom – Timer Day Auto-on
+    auto_on_bedroom_evening:
+      name: Bedroom – Timer Evening Auto-on
+    auto_on_bedroom_night:
+      name: Bedroom – Timer Night Auto-on
+  hallway.yaml: |
+    hallway_custom_schedule:
+      name: Hallway – Use custom schedule
+    hallway_motion_enabled:
+      name: Hallway – Motion Control Enabled
+    hallway_timer_enabled:
+      name: Hallway – Timer Control Enabled
+
+    enable_hallway_morning:
+      name: Hallway – Timer Morning Enabled
+    enable_hallway_day:
+      name: Hallway – Timer Day Enabled
+    enable_hallway_evening:
+      name: Hallway – Timer Evening Enabled
+    enable_hallway_night:
+      name: Hallway – Timer Night Enabled
+
+    auto_on_hallway_morning:
+      name: Hallway – Timer Morning Auto-on
+    auto_on_hallway_day:
+      name: Hallway – Timer Day Auto-on
+    auto_on_hallway_evening:
+      name: Hallway – Timer Evening Auto-on
+    auto_on_hallway_night:
+      name: Hallway – Timer Night Auto-on
+  kitchen.yaml: |
+    kitchen_custom_schedule:
+      name: Kitchen – Use custom schedule
+    kitchen_motion_enabled:
+      name: Kitchen – Motion Control Enabled
+    kitchen_timer_enabled:
+      name: Kitchen – Timer Control Enabled
+
+    enable_kitchen_morning:
+      name: Kitchen – Timer Morning Enabled
+    enable_kitchen_day:
+      name: Kitchen – Timer Day Enabled
+    enable_kitchen_evening:
+      name: Kitchen – Timer Evening Enabled
+    enable_kitchen_night:
+      name: Kitchen – Timer Night Enabled
+
+    auto_on_kitchen_morning:
+      name: Kitchen – Timer Morning Auto-on
+    auto_on_kitchen_day:
+      name: Kitchen – Timer Day Auto-on
+    auto_on_kitchen_evening:
+      name: Kitchen – Timer Evening Auto-on
+    auto_on_kitchen_night:
+      name: Kitchen – Timer Night Auto-on
+  living_room.yaml: |
+    living_room_custom_schedule:
+      name: Living Room – Use custom schedule
+    living_room_motion_enabled:
+      name: Living Room – Motion Control Enabled
+    living_room_timer_enabled:
+      name: Living Room – Timer Control Enabled
+
+    enable_living_room_morning:
+      name: Living Room – Timer Morning Enabled
+    enable_living_room_day:
+      name: Living Room – Timer Day Enabled
+    enable_living_room_evening:
+      name: Living Room – Timer Evening Enabled
+    enable_living_room_night:
+      name: Living Room – Timer Night Enabled
+
+    auto_on_living_room_morning:
+      name: Living Room – Timer Morning Auto-on
+    auto_on_living_room_day:
+      name: Living Room – Timer Day Auto-on
+    auto_on_living_room_evening:
+      name: Living Room – Timer Evening Auto-on
+    auto_on_living_room_night:
+      name: Living Room – Timer Night Auto-on
+kind: ConfigMap
+metadata:
+  name: homeassistant-helpers-input-boolean

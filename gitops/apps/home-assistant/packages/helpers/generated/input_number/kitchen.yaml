@@ -1,0 +1,21 @@
+kitchen_brightness_step_pct:
+  name: Kitchen Brightness step (%)
+  min: 1
+  max: 50
+  step: 1
+  unit_of_measurement: "%"
+  initial: 10
+kitchen_min_brightness_pct:
+  name: Kitchen Min brightness (%)
+  min: 1
+  max: 100
+  step: 1
+  unit_of_measurement: "%"
+  initial: 1
+kitchen_max_brightness_pct:
+  name: Kitchen Max brightness (%)
+  min: 1
+  max: 100
+  step: 1
+  unit_of_measurement: "%"
+  initial: 100
