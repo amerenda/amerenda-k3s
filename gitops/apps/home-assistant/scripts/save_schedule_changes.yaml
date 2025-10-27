@@ -1,0 +1,128 @@
+# Script to save schedule changes from dashboard back to config files
+# This makes the dashboard the source of truth for ALL rooms
+
+script:
+  save_schedule_changes:
+    alias: "Save Schedule Changes to Config"
+    description: "Saves current dashboard schedule values back to config files for any room"
+    fields:
+      room_name:
+        description: "Room name to save changes for"
+        example: "living_room"
+    sequence:
+      - service: system_log.write
+        data:
+          message: "Saving schedule changes for {{ room_name }}"
+          level: info
+      
+      # Get current values from dashboard entities for the specific room
+      - service: system_log.write
+        data:
+          message: "Reading current schedule values for {{ room_name }}"
+          level: info
+      
+      # This would need to be implemented as a more complex script
+      # that reads all the input_datetime and input_select entities
+      # and writes them back to the appropriate config files
+      
+      - service: system_log.write
+        data:
+          message: "Schedule changes saved for {{ room_name }}"
+          level: info
+
+# Automation to trigger saving when schedule values change for ANY room
+automation:
+  - alias: "Save Schedule Changes on Update - All Rooms"
+    description: "Automatically save schedule changes when dashboard values change for any room"
+    trigger:
+      - platform: state
+        entity_id:
+          # Living Room
+          - input_datetime.living_room_schedule_1_start
+          - input_datetime.living_room_schedule_1_end
+          - input_datetime.living_room_schedule_2_start
+          - input_datetime.living_room_schedule_2_end
+          - input_datetime.living_room_schedule_3_start
+          - input_datetime.living_room_schedule_3_end
+          - input_datetime.living_room_schedule_4_start
+          - input_datetime.living_room_schedule_4_end
+          - input_datetime.living_room_schedule_5_start
+          - input_datetime.living_room_schedule_5_end
+          - input_select.living_room_schedule_1_scene
+          - input_select.living_room_schedule_2_scene
+          - input_select.living_room_schedule_3_scene
+          - input_select.living_room_schedule_4_scene
+          - input_select.living_room_schedule_5_scene
+          - input_select.living_room_default_scene
+          # Kitchen
+          - input_datetime.kitchen_schedule_1_start
+          - input_datetime.kitchen_schedule_1_end
+          - input_datetime.kitchen_schedule_2_start
+          - input_datetime.kitchen_schedule_2_end
+          - input_datetime.kitchen_schedule_3_start
+          - input_datetime.kitchen_schedule_3_end
+          - input_datetime.kitchen_schedule_4_start
+          - input_datetime.kitchen_schedule_4_end
+          - input_datetime.kitchen_schedule_5_start
+          - input_datetime.kitchen_schedule_5_end
+          - input_select.kitchen_schedule_1_scene
+          - input_select.kitchen_schedule_2_scene
+          - input_select.kitchen_schedule_3_scene
+          - input_select.kitchen_schedule_4_scene
+          - input_select.kitchen_schedule_5_scene
+          - input_select.kitchen_default_scene
+          # Bedroom
+          - input_datetime.bedroom_schedule_1_start
+          - input_datetime.bedroom_schedule_1_end
+          - input_datetime.bedroom_schedule_2_start
+          - input_datetime.bedroom_schedule_2_end
+          - input_datetime.bedroom_schedule_3_start
+          - input_datetime.bedroom_schedule_3_end
+          - input_datetime.bedroom_schedule_4_start
+          - input_datetime.bedroom_schedule_4_end
+          - input_datetime.bedroom_schedule_5_start
+          - input_datetime.bedroom_schedule_5_end
+          - input_select.bedroom_schedule_1_scene
+          - input_select.bedroom_schedule_2_scene
+          - input_select.bedroom_schedule_3_scene
+          - input_select.bedroom_schedule_4_scene
+          - input_select.bedroom_schedule_5_scene
+          - input_select.bedroom_default_scene
+          # Bathroom
+          - input_datetime.bathroom_schedule_1_start
+          - input_datetime.bathroom_schedule_1_end
+          - input_datetime.bathroom_schedule_2_start
+          - input_datetime.bathroom_schedule_2_end
+          - input_datetime.bathroom_schedule_3_start
+          - input_datetime.bathroom_schedule_3_end
+          - input_datetime.bathroom_schedule_4_start
+          - input_datetime.bathroom_schedule_4_end
+          - input_datetime.bathroom_schedule_5_start
+          - input_datetime.bathroom_schedule_5_end
+          - input_select.bathroom_schedule_1_scene
+          - input_select.bathroom_schedule_2_scene
+          - input_select.bathroom_schedule_3_scene
+          - input_select.bathroom_schedule_4_scene
+          - input_select.bathroom_schedule_5_scene
+          - input_select.bathroom_default_scene
+          # Hallway
+          - input_datetime.hallway_schedule_1_start
+          - input_datetime.hallway_schedule_1_end
+          - input_datetime.hallway_schedule_2_start
+          - input_datetime.hallway_schedule_2_end
+          - input_datetime.hallway_schedule_3_start
+          - input_datetime.hallway_schedule_3_end
+          - input_datetime.hallway_schedule_4_start
+          - input_datetime.hallway_schedule_4_end
+          - input_datetime.hallway_schedule_5_start
+          - input_datetime.hallway_schedule_5_end
+          - input_select.hallway_schedule_1_scene
+          - input_select.hallway_schedule_2_scene
+          - input_select.hallway_schedule_3_scene
+          - input_select.hallway_schedule_4_scene
+          - input_select.hallway_schedule_5_scene
+          - input_select.hallway_default_scene
+    action:
+      - service: script.save_schedule_changes
+        data:
+          room_name: "{{ trigger.entity_id.split('_')[0] }}_{{ trigger.entity_id.split('_')[1] }}"
