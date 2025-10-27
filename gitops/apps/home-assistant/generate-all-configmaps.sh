@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # Unified script to generate all Home Assistant ConfigMaps
-# This approach reduces duplication by ~80% by using templates and only generating what's needed
+# This approach reads from config files and applies room overrides
 
 set -e
 
 NAMESPACE="home-assistant"
+CONFIG_DIR="config"
 
 # Colors for output
 RED='\033[0;31m'
@@ -28,6 +29,63 @@ print_warning() {
 
 print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# Function to get schedule value with override support
+get_schedule_value() {
+    local room_name="$1"
+    local schedule_key="$2"
+    local value_key="$3"
+    local default_value="$4"
+    
+    # Check for room override first
+    if [ -f "$CONFIG_DIR/room_overrides.yaml" ]; then
+        local override_value=$(awk "
+            /^room_overrides:/ { in_room_overrides=1; next }
+            in_room_overrides && /^  $room_name:/ { in_room=1; next }
+            in_room && /^  [a-zA-Z]/ && !/^  $room_name:/ { in_room=0; next }
+            in_room && /^    $schedule_key:/ { in_schedule=1; next }
+            in_schedule && /^    [a-zA-Z]/ && !/^    $schedule_key:/ { in_schedule=0; next }
+            in_schedule && /^      $value_key:/ { 
+                gsub(/^[[:space:]]*$value_key:[[:space:]]*/, \"\")
+                gsub(/[[:space:]]*#.*$/, \"\")  # Remove comments
+                gsub(/[[:space:]]*$/, \"\")
+                gsub(/^\"|\"$/, \"\")
+                print
+                exit
+            }
+        " "$CONFIG_DIR/room_overrides.yaml")
+        
+        if [ -n "$override_value" ]; then
+            echo "$override_value"
+            return
+        fi
+    fi
+    
+    # Fall back to default schedule
+    if [ -f "$CONFIG_DIR/default_schedule.yaml" ]; then
+        local default_value_from_file=$(awk "
+            /^default_schedule:/ { in_default_schedule=1; next }
+            in_default_schedule && /^  $schedule_key:/ { in_schedule=1; next }
+            in_schedule && /^  [a-zA-Z]/ && !/^  $schedule_key:/ { in_schedule=0; next }
+            in_schedule && /^    $value_key:/ { 
+                gsub(/^[[:space:]]*$value_key:[[:space:]]*/, \"\")
+                gsub(/[[:space:]]*#.*$/, \"\")  # Remove comments
+                gsub(/[[:space:]]*$/, \"\")
+                gsub(/^\"|\"$/, \"\")
+                print
+                exit
+            }
+        " "$CONFIG_DIR/default_schedule.yaml")
+        
+        if [ -n "$default_value_from_file" ]; then
+            echo "$default_value_from_file"
+            return
+        fi
+    fi
+    
+    # Final fallback to hardcoded default
+    echo "$default_value"
 }
 
 # Function to generate automations ConfigMap
@@ -98,11 +156,19 @@ EOF
     fi
 }
 
-# Function to generate simplified schedule ConfigMap
+# Function to generate schedule ConfigMap with config file support
 generate_schedule_configmap() {
     local output_file="schedule-configmap.yaml"
     
-    print_status "Generating simplified schedule configuration ConfigMap..."
+    print_status "Generating schedule configuration ConfigMap with config file support..."
+    
+    # Check if config files exist
+    if [ ! -f "$CONFIG_DIR/default_schedule.yaml" ]; then
+        print_error "Default schedule config file not found: $CONFIG_DIR/default_schedule.yaml"
+        return 1
+    fi
+    
+    print_status "Reading schedule configuration from config files..."
     
     cat > "$output_file" << 'EOF'
 apiVersion: v1
@@ -114,8 +180,8 @@ metadata:
     reloader.stakater.com/auto: "true"
 data:
   schedule_entities.yaml: |
-    # Simplified Schedule Configuration
-    # Only includes essential entities - other rooms can be added as needed
+    # Schedule Configuration with Config File Support
+    # Generated from default_schedule.yaml with room-specific overrides from room_overrides.yaml
     
     input_boolean:
       global_schedule_enabled:
@@ -144,316 +210,45 @@ data:
         initial: true
     
     input_datetime:
-      # Living Room (example - other rooms follow same pattern)
-      living_room_schedule_1_start:
-        name: "Living Room Morning Start"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "06:00"
-      living_room_schedule_1_end:
-        name: "Living Room Morning End"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "09:00"
-      living_room_schedule_2_start:
-        name: "Living Room Day Start"
-        icon: mdi:weather-sunny
-        has_time: true
-        has_date: false
-        initial: "09:00"
-      living_room_schedule_2_end:
-        name: "Living Room Day End"
-        icon: mdi:weather-sunny
-        has_time: true
-        has_date: false
-        initial: "17:00"
-      living_room_schedule_3_start:
-        name: "Living Room Evening Start"
-        icon: mdi:weather-sunset
-        has_time: true
-        has_date: false
-        initial: "17:00"
-      living_room_schedule_3_end:
-        name: "Living Room Evening End"
-        icon: mdi:weather-sunset
-        has_time: true
-        has_date: false
-        initial: "21:00"
-      living_room_schedule_4_start:
-        name: "Living Room Night Start"
-        icon: mdi:weather-night
-        has_time: true
-        has_date: false
-        initial: "21:00"
-      living_room_schedule_4_end:
-        name: "Living Room Night End"
-        icon: mdi:weather-night
-        has_time: true
-        has_date: false
-        initial: "23:00"
-      living_room_schedule_5_start:
-        name: "Living Room Late Night Start"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "23:00"
-      living_room_schedule_5_end:
-        name: "Living Room Late Night End"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "06:00"
-      
-      # Kitchen
-      kitchen_schedule_1_start:
-        name: "Kitchen Morning Start"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "06:00"
-      kitchen_schedule_1_end:
-        name: "Kitchen Morning End"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "09:00"
-      kitchen_schedule_2_start:
-        name: "Kitchen Day Start"
-        icon: mdi:weather-sunny
-        has_time: true
-        has_date: false
-        initial: "09:00"
-      kitchen_schedule_2_end:
-        name: "Kitchen Day End"
-        icon: mdi:weather-sunny
-        has_time: true
-        has_date: false
-        initial: "17:00"
-      kitchen_schedule_3_start:
-        name: "Kitchen Evening Start"
-        icon: mdi:weather-sunset
-        has_time: true
-        has_date: false
-        initial: "17:00"
-      kitchen_schedule_3_end:
-        name: "Kitchen Evening End"
-        icon: mdi:weather-sunset
-        has_time: true
-        has_date: false
-        initial: "21:00"
-      kitchen_schedule_4_start:
-        name: "Kitchen Night Start"
-        icon: mdi:weather-night
-        has_time: true
-        has_date: false
-        initial: "21:00"
-      kitchen_schedule_4_end:
-        name: "Kitchen Night End"
-        icon: mdi:weather-night
-        has_time: true
-        has_date: false
-        initial: "23:00"
-      kitchen_schedule_5_start:
-        name: "Kitchen Late Night Start"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "23:00"
-      kitchen_schedule_5_end:
-        name: "Kitchen Late Night End"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "06:00"
-      
-      # Bedroom
-      bedroom_schedule_1_start:
-        name: "Bedroom Morning Start"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "06:00"
-      bedroom_schedule_1_end:
-        name: "Bedroom Morning End"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "09:00"
-      bedroom_schedule_2_start:
-        name: "Bedroom Day Start"
-        icon: mdi:weather-sunny
-        has_time: true
-        has_date: false
-        initial: "09:00"
-      bedroom_schedule_2_end:
-        name: "Bedroom Day End"
-        icon: mdi:weather-sunny
-        has_time: true
-        has_date: false
-        initial: "17:00"
-      bedroom_schedule_3_start:
-        name: "Bedroom Evening Start"
-        icon: mdi:weather-sunset
-        has_time: true
-        has_date: false
-        initial: "17:00"
-      bedroom_schedule_3_end:
-        name: "Bedroom Evening End"
-        icon: mdi:weather-sunset
-        has_time: true
-        has_date: false
-        initial: "21:00"
-      bedroom_schedule_4_start:
-        name: "Bedroom Night Start"
-        icon: mdi:weather-night
-        has_time: true
-        has_date: false
-        initial: "21:00"
-      bedroom_schedule_4_end:
-        name: "Bedroom Night End"
-        icon: mdi:weather-night
-        has_time: true
-        has_date: false
-        initial: "23:00"
-      bedroom_schedule_5_start:
-        name: "Bedroom Late Night Start"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "23:00"
-      bedroom_schedule_5_end:
-        name: "Bedroom Late Night End"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "06:00"
-      
-      # Bathroom
-      bathroom_schedule_1_start:
-        name: "Bathroom Morning Start"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "06:00"
-      bathroom_schedule_1_end:
-        name: "Bathroom Morning End"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "09:00"
-      bathroom_schedule_2_start:
-        name: "Bathroom Day Start"
-        icon: mdi:weather-sunny
-        has_time: true
-        has_date: false
-        initial: "09:00"
-      bathroom_schedule_2_end:
-        name: "Bathroom Day End"
-        icon: mdi:weather-sunny
-        has_time: true
-        has_date: false
-        initial: "17:00"
-      bathroom_schedule_3_start:
-        name: "Bathroom Evening Start"
-        icon: mdi:weather-sunset
-        has_time: true
-        has_date: false
-        initial: "17:00"
-      bathroom_schedule_3_end:
-        name: "Bathroom Evening End"
-        icon: mdi:weather-sunset
-        has_time: true
-        has_date: false
-        initial: "21:00"
-      bathroom_schedule_4_start:
-        name: "Bathroom Night Start"
-        icon: mdi:weather-night
-        has_time: true
-        has_date: false
-        initial: "21:00"
-      bathroom_schedule_4_end:
-        name: "Bathroom Night End"
-        icon: mdi:weather-night
-        has_time: true
-        has_date: false
-        initial: "23:00"
-      bathroom_schedule_5_start:
-        name: "Bathroom Late Night Start"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "23:00"
-      bathroom_schedule_5_end:
-        name: "Bathroom Late Night End"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "06:00"
-      
-      # Hallway
-      hallway_schedule_1_start:
-        name: "Hallway Morning Start"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "06:00"
-      hallway_schedule_1_end:
-        name: "Hallway Morning End"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "09:00"
-      hallway_schedule_2_start:
-        name: "Hallway Day Start"
-        icon: mdi:weather-sunny
-        has_time: true
-        has_date: false
-        initial: "09:00"
-      hallway_schedule_2_end:
-        name: "Hallway Day End"
-        icon: mdi:weather-sunny
-        has_time: true
-        has_date: false
-        initial: "17:00"
-      hallway_schedule_3_start:
-        name: "Hallway Evening Start"
-        icon: mdi:weather-sunset
-        has_time: true
-        has_date: false
-        initial: "17:00"
-      hallway_schedule_3_end:
-        name: "Hallway Evening End"
-        icon: mdi:weather-sunset
-        has_time: true
-        has_date: false
-        initial: "21:00"
-      hallway_schedule_4_start:
-        name: "Hallway Night Start"
-        icon: mdi:weather-night
-        has_time: true
-        has_date: false
-        initial: "21:00"
-      hallway_schedule_4_end:
-        name: "Hallway Night End"
-        icon: mdi:weather-night
-        has_time: true
-        has_date: false
-        initial: "23:00"
-      hallway_schedule_5_start:
-        name: "Hallway Late Night Start"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "23:00"
-      hallway_schedule_5_end:
-        name: "Hallway Late Night End"
-        icon: mdi:weather-sunrise
-        has_time: true
-        has_date: false
-        initial: "06:00"
+EOF
+
+    # Generate datetime inputs for all rooms using config files
+    local rooms=("living_room" "kitchen" "bedroom" "bathroom" "hallway")
+    local room_icons=("mdi:sofa" "mdi:chef-hat" "mdi:bed" "mdi:shower" "mdi:corridor")
+    local period_names=("Morning" "Day" "Evening" "Night" "Late Night")
+    local period_icons=("mdi:weather-sunrise" "mdi:weather-sunny" "mdi:weather-sunset" "mdi:weather-night" "mdi:weather-sunrise")
     
+    for i in "${!rooms[@]}"; do
+        local room="${rooms[$i]}"
+        print_status "Generating schedule for room: $room"
+        
+        for j in {1..5}; do
+            local period_name="${period_names[$((j-1))]}"
+            local period_icon="${period_icons[$((j-1))]}"
+            
+            # Get start and end times from config files
+            local start_time=$(get_schedule_value "$room" "schedule_${j}" "start_time" "06:00")
+            local end_time=$(get_schedule_value "$room" "schedule_${j}" "end_time" "09:00")
+            
+            cat >> "$output_file" << EOF
+      ${room}_schedule_${j}_start:
+        name: "${room^} ${period_name} Start"
+        icon: ${period_icon}
+        has_time: true
+        has_date: false
+        initial: "${start_time}"
+      ${room}_schedule_${j}_end:
+        name: "${room^} ${period_name} End"
+        icon: ${period_icon}
+        has_time: true
+        has_date: false
+        initial: "${end_time}"
+EOF
+        done
+    done
+
+    cat >> "$output_file" << EOF
+
     input_select:
       room_schedule_selector:
         name: "Select Room to Configure"
@@ -466,10 +261,25 @@ data:
           - "hallway"
         initial: "living_room"
       
-      # Living Room Scenes
-      living_room_schedule_1_scene:
-        name: "Living Room Morning Scene"
-        icon: mdi:weather-sunrise
+EOF
+
+    # Generate select inputs for all rooms using config files
+    for i in "${!rooms[@]}"; do
+        local room="${rooms[$i]}"
+        local icon="${room_icons[$i]}"
+        
+        # Generate scene selects for each schedule period
+        for j in {1..5}; do
+            local period_name="${period_names[$((j-1))]}"
+            local period_icon="${period_icons[$((j-1))]}"
+            
+            # Get scene from config files
+            local scene=$(get_schedule_value "$room" "schedule_${j}" "scene_suffix" "energize")
+            
+            cat >> "$output_file" << EOF
+      ${room}_schedule_${j}_scene:
+        name: "${room^} ${period_name} Scene"
+        icon: ${period_icon}
         options:
           - "energize"
           - "concentrate"
@@ -478,10 +288,17 @@ data:
           - "read"
           - "dimmed"
           - "custom"
-        initial: "energize"
-      living_room_schedule_2_scene:
-        name: "Living Room Day Scene"
-        icon: mdi:weather-sunny
+        initial: "${scene}"
+EOF
+        done
+        
+        # Generate default scene select
+        local default_scene=$(get_schedule_value "$room" "default_scene_suffix" "scene_suffix" "relax")
+        
+        cat >> "$output_file" << EOF
+      ${room}_default_scene:
+        name: "${room^} Default Scene"
+        icon: ${icon}
         options:
           - "energize"
           - "concentrate"
@@ -490,353 +307,14 @@ data:
           - "read"
           - "dimmed"
           - "custom"
-        initial: "concentrate"
-      living_room_schedule_3_scene:
-        name: "Living Room Evening Scene"
-        icon: mdi:weather-sunset
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "relax"
-      living_room_schedule_4_scene:
-        name: "Living Room Night Scene"
-        icon: mdi:weather-night
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "nightlight"
-      living_room_schedule_5_scene:
-        name: "Living Room Late Night Scene"
-        icon: mdi:weather-sunrise
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "nightlight"
-      living_room_default_scene:
-        name: "Living Room Default Scene"
-        icon: mdi:sofa
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "relax"
+        initial: "${default_scene}"
+EOF
+    done
+
+    # Add switch configuration (simplified - only for living room and hallway)
+    cat >> "$output_file" << EOF
       
-      # Kitchen Scenes
-      kitchen_schedule_1_scene:
-        name: "Kitchen Morning Scene"
-        icon: mdi:weather-sunrise
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "energize"
-      kitchen_schedule_2_scene:
-        name: "Kitchen Day Scene"
-        icon: mdi:weather-sunny
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "concentrate"
-      kitchen_schedule_3_scene:
-        name: "Kitchen Evening Scene"
-        icon: mdi:weather-sunset
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "relax"
-      kitchen_schedule_4_scene:
-        name: "Kitchen Night Scene"
-        icon: mdi:weather-night
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "nightlight"
-      kitchen_schedule_5_scene:
-        name: "Kitchen Late Night Scene"
-        icon: mdi:weather-sunrise
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "nightlight"
-      kitchen_default_scene:
-        name: "Kitchen Default Scene"
-        icon: mdi:chef-hat
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "relax"
-      
-      # Bedroom Scenes
-      bedroom_schedule_1_scene:
-        name: "Bedroom Morning Scene"
-        icon: mdi:weather-sunrise
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "energize"
-      bedroom_schedule_2_scene:
-        name: "Bedroom Day Scene"
-        icon: mdi:weather-sunny
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "concentrate"
-      bedroom_schedule_3_scene:
-        name: "Bedroom Evening Scene"
-        icon: mdi:weather-sunset
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "relax"
-      bedroom_schedule_4_scene:
-        name: "Bedroom Night Scene"
-        icon: mdi:weather-night
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "nightlight"
-      bedroom_schedule_5_scene:
-        name: "Bedroom Late Night Scene"
-        icon: mdi:weather-sunrise
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "nightlight"
-      bedroom_default_scene:
-        name: "Bedroom Default Scene"
-        icon: mdi:bed
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "relax"
-      
-      # Bathroom Scenes
-      bathroom_schedule_1_scene:
-        name: "Bathroom Morning Scene"
-        icon: mdi:weather-sunrise
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "energize"
-      bathroom_schedule_2_scene:
-        name: "Bathroom Day Scene"
-        icon: mdi:weather-sunny
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "concentrate"
-      bathroom_schedule_3_scene:
-        name: "Bathroom Evening Scene"
-        icon: mdi:weather-sunset
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "relax"
-      bathroom_schedule_4_scene:
-        name: "Bathroom Night Scene"
-        icon: mdi:weather-night
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "nightlight"
-      bathroom_schedule_5_scene:
-        name: "Bathroom Late Night Scene"
-        icon: mdi:weather-sunrise
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "nightlight"
-      bathroom_default_scene:
-        name: "Bathroom Default Scene"
-        icon: mdi:shower
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "relax"
-      
-      # Hallway Scenes
-      hallway_schedule_1_scene:
-        name: "Hallway Morning Scene"
-        icon: mdi:weather-sunrise
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "energize"
-      hallway_schedule_2_scene:
-        name: "Hallway Day Scene"
-        icon: mdi:weather-sunny
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "concentrate"
-      hallway_schedule_3_scene:
-        name: "Hallway Evening Scene"
-        icon: mdi:weather-sunset
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "relax"
-      hallway_schedule_4_scene:
-        name: "Hallway Night Scene"
-        icon: mdi:weather-night
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "nightlight"
-      hallway_schedule_5_scene:
-        name: "Hallway Late Night Scene"
-        icon: mdi:weather-sunrise
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "nightlight"
-      hallway_default_scene:
-        name: "Hallway Default Scene"
-        icon: mdi:corridor
-        options:
-          - "energize"
-          - "concentrate"
-          - "relax"
-          - "nightlight"
-          - "read"
-          - "dimmed"
-          - "custom"
-        initial: "relax"
-      
-      # Switch Configuration (only for living room as example)
+      # Switch Configuration
       living_room_switch_brightness_step:
         name: "Living Room Brightness Step"
         icon: mdi:brightness-6
@@ -1047,192 +525,53 @@ data:
         initial: "room_relax_scene"
     
     input_text:
-      # Living Room Custom Scenes
-      living_room_schedule_1_custom_scene:
-        name: "Living Room Morning Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
-      living_room_schedule_2_custom_scene:
-        name: "Living Room Day Custom Scene"
-        icon: mdi:weather-sunny
-        initial: ""
-      living_room_schedule_3_custom_scene:
-        name: "Living Room Evening Custom Scene"
-        icon: mdi:weather-sunset
-        initial: ""
-      living_room_schedule_4_custom_scene:
-        name: "Living Room Night Custom Scene"
-        icon: mdi:weather-night
-        initial: ""
-      living_room_schedule_5_custom_scene:
-        name: "Living Room Late Night Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
-      living_room_default_custom_scene:
-        name: "Living Room Default Custom Scene"
-        icon: mdi:sofa
-        initial: ""
-      
-      # Kitchen Custom Scenes
-      kitchen_schedule_1_custom_scene:
-        name: "Kitchen Morning Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
-      kitchen_schedule_2_custom_scene:
-        name: "Kitchen Day Custom Scene"
-        icon: mdi:weather-sunny
-        initial: ""
-      kitchen_schedule_3_custom_scene:
-        name: "Kitchen Evening Custom Scene"
-        icon: mdi:weather-sunset
-        initial: ""
-      kitchen_schedule_4_custom_scene:
-        name: "Kitchen Night Custom Scene"
-        icon: mdi:weather-night
-        initial: ""
-      kitchen_schedule_5_custom_scene:
-        name: "Kitchen Late Night Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
-      kitchen_default_custom_scene:
-        name: "Kitchen Default Custom Scene"
-        icon: mdi:chef-hat
-        initial: ""
-      
-      # Bedroom Custom Scenes
-      bedroom_schedule_1_custom_scene:
-        name: "Bedroom Morning Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
-      bedroom_schedule_2_custom_scene:
-        name: "Bedroom Day Custom Scene"
-        icon: mdi:weather-sunny
-        initial: ""
-      bedroom_schedule_3_custom_scene:
-        name: "Bedroom Evening Custom Scene"
-        icon: mdi:weather-sunset
-        initial: ""
-      bedroom_schedule_4_custom_scene:
-        name: "Bedroom Night Custom Scene"
-        icon: mdi:weather-night
-        initial: ""
-      bedroom_schedule_5_custom_scene:
-        name: "Bedroom Late Night Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
-      bedroom_default_custom_scene:
-        name: "Bedroom Default Custom Scene"
-        icon: mdi:bed
-        initial: ""
-      
-      # Bathroom Custom Scenes
-      bathroom_schedule_1_custom_scene:
-        name: "Bathroom Morning Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
-      bathroom_schedule_2_custom_scene:
-        name: "Bathroom Day Custom Scene"
-        icon: mdi:weather-sunny
-        initial: ""
-      bathroom_schedule_3_custom_scene:
-        name: "Bathroom Evening Custom Scene"
-        icon: mdi:weather-sunset
-        initial: ""
-      bathroom_schedule_4_custom_scene:
-        name: "Bathroom Night Custom Scene"
-        icon: mdi:weather-night
-        initial: ""
-      bathroom_schedule_5_custom_scene:
-        name: "Bathroom Late Night Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
-      bathroom_default_custom_scene:
-        name: "Bathroom Default Custom Scene"
-        icon: mdi:shower
-        initial: ""
-      
-      # Hallway Custom Scenes
-      hallway_schedule_1_custom_scene:
-        name: "Hallway Morning Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
-      hallway_schedule_2_custom_scene:
-        name: "Hallway Day Custom Scene"
-        icon: mdi:weather-sunny
-        initial: ""
-      hallway_schedule_3_custom_scene:
-        name: "Hallway Evening Custom Scene"
-        icon: mdi:weather-sunset
-        initial: ""
-      hallway_schedule_4_custom_scene:
-        name: "Hallway Night Custom Scene"
-        icon: mdi:weather-night
-        initial: ""
-      hallway_schedule_5_custom_scene:
-        name: "Hallway Late Night Custom Scene"
-        icon: mdi:weather-sunrise
-        initial: ""
-      hallway_default_custom_scene:
-        name: "Hallway Default Custom Scene"
-        icon: mdi:corridor
-        initial: ""
-
-  default_schedule.yaml: |
-    # Default Time-Based Scene Schedule Configuration
-    # This file defines the default schedule for all rooms
-    # Can be overridden per room in individual automation files
-
-    default_schedule:
-      # Schedule 1: Morning (06:00-09:00)
-      schedule_1:
-        start_time: "06:00"
-        end_time: "09:00"
-        scene_suffix: "energize"  # Will be prefixed with room name
-      
-      # Schedule 2: Day (09:00-17:00)
-      schedule_2:
-        start_time: "09:00"
-        end_time: "17:00"
-        scene_suffix: "concentrate"
-      
-      # Schedule 3: Evening (17:00-21:00)
-      schedule_3:
-        start_time: "17:00"
-        end_time: "21:00"
-        scene_suffix: "relax"
-      
-      # Schedule 4: Night (21:00-23:00)
-      schedule_4:
-        start_time: "21:00"
-        end_time: "23:00"
-        scene_suffix: "nightlight"
-      
-      # Schedule 5: Late Night (23:00-06:00)
-      schedule_5:
-        start_time: "23:00"
-        end_time: "06:00"
-        scene_suffix: "nightlight"
-      
-      # Default fallback scene
-      default_scene_suffix: "relax"
-
-    # Room-specific overrides (optional)
-    room_overrides:
-      # Example: Kitchen might have different morning time
-      # kitchen:
-      #   schedule_1:
-      #     start_time: "05:30"
-      #     end_time: "08:30"
-      #     scene_suffix: "energize"
 EOF
 
-    print_success "Simplified schedule ConfigMap generated: $output_file"
-    print_status "This approach is much more maintainable and reduces the ConfigMap size significantly"
+    # Generate custom scene text inputs for all rooms
+    for i in "${!rooms[@]}"; do
+        local room="${rooms[$i]}"
+        local icon="${room_icons[$i]}"
+        
+        # Generate custom scene text inputs for each schedule period
+        for j in {1..5}; do
+            local period_name="${period_names[$((j-1))]}"
+            local period_icon="${period_icons[$((j-1))]}"
+            
+            cat >> "$output_file" << EOF
+      ${room}_schedule_${j}_custom_scene:
+        name: "${room^} ${period_name} Custom Scene"
+        icon: ${period_icon}
+        initial: ""
+EOF
+        done
+        
+        # Generate default custom scene text input
+        cat >> "$output_file" << EOF
+      ${room}_default_custom_scene:
+        name: "${room^} Default Custom Scene"
+        icon: ${icon}
+        initial: ""
+EOF
+    done
+
+    # Include the config files in the ConfigMap
+    if [ -d "$CONFIG_DIR" ]; then
+        find "$CONFIG_DIR" -name "*.yaml" -type f | while read -r file; do
+            local filename=$(basename "$file")
+            print_status "Including config file: $filename"
+            
+            echo "  $filename: |" >> "$output_file"
+            sed 's/^/    /' "$file" >> "$output_file"
+            echo "" >> "$output_file"
+        done
+    fi
+    
+    print_success "Schedule ConfigMap generated with config file support: $output_file"
 }
 
 # Main execution
 main() {
-    print_status "Starting unified ConfigMap generation..."
+    print_status "Starting unified ConfigMap generation with config file support..."
     
     # Generate all ConfigMaps
     generate_automations_configmap
@@ -1245,6 +584,10 @@ main() {
     print_status "  - blueprints-configmap.yaml"
     print_status "  - schedule-configmap.yaml"
     print_status ""
+    print_status "Schedule configuration now reads from:"
+    print_status "  - config/default_schedule.yaml (default values)"
+    print_status "  - config/room_overrides.yaml (room-specific overrides)"
+    print_status ""
     print_status "To apply: commit the changes and push to the repository"
     print_status "Or apply directly with: kubectl apply -f *.yaml"
 }
@@ -1253,15 +596,19 @@ main() {
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     echo "Usage: $0"
     echo ""
-    echo "Generate all Home Assistant ConfigMaps with a unified approach"
-    echo "This script reduces duplication and creates maintainable configurations"
+    echo "Generate all Home Assistant ConfigMaps with config file support"
+    echo "This script reads from default_schedule.yaml and applies room_overrides.yaml"
+    echo ""
+    echo "Config Files:"
+    echo "  - config/default_schedule.yaml    # Default schedule for all rooms"
+    echo "  - config/room_overrides.yaml      # Room-specific overrides"
     echo ""
     echo "Generated ConfigMaps:"
-    echo "  - automations-configmap.yaml         # Automation files"
-    echo "  - blueprints-configmap.yaml          # Blueprint files"
-    echo "  - schedule-configmap.yaml            # Schedule configuration files"
+    echo "  - automations-configmap.yaml      # Automation files"
+    echo "  - blueprints-configmap.yaml       # Blueprint files"
+    echo "  - schedule-configmap.yaml         # Schedule configuration files"
     echo ""
-    echo "This approach is much more efficient than the previous method"
+    echo "This approach is flexible and maintainable"
     exit 0
 fi
 
