@@ -1,0 +1,154 @@
+blueprint:
+  name: "Room Schedule Generator"
+  description: "Dynamically generates schedule entities for any room"
+  domain: automation
+  input:
+    room_name:
+      name: "Room Name"
+      description: "Name of the room (e.g., living_room, kitchen)"
+      selector:
+        text:
+    room_display_name:
+      name: "Room Display Name"
+      description: "Display name for the room (e.g., Living Room, Kitchen)"
+      selector:
+        text:
+    room_icon:
+      name: "Room Icon"
+      description: "Icon for the room"
+      default: "mdi:home"
+      selector:
+        icon:
+    enable_switch_config:
+      name: "Enable Switch Configuration"
+      description: "Include switch configuration entities"
+      default: true
+      selector:
+        boolean:
+    enable_motion_sensors:
+      name: "Enable Motion Sensors"
+      description: "Include motion sensor configuration"
+      default: false
+      selector:
+        boolean:
+
+script:
+  room_schedule_generator:
+    alias: "Generate {{ room_display_name }} Schedule"
+    fields:
+      room_name:
+        description: "Room name for entity generation"
+        example: "living_room"
+      room_display_name:
+        description: "Display name for the room"
+        example: "Living Room"
+      room_icon:
+        description: "Icon for the room"
+        example: "mdi:sofa"
+      enable_switch_config:
+        description: "Whether to include switch configuration"
+        example: true
+      enable_motion_sensors:
+        description: "Whether to include motion sensor configuration"
+        example: false
+    sequence:
+      - service: system_log.write
+        data:
+          message: "Generating schedule configuration for {{ room_display_name }}"
+          level: info
+      
+      # Generate input_boolean entities
+      - service: input_boolean.set
+        data:
+          entity_id: "input_boolean.{{ room_name }}_schedule_enabled"
+          value: true
+      
+      # Generate input_datetime entities for each schedule period
+      - repeat:
+          for_each: [1, 2, 3, 4, 5]
+          sequence:
+            - service: input_datetime.set_datetime
+              data:
+                entity_id: "input_datetime.{{ room_name }}_schedule_{{ repeat.item }}_start"
+                time: "{{ ['06:00', '09:00', '17:00', '21:00', '23:00'][repeat.item - 1] }}"
+            - service: input_datetime.set_datetime
+              data:
+                entity_id: "input_datetime.{{ room_name }}_schedule_{{ repeat.item }}_end"
+                time: "{{ ['09:00', '17:00', '21:00', '23:00', '06:00'][repeat.item - 1] }}"
+      
+      # Generate input_select entities for scenes
+      - repeat:
+          for_each: [1, 2, 3, 4, 5]
+          sequence:
+            - service: input_select.select_option
+              data:
+                entity_id: "input_select.{{ room_name }}_schedule_{{ repeat.item }}_scene"
+                option: "{{ ['energize', 'concentrate', 'relax', 'nightlight', 'nightlight'][repeat.item - 1] }}"
+      
+      # Generate default scene
+      - service: input_select.select_option
+        data:
+          entity_id: "input_select.{{ room_name }}_default_scene"
+          option: "relax"
+      
+      # Generate custom scene text inputs
+      - repeat:
+          for_each: [1, 2, 3, 4, 5]
+          sequence:
+            - service: input_text.set_value
+              data:
+                entity_id: "input_text.{{ room_name }}_schedule_{{ repeat.item }}_custom_scene"
+                value: ""
+      
+      - service: input_text.set_value
+        data:
+          entity_id: "input_text.{{ room_name }}_default_custom_scene"
+          value: ""
+      
+      # Generate switch configuration if enabled
+      - if:
+          condition:
+            condition: template
+            value_template: "{{ enable_switch_config }}"
+        then:
+          - service: input_select.select_option
+            data:
+              entity_id: "input_select.{{ room_name }}_switch_brightness_step"
+              option: "25"
+          - service: input_select.select_option
+            data:
+              entity_id: "input_select.{{ room_name }}_switch_min_brightness"
+              option: "1"
+          - service: input_select.select_option
+            data:
+              entity_id: "input_select.{{ room_name }}_switch_max_brightness"
+              option: "255"
+          - service: input_select.select_option
+            data:
+              entity_id: "input_select.{{ room_name }}_button_1_short"
+              option: "toggle_lights"
+          - service: input_select.select_option
+            data:
+              entity_id: "input_select.{{ room_name }}_button_1_long"
+              option: "all_lights_off"
+          - service: input_select.select_option
+            data:
+              entity_id: "input_select.{{ room_name }}_button_2_short"
+              option: "brightness_up"
+          - service: input_select.select_option
+            data:
+              entity_id: "input_select.{{ room_name }}_button_3_short"
+              option: "brightness_down"
+          - service: input_select.select_option
+            data:
+              entity_id: "input_select.{{ room_name }}_button_4_short"
+              option: "scene_cycle"
+          - service: input_select.select_option
+            data:
+              entity_id: "input_select.{{ room_name }}_button_4_long"
+              option: "room_relax_scene"
+      
+      - service: system_log.write
+        data:
+          message: "Schedule configuration generated for {{ room_display_name }}"
+          level: info
