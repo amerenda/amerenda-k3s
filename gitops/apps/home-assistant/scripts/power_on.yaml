@@ -1,27 +1,21 @@
 scheduled_light_on:
-  alias: Scheduled Light On (by room key; uses optional per-room scene overrides)
+  alias: Scheduled Light On (safe)
   mode: restart
   fields:
     room_key:
-      description: Short name used in scene IDs (e.g., 'living_room')
+      description: e.g. living_room
       example: living_room
     custom_schedule_enabled:
-      description: input_boolean that enables per-room time windows
       required: false
     custom_s1_start:
-      description: input_datetime Morning start (time-only)
       required: false
     custom_s2_start:
-      description: input_datetime Day start (time-only)
       required: false
     custom_s3_start:
-      description: input_datetime Evening start (time-only)
       required: false
     custom_s4_start:
-      description: input_datetime Night start (time-only)
       required: false
     transition:
-      description: Optional fade time in seconds
       required: false
   sequence:
     - variables:
@@ -33,18 +27,19 @@ scheduled_light_on:
         use_custom: >-
           {{ custom_schedule_enabled is defined and is_state(custom_schedule_enabled, 'on') }}
 
+        # Use states() *safely*; guard unknown/unavailable/empty
         s1_str: >-
           {% set v = states(custom_s1_start) if use_custom else default_s1 %}
-          {% if v in ['unknown','unavailable',''] %}{{ default_s1 }}{% else %}{{ v }}{% endif %}
+          {{ default_s1 if v in ['unknown','unavailable','', None] else v }}
         s2_str: >-
           {% set v = states(custom_s2_start) if use_custom else default_s2 %}
-          {% if v in ['unknown','unavailable',''] %}{{ default_s2 }}{% else %}{{ v }}{% endif %}
+          {{ default_s2 if v in ['unknown','unavailable','', None] else v }}
         s3_str: >-
           {% set v = states(custom_s3_start) if use_custom else default_s3 %}
-          {% if v in ['unknown','unavailable',''] %}{{ default_s3 }}{% else %}{{ v }}{% endif %}
+          {{ default_s3 if v in ['unknown','unavailable','', None] else v }}
         s4_str: >-
           {% set v = states(custom_s4_start) if use_custom else default_s4 %}
-          {% if v in ['unknown','unavailable',''] %}{{ default_s4 }}{% else %}{{ v }}{% endif %}
+          {{ default_s4 if v in ['unknown','unavailable','', None] else v }}
 
         now_ts: "{{ as_timestamp(now()) }}"
         s1: "{{ as_timestamp(today_at(s1_str)) }}"
@@ -58,16 +53,36 @@ scheduled_light_on:
           {% elif now_ts >= s3 and now_ts < s4 %}evening
           {% else %}night{% endif %}
 
-        override_entity_id: >-
-          {% set sel = 'input_select.' ~ room_key ~ '_' ~ slot ~ '_scene' %}
-          {% if states(sel) not in ['unknown','unavailable', None, ''] %}
-            {{ states(sel) }}
-          {% else %}{{ '' }}{% endif %}
+        # If the input_select exists and contains a valid scene entity_id, use it.
+        _override_select: "{{ 'input_select.' ~ room_key ~ '_' ~ slot ~ '_scene' }}"
+        _override_val: >-
+          {% set val = states(_override_select) %}
+          {{ '' if val in ['unknown','unavailable','', None] else val }}
 
         default_scene_entity_id: "scene.{{ room_key }}_{{ slot }}"
-        scene_to_activate: "{{ override_entity_id if override_entity_id else default_scene_entity_id }}"
-    - service: scene.turn_on
-      data:
-        transition: "{{ transition | default(0) }}"
-      target:
-        entity_id: "{{ scene_to_activate }}"
+        scene_to_activate: >-
+          {% set candidate = _override_val if _override_val else default_scene_entity_id %}
+          {{ candidate }}
+
+        # Verify the candidate actually exists in HA's state machine
+        scene_exists: >-
+          {{ scene_to_activate in states.scene | map(attribute='entity_id') | list }}
+    - choose:
+        - conditions: "{{ scene_exists }}"
+          sequence:
+            - service: scene.turn_on
+              data:
+                transition: "{{ transition | default(0) }}"
+              target:
+                entity_id: "{{ scene_to_activate }}"
+      default:
+        # Fallback to a best-effort: turn on the room's lights if scene missing
+        - service: light.turn_on
+          target:
+            entity_id: "light.{{ room_key }}_lights"
+        - service: logbook.log
+          data:
+            name: "scheduled_light_on"
+            message: >-
+              Scene '{{ scene_to_activate }}' not found; fell back to light.turn_on
+            entity_id: "light.{{ room_key }}_lights"

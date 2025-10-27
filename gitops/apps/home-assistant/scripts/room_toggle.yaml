@@ -1,46 +1,38 @@
 room_toggle:
-  alias: Room Toggle (scheduled when turning on)
-  mode: restart
+  alias: Room Toggle (smart)
+  mode: parallel
   fields:
     room_key:
-      description: Room key used by scenes
+      description: Short name used in scene IDs (e.g., 'living_room')
+      example: living_room
     target_lights:
-      description: Target lights (entity_id or list, or a target object with entity_id)
-    custom_schedule_enabled:
-      required: false
-    custom_s1_start:
-      required: false
-    custom_s2_start:
-      required: false
-    custom_s3_start:
-      required: false
-    custom_s4_start:
-      required: false
-
+      description: Entity or group of lights to control
+      example: light.living_room_lights
   sequence:
     - variables:
-        targets: >-
+        # Accept string, list, or target dict; normalize to list of entity_ids
+        _entities: >-
           {% if target_lights is mapping and 'entity_id' in target_lights %}
             {{ target_lights.entity_id }}
           {% else %}
             {{ target_lights }}
           {% endif %}
-        any_on: >-
-          {{ expand(targets) | selectattr('state','eq','on') | list | count > 0 if targets else false }}
-
+        lights: >-
+          {% if _entities is string %}
+            {{ expand([_entities]) }}
+          {% elif _entities is sequence %}
+            {{ expand(_entities) }}
+          {% else %}
+            {{ expand([]) }}
+          {% endif %}
+        any_on: "{{ lights | selectattr('state','eq','on') | list | count > 0 }}"
     - choose:
         - conditions: "{{ any_on }}"
           sequence:
             - service: light.turn_off
               target:
-                entity_id: "{{ targets }}"
-        - conditions: []
-          sequence:
-            - service: script.scheduled_light_on
-              data:
-                room_key: "{{ room_key }}"
-                custom_schedule_enabled: "{{ custom_schedule_enabled | default(none) }}"
-                custom_s1_start: "{{ custom_s1_start | default(none) }}"
-                custom_s2_start: "{{ custom_s2_start | default(none) }}"
-                custom_s3_start: "{{ custom_s3_start | default(none) }}"
-                custom_s4_start: "{{ custom_s4_start | default(none) }}"
+                entity_id: "{{ lights | map(attribute='entity_id') | list }}"
+      default:
+        - service: script.scheduled_light_on
+          data:
+            room_key: "{{ room_key }}"
