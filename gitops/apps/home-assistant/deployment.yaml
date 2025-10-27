@@ -124,6 +124,7 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
+
         - name: setup-default-config
           image: alpine:3.20
           imagePullPolicy: IfNotPresent
@@ -132,41 +133,47 @@ spec:
             - |
               set -e
               CONFIG_DIR="/config"
-              
-              # Create directories if they don't exist
+        
+              # Directories
               mkdir -p "${CONFIG_DIR}/themes"
-              mkdir -p "${CONFIG_DIR}/www"
-              mkdir -p "${CONFIG_DIR}/automations"
-              mkdir -p "${CONFIG_DIR}/scripts"
-              mkdir -p "${CONFIG_DIR}/scenes"
-              mkdir -p "${CONFIG_DIR}/views"
-              mkdir -p "${CONFIG_DIR}/www/pets"
-              mkdir -p "${CONFIG_DIR}/www/intruders"
-              mkdir -p "${CONFIG_DIR}/helpers"
-              mkdir -p "${CONFIG_DIR}/dashboards"
-              
-              # Create default configuration.yaml
+              mkdir -p "${CONFIG_DIR}/www/pets" "${CONFIG_DIR}/www/intruders"
+              mkdir -p "${CONFIG_DIR}/scripts"                     # dir-based scripts
+              mkdir -p "${CONFIG_DIR}/automations"                 # optional manual files (not auto-included)
+              mkdir -p "${CONFIG_DIR}/scenes"                      # optional manual files (not auto-included)
+              mkdir -p "${CONFIG_DIR}/dashboards/views"            # YAML dashboards live here
+              mkdir -p "${CONFIG_DIR}/helpers/input_boolean"
+              mkdir -p "${CONFIG_DIR}/helpers/input_datetime"
+              mkdir -p "${CONFIG_DIR}/helpers/input_select"
+              mkdir -p "${CONFIG_DIR}/helpers/input_number"
+              mkdir -p "${CONFIG_DIR}/packages/helpers/generated"  # for your Jinja-generated helpers
+        
+              # configuration.yaml
               cat > "${CONFIG_DIR}/configuration.yaml" << 'EOF'
               # Loads default set of integrations. Do not remove.
               default_config: {}
-              
+        
               # Load frontend themes from the themes folder
               frontend:
                 themes: !include_dir_merge_named themes
-              
-              automation: !include_dir_list automations/
-              automation ui: !include automations.yaml
-              script: !include scripts.yaml
-              script manual: !include_dir_list scripts/
+        
+              # Load UI-managed files for Automations & Scenes (so the UI keeps working)
+              automation: !include automations.yaml
               scene: !include scenes.yaml
-              
-              # Input helpers organized by domain type
-              input_boolean: !include_dir_merge_named helpers/input_boolean/
+        
+              # Scripts managed as separate files under /config/scripts/*.yaml (dict merge)
+              script: !include_dir_merge_named scripts
+        
+              # Input helpers (split by domain)
+              input_boolean:  !include_dir_merge_named helpers/input_boolean/
               input_datetime: !include_dir_merge_named helpers/input_datetime/
-              input_select: !include_dir_merge_named helpers/input_select/
-              input_number: !include_dir_merge_named helpers/input_number/
-              
-              # Lovelace dashboard configuration (hybrid mode)
+              input_select:   !include_dir_merge_named helpers/input_select/
+              input_number:   !include_dir_merge_named helpers/input_number/
+        
+              # Packages (loads your generated per-room helpers under packages/helpers/generated/)
+              homeassistant:
+                packages: !include_dir_named packages
+        
+              # Lovelace: storage mode + an extra YAML dashboard
               lovelace:
                 mode: storage
                 dashboards:
@@ -176,24 +183,24 @@ spec:
                     icon: mdi:lightbulb-group
                     show_in_sidebar: true
                     filename: dashboards/views/living_room_lighting.yaml
-
-              # HTTP configuration for reverse proxy
+        
+              # HTTP reverse proxy
               http:
                 use_x_forwarded_for: true
                 trusted_proxies:
                   - 10.100.20.0/24
                   - 10.43.0.0/16
                   - 10.42.0.0/16
-              
-              # Shell commands for photo cleanup
+        
+              # Shell commands
               shell_command:
                 cleanup_old_photos: 'find /config/www/pets -name "*.jpg" -mtime +30 -delete && find /config/www/intruders -name "*.jpg" -mtime +30 -delete'
               EOF
-              
-              # Create empty files for scripts, scenes, and automations only if they don't exist or are empty
-              # This preserves UI-created automations, scripts, and scenes
+        
+              # Seed UI files if missing/empty (correct types!)
+              # scripts.yaml is a DICT; scenes/automations are LISTS
               if [ ! -f "${CONFIG_DIR}/scripts.yaml" ] || [ ! -s "${CONFIG_DIR}/scripts.yaml" ]; then
-                echo "[]" > "${CONFIG_DIR}/scripts.yaml"
+                echo "{}" > "${CONFIG_DIR}/scripts.yaml"
               fi
               if [ ! -f "${CONFIG_DIR}/scenes.yaml" ] || [ ! -s "${CONFIG_DIR}/scenes.yaml" ]; then
                 echo "[]" > "${CONFIG_DIR}/scenes.yaml"
@@ -201,13 +208,12 @@ spec:
               if [ ! -f "${CONFIG_DIR}/automations.yaml" ] || [ ! -s "${CONFIG_DIR}/automations.yaml" ]; then
                 echo "[]" > "${CONFIG_DIR}/automations.yaml"
               fi
-              
-              
-              # Set proper permissions for www directories
-              chmod 755 "${CONFIG_DIR}/www/pets"
-              chmod 755 "${CONFIG_DIR}/www/intruders"
-              
+        
+              # Perms
+              chmod 755 "${CONFIG_DIR}/www/pets" "${CONFIG_DIR}/www/intruders"
+        
               echo "Default configuration and directories created"
+
           volumeMounts:
             - name: config
               mountPath: /config

@@ -3,37 +3,37 @@ room_toggle:
   mode: parallel
   fields:
     room_key:
-      description: e.g., living_room
+      description: Short name for the room (e.g., living_room)
     target_lights:
-      description: Light or group to control (entity_id, list, or target)
+      description: Entity or group to control (entity_id, list, or target)
   sequence:
     - variables:
-        # Normalize to a flat list of entity_ids without losing the original group
+        # Normalize to a list but keep original ids for targeting
         _ids: >-
           {% if target_lights is mapping and 'entity_id' in target_lights %}
             {{ target_lights.entity_id }}
           {% else %}
             {{ target_lights }}
           {% endif %}
-        _list: >-
-          {% if _ids is string %}{{ [_ids] }}
-          {% elif _ids is sequence %}{{ _ids }}
-          {% else %}{{ [] }}
+        id_list: >-
+          {% if _ids is string %}
+            {{ [_ids] }}
+          {% elif _ids is sequence and _ids is not string %}
+            {{ _ids | list }}
+          {% else %}
+            {{ [] }}
           {% endif %}
-        # Expanded states (for member lights) plus originals (for group state)
-        _expanded: "{{ expand(_list) }}"
-        _expanded_ids: "{{ _expanded | map(attribute='entity_id') | list }}"
-        _all_ids: "{{ (_list + _expanded_ids) | unique | list }}"
-        any_on: >-
-          {{ expand(_all_ids) | selectattr('state','eq','on') | list | count > 0 }}
+        expanded: "{{ expand(id_list) }}"
+        any_on: "{{ expanded | selectattr('state','eq','on') | list | count > 0 }}"
     - choose:
         - conditions: "{{ any_on }}"
           sequence:
             - service: light.turn_off
               target:
-                entity_id: "{{ _all_ids }}"
+                entity_id: "{{ id_list }}"
       default:
         - service: script.scheduled_light_on
           data:
             room_key: "{{ room_key }}"
-            fallback_lights: "{{ _list | first if _list|length>0 else '' }}"
+            # provide usable fallback if scene is missing
+            fallback_lights: "{{ id_list[0] if id_list|length>0 else '' }}"

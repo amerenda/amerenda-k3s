@@ -9,9 +9,7 @@ scheduled_light_on:
     custom_s3_start: { required: false }
     custom_s4_start: { required: false }
     transition: { required: false }
-    fallback_lights:
-      description: Optional light/group to turn on if scene missing
-      required: false
+    fallback_lights: { required: false }
   sequence:
     - variables:
         default_s1: "06:00:00"
@@ -54,21 +52,14 @@ scheduled_light_on:
 
         default_scene_entity_id: "scene.{{ room_key }}_{{ slot }}"
         scene_to_activate: "{{ _override_val if _override_val else default_scene_entity_id }}"
+        scene_exists: "{{ scene_to_activate in (states.scene | map(attribute='entity_id') | list) }}"
 
-        all_scenes: "{{ states.scene | map(attribute='entity_id') | list }}"
-        scene_exists: "{{ scene_to_activate in all_scenes }}"
-
-        # Dynamic fallback: prefer light.<room_key>, then light.<room_key>_lights, else provided fallback_lights
-        _light_room: "light.{{ room_key }}"
-        _light_room_lights: "light.{{ room_key }}_lights"
-        _all_lights: "{{ states.light | map(attribute='entity_id') | list }}"
+        preferred_room_light: "light.{{ room_key }}"
+        all_lights: "{{ states.light | map(attribute='entity_id') | list }}"
         dynamic_fallback: >-
-          {% if _light_room in _all_lights %}{{ _light_room }}
-          {% elif _light_room_lights in _all_lights %}{{ _light_room_lights }}
-          {% elif fallback_lights is defined and fallback_lights and fallback_lights in _all_lights %}
-            {{ fallback_lights }}
-          {% else %}{{ '' }}
-          {% endif %}
+          {% if preferred_room_light in all_lights %}{{ preferred_room_light }}
+          {% elif fallback_lights is defined and fallback_lights in all_lights %}{{ fallback_lights }}
+          {% else %}{{ '' }}{% endif %}
     - choose:
         - conditions: "{{ scene_exists }}"
           sequence:
