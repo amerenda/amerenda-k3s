@@ -33,8 +33,8 @@ for room in "${rooms[@]}"; do
   jinja2 "$SCRIPT_DIR/input_number_template.yaml.j2" -D room="$room" > "$OUTPUT_DIR/input_number/${room}.yaml"
 done
 
-# Copy global input_text helper
-cp "$SCRIPT_DIR/input_text/set_value.yaml" "$OUTPUT_DIR/input_text/"
+# Copy all global input_text helpers
+cp "$SCRIPT_DIR/input_text"/*.yaml "$OUTPUT_DIR/input_text/"
 
 echo "All helper files generated in: $OUTPUT_DIR"
 echo "Directory structure:"
