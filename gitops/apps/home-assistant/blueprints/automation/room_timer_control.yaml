@@ -1,5 +1,5 @@
 blueprint:
-  name: Room – Timer Control (apply scene at window start)
+  name: Room - Timer Control (apply scene at window start)
   description: >
     On each time window start (morning/day/evening/night), optionally auto-turn-on
     or only update scene on currently-on lights. Uses the same shared custom schedule

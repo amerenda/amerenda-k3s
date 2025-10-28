@@ -1,5 +1,5 @@
 blueprint:
-  name: Room – Motion Control (scheduled scene, per-window options)
+  name: Room - Motion Control (scheduled scene, per-window options)
   description: >
     On motion: optionally turn on using script.scheduled_light_on based on current schedule slot
     (morning/day/evening/night). For each window you can block "turn-on" and set an auto-off

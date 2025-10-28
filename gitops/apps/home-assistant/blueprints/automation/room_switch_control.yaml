@@ -1,5 +1,5 @@
 blueprint:
-  name: Room – Switch Control (Hue Dimmer, scheduled scenes)
+  name: Room - Switch Control (Hue Dimmer, scheduled scenes)
   description: >
     Map Hue 4-button dimmer actions to room lighting. Defaults use scheduled_light_on
     for ON/toggle and provide brightness adjustments, scene cycling, and all-off.
