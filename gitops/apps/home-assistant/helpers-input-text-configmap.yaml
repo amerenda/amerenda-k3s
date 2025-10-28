@@ -1,0 +1,11 @@
+apiVersion: v1
+data:
+  set_value.yaml: |
+    # Global input_text helper for set_value automation
+    set_value:
+      name: Set Value
+      initial: ""
+      max: 255
+kind: ConfigMap
+metadata:
+  name: homeassistant-helpers-input-text
