@@ -263,7 +263,7 @@ trigger:
       id: !input hue_event_id
       type: initial_press
       subtype: 1
-    id: b1_short
+    id: e1_short
 
   - platform: event
     event_type: hue_event
@@ -271,7 +271,7 @@ trigger:
       id: !input hue_event_id
       type: long_press
       subtype: 1
-    id: b1_long
+    id: e1_long
 
   - platform: event
     event_type: hue_event
@@ -279,7 +279,7 @@ trigger:
       id: !input hue_event_id
       type: initial_press
       subtype: 2
-    id: b2_short
+    id: e2_short
 
   - platform: event
     event_type: hue_event
@@ -287,7 +287,7 @@ trigger:
       id: !input hue_event_id
       type: long_press
       subtype: 2
-    id: b2_long
+    id: e2_long
 
   - platform: event
     event_type: hue_event
@@ -295,7 +295,7 @@ trigger:
       id: !input hue_event_id
       type: short_release
       subtype: 3
-    id: b3_short
+    id: e3_short
 
   - platform: event
     event_type: hue_event
@@ -303,7 +303,7 @@ trigger:
       id: !input hue_event_id
       type: long_press
       subtype: 3
-    id: b3_long
+    id: e3_long
 
   - platform: event
     event_type: hue_event
@@ -311,7 +311,7 @@ trigger:
       id: !input hue_event_id
       type: short_release
       subtype: 4
-    id: b4_short
+    id: e4_short
 
   - platform: event
     event_type: hue_event
@@ -319,20 +319,20 @@ trigger:
       id: !input hue_event_id
       type: long_press
       subtype: 4
-    id: b4_long
+    id: e4_long
 
 action:
   - variables:
       action_key: >-
         {% set id = trigger.id %}
-        {% if id == 'b1_short' %}{{ btn1_short_action }}
-        {% elif id == 'b1_long' %}{{ btn1_long_action }}
-        {% elif id == 'b2_short' %}{{ btn2_short_action }}
-        {% elif id == 'b2_long' %}{{ btn2_long_action }}
-        {% elif id == 'b3_short' %}{{ btn3_short_action }}
-        {% elif id == 'b3_long' %}{{ btn3_long_action }}
-        {% elif id == 'b4_short' %}{{ btn4_short_action }}
-        {% elif id == 'b4_long' %}{{ btn4_long_action }}
+        {% if id == 'b1_short' or id == 'e1_short' %}{{ btn1_short_action }}
+        {% elif id == 'b1_long' or id == 'e1_long' %}{{ btn1_long_action }}
+        {% elif id == 'b2_short' or id == 'e2_short' %}{{ btn2_short_action }}
+        {% elif id == 'b2_long' or id == 'e2_long' %}{{ btn2_long_action }}
+        {% elif id == 'b3_short' or id == 'e3_short' %}{{ btn3_short_action }}
+        {% elif id == 'b3_long' or id == 'e3_long' %}{{ btn3_long_action }}
+        {% elif id == 'b4_short' or id == 'e4_short' %}{{ btn4_short_action }}
+        {% elif id == 'b4_long' or id == 'e4_long' %}{{ btn4_long_action }}
         {% else %}unknown{% endif %}
 
   - choose:
