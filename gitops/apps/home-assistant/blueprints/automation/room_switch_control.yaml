@@ -11,7 +11,8 @@ blueprint:
     room_key:
       name: Room Key
       description: "Short name used by scenes: scene.<room_key>_(morning|day|evening|night)"
-      selector: { text: {} }
+      selector:
+        text: {}
 
     target_lights:
       name: Target lights (group or list)
@@ -26,106 +27,153 @@ blueprint:
         device:
           integration: hue
 
-    # Optional legacy event-based compatibility (Philips hue_event id)
     hue_event_id:
       name: (Optional) Hue event ID (for hue_event compatibility)
       description: "Example: living_room_switch_button"
       default:
-      selector: { text: {} }
+      selector:
+        text: {}
 
-    # ---- Optional: pass through your per-room schedule overrides to scheduled_light_on
+    # ---- Optional schedule passthrough for scheduled_light_on
     custom_schedule_enabled:
       name: (Optional) Custom schedule enabled boolean
       default:
-      selector: { entity: { domain: input_boolean } }
+      selector:
+        entity:
+          domain: input_boolean
     custom_s1_start:
       name: (Optional) Morning start (time-only)
       default:
-      selector: { entity: { domain: input_datetime } }
+      selector:
+        entity:
+          domain: input_datetime
     custom_s2_start:
       name: (Optional) Day start (time-only)
       default:
-      selector: { entity: { domain: input_datetime } }
+      selector:
+        entity:
+          domain: input_datetime
     custom_s3_start:
       name: (Optional) Evening start (time-only)
       default:
-      selector: { entity: { domain: input_datetime } }
+      selector:
+        entity:
+          domain: input_datetime
     custom_s4_start:
       name: (Optional) Night start (time-only)
       default:
-      selector: { entity: { domain: input_datetime } }
+      selector:
+        entity:
+          domain: input_datetime
 
-    # ---- Optional: helper to store/cycle scene (recommended)
+    # ---- Optional scene cycle memory helper
     scene_cycle_helper:
       name: (Optional) Scene cycle helper (input_select)
       description: Stores the CURRENT slot; cycles morning→day→evening→night
       default:
-      selector: { entity: { domain: input_select } }
+      selector:
+        entity:
+          domain: input_select
 
-    # ---- NEW: per-room brightness helpers (optional)
+    # ---- Optional brightness helpers
     brightness_step_helper:
       name: (Optional) Brightness step helper (input_number, %)
       description: "e.g. input_number.<room>_brightness_step_pct"
       default:
-      selector: { entity: { domain: input_number } }
+      selector:
+        entity:
+          domain: input_number
     min_brightness_helper:
       name: (Optional) Min brightness helper (input_number, %)
       description: "e.g. input_number.<room>_min_brightness_pct"
       default:
-      selector: { entity: { domain: input_number } }
+      selector:
+        entity:
+          domain: input_number
     max_brightness_helper:
       name: (Optional) Max brightness helper (input_number, %)
       description: "e.g. input_number.<room>_max_brightness_pct"
       default:
-      selector: { entity: { domain: input_number } }
+      selector:
+        entity:
+          domain: input_number
 
-    # ---- Legacy static fallback if no helper is provided
+    # ---- Static brightness fallback values
     brightness_step_pct:
       name: Fallback brightness step (%)
       default: 10
-      selector: { number: { min: 1, max: 50, unit_of_measurement: "%", mode: slider } }
+      selector:
+        number:
+          min: 1
+          max: 50
+          unit_of_measurement: "%"
+          mode: slider
 
-    # ---- Optional: per-button overrides via input_select helpers (dashboard-friendly)
-    # The input_select state must be one of these keys:
-    #   toggle, scheduled_on, all_off, brightness_up, brightness_down, brightness_min,
-    #   brightness_max, scene_cycle, default_scene
+    # ---- Optional per-button override helpers
     btn1_short_action_helper:
       name: (Optional) Button 1 Short action (input_select)
       default:
-      selector: { entity: { domain: input_select } }
+      selector:
+        entity:
+          domain: input_select
     btn1_long_action_helper:
       name: (Optional) Button 1 Long action (input_select)
       default:
-      selector: { entity: { domain: input_select } }
+      selector:
+        entity:
+          domain: input_select
     btn2_short_action_helper:
       name: (Optional) Button 2 Short action (input_select)
       default:
-      selector: { entity: { domain: input_select } }
+      selector:
+        entity:
+          domain: input_select
     btn2_long_action_helper:
       name: (Optional) Button 2 Long action (input_select)
       default:
-      selector: { entity: { domain: input_select } }
+      selector:
+        entity:
+          domain: input_select
     btn3_short_action_helper:
       name: (Optional) Button 3 Short action (input_select)
       default:
-      selector: { entity: { domain: input_select } }
+      selector:
+        entity:
+          domain: input_select
     btn3_long_action_helper:
       name: (Optional) Button 3 Long action (input_select)
       default:
-      selector: { entity: { domain: input_select } }
+      selector:
+        entity:
+          domain: input_select
     btn4_short_action_helper:
       name: (Optional) Button 4 Short action (input_select)
       default:
-      selector: { entity: { domain: input_select } }
+      selector:
+        entity:
+          domain: input_select
     btn4_long_action_helper:
       name: (Optional) Button 4 Long action (input_select)
       default:
-      selector: { entity: { domain: input_select } }
+      selector:
+        entity:
+          domain: input_select
 
 mode: restart
 max_exceeded: silent
 
 variables:
+  # materialize inputs so we can reference them in templates/logs
+  room_key_input: !input room_key
+  target_lights_input: !input target_lights
+  scene_cycle_helper_input: !input scene_cycle_helper
+
+  custom_schedule_enabled_input: !input custom_schedule_enabled
+  custom_s1_start_input: !input custom_s1_start
+  custom_s2_start_input: !input custom_s2_start
+  custom_s3_start_input: !input custom_s3_start
+  custom_s4_start_input: !input custom_s4_start
+
   # ---- Resolve per-button actions (helper overrides if provided; else defaults)
   btn1_short_action: >-
     {{ states(btn1_short_action_helper) if btn1_short_action_helper else 'toggle' }}
@@ -167,27 +215,28 @@ variables:
     {% set v = _max_raw %}
     {{ (v | int(100)) if v not in ['unknown','unavailable','', None] else 100 }}
 
-  # ---- Schedule variables used to derive current slot (for scene-cycle fallback)
+  # ---- Time window / slot calc
   default_s1: "06:00:00"
   default_s2: "09:00:00"
   default_s3: "17:00:00"
   default_s4: "22:00:00"
 
   use_custom: >-
-    {{ custom_schedule_enabled is defined and custom_schedule_enabled != none and
-       is_state(custom_schedule_enabled, 'on') }}
+    {{ custom_schedule_enabled_input is not none and
+       custom_schedule_enabled_input != '' and
+       is_state(custom_schedule_enabled_input, 'on') }}
 
   s1_str: >-
-    {% set v = states(custom_s1_start) if use_custom else default_s1 %}
+    {% set v = states(custom_s1_start_input) if use_custom else default_s1 %}
     {% if v in ['unknown','unavailable',''] %}{{ default_s1 }}{% else %}{{ v }}{% endif %}
   s2_str: >-
-    {% set v = states(custom_s2_start) if use_custom else default_s2 %}
+    {% set v = states(custom_s2_start_input) if use_custom else default_s2 %}
     {% if v in ['unknown','unavailable',''] %}{{ default_s2 }}{% else %}{{ v }}{% endif %}
   s3_str: >-
-    {% set v = states(custom_s3_start) if use_custom else default_s3 %}
+    {% set v = states(custom_s3_start_input) if use_custom else default_s3 %}
     {% if v in ['unknown','unavailable',''] %}{{ default_s3 }}{% else %}{{ v }}{% endif %}
   s4_str: >-
-    {% set v = states(custom_s4_start) if use_custom else default_s4 %}
+    {% set v = states(custom_s4_start_input) if use_custom else default_s4 %}
     {% if v in ['unknown','unavailable',''] %}{{ default_s4 }}{% else %}{{ v }}{% endif %}
 
   now_ts: "{{ as_timestamp(now()) }}"
@@ -256,7 +305,7 @@ trigger:
     subtype: 4
     id: b4_long
 
-  # Optional legacy event-based triggers (Philips Hue v2 "hue_event")
+  # Optional legacy hue_event (this matches what you showed in dev tools)
   - platform: event
     event_type: hue_event
     event_data:
@@ -264,7 +313,6 @@ trigger:
       type: initial_press
       subtype: 1
     id: e1_short
-
   - platform: event
     event_type: hue_event
     event_data:
@@ -280,7 +328,6 @@ trigger:
       type: initial_press
       subtype: 2
     id: e2_short
-
   - platform: event
     event_type: hue_event
     event_data:
@@ -296,7 +343,6 @@ trigger:
       type: short_release
       subtype: 3
     id: e3_short
-
   - platform: event
     event_type: hue_event
     event_data:
@@ -312,7 +358,6 @@ trigger:
       type: short_release
       subtype: 4
     id: e4_short
-
   - platform: event
     event_type: hue_event
     event_data:
@@ -322,6 +367,15 @@ trigger:
     id: e4_long
 
 action:
+  # First: debug log so we SEE if the trigger actually fired
+  - service: logbook.log
+    data:
+      name: "room_switch_control"
+      message: >-
+        Trigger {{ trigger.id }} mapped for room {{ room_key_input }}.
+        Lights {{ target_lights_input }}.
+
+  # Resolve which logical action to run for this trigger
   - variables:
       action_key: >-
         {% set id = trigger.id %}
@@ -335,30 +389,33 @@ action:
         {% elif id == 'b4_long' or id == 'e4_long' %}{{ btn4_long_action }}
         {% else %}unknown{% endif %}
 
+  - service: logbook.log
+    data:
+      name: "room_switch_control"
+      message: >-
+        action_key={{ action_key }}
+
   - choose:
-      # --- toggle -> shared script
+      # --- toggle -> call room_toggle with only the supported args
       - conditions: "{{ action_key == 'toggle' }}"
         sequence:
           - service: script.room_toggle
             data:
-              room_key: !input room_key
-              target_lights: !input target_lights
-              custom_schedule_enabled: !input custom_schedule_enabled
-              custom_s1_start: !input custom_s1_start
-              custom_s2_start: !input custom_s2_start
-              custom_s3_start: !input custom_s3_start
-              custom_s4_start: !input custom_s4_start
+              room_key: "{{ room_key_input }}"
+              target_lights: "{{ target_lights_input.entity_id if target_lights_input.entity_id is defined else target_lights_input }}"
 
+      # --- scheduled_on/default_scene -> directly call scheduled_light_on with schedule overrides
       - conditions: "{{ action_key == 'scheduled_on' or action_key == 'default_scene' }}"
         sequence:
           - service: script.scheduled_light_on
             data:
-              room_key: !input room_key
-              custom_schedule_enabled: !input custom_schedule_enabled
-              custom_s1_start: !input custom_s1_start
-              custom_s2_start: !input custom_s2_start
-              custom_s3_start: !input custom_s3_start
-              custom_s4_start: !input custom_s4_start
+              room_key: "{{ room_key_input }}"
+              custom_schedule_enabled: "{{ custom_schedule_enabled_input }}"
+              custom_s1_start: "{{ custom_s1_start_input }}"
+              custom_s2_start: "{{ custom_s2_start_input }}"
+              custom_s3_start: "{{ custom_s3_start_input }}"
+              custom_s4_start: "{{ custom_s4_start_input }}"
+              fallback_lights: "{{ target_lights_input.entity_id if target_lights_input.entity_id is defined else target_lights_input }}"
 
       - conditions: "{{ action_key == 'all_off' }}"
         sequence:
@@ -397,18 +454,24 @@ action:
         sequence:
           - variables:
               order: ['morning','day','evening','night']
-              # Prefer helper to remember last position; else derive from current_slot
               cur_slot: >-
-                {% if scene_cycle_helper %}{{ states(scene_cycle_helper) | default(current_slot) }}{% else %}{{ current_slot }}{% endif %}
+                {% if scene_cycle_helper_input %}
+                  {{ states(scene_cycle_helper_input) | default(current_slot) }}
+                {% else %}
+                  {{ current_slot }}
+                {% endif %}
               idx: "{{ order.index(cur_slot) if cur_slot in order else 0 }}"
               next_slot: "{{ order[(idx + 1) % order | length] }}"
-              scene_to_activate: "scene.{{ room_key }}_{{ next_slot }}"
+              scene_to_activate: "scene.{{ room_key_input }}_{{ next_slot }}"
           - if:
               - condition: template
-                value_template: "{{ scene_cycle_helper is defined and scene_cycle_helper != none and scene_cycle_helper != '' }}"
+                value_template: "{{ scene_cycle_helper_input is not none and scene_cycle_helper_input != '' }}"
             then:
               - service: input_select.select_option
-                target: { entity_id: !input scene_cycle_helper }
-                data: { option: "{{ next_slot }}" }
+                target:
+                  entity_id: "{{ scene_cycle_helper_input }}"
+                data:
+                  option: "{{ next_slot }}"
           - service: scene.turn_on
-            target: { entity_id: "{{ scene_to_activate }}" }
+            target:
+              entity_id: "{{ scene_to_activate }}"
