@@ -424,6 +424,11 @@ action:
             data:
               room_key: "{{ room_key_input }}"
               target_lights: "{{ target_lights_input.entity_id if target_lights_input.entity_id is defined else target_lights_input }}"
+              custom_schedule_enabled: "{{ custom_schedule_enabled }}"
+              custom_s1_start: "{{ custom_s1_start }}"
+              custom_s2_start: "{{ custom_s2_start }}"
+              custom_s3_start: "{{ custom_s3_start }}"
+              custom_s4_start: "{{ custom_s4_start }}"
 
       # --- scheduled_on/default_scene -> directly call scheduled_light_on with schedule overrides
       - conditions: "{{ action_key == 'scheduled_on' or action_key == 'default_scene' }}"
@@ -476,8 +481,8 @@ action:
           - variables:
               order: ['morning','day','evening','night']
               cur_slot: >-
-                {% if scene_cycle_helper_input %}
-                  {{ states(scene_cycle_helper_input) | default(current_slot) }}
+                {% if scene_cycle_helper %}
+                  {{ states(scene_cycle_helper) | default(current_slot) }}
                 {% else %}
                   {{ current_slot }}
                 {% endif %}
@@ -486,11 +491,11 @@ action:
               scene_to_activate: "scene.{{ room_key_input }}_{{ next_slot }}"
           - if:
               - condition: template
-                value_template: "{{ scene_cycle_helper_input is not none and scene_cycle_helper_input != '' }}"
+                value_template: "{{ scene_cycle_helper is not none and scene_cycle_helper != '' }}"
             then:
               - service: input_select.select_option
                 target:
-                  entity_id: "{{ scene_cycle_helper_input }}"
+                  entity_id: "{{ scene_cycle_helper }}"
                 data:
                   option: "{{ next_slot }}"
           - service: scene.turn_on

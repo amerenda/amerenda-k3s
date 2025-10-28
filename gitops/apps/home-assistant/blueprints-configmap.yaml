@@ -380,17 +380,20 @@ data:
     \"{{ action_key == 'toggle' }}\"\n        sequence:\n          - service: script.room_toggle\n
     \           data:\n              room_key: \"{{ room_key_input }}\"\n              target_lights:
     \"{{ target_lights_input.entity_id if target_lights_input.entity_id is defined
-    else target_lights_input }}\"\n\n      # --- scheduled_on/default_scene -> directly
-    call scheduled_light_on with schedule overrides\n      - conditions: \"{{ action_key
-    == 'scheduled_on' or action_key == 'default_scene' }}\"\n        sequence:\n          -
-    service: script.scheduled_light_on\n            data:\n              room_key:
-    \"{{ room_key_input }}\"\n              custom_schedule_enabled: \"{{ custom_schedule_enabled_input
-    }}\"\n              custom_s1_start: \"{{ custom_s1_start_input }}\"\n              custom_s2_start:
-    \"{{ custom_s2_start_input }}\"\n              custom_s3_start: \"{{ custom_s3_start_input
-    }}\"\n              custom_s4_start: \"{{ custom_s4_start_input }}\"\n              fallback_lights:
-    \"{{ target_lights_input.entity_id if target_lights_input.entity_id is defined
-    else target_lights_input }}\"\n\n      - conditions: \"{{ action_key == 'all_off'
-    }}\"\n        sequence:\n          - service: light.turn_off\n            target:
+    else target_lights_input }}\"\n              custom_schedule_enabled: \"{{ custom_schedule_enabled
+    }}\"\n              custom_s1_start: \"{{ custom_s1_start }}\"\n              custom_s2_start:
+    \"{{ custom_s2_start }}\"\n              custom_s3_start: \"{{ custom_s3_start
+    }}\"\n              custom_s4_start: \"{{ custom_s4_start }}\"\n\n      # ---
+    scheduled_on/default_scene -> directly call scheduled_light_on with schedule overrides\n
+    \     - conditions: \"{{ action_key == 'scheduled_on' or action_key == 'default_scene'
+    }}\"\n        sequence:\n          - service: script.scheduled_light_on\n            data:\n
+    \             room_key: \"{{ room_key_input }}\"\n              custom_schedule_enabled:
+    \"{{ custom_schedule_enabled_input }}\"\n              custom_s1_start: \"{{ custom_s1_start_input
+    }}\"\n              custom_s2_start: \"{{ custom_s2_start_input }}\"\n              custom_s3_start:
+    \"{{ custom_s3_start_input }}\"\n              custom_s4_start: \"{{ custom_s4_start_input
+    }}\"\n              fallback_lights: \"{{ target_lights_input.entity_id if target_lights_input.entity_id
+    is defined else target_lights_input }}\"\n\n      - conditions: \"{{ action_key
+    == 'all_off' }}\"\n        sequence:\n          - service: light.turn_off\n            target:
     !input target_lights\n\n      - conditions: \"{{ action_key == 'brightness_up'
     }}\"\n        sequence:\n          - service: light.turn_on\n            target:
     !input target_lights\n            data:\n              brightness_step_pct: \"{{
@@ -406,15 +409,15 @@ data:
     \"{{ max_brightness_pct_resolved | int }}\"\n\n      - conditions: \"{{ action_key
     == 'scene_cycle' }}\"\n        sequence:\n          - variables:\n              order:
     ['morning','day','evening','night']\n              cur_slot: >-\n                {%
-    if scene_cycle_helper_input %}\n                  {{ states(scene_cycle_helper_input)
-    | default(current_slot) }}\n                {% else %}\n                  {{ current_slot
-    }}\n                {% endif %}\n              idx: \"{{ order.index(cur_slot)
-    if cur_slot in order else 0 }}\"\n              next_slot: \"{{ order[(idx + 1)
-    % order | length] }}\"\n              scene_to_activate: \"scene.{{ room_key_input
-    }}_{{ next_slot }}\"\n          - if:\n              - condition: template\n                value_template:
-    \"{{ scene_cycle_helper_input is not none and scene_cycle_helper_input != '' }}\"\n
-    \           then:\n              - service: input_select.select_option\n                target:\n
-    \                 entity_id: \"{{ scene_cycle_helper_input }}\"\n                data:\n
+    if scene_cycle_helper %}\n                  {{ states(scene_cycle_helper) | default(current_slot)
+    }}\n                {% else %}\n                  {{ current_slot }}\n                {%
+    endif %}\n              idx: \"{{ order.index(cur_slot) if cur_slot in order else
+    0 }}\"\n              next_slot: \"{{ order[(idx + 1) % order | length] }}\"\n
+    \             scene_to_activate: \"scene.{{ room_key_input }}_{{ next_slot }}\"\n
+    \         - if:\n              - condition: template\n                value_template:
+    \"{{ scene_cycle_helper is not none and scene_cycle_helper != '' }}\"\n            then:\n
+    \             - service: input_select.select_option\n                target:\n
+    \                 entity_id: \"{{ scene_cycle_helper }}\"\n                data:\n
     \                 option: \"{{ next_slot }}\"\n          - service: scene.turn_on\n
     \           target:\n              entity_id: \"{{ scene_to_activate }}\"\n"
   room_timer_control.yaml: |
