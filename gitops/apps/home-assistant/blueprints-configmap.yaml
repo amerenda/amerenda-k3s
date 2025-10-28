@@ -251,7 +251,7 @@ data:
         # Optional legacy event-based compatibility (Philips hue_event id)
         hue_event_id:
           name: (Optional) Hue event ID (for hue_event compatibility)
-          description: Example: living_room_switch_button
+          description: "Example: living_room_switch_button"
           default:
           selector: { text: {} }
 
