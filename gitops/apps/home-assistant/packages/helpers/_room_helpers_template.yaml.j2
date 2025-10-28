@@ -75,6 +75,14 @@ input_select:
       - scene.{{ room }}_day
       - scene.{{ room }}_morning
     initial: scene.{{ room }}_night
+  {{ room }}_scene_cycle:
+    name: {{ room|replace('_',' ')|title }} Scene Cycle
+    options:
+      - morning
+      - day
+      - evening
+      - night
+    initial: morning
 
 input_number:
   {{ room }}_brightness_step_pct:

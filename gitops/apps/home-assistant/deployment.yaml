@@ -168,6 +168,7 @@ spec:
               input_datetime: !include_dir_merge_named helpers/input_datetime/
               input_select:   !include_dir_merge_named helpers/input_select/
               input_number:   !include_dir_merge_named helpers/input_number/
+              input_text:     !include_dir_merge_named helpers/input_text/
         
               # Packages (loads your generated per-room helpers under packages/helpers/generated/)
               homeassistant:
@@ -310,6 +311,9 @@ spec:
             - name: helpers-input-number
               mountPath: /config/helpers/input_number
               readOnly: true
+            - name: helpers-input-text
+              mountPath: /config/helpers/input_text
+              readOnly: true
             - name: dashboards
               mountPath: /config/dashboards/views
               readOnly: true
@@ -342,6 +346,9 @@ spec:
         - name: helpers-input-number
           configMap:
             name: homeassistant-helpers-input-number
+        - name: helpers-input-text
+          configMap:
+            name: homeassistant-helpers-input-text
         - name: dashboards
           configMap:
             name: homeassistant-dashboards

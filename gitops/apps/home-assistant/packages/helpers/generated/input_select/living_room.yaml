@@ -34,3 +34,12 @@ living_room_night_scene:
     - scene.living_room_day
     - scene.living_room_morning
   initial: scene.living_room_night
+
+living_room_scene_cycle:
+  name: Living Room Scene Cycle
+  options:
+    - morning
+    - day
+    - evening
+    - night
+  initial: morning

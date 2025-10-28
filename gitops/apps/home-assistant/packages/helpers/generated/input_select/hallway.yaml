@@ -34,3 +34,12 @@ hallway_night_scene:
     - scene.hallway_day
     - scene.hallway_morning
   initial: scene.hallway_night
+
+hallway_scene_cycle:
+  name: Hallway Scene Cycle
+  options:
+    - morning
+    - day
+    - evening
+    - night
+  initial: morning

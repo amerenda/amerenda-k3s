@@ -34,3 +34,12 @@ bedroom_night_scene:
     - scene.bedroom_day
     - scene.bedroom_morning
   initial: scene.bedroom_night
+
+bedroom_scene_cycle:
+  name: Bedroom Scene Cycle
+  options:
+    - morning
+    - day
+    - evening
+    - night
+  initial: morning

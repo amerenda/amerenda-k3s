@@ -34,3 +34,12 @@ bathroom_night_scene:
     - scene.bathroom_day
     - scene.bathroom_morning
   initial: scene.bathroom_night
+
+bathroom_scene_cycle:
+  name: Bathroom Scene Cycle
+  options:
+    - morning
+    - day
+    - evening
+    - night
+  initial: morning

@@ -34,3 +34,12 @@
     - scene.{{ room }}_day
     - scene.{{ room }}_morning
   initial: scene.{{ room }}_night
+
+{{ room }}_scene_cycle:
+  name: {{ room|replace('_',' ')|title }} Scene Cycle
+  options:
+    - morning
+    - day
+    - evening
+    - night
+  initial: morning

@@ -34,3 +34,12 @@ kitchen_night_scene:
     - scene.kitchen_day
     - scene.kitchen_morning
   initial: scene.kitchen_night
+
+kitchen_scene_cycle:
+  name: Kitchen Scene Cycle
+  options:
+    - morning
+    - day
+    - evening
+    - night
+  initial: morning

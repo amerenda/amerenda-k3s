@@ -37,6 +37,15 @@ data:
         - scene.bathroom_day
         - scene.bathroom_morning
       initial: scene.bathroom_night
+
+    bathroom_scene_cycle:
+      name: Bathroom Scene Cycle
+      options:
+        - morning
+        - day
+        - evening
+        - night
+      initial: morning
   bedroom.yaml: |
     # Template for input_select helpers per room
     # Usage:
@@ -74,6 +83,15 @@ data:
         - scene.bedroom_day
         - scene.bedroom_morning
       initial: scene.bedroom_night
+
+    bedroom_scene_cycle:
+      name: Bedroom Scene Cycle
+      options:
+        - morning
+        - day
+        - evening
+        - night
+      initial: morning
   hallway.yaml: |
     # Template for input_select helpers per room
     # Usage:
@@ -111,6 +129,15 @@ data:
         - scene.hallway_day
         - scene.hallway_morning
       initial: scene.hallway_night
+
+    hallway_scene_cycle:
+      name: Hallway Scene Cycle
+      options:
+        - morning
+        - day
+        - evening
+        - night
+      initial: morning
   kitchen.yaml: |
     # Template for input_select helpers per room
     # Usage:
@@ -148,6 +175,15 @@ data:
         - scene.kitchen_day
         - scene.kitchen_morning
       initial: scene.kitchen_night
+
+    kitchen_scene_cycle:
+      name: Kitchen Scene Cycle
+      options:
+        - morning
+        - day
+        - evening
+        - night
+      initial: morning
   living_room.yaml: |
     # Template for input_select helpers per room
     # Usage:
@@ -185,6 +221,15 @@ data:
         - scene.living_room_day
         - scene.living_room_morning
       initial: scene.living_room_night
+
+    living_room_scene_cycle:
+      name: Living Room Scene Cycle
+      options:
+        - morning
+        - day
+        - evening
+        - night
+      initial: morning
 kind: ConfigMap
 metadata:
   name: homeassistant-helpers-input-select

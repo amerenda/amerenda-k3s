@@ -163,10 +163,31 @@ mode: restart
 max_exceeded: silent
 
 variables:
+  # Materialize all optional inputs so they're available in templates
+  btn1_short_action_helper: !input btn1_short_action_helper
+  btn1_long_action_helper: !input btn1_long_action_helper
+  btn2_short_action_helper: !input btn2_short_action_helper
+  btn2_long_action_helper: !input btn2_long_action_helper
+  btn3_short_action_helper: !input btn3_short_action_helper
+  btn3_long_action_helper: !input btn3_long_action_helper
+  btn4_short_action_helper: !input btn4_short_action_helper
+  btn4_long_action_helper: !input btn4_long_action_helper
+  
+  brightness_step_helper: !input brightness_step_helper
+  min_brightness_helper: !input min_brightness_helper
+  max_brightness_helper: !input max_brightness_helper
+  brightness_step_pct: !input brightness_step_pct
+  
+  scene_cycle_helper: !input scene_cycle_helper
+  custom_schedule_enabled: !input custom_schedule_enabled
+  custom_s1_start: !input custom_s1_start
+  custom_s2_start: !input custom_s2_start
+  custom_s3_start: !input custom_s3_start
+  custom_s4_start: !input custom_s4_start
+  
   # materialize inputs so we can reference them in templates/logs
   room_key_input: !input room_key
   target_lights_input: !input target_lights
-  scene_cycle_helper_input: !input scene_cycle_helper
 
   custom_schedule_enabled_input: !input custom_schedule_enabled
   custom_s1_start_input: !input custom_s1_start

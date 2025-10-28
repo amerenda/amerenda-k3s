@@ -13,6 +13,7 @@ mkdir -p "$OUTPUT_DIR/input_boolean"
 mkdir -p "$OUTPUT_DIR/input_datetime"
 mkdir -p "$OUTPUT_DIR/input_select"
 mkdir -p "$OUTPUT_DIR/input_number"
+mkdir -p "$OUTPUT_DIR/input_text"
 
 rooms=(bedroom bathroom living_room kitchen hallway)
 
@@ -31,6 +32,9 @@ for room in "${rooms[@]}"; do
   # Generate input_number helpers
   jinja2 "$SCRIPT_DIR/input_number_template.yaml.j2" -D room="$room" > "$OUTPUT_DIR/input_number/${room}.yaml"
 done
+
+# Copy global input_text helper
+cp "$SCRIPT_DIR/input_text/set_value.yaml" "$OUTPUT_DIR/input_text/"
 
 echo "All helper files generated in: $OUTPUT_DIR"
 echo "Directory structure:"
@@ -69,9 +73,16 @@ kubectl create configmap homeassistant-helpers-input-number \
   --dry-run=client \
   -o yaml > "$CONFIGMAP_DIR/helpers-input-number-configmap.yaml"
 
+echo "Generating input-text ConfigMap..."
+kubectl create configmap homeassistant-helpers-input-text \
+  --from-file="$OUTPUT_DIR/input_text" \
+  --dry-run=client \
+  -o yaml > "$CONFIGMAP_DIR/helpers-input-text-configmap.yaml"
+
 echo ""
 echo "All ConfigMaps generated:"
 echo "  helpers-input-boolean-configmap.yaml"
 echo "  helpers-input-datetime-configmap.yaml"
 echo "  helpers-input-select-configmap.yaml"
 echo "  helpers-input-number-configmap.yaml"
+echo "  helpers-input-text-configmap.yaml"
