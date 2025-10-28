@@ -10,7 +10,7 @@ blueprint:
   input:
     room_key:
       name: Room Key
-      description: Short name used by scenes: scene.<room_key>_(morning|day|evening|night)
+      description: "Short name used by scenes: scene.<room_key>_(morning|day|evening|night)"
       selector: { text: {} }
 
     target_lights:
