@@ -273,60 +273,7 @@ variables:
     {% else %}night{% endif %}
 
 trigger:
-  # Hue Bridge (device triggers)
-  - platform: device
-    device_id: !input dimmer
-    domain: hue
-    type: short_release
-    subtype: 1
-    id: b1_short
-  - platform: device
-    device_id: !input dimmer
-    domain: hue
-    type: long_release
-    subtype: 1
-    id: b1_long
-
-  - platform: device
-    device_id: !input dimmer
-    domain: hue
-    type: short_release
-    subtype: 2
-    id: b2_short
-  - platform: device
-    device_id: !input dimmer
-    domain: hue
-    type: long_release
-    subtype: 2
-    id: b2_long
-
-  - platform: device
-    device_id: !input dimmer
-    domain: hue
-    type: short_release
-    subtype: 3
-    id: b3_short
-  - platform: device
-    device_id: !input dimmer
-    domain: hue
-    type: long_release
-    subtype: 3
-    id: b3_long
-
-  - platform: device
-    device_id: !input dimmer
-    domain: hue
-    type: short_release
-    subtype: 4
-    id: b4_short
-  - platform: device
-    device_id: !input dimmer
-    domain: hue
-    type: long_release
-    subtype: 4
-    id: b4_long
-
-  # Optional legacy hue_event (this matches what you showed in dev tools)
+  # Event-based triggers (Philips Hue v2 "hue_event")
   - platform: event
     event_type: hue_event
     event_data:
@@ -400,14 +347,14 @@ action:
   - variables:
       action_key: >-
         {% set id = trigger.id %}
-        {% if id == 'b1_short' or id == 'e1_short' %}{{ btn1_short_action }}
-        {% elif id == 'b1_long' or id == 'e1_long' %}{{ btn1_long_action }}
-        {% elif id == 'b2_short' or id == 'e2_short' %}{{ btn2_short_action }}
-        {% elif id == 'b2_long' or id == 'e2_long' %}{{ btn2_long_action }}
-        {% elif id == 'b3_short' or id == 'e3_short' %}{{ btn3_short_action }}
-        {% elif id == 'b3_long' or id == 'e3_long' %}{{ btn3_long_action }}
-        {% elif id == 'b4_short' or id == 'e4_short' %}{{ btn4_short_action }}
-        {% elif id == 'b4_long' or id == 'e4_long' %}{{ btn4_long_action }}
+        {% if id == 'e1_short' %}{{ btn1_short_action }}
+        {% elif id == 'e1_long' %}{{ btn1_long_action }}
+        {% elif id == 'e2_short' %}{{ btn2_short_action }}
+        {% elif id == 'e2_long' %}{{ btn2_long_action }}
+        {% elif id == 'e3_short' %}{{ btn3_short_action }}
+        {% elif id == 'e3_long' %}{{ btn3_long_action }}
+        {% elif id == 'e4_short' %}{{ btn4_short_action }}
+        {% elif id == 'e4_long' %}{{ btn4_long_action }}
         {% else %}unknown{% endif %}
 
   - service: logbook.log

@@ -331,29 +331,16 @@ data:
     }}\"\n  s3: \"{{ as_timestamp(today_at(s3_str)) }}\"\n  s4: \"{{ as_timestamp(today_at(s4_str))
     }}\"\n\n  current_slot: >-\n    {% if now_ts >= s1 and now_ts < s2 %}morning\n
     \   {% elif now_ts >= s2 and now_ts < s3 %}day\n    {% elif now_ts >= s3 and now_ts
-    < s4 %}evening\n    {% else %}night{% endif %}\n\ntrigger:\n  # Hue Bridge (device
-    triggers)\n  - platform: device\n    device_id: !input dimmer\n    domain: hue\n
-    \   type: short_release\n    subtype: 1\n    id: b1_short\n  - platform: device\n
-    \   device_id: !input dimmer\n    domain: hue\n    type: long_release\n    subtype:
-    1\n    id: b1_long\n\n  - platform: device\n    device_id: !input dimmer\n    domain:
-    hue\n    type: short_release\n    subtype: 2\n    id: b2_short\n  - platform:
-    device\n    device_id: !input dimmer\n    domain: hue\n    type: long_release\n
-    \   subtype: 2\n    id: b2_long\n\n  - platform: device\n    device_id: !input
-    dimmer\n    domain: hue\n    type: short_release\n    subtype: 3\n    id: b3_short\n
-    \ - platform: device\n    device_id: !input dimmer\n    domain: hue\n    type:
-    long_release\n    subtype: 3\n    id: b3_long\n\n  - platform: device\n    device_id:
-    !input dimmer\n    domain: hue\n    type: short_release\n    subtype: 4\n    id:
-    b4_short\n  - platform: device\n    device_id: !input dimmer\n    domain: hue\n
-    \   type: long_release\n    subtype: 4\n    id: b4_long\n\n  # Optional legacy
-    hue_event (this matches what you showed in dev tools)\n  - platform: event\n    event_type:
-    hue_event\n    event_data:\n      id: !input hue_event_id\n      type: initial_press\n
-    \     subtype: 1\n    id: e1_short\n  - platform: event\n    event_type: hue_event\n
-    \   event_data:\n      id: !input hue_event_id\n      type: long_press\n      subtype:
-    1\n    id: e1_long\n\n  - platform: event\n    event_type: hue_event\n    event_data:\n
-    \     id: !input hue_event_id\n      type: initial_press\n      subtype: 2\n    id:
-    e2_short\n  - platform: event\n    event_type: hue_event\n    event_data:\n      id:
-    !input hue_event_id\n      type: long_press\n      subtype: 2\n    id: e2_long\n\n
+    < s4 %}evening\n    {% else %}night{% endif %}\n\ntrigger:\n  # Event-based triggers
+    (Philips Hue v2 \"hue_event\")\n  - platform: event\n    event_type: hue_event\n
+    \   event_data:\n      id: !input hue_event_id\n      type: initial_press\n      subtype:
+    1\n    id: e1_short\n  - platform: event\n    event_type: hue_event\n    event_data:\n
+    \     id: !input hue_event_id\n      type: long_press\n      subtype: 1\n    id:
+    e1_long\n\n  - platform: event\n    event_type: hue_event\n    event_data:\n      id:
+    !input hue_event_id\n      type: initial_press\n      subtype: 2\n    id: e2_short\n
     \ - platform: event\n    event_type: hue_event\n    event_data:\n      id: !input
+    hue_event_id\n      type: long_press\n      subtype: 2\n    id: e2_long\n\n  -
+    platform: event\n    event_type: hue_event\n    event_data:\n      id: !input
     hue_event_id\n      type: short_release\n      subtype: 3\n    id: e3_short\n
     \ - platform: event\n    event_type: hue_event\n    event_data:\n      id: !input
     hue_event_id\n      type: long_press\n      subtype: 3\n    id: e3_long\n\n  -
@@ -365,19 +352,17 @@ data:
     \   data:\n      name: \"room_switch_control\"\n      message: >-\n        Trigger
     {{ trigger.id }} mapped for room {{ room_key_input }}.\n        Lights {{ target_lights_input
     }}.\n\n  # Resolve which logical action to run for this trigger\n  - variables:\n
-    \     action_key: >-\n        {% set id = trigger.id %}\n        {% if id == 'b1_short'
-    or id == 'e1_short' %}{{ btn1_short_action }}\n        {% elif id == 'b1_long'
-    or id == 'e1_long' %}{{ btn1_long_action }}\n        {% elif id == 'b2_short'
-    or id == 'e2_short' %}{{ btn2_short_action }}\n        {% elif id == 'b2_long'
-    or id == 'e2_long' %}{{ btn2_long_action }}\n        {% elif id == 'b3_short'
-    or id == 'e3_short' %}{{ btn3_short_action }}\n        {% elif id == 'b3_long'
-    or id == 'e3_long' %}{{ btn3_long_action }}\n        {% elif id == 'b4_short'
-    or id == 'e4_short' %}{{ btn4_short_action }}\n        {% elif id == 'b4_long'
-    or id == 'e4_long' %}{{ btn4_long_action }}\n        {% else %}unknown{% endif
-    %}\n\n  - service: logbook.log\n    data:\n      name: \"room_switch_control\"\n
-    \     message: >-\n        action_key={{ action_key }}\n\n  - choose:\n      #
-    --- toggle -> call room_toggle with only the supported args\n      - conditions:
-    \"{{ action_key == 'toggle' }}\"\n        sequence:\n          - service: script.room_toggle\n
+    \     action_key: >-\n        {% set id = trigger.id %}\n        {% if id == 'e1_short'
+    %}{{ btn1_short_action }}\n        {% elif id == 'e1_long' %}{{ btn1_long_action
+    }}\n        {% elif id == 'e2_short' %}{{ btn2_short_action }}\n        {% elif
+    id == 'e2_long' %}{{ btn2_long_action }}\n        {% elif id == 'e3_short' %}{{
+    btn3_short_action }}\n        {% elif id == 'e3_long' %}{{ btn3_long_action }}\n
+    \       {% elif id == 'e4_short' %}{{ btn4_short_action }}\n        {% elif id
+    == 'e4_long' %}{{ btn4_long_action }}\n        {% else %}unknown{% endif %}\n\n
+    \ - service: logbook.log\n    data:\n      name: \"room_switch_control\"\n      message:
+    >-\n        action_key={{ action_key }}\n\n  - choose:\n      # --- toggle ->
+    call room_toggle with only the supported args\n      - conditions: \"{{ action_key
+    == 'toggle' }}\"\n        sequence:\n          - service: script.room_toggle\n
     \           data:\n              room_key: \"{{ room_key_input }}\"\n              target_lights:
     \"{{ target_lights_input.entity_id if target_lights_input.entity_id is defined
     else target_lights_input }}\"\n              custom_schedule_enabled: \"{{ custom_schedule_enabled
