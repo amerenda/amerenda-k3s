@@ -69,8 +69,8 @@ blueprint:
     # ---- Optional scene cycle memory helper
     scene_cycle_helper:
       name: (Optional) Scene cycle helper (input_select)
-      description: Stores the CURRENT slot; cycles morning→day→evening→night
-      default:
+      description: "Stores the CURRENT slot; cycles morning→day→evening→night. Defaults to input_select.<room_key>_scene_cycle"
+      default: ""
       selector:
         entity:
           domain: input_select
@@ -178,7 +178,14 @@ variables:
   max_brightness_helper: !input max_brightness_helper
   brightness_step_pct: !input brightness_step_pct
   
-  scene_cycle_helper: !input scene_cycle_helper
+  scene_cycle_helper_input: !input scene_cycle_helper
+  room_key: !input room_key
+  scene_cycle_helper: >-
+    {% if scene_cycle_helper_input and scene_cycle_helper_input != '' %}
+      {{ scene_cycle_helper_input }}
+    {% else %}
+      input_select.{{ room_key }}_scene_cycle
+    {% endif %}
   custom_schedule_enabled: !input custom_schedule_enabled
   custom_s1_start: !input custom_s1_start
   custom_s2_start: !input custom_s2_start
@@ -436,6 +443,12 @@ action:
               idx: "{{ order.index(cur_slot) if cur_slot in order else 0 }}"
               next_slot: "{{ order[(idx + 1) % order | length] }}"
               scene_to_activate: "scene.{{ room_key_input }}_{{ next_slot }}"
+          - service: logbook.log
+            data:
+              name: "scene_cycle DEBUG"
+              message: >-
+                helper={{ scene_cycle_helper }}, cur_slot={{ cur_slot }}, 
+                next_slot={{ next_slot }}, scene={{ scene_to_activate }}
           - if:
               - condition: template
                 value_template: "{{ scene_cycle_helper is not none and scene_cycle_helper != '' }}"
