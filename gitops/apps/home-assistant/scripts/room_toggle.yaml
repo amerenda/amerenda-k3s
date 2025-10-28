@@ -1,5 +1,5 @@
 room_toggle:
-  alias: Room Toggle (smart)
+  alias: Room Toggle (smart with debug)
   mode: parallel
   fields:
     room_key:
@@ -47,13 +47,31 @@ room_toggle:
         
         # Any method indicates lights are on
         any_on: "{{ group_on or members_on or attr_members_on }}"
+    
+    # DEBUG: Log what we detected
+    - service: logbook.log
+      data:
+        name: "room_toggle DEBUG"
+        message: >-
+          id_list={{ id_list }}, group_on={{ group_on }}, 
+          members_on={{ members_on }}, attr_members_on={{ attr_members_on }}, 
+          any_on={{ any_on }}
+    
     - choose:
         - conditions: "{{ any_on }}"
           sequence:
+            - service: logbook.log
+              data:
+                name: "room_toggle"
+                message: "Turning OFF {{ id_list }}"
             - service: light.turn_off
               target:
                 entity_id: "{{ id_list }}"
       default:
+        - service: logbook.log
+          data:
+            name: "room_toggle"
+            message: "Turning ON {{ room_key }} via scheduled_light_on"
         - service: script.scheduled_light_on
           data:
             room_key: "{{ room_key | default('') }}"
