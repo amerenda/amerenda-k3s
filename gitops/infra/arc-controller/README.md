@@ -9,14 +9,18 @@ The ARC controller manages runner scale sets cluster-wide and handles authentica
 ## Files
 
 - `values.yaml` - Helm values for the ARC controller
-- `externalsecret.yaml` - ExternalSecret to fetch GitHub App credentials from Bitwarden
+- `externalsecret.yaml` - ExternalSecret for GitHub App credentials (creates `controller-manager` secret used by both controller and runners)
 
 ## Configuration
 
 - **Namespace**: `arc-systems`
-- **Sync Wave**: 1 (installs early)
+- **Sync Wave**: 1 (installs early, must be synced before ARC runners)
 - **GitHub Auth**: Uses GitHub App authentication via ExternalSecret
-- **Secret Name**: `github-app-arc-token`
+- **Secret Name**: `controller-manager` (used by both ARC controller and runner scale sets)
+
+## Sync Order
+
+This application must be synced and healthy before the ARC runners application can be synced. ArgoCD sync waves (wave 1 for controller, wave 5 for runners) ensure this ordering automatically.
 
 ## Dependencies
 

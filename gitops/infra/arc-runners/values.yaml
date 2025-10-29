@@ -6,7 +6,7 @@ runnerScaleSet:
   # GitHub configuration
   githubConfigUrl: "https://github.com/amerenda"
   githubConfigSecret:
-    name: github-app-arc-token
+    name: controller-manager
     namespace: arc-systems
   
   # Runner scale set name

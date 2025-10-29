@@ -16,6 +16,8 @@ jobs:
   yaml-lint:
     name: YAML Lint
     runs-on: arc-runner-set
+    # Run on PRs and pushes to main
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,6 +34,10 @@ jobs:
     name: Home Assistant Configuration Check
     runs-on: arc-runner-set
     needs: yaml-lint
+    # Run on PRs and pushes to main
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    env:
+      HA_VERSION: "2024.10.0"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -113,6 +119,3 @@ jobs:
           else
             echo "No custom_components directory found, skipping hassfest"
           fi
-
-  env:
-    HA_VERSION: "2024.10.0"

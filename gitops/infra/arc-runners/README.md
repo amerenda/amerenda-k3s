@@ -19,5 +19,9 @@ The runner scale set deploys ephemeral runners that scale based on workflow dema
 
 ## Dependencies
 
-- ARC Controller (must be installed first)
-- GitHub App credentials (via ExternalSecret)
+- **ARC Controller** (must be synced and healthy first - see `arc-controller` application)
+- GitHub App credentials (via ExternalSecret `controller-manager` from arc-controller)
+
+## Sync Order
+
+This application depends on the ARC controller being synced first. ArgoCD sync waves automatically ensure the controller (wave 1) is synced before runners (wave 5). Do not manually sync this application until the `infra-arc-controller` application is healthy.
