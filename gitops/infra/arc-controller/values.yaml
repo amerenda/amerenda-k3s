@@ -10,9 +10,7 @@ githubConfigUrl: "https://github.com/amerenda"
 # Install CRDs automatically
 installCRDs: true
 
-# Global secret configuration
-secret:
-  name: github-app-arc-token
+# GitHub authentication - ARC expects secret named 'controller-manager'
 
 # Controller configuration
 controller:
