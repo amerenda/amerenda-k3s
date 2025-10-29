@@ -1,17 +1,17 @@
 apiVersion: v1
 data:
-  event_image_location_text.yaml: |
+  event_image_location.yaml: |
     # Global input_text helper for pet detection event location
-    event_image_location_text:
+    event_image_location:
       name: Event Image Location Text
       initial: ""
       max: 50
-  event_image_timestamp_text.yaml: |
+  event_image_timestamp.yaml: |
     # Global input_text helper for pet detection event timestamp
-    event_image_timestamp_text:
+    event_image_timestamp:
       name: Event Image Timestamp Text
       initial: ""
-      max: 20
+      max: 50
   set_value.yaml: |
     # Global input_text helper for set_value automation
     set_value:
