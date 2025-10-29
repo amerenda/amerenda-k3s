@@ -1,7 +1,8 @@
 name: Generate Home Assistant ConfigMaps
 
 on:
-  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
     branches: [ main ]
     paths:
       - 'gitops/apps/home-assistant/automations/**'
@@ -15,11 +16,14 @@ jobs:
   generate-configmaps:
     name: Generate ConfigMaps
     runs-on: arc-runner-set
+    # Only run on PR branches, not on main
+    if: github.event_name == 'pull_request' && github.head_ref != 'main'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - name: Configure Git
         run: |
