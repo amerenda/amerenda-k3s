@@ -576,3 +576,85 @@ spec:
         duration: 5s
         factor: 2
         maxDuration: 3m
+
+---
+# Infrastructure: GitHub Actions Runner Controller (ARC)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-arc-controller
+  namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"  # Install early - needed for runners
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: default
+  sources:
+    - repoURL: https://actions-runner-controller.github.io/actions-runner-controller
+      chart: actions-runner-controller
+      targetRevision: 0.23.7
+      helm:
+        valueFiles:
+          - $values/gitops/infra/arc/values.yaml
+    - repoURL: https://github.com/amerenda/amerenda-k3s.git
+      targetRevision: main
+      ref: values
+    - repoURL: https://github.com/amerenda/amerenda-k3s.git
+      targetRevision: main
+      path: gitops/infra/arc
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: arc-systems
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+---
+# Infrastructure: GitHub Actions Runner Scale Set
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-arc-runners
+  namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"  # Install after controller and external-secrets
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: default
+  sources:
+    - repoURL: https://actions-runner-controller.github.io/actions-runner-controller
+      chart: actions-runner-controller
+      targetRevision: 0.23.7
+      helm:
+        valueFiles:
+          - $values/gitops/infra/arc/runner-scale-set-values.yaml
+    - repoURL: https://github.com/amerenda/amerenda-k3s.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: arc-systems
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

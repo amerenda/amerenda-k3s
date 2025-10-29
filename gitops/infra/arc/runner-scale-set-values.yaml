@@ -1,0 +1,126 @@
+# GitHub Actions Runner Scale Set Configuration
+# This file contains the configuration for the runner scale set
+
+# Runner scale set configuration
+runnerScaleSet:
+  # GitHub configuration
+  githubConfigUrl: "https://github.com/amerenda"
+  githubConfigSecret:
+    name: github-app-arc-token
+    namespace: arc-systems
+  
+  # Runner scale set name
+  name: arc-runner-set
+  
+  # Runner group (leave empty for default)
+  runnerGroup: ""
+  
+  # Runner labels
+  runnerLabels:
+    - self-hosted
+    - linux
+    - arc-runner-set
+  
+  # Runner configuration
+  runner:
+    # Container image
+    image:
+      repository: ghcr.io/actions/actions-runner
+      tag: "2.320.0"
+      pullPolicy: IfNotPresent
+    
+    # Resources
+    resources:
+      requests:
+        cpu: 200m
+        memory: 256Mi
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+    
+    # Security context
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+    
+    # Environment variables
+    env: []
+    
+    # Volume mounts
+    volumeMounts: []
+    
+    # Working directory
+    workDir: /home/runner/_work
+    
+    # Runner timeout (in minutes)
+    timeout: 30
+  
+  # Scaling configuration
+  scaling:
+    # Minimum number of runners
+    minReplicas: 0
+    
+    # Maximum number of runners
+    maxReplicas: 10
+    
+    # Scale up behavior
+    scaleUp:
+      # Number of runners to add per scale up
+      stepSize: 1
+      # Time to wait before scaling up again (in seconds)
+      stepDelay: 10s
+    
+    # Scale down behavior
+    scaleDown:
+      # Number of runners to remove per scale down
+      stepSize: 1
+      # Time to wait before scaling down again (in seconds)
+      stepDelay: 30s
+      # Time to wait before removing a runner (in seconds)
+      runnerGracefulStopTimeout: 30s
+  
+  # Pod configuration
+  pod:
+    # Node selector
+    nodeSelector: {}
+    
+    # Tolerations
+    tolerations: []
+    
+    # Affinity
+    affinity: {}
+    
+    # Pod annotations
+    annotations: {}
+    
+    # Pod labels
+    labels: {}
+    
+    # Security context
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+  
+  # Service account
+  serviceAccount:
+    create: true
+    name: arc-runner-set
+    annotations: {}
+  
+  # RBAC configuration
+  rbac:
+    create: true
+  
+  # Pod security policy
+  podSecurityPolicy:
+    enabled: false
+  
+  # Monitoring
+  monitoring:
+    enabled: false
+    serviceMonitor:
+      enabled: false

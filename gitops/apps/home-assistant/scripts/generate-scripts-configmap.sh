@@ -9,19 +9,25 @@ OUTPUT_FILE="$SCRIPT_DIR/../scripts-configmap.yaml"
 
 echo "Generating scripts ConfigMap..."
 
-# Create ConfigMap from scripts directory (only .yaml files)
-# Use a temporary directory to avoid including the generation script
-TEMP_DIR=$(mktemp -d)
-cp "$SCRIPT_DIR"/*.yaml "$TEMP_DIR/"
+# Create ConfigMap YAML manually (no kubectl dependency)
+cat > "$OUTPUT_FILE" << 'EOF'
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homeassistant-scripts
+data:
+EOF
 
-kubectl create configmap homeassistant-scripts \
-  --from-file="$TEMP_DIR" \
-  --dry-run=client \
-  -o yaml > "$OUTPUT_FILE"
-
-# Cleanup
-rm -rf "$TEMP_DIR"
+# Add each YAML file to the ConfigMap (exclude generation script)
+for file in "$SCRIPT_DIR"/*.yaml; do
+  if [ -f "$file" ] && [ "$(basename "$file")" != "generate-scripts-configmap.sh" ]; then
+    filename=$(basename "$file")
+    echo "  $filename: |" >> "$OUTPUT_FILE"
+    # Indent each line with 4 spaces and add to ConfigMap
+    sed 's/^/    /' "$file" >> "$OUTPUT_FILE"
+  fi
+done
 
 echo "Scripts ConfigMap generated: $OUTPUT_FILE"
 echo "ConfigMap includes:"
-ls -1 "$SCRIPT_DIR"/*.yaml | sed 's/^/  /'
+ls -1 "$SCRIPT_DIR"/*.yaml | grep -v "generate-scripts-configmap.sh" | sed 's/^/  /'

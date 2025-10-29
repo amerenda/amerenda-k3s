@@ -49,35 +49,39 @@ echo "Generating ConfigMaps..."
 # Generate ConfigMaps for each domain
 CONFIGMAP_DIR="$SCRIPT_DIR/../.."
 
-echo "Generating input-boolean ConfigMap..."
-kubectl create configmap homeassistant-helpers-input-boolean \
-  --from-file="$OUTPUT_DIR/input_boolean" \
-  --dry-run=client \
-  -o yaml > "$CONFIGMAP_DIR/helpers-input-boolean-configmap.yaml"
+# Function to generate ConfigMap YAML manually
+generate_configmap() {
+  local name="$1"
+  local source_dir="$2"
+  local output_file="$3"
+  
+  echo "Generating $name ConfigMap..."
+  
+  cat > "$output_file" << EOF
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: $name
+data:
+EOF
 
-echo "Generating input-datetime ConfigMap..."
-kubectl create configmap homeassistant-helpers-input-datetime \
-  --from-file="$OUTPUT_DIR/input_datetime" \
-  --dry-run=client \
-  -o yaml > "$CONFIGMAP_DIR/helpers-input-datetime-configmap.yaml"
+  # Add each YAML file to the ConfigMap
+  for file in "$source_dir"/*.yaml; do
+    if [ -f "$file" ]; then
+      filename=$(basename "$file")
+      echo "  $filename: |" >> "$output_file"
+      # Indent each line with 4 spaces and add to ConfigMap
+      sed 's/^/    /' "$file" >> "$output_file"
+    fi
+  done
+}
 
-echo "Generating input-select ConfigMap..."
-kubectl create configmap homeassistant-helpers-input-select \
-  --from-file="$OUTPUT_DIR/input_select" \
-  --dry-run=client \
-  -o yaml > "$CONFIGMAP_DIR/helpers-input-select-configmap.yaml"
-
-echo "Generating input-number ConfigMap..."
-kubectl create configmap homeassistant-helpers-input-number \
-  --from-file="$OUTPUT_DIR/input_number" \
-  --dry-run=client \
-  -o yaml > "$CONFIGMAP_DIR/helpers-input-number-configmap.yaml"
-
-echo "Generating input-text ConfigMap..."
-kubectl create configmap homeassistant-helpers-input-text \
-  --from-file="$OUTPUT_DIR/input_text" \
-  --dry-run=client \
-  -o yaml > "$CONFIGMAP_DIR/helpers-input-text-configmap.yaml"
+# Generate all ConfigMaps
+generate_configmap "homeassistant-helpers-input-boolean" "$OUTPUT_DIR/input_boolean" "$CONFIGMAP_DIR/helpers-input-boolean-configmap.yaml"
+generate_configmap "homeassistant-helpers-input-datetime" "$OUTPUT_DIR/input_datetime" "$CONFIGMAP_DIR/helpers-input-datetime-configmap.yaml"
+generate_configmap "homeassistant-helpers-input-select" "$OUTPUT_DIR/input_select" "$CONFIGMAP_DIR/helpers-input-select-configmap.yaml"
+generate_configmap "homeassistant-helpers-input-number" "$OUTPUT_DIR/input_number" "$CONFIGMAP_DIR/helpers-input-number-configmap.yaml"
+generate_configmap "homeassistant-helpers-input-text" "$OUTPUT_DIR/input_text" "$CONFIGMAP_DIR/helpers-input-text-configmap.yaml"
 
 echo ""
 echo "All ConfigMaps generated:"
