@@ -613,6 +613,7 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
+      - ServerSideApply=true
     retry:
       limit: 5
       backoff:
@@ -652,6 +653,7 @@ spec:
       selfHeal: true
     syncOptions:
       - PrunePropagationPolicy=foreground
+      - ServerSideApply=true
     retry:
       limit: 5
       backoff:
