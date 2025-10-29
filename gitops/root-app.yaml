@@ -620,6 +620,11 @@ spec:
         duration: 5s
         factor: 2
         maxDuration: 3m
+  ignoreDifferences:
+  - group: "apiextensions.k8s.io"
+    kind: CustomResourceDefinition
+    jsonPointers:
+    - /spec/preserveUnknownFields
 
 ---
 # Infrastructure: GitHub Actions Runner Scale Set
@@ -660,3 +665,8 @@ spec:
         duration: 5s
         factor: 2
         maxDuration: 3m
+  ignoreDifferences:
+  - group: "apiextensions.k8s.io"
+    kind: CustomResourceDefinition
+    jsonPointers:
+    - /spec/preserveUnknownFields

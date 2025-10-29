@@ -4,6 +4,9 @@
 # Override the default namespace
 namespaceOverride: arc-systems
 
+# GitHub configuration
+githubConfigUrl: "https://github.com/amerenda"
+
 # Install CRDs automatically
 installCRDs: true
 
@@ -71,6 +74,20 @@ controller:
 
   # Extra environment variables
   extraEnv: []
+
+  # GitHub authentication
+  authSecret:
+    enabled: true
+    secretName: github-app-arc-token
+    key: github_app_id
+  authSecretInstallationID:
+    enabled: true
+    secretName: github-app-arc-token
+    key: github_app_installation_id
+  authSecretPrivateKey:
+    enabled: true
+    secretName: github-app-arc-token
+    key: github_app_private_key
 
   # Pod disruption budget
   podDisruptionBudget:
