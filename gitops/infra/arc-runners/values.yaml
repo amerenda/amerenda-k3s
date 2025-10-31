@@ -13,6 +13,12 @@ githubConfigUrl: "https://github.com/amerenda/amerenda-k3s"
 # - github_app_private_key
 githubConfigSecret: controller-manager
 
+# Controller service account configuration
+# Explicitly set to avoid lookup issues during Helm template rendering
+controllerServiceAccount:
+  name: gha-runner-scale-set-controller  # Default name from controller chart
+  namespace: arc-systems  # Controller namespace
+
 # Runner scale set configuration
 autoscalingRunnerSet:
   # Installation name (used as runs-on in workflows)
