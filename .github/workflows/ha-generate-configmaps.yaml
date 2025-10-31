@@ -22,23 +22,14 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
       - name: Install dependencies
         run: |
-          # Install Python and pip if not available
-          if ! command -v pip3 &> /dev/null; then
-            if command -v apt-get &> /dev/null; then
-              sudo apt-get update
-              sudo apt-get install -y python3 python3-pip
-            elif command -v apk &> /dev/null; then
-              sudo apk add --no-cache python3 py3-pip
-            elif command -v yum &> /dev/null; then
-              sudo yum install -y python3 python3-pip
-            else
-              echo "Could not detect package manager. Assuming pip3 is available."
-            fi
-          fi
-          python3 -m pip install --upgrade pip
-          python3 -m pip install jinja2-cli
+          pip install jinja2-cli
 
       - name: Generate all ConfigMaps
         run: |
