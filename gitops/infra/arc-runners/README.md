@@ -8,7 +8,7 @@ The runner scale set deploys ephemeral runners that scale based on workflow dema
 
 ## Files
 
-- `values.yaml` - Helm values for the runner scale set
+- `runnerset.yaml` - RunnerSet CRD resource that defines the runner scale set
 
 ## Configuration
 

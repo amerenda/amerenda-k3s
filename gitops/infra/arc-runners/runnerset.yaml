@@ -49,5 +49,5 @@ spec:
   replicas: 0  # Start with 0, scale up on demand
   
   # Autoscaling configuration
-  minReplicas: 0
+  minReplicas: 1
   maxReplicas: 10
