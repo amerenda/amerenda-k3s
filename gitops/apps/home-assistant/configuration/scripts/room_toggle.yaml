@@ -1,11 +1,11 @@
 room_toggle:
-  alias: Room Toggle (smart with debug)
-  mode: parallel
+  alias: "Room Toggle (smart with debug)"
+  mode: "parallel"
   fields:
     room_key:
-      description: Short name for the room (e.g., living_room)
+      description: "Short name for the room (e.g., living_room)"
     target_lights:
-      description: Entity or group to control (entity_id, list, or target)
+      description: "Entity or group to control (entity_id, list, or target)"
   sequence:
     - variables:
         _ids: >-
@@ -49,7 +49,7 @@ room_toggle:
         any_on: "{{ group_on or members_on or attr_members_on }}"
     
     # DEBUG: Log what we detected
-    - service: logbook.log
+    - service: "logbook.log"
       data:
         name: "room_toggle DEBUG"
         message: >-
@@ -60,19 +60,19 @@ room_toggle:
     - choose:
         - conditions: "{{ any_on }}"
           sequence:
-            - service: logbook.log
+            - service: "logbook.log"
               data:
                 name: "room_toggle"
                 message: "Turning OFF {{ id_list }}"
-            - service: light.turn_off
+            - service: "light.turn_off"
               target:
                 entity_id: "{{ id_list }}"
       default:
-        - service: logbook.log
+        - service: "logbook.log"
           data:
             name: "room_toggle"
             message: "Turning ON {{ room_key }} via scheduled_light_on"
-        - service: script.scheduled_light_on
+        - service: "script.scheduled_light_on"
           data:
             room_key: "{{ room_key | default('') }}"
             fallback_lights: "{{ id_list[0] if id_list|length>0 else '' }}"

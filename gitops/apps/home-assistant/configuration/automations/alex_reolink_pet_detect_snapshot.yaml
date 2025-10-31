@@ -1,16 +1,16 @@
-alias: Alex - Reolink Pet Snapshot (Away)
-mode: queued
+alias: "Alex - Reolink Pet Snapshot (Away)"
+mode: "queued"
 triggers:
-  - trigger: state
+  - trigger: "state"
     entity_id:
       - binary_sensor.living_room_animal
       - binary_sensor.bedroom_animal
     from: "off"
     to: "on"
 conditions:
-  - condition: not
+  - condition: "not"
     conditions:
-      - condition: state
+      - condition: "state"
         entity_id: person.alex_merenda
         state: "home"
 variables:
@@ -30,22 +30,22 @@ variables:
   path: "/config/www/pets/{{ slug }}_{{ timestamp }}.jpg"
   url: "/local/pets/{{ slug }}_{{ timestamp }}.jpg"
 actions:
-  - action: camera.snapshot
+  - action: "camera.snapshot"
     target: { entity_id: "{{ cam }}" }
     data:
       filename: "{{ path }}"
-  - action: input_text.set_value
+  - action: "input_text.set_value"
     target: { entity_id: input_text.event_image_location }
     data: { value: "{{ slug }}" }
-  - action: input_text.set_value
+  - action: "input_text.set_value"
     target: { entity_id: input_text.event_image_timestamp }
     data: { value: "{{ timestamp }}" }
-  - action: notify.mobile_app_pixel_9_pro_xl
+  - action: "notify.mobile_app_pixel_9_pro_xl"
     data:
       title: "Pet detected - {{ room }}"
       message: "{{ now().strftime('%-I:%M %p on %b %-d') }}"
       data:
         image: "{{ url }}"
         tag: "pet-{{ slug }}"
-        importance: low
+        importance: "low"
         sticky: true

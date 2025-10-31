@@ -1,6 +1,6 @@
 scheduled_light_on:
-  alias: Scheduled Light On (safe)
-  mode: restart
+  alias: "Scheduled Light On (safe)"
+  mode: "restart"
   fields:
     room_key: {}
     custom_schedule_enabled: { required: false }
@@ -64,7 +64,7 @@ scheduled_light_on:
     - choose:
         - conditions: "{{ scene_exists }}"
           sequence:
-            - service: scene.turn_on
+            - service: "scene.turn_on"
               data:
                 transition: "{{ transition | default(0) }}"
               target:
@@ -73,16 +73,16 @@ scheduled_light_on:
         - choose:
             - conditions: "{{ dynamic_fallback != '' }}"
               sequence:
-                - service: light.turn_on
+                - service: "light.turn_on"
                   target:
                     entity_id: "{{ dynamic_fallback }}"
-                - service: logbook.log
+                - service: "logbook.log"
                   data:
                     name: "scheduled_light_on"
                     message: "Scene '{{ scene_to_activate }}' missing; used '{{ dynamic_fallback }}'"
                     entity_id: "{{ dynamic_fallback }}"
           default:
-            - service: logbook.log
+            - service: "logbook.log"
               data:
                 name: "scheduled_light_on"
                 message: "Scene '{{ scene_to_activate }}' missing; no fallback light entity available"

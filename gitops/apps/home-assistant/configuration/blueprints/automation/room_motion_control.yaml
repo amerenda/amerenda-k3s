@@ -1,108 +1,108 @@
 blueprint:
-  name: Room - Motion Control (scheduled scene, per-window options)
+  name: "Room - Motion Control (scheduled scene, per-window options)"
   description: >
     On motion: optionally turn on using script.scheduled_light_on based on current schedule slot
     (morning/day/evening/night). For each window you can block "turn-on" and set an auto-off
     timeout after motion clears. Supports per-room schedule overrides via helpers.
-  domain: automation
+  domain: "automation"
 
   input:
     room_key:
-      name: Room Key
+      name: "Room Key"
       description: "Short name used by scenes: scene.<room_key>_(morning|day|evening|night)"
       selector: { text: {} }
 
     target_lights:
-      name: Target lights (group or list)
-      selector: { target: { entity: { domain: light } } }
+      name: "Target lights (group or list)"
+      selector: { target: { entity: { domain: "light" } } }
 
     motion_sensor:
-      name: Motion sensor (binary_sensor)
-      selector: { entity: { domain: binary_sensor } }
+      name: "Motion sensor (binary_sensor)"
+      selector: { entity: { domain: "binary_sensor" } }
 
     motion_enabled:
-      name: Motion Control Enabled (input_boolean)
-      description: If OFF, motion won't control lights in this room.
-      selector: { entity: { domain: input_boolean } }
+      name: "Motion Control Enabled (input_boolean)"
+      description: "If OFF, motion won't control lights in this room."
+      selector: { entity: { domain: "input_boolean" } }
 
     # ---- Optional: pass your per-room schedule overrides to scheduled_light_on
     custom_schedule_enabled:
-      name: (Optional) Custom schedule enabled boolean
+      name: "(Optional) Custom schedule enabled boolean"
       default:
-      selector: { entity: { domain: input_boolean } }
+      selector: { entity: { domain: "input_boolean" } }
     custom_s1_start:
-      name: (Optional) Morning start (time-only)
+      name: "(Optional) Morning start (time-only)"
       default:
-      selector: { entity: { domain: input_datetime } }
+      selector: { entity: { domain: "input_datetime" } }
     custom_s2_start:
-      name: (Optional) Day start (time-only)
+      name: "(Optional) Day start (time-only)"
       default:
-      selector: { entity: { domain: input_datetime } }
+      selector: { entity: { domain: "input_datetime" } }
     custom_s3_start:
-      name: (Optional) Evening start (time-only)
+      name: "(Optional) Evening start (time-only)"
       default:
-      selector: { entity: { domain: input_datetime } }
+      selector: { entity: { domain: "input_datetime" } }
     custom_s4_start:
-      name: (Optional) Night start (time-only)
+      name: "(Optional) Night start (time-only)"
       default:
-      selector: { entity: { domain: input_datetime } }
+      selector: { entity: { domain: "input_datetime" } }
 
     # ---- Per-window controls (helpers optional; defaults provided)
     morning_block_helper:
-      name: (Optional) Block motion ON during Morning (input_boolean)
+      name: "(Optional) Block motion ON during Morning (input_boolean)"
       default:
-      selector: { entity: { domain: input_boolean } }
+      selector: { entity: { domain: "input_boolean" } }
     day_block_helper:
-      name: (Optional) Block motion ON during Day (input_boolean)
+      name: "(Optional) Block motion ON during Day (input_boolean)"
       default:
-      selector: { entity: { domain: input_boolean } }
+      selector: { entity: { domain: "input_boolean" } }
     evening_block_helper:
-      name: (Optional) Block motion ON during Evening (input_boolean)
+      name: "(Optional) Block motion ON during Evening (input_boolean)"
       default:
-      selector: { entity: { domain: input_boolean } }
+      selector: { entity: { domain: "input_boolean" } }
     night_block_helper:
-      name: (Optional) Block motion ON during Night (input_boolean)
+      name: "(Optional) Block motion ON during Night (input_boolean)"
       default:
-      selector: { entity: { domain: input_boolean } }
+      selector: { entity: { domain: "input_boolean" } }
 
     morning_auto_off_default:
-      name: Morning auto-off (minutes, default if no helper)
+      name: "Morning auto-off (minutes, default if no helper)"
       default: 5
-      selector: { number: { min: 0, max: 240, mode: slider } }
+      selector: { number: { min: 0, max: 240, mode: "slider" } }
     morning_auto_off_helper:
-      name: (Optional) Morning auto-off helper (input_number)
+      name: "(Optional) Morning auto-off helper (input_number)"
       default:
-      selector: { entity: { domain: input_number } }
+      selector: { entity: { domain: "input_number" } }
 
     day_auto_off_default:
-      name: Day auto-off (minutes, default if no helper)
+      name: "Day auto-off (minutes, default if no helper)"
       default: 5
-      selector: { number: { min: 0, max: 240, mode: slider } }
+      selector: { number: { min: 0, max: 240, mode: "slider" } }
     day_auto_off_helper:
-      name: (Optional) Day auto-off helper (input_number)
+      name: "(Optional) Day auto-off helper (input_number)"
       default:
-      selector: { entity: { domain: input_number } }
+      selector: { entity: { domain: "input_number" } }
 
     evening_auto_off_default:
-      name: Evening auto-off (minutes, default if no helper)
+      name: "Evening auto-off (minutes, default if no helper)"
       default: 10
-      selector: { number: { min: 0, max: 240, mode: slider } }
+      selector: { number: { min: 0, max: 240, mode: "slider" } }
     evening_auto_off_helper:
-      name: (Optional) Evening auto-off helper (input_number)
+      name: "(Optional) Evening auto-off helper (input_number)"
       default:
-      selector: { entity: { domain: input_number } }
+      selector: { entity: { domain: "input_number" } }
 
     night_auto_off_default:
-      name: Night auto-off (minutes, default if no helper)
+      name: "Night auto-off (minutes, default if no helper)"
       default: 1
-      selector: { number: { min: 0, max: 240, mode: slider } }
+      selector: { number: { min: 0, max: 240, mode: "slider" } }
     night_auto_off_helper:
-      name: (Optional) Night auto-off helper (input_number)
+      name: "(Optional) Night auto-off helper (input_number)"
       default:
-      selector: { entity: { domain: input_number } }
+      selector: { entity: { domain: "input_number" } }
 
-mode: restart
-max_exceeded: silent
+mode: "restart"
+max_exceeded: "silent"
 
 variables:
   default_s1: "06:00:00"
@@ -166,12 +166,12 @@ variables:
     {{ map[slot] | int(0) }}
 
 trigger:
-  - platform: state
+  - platform: "state"
     entity_id: !input motion_sensor
     to: "on"
     id: motion_on
 
-  - platform: state
+  - platform: "state"
     entity_id: !input motion_sensor
     to: "off"
     id: motion_off
@@ -189,7 +189,7 @@ action:
           - condition: template
             value_template: "{{ not block_current }}"
         sequence:
-          - service: script.scheduled_light_on
+          - service: "script.scheduled_light_on"
             data:
               room_key: !input room_key
               custom_schedule_enabled: !input custom_schedule_enabled
@@ -214,5 +214,5 @@ action:
               - condition: state
                 entity_id: !input motion_sensor
                 state: "off"
-              - service: light.turn_off
+              - service: "light.turn_off"
                 target: !input target_lights
