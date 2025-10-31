@@ -70,10 +70,11 @@ rules:
   document-end:
     present: false
   
-  # Allow quoted strings
+  # Allow quoted strings (don't require quotes, but don't complain if they're used)
   quoted-strings:
     quote-type: any
     check-keys: false
+    required: false
   
   # Allow octal values
   octal-values:

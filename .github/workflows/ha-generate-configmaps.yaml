@@ -11,11 +11,14 @@ jobs:
   generate-configmaps:
     name: Generate ConfigMaps
     runs-on: arc-runner-set
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - name: Configure Git
         run: |
@@ -60,4 +63,4 @@ jobs:
           - dashboards/
           - helpers/
           - scripts/"
-          git push
+          git push origin HEAD:main

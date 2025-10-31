@@ -3,15 +3,15 @@ mode: "queued"
 triggers:
   - trigger: "state"
     entity_id:
-      - binary_sensor.living_room_animal
-      - binary_sensor.bedroom_animal
+      - "binary_sensor.living_room_animal"
+      - "binary_sensor.bedroom_animal"
     from: "off"
     to: "on"
 conditions:
   - condition: "not"
     conditions:
       - condition: "state"
-        entity_id: person.alex_merenda
+        entity_id: "person.alex_merenda"
         state: "home"
 variables:
   CAM_MAP: >
@@ -35,10 +35,10 @@ actions:
     data:
       filename: "{{ path }}"
   - action: "input_text.set_value"
-    target: { entity_id: input_text.event_image_location }
+    target: { entity_id: "input_text.event_image_location" }
     data: { value: "{{ slug }}" }
   - action: "input_text.set_value"
-    target: { entity_id: input_text.event_image_timestamp }
+    target: { entity_id: "input_text.event_image_timestamp" }
     data: { value: "{{ timestamp }}" }
   - action: "notify.mobile_app_pixel_9_pro_xl"
     data:

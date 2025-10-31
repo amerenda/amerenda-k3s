@@ -140,9 +140,9 @@ variables:
     {% else %}night{% endif %}
 
   block_morning: "{{ is_state(morning_block_helper, 'on') if morning_block_helper else false }}"
-  block_day:     "{{ is_state(day_block_helper, 'on') if day_block_helper else false }}"
+  block_day: "{{ is_state(day_block_helper, 'on') if day_block_helper else false }}"
   block_evening: "{{ is_state(evening_block_helper, 'on') if evening_block_helper else false }}"
-  block_night:   "{{ is_state(night_block_helper, 'on') if night_block_helper else false }}"
+  block_night: "{{ is_state(night_block_helper, 'on') if night_block_helper else false }}"
 
   morning_auto_off_mins: >-
     {{ (states(morning_auto_off_helper) | int(0)) if morning_auto_off_helper else (morning_auto_off_default | int) }}
@@ -167,52 +167,52 @@ variables:
 
 trigger:
   - platform: "state"
-    entity_id: !input motion_sensor
+    entity_id: !input motion_sensor  # yamllint disable-line quoted-strings
     to: "on"
-    id: motion_on
+    id: "motion_on"
 
   - platform: "state"
-    entity_id: !input motion_sensor
+    entity_id: !input motion_sensor  # yamllint disable-line quoted-strings
     to: "off"
-    id: motion_off
+    id: "motion_off"
 
 condition: []
 
 action:
   - choose:
       - conditions:
-          - condition: trigger
-            id: motion_on
-          - condition: state
-            entity_id: !input motion_enabled
+          - condition: "trigger"
+            id: "motion_on"
+          - condition: "state"
+            entity_id: !input motion_enabled  # yamllint disable-line quoted-strings
             state: "on"
-          - condition: template
+          - condition: "template"
             value_template: "{{ not block_current }}"
         sequence:
           - service: "script.scheduled_light_on"
             data:
-              room_key: !input room_key
-              custom_schedule_enabled: !input custom_schedule_enabled
-              custom_s1_start: !input custom_s1_start
-              custom_s2_start: !input custom_s2_start
-              custom_s3_start: !input custom_s3_start
-              custom_s4_start: !input custom_s4_start
+              room_key: !input room_key  # yamllint disable-line quoted-strings
+              custom_schedule_enabled: !input custom_schedule_enabled  # yamllint disable-line quoted-strings
+              custom_s1_start: !input custom_s1_start  # yamllint disable-line quoted-strings
+              custom_s2_start: !input custom_s2_start  # yamllint disable-line quoted-strings
+              custom_s3_start: !input custom_s3_start  # yamllint disable-line quoted-strings
+              custom_s4_start: !input custom_s4_start  # yamllint disable-line quoted-strings
 
       - conditions:
-          - condition: trigger
-            id: motion_off
-          - condition: state
-            entity_id: !input motion_enabled
+          - condition: "trigger"
+            id: "motion_off"
+          - condition: "state"
+            entity_id: !input motion_enabled  # yamllint disable-line quoted-strings
             state: "on"
         sequence:
           - if:
-              - condition: template
+              - condition: "template"
                 value_template: "{{ auto_off_current_mins | int(0) > 0 }}"
             then:
               - delay:
                   minutes: "{{ auto_off_current_mins | int(0) }}"
-              - condition: state
-                entity_id: !input motion_sensor
+              - condition: "state"
+                entity_id: !input motion_sensor  # yamllint disable-line quoted-strings
                 state: "off"
               - service: "light.turn_off"
                 target: !input target_lights

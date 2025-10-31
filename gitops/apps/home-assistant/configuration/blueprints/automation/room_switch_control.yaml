@@ -69,7 +69,9 @@ blueprint:
     # ---- Optional scene cycle memory helper
     scene_cycle_helper:
       name: "(Optional) Scene cycle helper (input_select)"
-      description: "Stores the CURRENT slot; cycles morning→day→evening→night. Defaults to input_select.<room_key>_scene_cycle"
+      description: >
+        Stores the CURRENT slot; cycles morning→day→evening→night.
+        Defaults to input_select.<room_key>_scene_cycle
       default: ""
       selector:
         entity:
@@ -172,12 +174,12 @@ variables:
   btn3_long_action_helper: !input btn3_long_action_helper
   btn4_short_action_helper: !input btn4_short_action_helper
   btn4_long_action_helper: !input btn4_long_action_helper
-  
+
   brightness_step_helper: !input brightness_step_helper
   min_brightness_helper: !input min_brightness_helper
   max_brightness_helper: !input max_brightness_helper
   brightness_step_pct: !input brightness_step_pct
-  
+
   scene_cycle_helper_input: !input scene_cycle_helper
   room_key: !input room_key
   scene_cycle_helper: >-
@@ -191,7 +193,7 @@ variables:
   custom_s2_start: !input custom_s2_start
   custom_s3_start: !input custom_s3_start
   custom_s4_start: !input custom_s4_start
-  
+
   # materialize inputs so we can reference them in templates/logs
   room_key_input: !input room_key
   target_lights_input: !input target_lights
@@ -377,7 +379,8 @@ action:
           - service: "script.room_toggle"
             data:
               room_key: "{{ room_key_input }}"
-              target_lights: "{{ target_lights_input.entity_id if target_lights_input.entity_id is defined else target_lights_input }}"
+              target_lights: >-
+                {{ target_lights_input.entity_id if target_lights_input.entity_id is defined else target_lights_input }}
               custom_schedule_enabled: "{{ custom_schedule_enabled }}"
               custom_s1_start: "{{ custom_s1_start }}"
               custom_s2_start: "{{ custom_s2_start }}"
@@ -395,7 +398,8 @@ action:
               custom_s2_start: "{{ custom_s2_start_input }}"
               custom_s3_start: "{{ custom_s3_start_input }}"
               custom_s4_start: "{{ custom_s4_start_input }}"
-              fallback_lights: "{{ target_lights_input.entity_id if target_lights_input.entity_id is defined else target_lights_input }}"
+              fallback_lights: >-
+                {{ target_lights_input.entity_id if target_lights_input.entity_id is defined else target_lights_input }}
 
       - conditions: "{{ action_key == 'all_off' }}"
         sequence:
@@ -433,7 +437,7 @@ action:
       - conditions: "{{ action_key == 'scene_cycle' }}"
         sequence:
           - variables:
-              order: ['morning','day','evening','night']
+              order: ['morning', 'day', 'evening', 'night']
               cur_slot: >-
                 {% if scene_cycle_helper %}
                   {{ states(scene_cycle_helper) | default(current_slot) }}
@@ -447,7 +451,7 @@ action:
             data:
               name: "scene_cycle DEBUG"
               message: >-
-                helper={{ scene_cycle_helper }}, cur_slot={{ cur_slot }}, 
+                helper={{ scene_cycle_helper }}, cur_slot={{ cur_slot }},
                 next_slot={{ next_slot }}, scene={{ scene_to_activate }}
           - if:
               - condition: template

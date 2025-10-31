@@ -52,7 +52,8 @@ scheduled_light_on:
 
         default_scene_entity_id: "scene.{{ room_key | default('') }}_{{ slot }}"
         scene_to_activate: "{{ _override_val if _override_val else default_scene_entity_id }}"
-        scene_exists: "{{ scene_to_activate in (states.scene | map(attribute='entity_id') | list) if scene_to_activate else false }}"
+        scene_exists: >-
+          {{ scene_to_activate in (states.scene | map(attribute='entity_id') | list) if scene_to_activate else false }}
 
         preferred_room_light: "light.{{ room_key | default('') }}"
         all_lights: "{{ states.light | map(attribute='entity_id') | list }}"
