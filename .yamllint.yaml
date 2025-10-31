@@ -78,7 +78,3 @@ rules:
   # Allow octal values
   octal-values:
     forbid-implicit-octal: false
-  
-  # Allow unicode
-  unicode:
-    check-bom: false
