@@ -47,13 +47,21 @@ autoscalingRunnerSet:
   # Docker configuration for container jobs
   dockerdWithinRunnerContainer: true
   dockerEnabled: true
-  
-  # Security context
-  securityContext:
-    runAsNonRoot: true
-    runAsUser: 1000
-    runAsGroup: 1000
-    fsGroup: 1000
+
+# Template specification for runner pods
+template:
+  spec:
+    # Security context for runner pods
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
+    # Ensure env and volumeMounts are arrays (not null)
+    containers:
+      - name: runner
+        env: []
+        volumeMounts: []
 
 # Namespace override
 namespaceOverride: arc-runners
