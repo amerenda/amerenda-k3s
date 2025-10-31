@@ -797,28 +797,97 @@ data:
       custom_s3_start_input: !input custom_s3_start
       custom_s4_start_input: !input custom_s4_start
     
+      # Materialize enable/auto_on helpers
+      enable_morning_helper_input: !input enable_morning_helper
+      auto_on_morning_helper_input: !input auto_on_morning_helper
+      enable_day_helper_input: !input enable_day_helper
+      auto_on_day_helper_input: !input auto_on_day_helper
+      enable_evening_helper_input: !input enable_evening_helper
+      auto_on_evening_helper_input: !input auto_on_evening_helper
+      enable_night_helper_input: !input enable_night_helper
+      auto_on_night_helper_input: !input auto_on_night_helper
+    
+      room_key_var: !input room_key
+    
       default_s1: "06:00:00"
       default_s2: "09:00:00"
       default_s3: "17:00:00"
       default_s4: "22:00:00"
     
-      use_custom: >-
-        {{ custom_schedule_enabled_input is not none and
-           custom_schedule_enabled_input != '' and
-           is_state(custom_schedule_enabled_input, 'on') }}
+      # Check per-time-window custom times
+      morning_custom: >-
+        {% if 'input_boolean.' ~ room_key_var ~ '_morning_custom_time' in states %}
+          {{ is_state('input_boolean.' ~ room_key_var ~ '_morning_custom_time', 'on') }}
+        {% elif custom_schedule_enabled_input is not none and custom_schedule_enabled_input != '' %}
+          {{ is_state(custom_schedule_enabled_input, 'on') }}
+        {% else %}
+          {{ false }}
+        {% endif %}
+      day_custom: >-
+        {% if 'input_boolean.' ~ room_key_var ~ '_day_custom_time' in states %}
+          {{ is_state('input_boolean.' ~ room_key_var ~ '_day_custom_time', 'on') }}
+        {% elif custom_schedule_enabled_input is not none and custom_schedule_enabled_input != '' %}
+          {{ is_state(custom_schedule_enabled_input, 'on') }}
+        {% else %}
+          {{ false }}
+        {% endif %}
+      evening_custom: >-
+        {% if 'input_boolean.' ~ room_key_var ~ '_evening_custom_time' in states %}
+          {{ is_state('input_boolean.' ~ room_key_var ~ '_evening_custom_time', 'on') }}
+        {% elif custom_schedule_enabled_input is not none and custom_schedule_enabled_input != '' %}
+          {{ is_state(custom_schedule_enabled_input, 'on') }}
+        {% else %}
+          {{ false }}
+        {% endif %}
+      night_custom: >-
+        {% if 'input_boolean.' ~ room_key_var ~ '_night_custom_time' in states %}
+          {{ is_state('input_boolean.' ~ room_key_var ~ '_night_custom_time', 'on') }}
+        {% elif custom_schedule_enabled_input is not none and custom_schedule_enabled_input != '' %}
+          {{ is_state(custom_schedule_enabled_input, 'on') }}
+        {% else %}
+          {{ false }}
+        {% endif %}
     
       s1_str: >-
-        {% set v = states(custom_s1_start_input) if use_custom else default_s1 %}
-        {% if v in ['unknown','unavailable',''] %}{{ default_s1 }}{% else %}{{ v }}{% endif %}
+        {% if morning_custom %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s1_start') %}
+          {% if v in ['unknown','unavailable',''] %}{{ default_s1 }}{% else %}{{ v }}{% endif %}
+        {% elif custom_s1_start_input %}
+          {% set v = states(custom_s1_start_input) %}
+          {% if v in ['unknown','unavailable',''] %}{{ default_s1 }}{% else %}{{ v }}{% endif %}
+        {% else %}
+          {{ default_s1 }}
+        {% endif %}
       s2_str: >-
-        {% set v = states(custom_s2_start_input) if use_custom else default_s2 %}
-        {% if v in ['unknown','unavailable',''] %}{{ default_s2 }}{% else %}{{ v }}{% endif %}
+        {% if day_custom %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s2_start') %}
+          {% if v in ['unknown','unavailable',''] %}{{ default_s2 }}{% else %}{{ v }}{% endif %}
+        {% elif custom_s2_start_input %}
+          {% set v = states(custom_s2_start_input) %}
+          {% if v in ['unknown','unavailable',''] %}{{ default_s2 }}{% else %}{{ v }}{% endif %}
+        {% else %}
+          {{ default_s2 }}
+        {% endif %}
       s3_str: >-
-        {% set v = states(custom_s3_start_input) if use_custom else default_s3 %}
-        {% if v in ['unknown','unavailable',''] %}{{ default_s3 }}{% else %}{{ v }}{% endif %}
+        {% if evening_custom %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s3_start') %}
+          {% if v in ['unknown','unavailable',''] %}{{ default_s3 }}{% else %}{{ v }}{% endif %}
+        {% elif custom_s3_start_input %}
+          {% set v = states(custom_s3_start_input) %}
+          {% if v in ['unknown','unavailable',''] %}{{ default_s3 }}{% else %}{{ v }}{% endif %}
+        {% else %}
+          {{ default_s3 }}
+        {% endif %}
       s4_str: >-
-        {% set v = states(custom_s4_start_input) if use_custom else default_s4 %}
-        {% if v in ['unknown','unavailable',''] %}{{ default_s4 }}{% else %}{{ v }}{% endif %}
+        {% if night_custom %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s4_start') %}
+          {% if v in ['unknown','unavailable',''] %}{{ default_s4 }}{% else %}{{ v }}{% endif %}
+        {% elif custom_s4_start_input %}
+          {% set v = states(custom_s4_start_input) %}
+          {% if v in ['unknown','unavailable',''] %}{{ default_s4 }}{% else %}{{ v }}{% endif %}
+        {% else %}
+          {{ default_s4 }}
+        {% endif %}
     
       s1: "{{ s1_str[:5] }}"
       s2: "{{ s2_str[:5] }}"
@@ -828,14 +897,62 @@ data:
       now_hm: "{{ now().strftime('%H:%M') }}"
     
       # Window enable/auto_on booleans with sensible defaults
-      en_morning: "{{ is_state(enable_morning_helper, 'on') if enable_morning_helper else true }}"
-      ao_morning: "{{ is_state(auto_on_morning_helper, 'on') if auto_on_morning_helper else false }}"
-      en_day: "{{ is_state(enable_day_helper, 'on') if enable_day_helper else true }}"
-      ao_day: "{{ is_state(auto_on_day_helper, 'on') if auto_on_day_helper else false }}"
-      en_evening: "{{ is_state(enable_evening_helper, 'on') if enable_evening_helper else true }}"
-      ao_evening: "{{ is_state(auto_on_evening_helper, 'on') if auto_on_evening_helper else false }}"
-      en_night: "{{ is_state(enable_night_helper, 'on') if enable_night_helper else true }}"
-      ao_night: "{{ is_state(auto_on_night_helper, 'on') if auto_on_night_helper else false }}"
+      en_morning: >-
+        {% if enable_morning_helper_input %}
+          {{ is_state(enable_morning_helper_input, 'on') }}
+        {% else %}
+          {% set helper = 'input_boolean.enable_' ~ room_key_var ~ '_morning' %}
+          {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else true }}
+        {% endif %}
+      ao_morning: >-
+        {% if auto_on_morning_helper_input %}
+          {{ is_state(auto_on_morning_helper_input, 'on') }}
+        {% else %}
+          {% set helper = 'input_boolean.auto_on_' ~ room_key_var ~ '_morning' %}
+          {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+        {% endif %}
+      en_day: >-
+        {% if enable_day_helper_input %}
+          {{ is_state(enable_day_helper_input, 'on') }}
+        {% else %}
+          {% set helper = 'input_boolean.enable_' ~ room_key_var ~ '_day' %}
+          {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else true }}
+        {% endif %}
+      ao_day: >-
+        {% if auto_on_day_helper_input %}
+          {{ is_state(auto_on_day_helper_input, 'on') }}
+        {% else %}
+          {% set helper = 'input_boolean.auto_on_' ~ room_key_var ~ '_day' %}
+          {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+        {% endif %}
+      en_evening: >-
+        {% if enable_evening_helper_input %}
+          {{ is_state(enable_evening_helper_input, 'on') }}
+        {% else %}
+          {% set helper = 'input_boolean.enable_' ~ room_key_var ~ '_evening' %}
+          {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else true }}
+        {% endif %}
+      ao_evening: >-
+        {% if auto_on_evening_helper_input %}
+          {{ is_state(auto_on_evening_helper_input, 'on') }}
+        {% else %}
+          {% set helper = 'input_boolean.auto_on_' ~ room_key_var ~ '_evening' %}
+          {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+        {% endif %}
+      en_night: >-
+        {% if enable_night_helper_input %}
+          {{ is_state(enable_night_helper_input, 'on') }}
+        {% else %}
+          {% set helper = 'input_boolean.enable_' ~ room_key_var ~ '_night' %}
+          {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else true }}
+        {% endif %}
+      ao_night: >-
+        {% if auto_on_night_helper_input %}
+          {{ is_state(auto_on_night_helper_input, 'on') }}
+        {% else %}
+          {% set helper = 'input_boolean.auto_on_' ~ room_key_var ~ '_night' %}
+          {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+        {% endif %}
     
       fired_slot: >-
         {% if now_hm == s1 %}morning
