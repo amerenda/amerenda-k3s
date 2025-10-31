@@ -1,0 +1,32 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: HorizontalRunnerAutoscaler
+metadata:
+  name: arc-runner-set-autoscaler
+  namespace: arc-systems
+  annotations:
+    argocd.argoproj.io/sync-wave: "6"  # After RunnerSet is created
+spec:
+  # Target the RunnerSet
+  scaleTargetRef:
+    kind: RunnerSet
+    name: arc-runner-set
+  
+  # Autoscaling configuration
+  minReplicas: 1
+  maxReplicas: 3
+  
+  # Scale up triggers based on workflow job events
+  scaleUpTriggers:
+  - githubEvent:
+      workflowJob:
+        types:
+          - queued
+  
+  # Metrics-based autoscaling (scale based on queued jobs)
+  metrics:
+  - type: TotalNumberOfQueuedAndInProgressWorkflowRuns
+    scaleUpThreshold: "1.0"
+    scaleUpAdjustment: 1
+    scaleDownThreshold: "0.0"
+    scaleDownAdjustment: -1
+

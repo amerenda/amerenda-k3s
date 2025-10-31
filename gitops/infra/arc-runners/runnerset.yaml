@@ -25,8 +25,8 @@ spec:
   dockerdWithinRunnerContainer: true
   dockerEnabled: true
   
-  # Replica configuration - start with 0, scale up on demand
-  replicas: 0
+  # Replica configuration - HRA will manage this (set initial to match minReplicas)
+  replicas: 1
   
   # Service name (required)
   serviceName: arc-runner-set
