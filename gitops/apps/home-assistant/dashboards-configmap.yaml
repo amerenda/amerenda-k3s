@@ -351,13 +351,13 @@ data:
                 {% set s3 = states('input_datetime.' ~ room ~ '_s3_start') if custom_schedule == 'on' else '17:00:00' %}
                 {% set s4 = states('input_datetime.' ~ room ~ '_s4_start') if custom_schedule == 'on' else '22:00:00' %}
                 
-                **Morning**: {{ s1[:5] }} → Day
+                **Morning**: {{ s1[:5] }} - {{ s2[:5] }} → Day
                 
-                **Day**: {{ s2[:5] }} → Evening
+                **Day**: {{ s2[:5] }} - {{ s3[:5] }} → Evening
                 
-                **Evening**: {{ s3[:5] }} → Night
+                **Evening**: {{ s3[:5] }} - {{ s4[:5] }} → Night
                 
-                **Night**: {{ s4[:5] }} → Morning
+                **Night**: {{ s4[:5] }} - {{ s1[:5] }} → Morning
                 
                 {% if custom_schedule == 'on' %}
                   *Custom schedule enabled*
