@@ -191,92 +191,11 @@ jobs:
     needs: yaml-lint
     # Run on PRs and pushes to main
     if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
-    env:
-      HA_VERSION: "2024.10.0"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Prepare Home Assistant configuration
-        run: |
-          # Create a temporary HA config directory
-          mkdir -p /tmp/ha-config
-          
-          # Copy HA source files to config directory
-          cp -r gitops/apps/home-assistant/configuration/automations/* /tmp/ha-config/ 2>/dev/null || true
-          cp -r gitops/apps/home-assistant/configuration/blueprints/* /tmp/ha-config/ 2>/dev/null || true
-          cp -r gitops/apps/home-assistant/configuration/scripts/* /tmp/ha-config/ 2>/dev/null || true
-          cp -r gitops/apps/home-assistant/configuration/dashboards/* /tmp/ha-config/ 2>/dev/null || true
-          
-          # Create basic configuration.yaml
-          cat > /tmp/ha-config/configuration.yaml << 'EOF'
-          # Loads default set of integrations. Do not remove.
-          default_config: {}
-          
-          # Load UI-managed files for Automations & Scenes
-          automation: !include automations.yaml
-          scene: !include scenes.yaml
-          
-          # Scripts managed as separate files
-          script: !include_dir_merge_named scripts
-          
-          # Input helpers
-          input_boolean:  !include_dir_merge_named helpers/input_boolean/
-          input_datetime: !include_dir_merge_named helpers/input_datetime/
-          input_select:   !include_dir_merge_named helpers/input_select/
-          input_number:   !include_dir_merge_named helpers/input_number/
-          input_text:     !include_dir_merge_named helpers/input_text/
-          
-          # Packages (helpers renamed from packages)
-          homeassistant:
-            packages: !include_dir_named packages
-          EOF
-          
-          # Create empty UI files
-          echo "[]" > /tmp/ha-config/automations.yaml
-          echo "[]" > /tmp/ha-config/scenes.yaml
-          echo "{}" > /tmp/ha-config/scripts.yaml
-          
-          # Create helper directories
-          mkdir -p /tmp/ha-config/helpers/input_boolean
-          mkdir -p /tmp/ha-config/helpers/input_datetime
-          mkdir -p /tmp/ha-config/helpers/input_select
-          mkdir -p /tmp/ha-config/helpers/input_number
-          mkdir -p /tmp/ha-config/helpers/input_text
-          mkdir -p /tmp/ha-config/packages
-          
-          # Copy helper files from generated directory
-          if [ -d "gitops/apps/home-assistant/configuration/helpers/generated" ]; then
-            find gitops/apps/home-assistant/configuration/helpers/generated/input_boolean -name "*.yaml" -exec cp {} /tmp/ha-config/helpers/input_boolean/ \; 2>/dev/null || true
-            find gitops/apps/home-assistant/configuration/helpers/generated/input_datetime -name "*.yaml" -exec cp {} /tmp/ha-config/helpers/input_datetime/ \; 2>/dev/null || true
-            find gitops/apps/home-assistant/configuration/helpers/generated/input_select -name "*.yaml" -exec cp {} /tmp/ha-config/helpers/input_select/ \; 2>/dev/null || true
-            find gitops/apps/home-assistant/configuration/helpers/generated/input_number -name "*.yaml" -exec cp {} /tmp/ha-config/helpers/input_number/ \; 2>/dev/null || true
-            find gitops/apps/home-assistant/configuration/helpers/generated/input_text -name "*.yaml" -exec cp {} /tmp/ha-config/helpers/input_text/ \; 2>/dev/null || true
-          fi
-          
-          # Copy package files (if any exist in helpers directory)
-          find gitops/apps/home-assistant/configuration/helpers -name "*.yaml" -not -path "*/generated/*" -not -path "*/input_text/*" -not -name "*_template.yaml.j2" -exec cp {} /tmp/ha-config/packages/ \; 2>/dev/null || true
-
-      - name: Set up Home Assistant
-        uses: frenck/action-home-assistant@v1
+      - name: Validate with hassfest
+        uses: home-assistant/actions/hassfest@master
         with:
-          version: ${{ env.HA_VERSION }}
-          path: /tmp/ha-config
-
-      - name: Run Home Assistant configuration check
-        run: |
-          # Set HA config directory
-          export HA_CONFIG_DIR=/tmp/ha-config
-          
-          # Run configuration check
-          hass --script check_config --config "$HA_CONFIG_DIR"
-
-      - name: Run hassfest (if custom_components exist)
-        if: contains(github.event.head_commit.modified, 'custom_components') || contains(github.event.head_commit.added, 'custom_components')
-        run: |
-          if [ -d "gitops/apps/home-assistant/custom_components" ]; then
-            pip install hassfest
-            hassfest gitops/apps/home-assistant/
-          else
-            echo "No custom_components directory found, skipping hassfest"
-          fi
+          path: gitops/apps/home-assistant/configuration
