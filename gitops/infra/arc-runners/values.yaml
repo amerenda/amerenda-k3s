@@ -48,6 +48,10 @@ autoscalingRunnerSet:
   dockerdWithinRunnerContainer: true
   dockerEnabled: true
 
+# Container mode - use dind (Docker-in-Docker) for container jobs
+containerMode:
+  type: dind
+
 # Template specification for runner pods
 template:
   spec:
@@ -57,11 +61,6 @@ template:
       runAsUser: 1000
       runAsGroup: 1000
       fsGroup: 1000
-    # Ensure env and volumeMounts are arrays (not null)
-    containers:
-      - name: runner
-        env: []
-        volumeMounts: []
 
 # Namespace override
 namespaceOverride: arc-runners
