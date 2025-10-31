@@ -655,7 +655,7 @@ spec:
   sources:
     - repoURL: oci://ghcr.io/actions/actions-runner-controller-charts
       chart: gha-runner-scale-set
-      targetRevision: latest
+      targetRevision: 0.4.2
       helm:
         valueFiles:
           - $values/gitops/infra/arc-runners/values.yaml
