@@ -6,8 +6,9 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "5"
 spec:
-  # GitHub configuration - organization-wide
-  organization: amerenda
+  # GitHub configuration - repository-level (required for personal accounts)
+  # Personal GitHub accounts cannot use organization-level runners
+  repository: amerenda/amerenda-k3s
   githubAPICredentialsFrom:
     secretRef:
       name: controller-manager

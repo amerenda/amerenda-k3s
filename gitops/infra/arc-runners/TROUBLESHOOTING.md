@@ -8,7 +8,9 @@ failed to create registration token: POST https://api.github.com/orgs/amerenda/a
 ```
 
 ### Cause
-The GitHub App doesn't have sufficient permissions to create organization-level registration tokens.
+**Important:** Personal GitHub accounts cannot use organization-level runners. If you see a 404 with `/orgs/`, you must use repository-level runners instead.
+
+If using an organization, the GitHub App may not have sufficient permissions to create organization-level registration tokens.
 
 ### Solution
 
@@ -48,16 +50,24 @@ kubectl describe externalsecret controller-manager -n arc-systems
 - ✅ The ExternalSecret will automatically refresh, but you can force it by deleting and recreating
 - ✅ The GitHub App credentials (App ID, Installation ID, Private Key) in Bitwarden do NOT need to change - only the installation token changes
 
-### Alternative: Use Repository-Level Runners
+### Personal GitHub Accounts
 
-If you don't want to grant "Organization administration" permission, you can use repository-level runners instead:
+**Personal GitHub accounts must use repository-level runners**, not organization-level. The configuration should be:
 
 ```yaml
 spec:
-  repository: amerenda/amerenda-k3s  # Instead of organization: amerenda
+  repository: amerenda/amerenda-k3s  # Required for personal accounts
 ```
 
 Repository-level runners require:
 - Repository permissions: Actions: Read and write, Administration: Read and write
-- Organization permissions: Self-hosted runners: Read and write (no admin needed)
+- Organization permissions: Self-hosted runners: Read and write (for organization accounts only - not needed for personal accounts)
+
+### Organization-Level Runners
+
+Organization-level runners (`organization: amerenda`) only work if:
+- You have an actual GitHub organization named "amerenda" (not a personal account)
+- The GitHub App has:
+  - Organization permissions: Self-hosted runners: Read and write
+  - Organization permissions: Organization administration: Read-only (may be required)
 

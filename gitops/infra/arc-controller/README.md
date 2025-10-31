@@ -29,8 +29,18 @@ This application must be synced and healthy before the ARC runners application c
 
 ## Required GitHub App Permissions
 
-Based on [GitHub REST API documentation](https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28), for organization-level runners:
+Based on [GitHub REST API documentation](https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28):
 
+### For Repository-Level Runners (Personal Accounts)
+**Repository permissions:**
+- Actions: Read and write
+- Administration: Read and write
+- Metadata: Read-only (automatically selected)
+
+**Organization permissions:**
+- Not required for personal accounts (only needed if using organization-level runners)
+
+### For Organization-Level Runners (Organizations Only)
 **Repository permissions:**
 - Actions: Read and write
 - Administration: Read and write
@@ -41,6 +51,8 @@ Based on [GitHub REST API documentation](https://docs.github.com/en/rest/actions
 - **Organization administration**: Read-only (may be required for registration tokens)
 
 The endpoint `POST /orgs/{org}/actions/runners/registration-token` requires authenticated users to have admin access to the organization. For GitHub Apps, this typically means "Self-hosted runners: Read and write" permission, but some setups may require "Organization administration: Read-only" as well.
+
+**Note:** Personal GitHub accounts cannot use organization-level runners and must use repository-level runners instead.
 
 **Important:** After changing GitHub App permissions, you MUST:
 1. Reinstall the app (Install App → Configure → Save)
