@@ -63,6 +63,13 @@ scheduled_light_on:
         scene_to_activate: "{{ _override_val if _override_val else default_scene_entity_id }}"
         scene_exists: >-
           {{ scene_to_activate in (states.scene | map(attribute='entity_id') | list) if scene_to_activate else false }}
+        
+        scene_cycle_helper: >-
+          {% if _entity_name and _entity_name != '' %}
+            input_select.{{ _entity_name }}_scene_cycle
+          {% else %}
+            ''
+          {% endif %}
 
         all_lights: "{{ states.light | map(attribute='entity_id') | list }}"
         dynamic_fallback: >-
@@ -72,11 +79,21 @@ scheduled_light_on:
     - choose:
         - conditions: "{{ scene_exists }}"
           sequence:
-            - service: "scene.turn_on"
-              data:
-                transition: "{{ transition | default(0) }}"
-              target:
-                entity_id: "{{ scene_to_activate }}"
+            - parallel:
+                - service: "scene.turn_on"
+                  data:
+                    transition: "{{ transition | default(0) }}"
+                  target:
+                    entity_id: "{{ scene_to_activate }}"
+                - if:
+                    - condition: template
+                      value_template: "{{ scene_cycle_helper != '' }}"
+                  then:
+                    - service: "input_select.select_option"
+                      target:
+                        entity_id: "{{ scene_cycle_helper }}"
+                      data:
+                        option: "{{ slot }}"
       default:
         - choose:
             - conditions: "{{ dynamic_fallback != '' }}"

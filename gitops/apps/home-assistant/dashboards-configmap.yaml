@@ -53,14 +53,21 @@ data:
                 {% set scene_cycle_helper = 'input_select.' ~ room ~ '_scene_cycle' %}
                 {% set scene_cycle = states(scene_cycle_helper) %}
                 {% if scene_cycle and scene_cycle != 'unknown' and scene_cycle != 'unavailable' and scene_cycle in ['morning', 'day', 'evening', 'night'] %}
-                  {% set current_slot = scene_cycle %}
+                  {% if scene_cycle != scheduled_slot %}
+                    {% set current_slot = scene_cycle %}
+                    {% set is_manual_override = true %}
+                  {% else %}
+                    {% set current_slot = scheduled_slot %}
+                    {% set is_manual_override = false %}
+                  {% endif %}
                 {% else %}
                   {% set current_slot = scheduled_slot %}
+                  {% set is_manual_override = false %}
                 {% endif %}
                 
                 ### **{{ current_slot|title }} Scene Active**
                 
-                {% if scene_cycle and scene_cycle != 'unknown' and scene_cycle != 'unavailable' and scene_cycle in ['morning', 'day', 'evening', 'night'] %}
+                {% if is_manual_override %}
                   *Manual override active*
                 {% else %}
                   *Scheduled scene*
