@@ -6,8 +6,8 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "5"
 spec:
-  # GitHub configuration - repository-level (more reliable than org-level)
-  repository: amerenda/amerenda-k3s
+  # GitHub configuration - organization-wide
+  organization: amerenda
   githubAPICredentialsFrom:
     secretRef:
       name: controller-manager
