@@ -206,7 +206,7 @@ variables:
   btn1_short_action: >-
     {{ states(btn1_short_action_helper) if btn1_short_action_helper else 'toggle' }}
   btn1_long_action: >-
-    {{ states(btn1_long_action_helper) if btn1_long_action_helper else 'all_off' }}
+    {{ states(btn1_long_action_helper) if btn1_long_action_helper else 'turn_off_home' }}
 
   btn2_short_action: >-
     {{ states(btn2_short_action_helper) if btn2_short_action_helper else 'brightness_up' }}
@@ -315,7 +315,7 @@ trigger:
     event_type: hue_event
     event_data:
       id: !input hue_event_id
-      type: short_release
+      type: initial_press
       subtype: 3
     id: e3_short
   - platform: event
@@ -461,3 +461,9 @@ action:
           - service: scene.turn_on
             target:
               entity_id: "{{ scene_to_activate }}"
+
+      - conditions: "{{ action_key == 'turn_off_home' }}"
+        sequence:
+          - service: light.turn_off
+            target:
+              entity_id: light.home
