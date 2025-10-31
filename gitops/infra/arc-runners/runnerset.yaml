@@ -29,8 +29,9 @@ spec:
   # Ephemeral runners - exit after completing jobs, HRA will scale up based on demand
   ephemeral: true
   
-  # Replica configuration - HRA will manage this
-  # Set to 0 initially, HRA will scale up to minReplicas when needed
+  # Replica configuration - HRA will manage scaling dynamically
+  # For ephemeral runners, set to 0 and let HRA scale based on demand
+  # HRA minReplicas (1) ensures at least 1 runner stays up even when idle
   replicas: 0
   
   # Service name (required)

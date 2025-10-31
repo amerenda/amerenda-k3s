@@ -11,6 +11,11 @@ spec:
     kind: RunnerSet
     name: arc-runner-set
   
+  # GitHub API credentials (required for HRA to query workflow runs)
+  githubAPICredentialsFrom:
+    secretRef:
+      name: controller-manager
+  
   # Autoscaling configuration
   minReplicas: 1
   maxReplicas: 3
