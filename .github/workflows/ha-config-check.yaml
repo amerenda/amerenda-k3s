@@ -26,9 +26,9 @@ jobs:
         uses: ibiqlik/action-yamllint@v3
         with:
           config_file: .yamllint.yaml
-          yamllint_file_or_dir: gitops/apps/home-assistant/
-          yamllint_strict: true
-          yamllint_comment: true
+          file_or_dir: gitops/apps/home-assistant/
+          strict: true
+          no_warnings: false
 
   ha-config-check:
     name: Home Assistant Configuration Check
