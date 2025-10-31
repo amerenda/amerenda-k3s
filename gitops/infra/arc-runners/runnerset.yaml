@@ -6,37 +6,44 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "5"
 spec:
-  # GitHub configuration
-  gitHubConfigUrl: "https://github.com/amerenda"
-  gitHubConfigSecret:
-    name: controller-manager
-    namespace: arc-systems
+  # GitHub configuration - organization-wide
+  organization: amerenda
+  githubAPICredentialsFrom:
+    secretRef:
+      name: controller-manager
   
-  # Runner template
+  # Runner image
+  image: ghcr.io/actions/actions-runner:latest
+  
+  # Runner labels (must match runs-on in workflows)
+  labels:
+    - self-hosted
+    - linux
+    - arc-runner-set
+  
+  # Docker configuration for container jobs
+  dockerdWithinRunnerContainer: true
+  dockerEnabled: true
+  
+  # Replica configuration - start with 0, scale up on demand
+  replicas: 0
+  
+  # Service name (required)
+  serviceName: arc-runner-set
+  
+  # Selector (required)
+  selector:
+    matchLabels:
+      runner-template: arc-runner-set
+  
+  # Pod template
   template:
-    spec:
-      # Runner image
-      image: ghcr.io/actions/actions-runner:latest
-      imagePullPolicy: IfNotPresent
-      
-      # Runner labels (must match runs-on in workflows)
+    metadata:
       labels:
-        - self-hosted
-        - linux
-        - arc-runner-set
-      
-      # Docker image for container jobs
-      dockerdWithinRunnerContainer: true
-      dockerImage: docker:dind
-      
-      # Resources
-      resources:
-        requests:
-          cpu: 200m
-          memory: 256Mi
-        limits:
-          cpu: 1000m
-          memory: 1Gi
+        runner-template: arc-runner-set
+    spec:
+      # Service account
+      serviceAccountName: arc-runner-set
       
       # Security context
       securityContext:
@@ -44,10 +51,14 @@ spec:
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
-  
-  # Replica configuration (min/max for autoscaling)
-  replicas: 0  # Start with 0, scale up on demand
-  
-  # Autoscaling configuration
-  minReplicas: 1
-  maxReplicas: 10
+      
+      # Containers
+      containers:
+      - name: runner
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
