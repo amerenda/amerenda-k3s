@@ -97,6 +97,7 @@ variables:
   auto_on_night_helper_input: !input auto_on_night_helper
 
   room_key_var: !input room_key
+  target_lights_var: !input target_lights
 
   default_s1: "06:00:00"
   default_s2: "09:00:00"
@@ -268,7 +269,7 @@ trigger:
 action:
   - variables:
       any_on: >-
-        {% set targets = target_lights.entity_id if target_lights is mapping else target_lights %}
+        {% set targets = target_lights_var.entity_id if target_lights_var is mapping else target_lights_var %}
         {{ expand(targets) | selectattr('state','eq','on') | list | count > 0 if targets else false }}
 
   - choose:
