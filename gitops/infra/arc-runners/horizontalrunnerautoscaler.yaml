@@ -25,6 +25,8 @@ spec:
   # Metrics-based autoscaling (scale based on queued jobs)
   metrics:
   - type: TotalNumberOfQueuedAndInProgressWorkflowRuns
+    repositoryNames:
+      - amerenda-k3s  # Required for repository-level runners
     scaleUpThreshold: "1.0"
     scaleUpAdjustment: 1
     scaleDownThreshold: "0.0"
