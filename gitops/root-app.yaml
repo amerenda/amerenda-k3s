@@ -593,7 +593,7 @@ spec:
   sources:
     - repoURL: oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
       path: .
-      targetRevision: 0.4.0
+      targetRevision: 0.13.0
       helm:
         valueFiles:
           - $values/gitops/infra/arc-controller/values.yaml
@@ -655,7 +655,7 @@ spec:
   sources:
     - repoURL: oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
       path: .
-      targetRevision: 0.4.0
+      targetRevision: 0.13.0
       helm:
         valueFiles:
           - $values/gitops/infra/arc-runners/values.yaml
@@ -687,6 +687,19 @@ spec:
     kind: CustomResourceDefinition
     jsonPointers:
     - /spec/preserveUnknownFields
+  - group: "external-secrets.io"
+    kind: ExternalSecret
+    name: controller-manager
+    jsonPointers:
+    - /spec/data/0/remoteRef/conversionStrategy
+    - /spec/data/0/remoteRef/decodingStrategy
+    - /spec/data/0/remoteRef/metadataPolicy
+    - /spec/data/1/remoteRef/conversionStrategy
+    - /spec/data/1/remoteRef/decodingStrategy
+    - /spec/data/1/remoteRef/metadataPolicy
+    - /spec/data/2/remoteRef/conversionStrategy
+    - /spec/data/2/remoteRef/decodingStrategy
+    - /spec/data/2/remoteRef/metadataPolicy
   - group: "actions.summerwind.dev"
     kind: HorizontalRunnerAutoscaler
     jsonPointers:
