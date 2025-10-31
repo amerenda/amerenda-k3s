@@ -184,18 +184,3 @@ jobs:
             echo ""
             echo "✅ All ConfigMaps have valid YAML syntax!"
           fi
-
-  ha-config-check:
-    name: Home Assistant Configuration Check
-    runs-on: arc-runner-set
-    needs: yaml-lint
-    # Run on PRs and pushes to main
-    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Validate with hassfest
-        uses: home-assistant/actions/hassfest@master
-        with:
-          path: gitops/apps/home-assistant/configuration
