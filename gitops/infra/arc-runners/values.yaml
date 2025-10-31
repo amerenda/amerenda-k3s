@@ -5,6 +5,10 @@
 # GitHub configuration - repository-level (required for personal accounts)
 githubConfigUrl: "https://github.com/amerenda/amerenda-k3s"
 
+# Runner scale set name (used as runs-on in workflows)
+# This must match the runs-on label in GitHub Actions workflows
+runnerScaleSetName: arc-runner-set
+
 # GitHub App authentication
 # Reference existing secret created by ExternalSecret
 # The secret 'controller-manager' in arc-runners namespace contains:
@@ -22,9 +26,6 @@ controllerServiceAccount:
 
 # Runner scale set configuration
 autoscalingRunnerSet:
-  # Installation name (used as runs-on in workflows)
-  name: arc-runner-set
-  
   # Runner labels (must match runs-on in workflows)
   runnerLabels:
     - self-hosted
