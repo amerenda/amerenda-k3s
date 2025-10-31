@@ -983,6 +983,14 @@ data:
             {% set targets = target_lights_var.entity_id if target_lights_var is mapping else target_lights_var %}
             {{ expand(targets) | selectattr('state','eq','on') | list | count > 0 if targets else false }}
     
+      # Debug logging
+      - service: "logbook.log"
+        data:
+          name: "room_timer_control"
+          message: >-
+            DEBUG: now_hm={{ now_hm }}, s1={{ s1 }}, s2={{ s2 }}, s3={{ s3 }}, s4={{ s4 }},
+            fired_slot={{ fired_slot }}, en_night={{ en_night }}, ao_night={{ ao_night }}, any_on={{ any_on }}
+    
       - choose:
           - conditions: "{{ fired_slot == 'morning' and en_morning | bool }}"
             sequence:
@@ -1028,9 +1036,19 @@ data:
     
           - conditions: "{{ fired_slot == 'night' and en_night | bool }}"
             sequence:
+              - service: "logbook.log"
+                data:
+                  name: "room_timer_control"
+                  message: >-
+                    Night slot detected! en_night={{ en_night }}, any_on={{ any_on }}, ao_night={{ ao_night }}
               - choose:
                   - conditions: "{{ any_on or ao_night | bool }}"
                     sequence:
+                      - service: "logbook.log"
+                        data:
+                          name: "room_timer_control"
+                          message: >-
+                            Firing night scene for room {{ room_key_var }}
                       - service: "script.scheduled_light_on"
                         data:
                           room_key: !input room_key
@@ -1039,4 +1057,11 @@ data:
                           custom_s2_start: "{{ custom_s2_start_input }}"
                           custom_s3_start: "{{ custom_s3_start_input }}"
                           custom_s4_start: "{{ custom_s4_start_input }}"
+                  - conditions: []
+                    sequence:
+                      - service: "logbook.log"
+                        data:
+                          name: "room_timer_control"
+                          message: >-
+                            Night scene NOT fired: lights are off (any_on={{ any_on }}) and auto-on is disabled (ao_night={{ ao_night }})
     
