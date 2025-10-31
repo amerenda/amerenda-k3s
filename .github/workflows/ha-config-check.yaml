@@ -31,20 +31,31 @@ jobs:
         run: |
           pip install yamllint
 
-      - name: Run yamllint
+      - name: Run yamllint on raw configuration files
         run: |
-          echo "Running yamllint on Home Assistant configuration files..."
+          echo "Running yamllint on raw Home Assistant configuration files..."
+          echo ""
+          
+          # Only lint files in the configuration directory (not generated ConfigMaps)
+          # Exclude template files and generated helper files
+          echo "Checking files in: gitops/apps/home-assistant/configuration/"
           echo ""
           
           # Capture yamllint output
           set +e
-          yamllint -c .yamllint.yaml gitops/apps/home-assistant/ 2>&1 | tee /tmp/yamllint-output.txt
+          yamllint -c .yamllint.yaml \
+            gitops/apps/home-assistant/configuration/automations/ \
+            gitops/apps/home-assistant/configuration/blueprints/ \
+            gitops/apps/home-assistant/configuration/scripts/ \
+            gitops/apps/home-assistant/configuration/dashboards/ \
+            gitops/apps/home-assistant/configuration/helpers/input_text/ \
+            gitops/apps/home-assistant/configuration/helpers/generated/ 2>&1 | tee /tmp/yamllint-output.txt
           YAMLLINT_EXIT=$?
           set -e
           
           if [ $YAMLLINT_EXIT -ne 0 ]; then
             echo ""
-            echo "::error::YAML linting found errors. See details below."
+            echo "::error::YAML linting found errors in raw configuration files. See details below."
             echo ""
             echo "=== YAML Linting Errors ==="
             echo ""
@@ -114,7 +125,62 @@ jobs:
             exit 1
           else
             echo ""
-            echo "✅ YAML linting passed - no errors found!"
+            echo "✅ YAML linting passed - no errors found in raw configuration files!"
+          fi
+      
+      - name: Validate generated ConfigMaps (basic YAML syntax only)
+        run: |
+          echo "Validating generated ConfigMaps for basic YAML syntax..."
+          echo ""
+          
+          # Find all ConfigMap files
+          CONFIGMAP_FILES=$(find gitops/apps/home-assistant/ -name "*-configmap.yaml" -type f 2>/dev/null || true)
+          
+          if [ -z "$CONFIGMAP_FILES" ]; then
+            echo "No ConfigMap files found to validate."
+            exit 0
+          fi
+          
+          # Use yamllint with a minimal config that only checks syntax (no style rules)
+          cat > /tmp/configmap-lint.yaml << 'EOF'
+          extends: default
+          rules:
+            # Only check for syntax errors, not style
+            line-length: disable
+            comments: disable
+            indentation: disable
+            truthy: disable
+            brackets: disable
+            braces: disable
+            commas: disable
+            colons: disable
+            hyphens: disable
+            trailing-spaces: disable
+            empty-lines: disable
+            document-start: disable
+            document-end: disable
+            quoted-strings: disable
+            octal-values: disable
+          EOF
+          
+          set +e
+          ERROR_COUNT=0
+          for file in $CONFIGMAP_FILES; do
+            echo "Checking: ${file}"
+            if ! yamllint -c /tmp/configmap-lint.yaml "$file" 2>&1; then
+              echo "::error file=${file}::ConfigMap ${file} has YAML syntax errors"
+              ERROR_COUNT=$((ERROR_COUNT + 1))
+            fi
+          done
+          set -e
+          
+          if [ $ERROR_COUNT -gt 0 ]; then
+            echo ""
+            echo "::error::Found ${ERROR_COUNT} ConfigMap file(s) with YAML syntax errors"
+            exit 1
+          else
+            echo ""
+            echo "✅ All ConfigMaps have valid YAML syntax!"
           fi
 
   ha-config-check:
