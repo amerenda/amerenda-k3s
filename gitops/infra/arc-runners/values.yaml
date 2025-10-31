@@ -6,13 +6,12 @@
 githubConfigUrl: "https://github.com/amerenda/amerenda-k3s"
 
 # GitHub App authentication
-# Secret must exist in arc-runners namespace before Helm install
-githubConfigSecret:
-  name: controller-manager
-  # GitHub App authentication keys:
-  # - github_app_id
-  # - github_app_installation_id
-  # - github_app_private_key
+# Reference existing secret created by ExternalSecret
+# The secret 'controller-manager' in arc-runners namespace contains:
+# - github_app_id
+# - github_app_installation_id
+# - github_app_private_key
+githubConfigSecret: controller-manager
 
 # Controller service account configuration
 # Explicitly reference the controller service account since we're using the older controller chart
