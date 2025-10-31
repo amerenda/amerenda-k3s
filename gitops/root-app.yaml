@@ -704,3 +704,8 @@ spec:
     kind: HorizontalRunnerAutoscaler
     jsonPointers:
     - /spec/scaleUpTriggers
+  - group: "actions.github.com"
+    kind: AutoscalingRunnerSet
+    jsonPointers:
+    - /status/pendingEphemeralRunners
+    - /status/currentRunners
