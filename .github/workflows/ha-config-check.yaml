@@ -24,7 +24,21 @@ jobs:
 
       - name: Install yamllint
         run: |
-          pip install yamllint
+          # Install Python and pip if not available
+          if ! command -v pip3 &> /dev/null; then
+            if command -v apt-get &> /dev/null; then
+              sudo apt-get update
+              sudo apt-get install -y python3 python3-pip
+            elif command -v apk &> /dev/null; then
+              sudo apk add --no-cache python3 py3-pip
+            elif command -v yum &> /dev/null; then
+              sudo yum install -y python3 python3-pip
+            else
+              echo "Could not detect package manager. Assuming pip3 is available."
+            fi
+          fi
+          python3 -m pip install --upgrade pip
+          python3 -m pip install yamllint
 
       - name: Run yamllint
         run: |
@@ -119,7 +133,7 @@ jobs:
         if: contains(github.event.head_commit.modified, 'custom_components') || contains(github.event.head_commit.added, 'custom_components')
         run: |
           if [ -d "gitops/apps/home-assistant/custom_components" ]; then
-            pip install hassfest
+            python3 -m pip install hassfest
             hassfest gitops/apps/home-assistant/
           else
             echo "No custom_components directory found, skipping hassfest"
