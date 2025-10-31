@@ -31,10 +31,6 @@ autoscalingRunnerSet:
     - linux
     - arc-runner-set
   
-  # Autoscaling configuration
-  minReplicas: 1
-  maxReplicas: 3
-  
   # Runner resources
   resources:
     requests:
@@ -47,6 +43,10 @@ autoscalingRunnerSet:
   # Docker configuration for container jobs
   dockerdWithinRunnerContainer: true
   dockerEnabled: true
+
+# Autoscaling configuration (at root level, not under autoscalingRunnerSet)
+minRunners: 1
+maxRunners: 3
 
 # Container mode - use dind (Docker-in-Docker) for container jobs
 containerMode:
