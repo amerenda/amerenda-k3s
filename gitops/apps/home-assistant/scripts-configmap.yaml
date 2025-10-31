@@ -8,7 +8,6 @@ data:
       alias: "Scheduled Light On (safe)"
       mode: "restart"
       fields:
-        room_key: {}
         custom_schedule_enabled: { required: false }
         custom_s1_start: { required: false }
         custom_s2_start: { required: false }
@@ -51,22 +50,30 @@ data:
               {% elif now_ts >= s3 and now_ts < s4 %}evening
               {% else %}night{% endif %}
     
-            _override_select: "{{ 'input_select.' ~ (room_key | default('')) ~ '_' ~ slot ~ '_scene' }}"
+            # Extract entity name from fallback_lights for scene naming
+            _fb_entity: "{{ fallback_lights | default('') }}"
+            _entity_name: >-
+              {% set entity = _fb_entity %}
+              {% if entity is string and entity != '' and entity|length >= 6 and entity[:6] == 'light.' %}
+                {{ entity[6:] }}
+              {% else %}
+                {{ entity }}
+              {% endif %}
+    
+            _override_select: "{{ 'input_select.' ~ _entity_name ~ '_' ~ slot ~ '_scene' }}"
             _override_val: >-
-              {% set val = states(_override_select) if room_key | default('') else '' %}
+              {% set val = states(_override_select) if _entity_name and _entity_name != '' else '' %}
               {{ '' if val in ['unknown','unavailable','', None] else val }}
     
-            default_scene_entity_id: "scene.{{ room_key | default('') }}_{{ slot }}"
+            default_scene_entity_id: "scene.{{ _entity_name }}_{{ slot }}"
             scene_to_activate: "{{ _override_val if _override_val else default_scene_entity_id }}"
             scene_exists: >-
               {{ scene_to_activate in (states.scene | map(attribute='entity_id') | list) if scene_to_activate else false }}
     
-            preferred_room_light: "light.{{ room_key | default('') }}"
             all_lights: "{{ states.light | map(attribute='entity_id') | list }}"
             dynamic_fallback: >-
               {% set fb = fallback_lights | default('') %}
               {% if fb and fb != '' and fb in all_lights %}{{ fb }}
-              {% elif preferred_room_light in all_lights %}{{ preferred_room_light }}
               {% else %}{{ '' }}{% endif %}
         - choose:
             - conditions: "{{ scene_exists }}"
@@ -98,8 +105,6 @@ data:
       alias: "Room Toggle (smart with debug)"
       mode: "parallel"
       fields:
-        room_key:
-          description: "Short name for the room (e.g., living_room)"
         target_lights:
           description: "Entity or group to control (entity_id, list, or target)"
       sequence:
@@ -166,8 +171,7 @@ data:
             - service: "logbook.log"
               data:
                 name: "room_toggle"
-                message: "Turning ON {{ room_key }} via scheduled_light_on"
+                message: "Turning ON {{ id_list[0] if id_list|length>0 else 'target_lights' }} via scheduled_light_on"
             - service: "script.scheduled_light_on"
               data:
-                room_key: "{{ room_key | default('') }}"
                 fallback_lights: "{{ id_list[0] if id_list|length>0 else '' }}"

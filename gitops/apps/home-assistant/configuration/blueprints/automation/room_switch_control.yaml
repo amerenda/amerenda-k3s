@@ -4,16 +4,10 @@ blueprint:
     Map Hue 4-button dimmer actions to room lighting. Defaults use scheduled_light_on
     for ON/toggle and provide brightness adjustments, scene cycling, and all-off.
     Optional input_select helpers (one per press type) can override actions via dashboard.
-    Also supports legacy hue_event triggers via optional hue_event_id.
+    Uses hue_event triggers via hue_event_id.
   domain: "automation"
 
   input:
-    room_key:
-      name: "Room Key"
-      description: "Short name used by scenes: scene.<room_key>_(morning|day|evening|night)"
-      selector:
-        text: {}
-
     target_lights:
       name: "Target lights (group or list)"
       selector:
@@ -22,9 +16,8 @@ blueprint:
             domain: "light"
 
     hue_event_id:
-      name: "(Optional) Hue event ID (for hue_event compatibility)"
+      name: "Hue event ID (for hue_event compatibility)"
       description: "Example: living_room_switch_button"
-      default:
       selector:
         text: {}
 
@@ -65,7 +58,7 @@ blueprint:
       name: "(Optional) Scene cycle helper (input_select)"
       description: >
         Stores the CURRENT slot; cycles morning→day→evening→night.
-        Defaults to input_select.<room_key>_scene_cycle
+        Defaults to input_select.<light_entity_name>_scene_cycle
       default: ""
       selector:
         entity:
@@ -175,13 +168,6 @@ variables:
   brightness_step_pct: !input brightness_step_pct
 
   scene_cycle_helper_input: !input scene_cycle_helper
-  room_key: !input room_key
-  scene_cycle_helper: >-
-    {% if scene_cycle_helper_input and scene_cycle_helper_input != '' %}
-      {{ scene_cycle_helper_input }}
-    {% else %}
-      input_select.{{ room_key }}_scene_cycle
-    {% endif %}
   custom_schedule_enabled: !input custom_schedule_enabled
   custom_s1_start: !input custom_s1_start
   custom_s2_start: !input custom_s2_start
@@ -189,8 +175,33 @@ variables:
   custom_s4_start: !input custom_s4_start
 
   # materialize inputs so we can reference them in templates/logs
-  room_key_input: !input room_key
   target_lights_input: !input target_lights
+
+  # Extract entity name from target_lights for scene naming
+  _target_lights_raw: >-
+    {{ target_lights_input.entity_id if target_lights_input.entity_id is defined else target_lights_input }}
+  _target_lights_list: >-
+    {% if _target_lights_raw is string and _target_lights_raw != '' %}
+      {{ [_target_lights_raw] }}
+    {% elif _target_lights_raw is sequence and _target_lights_raw is not string %}
+      {{ _target_lights_raw | list }}
+    {% else %}
+      {{ [] }}
+    {% endif %}
+  _first_light_entity: "{{ _target_lights_list[0] if _target_lights_list|length > 0 else '' }}"
+  entity_name: >-
+    {% set entity = _first_light_entity %}
+    {% if entity is string and entity|length >= 6 and entity[:6] == 'light.' %}
+      {{ entity[6:] }}
+    {% else %}
+      {{ entity }}
+    {% endif %}
+  scene_cycle_helper: >-
+    {% if scene_cycle_helper_input and scene_cycle_helper_input != '' %}
+      {{ scene_cycle_helper_input }}
+    {% else %}
+      input_select.{{ entity_name }}_scene_cycle
+    {% endif %}
 
   custom_schedule_enabled_input: !input custom_schedule_enabled
   custom_s1_start_input: !input custom_s1_start
@@ -343,8 +354,8 @@ action:
     data:
       name: "room_switch_control"
       message: >-
-        Trigger {{ trigger.id }} mapped for room {{ room_key_input }}.
-        Lights {{ target_lights_input }}.
+        Trigger {{ trigger.id }} mapped for lights {{ target_lights_input }}.
+        Entity name: {{ entity_name }}.
 
   # Resolve which logical action to run for this trigger
   - variables:
@@ -372,7 +383,6 @@ action:
         sequence:
           - service: "script.room_toggle"
             data:
-              room_key: "{{ room_key_input }}"
               target_lights: >-
                 {{ target_lights_input.entity_id if target_lights_input.entity_id is defined else target_lights_input }}
               custom_schedule_enabled: "{{ custom_schedule_enabled }}"
@@ -386,7 +396,6 @@ action:
         sequence:
           - service: "script.scheduled_light_on"
             data:
-              room_key: "{{ room_key_input }}"
               custom_schedule_enabled: "{{ custom_schedule_enabled_input }}"
               custom_s1_start: "{{ custom_s1_start_input }}"
               custom_s2_start: "{{ custom_s2_start_input }}"
@@ -440,7 +449,7 @@ action:
                 {% endif %}
               idx: "{{ order.index(cur_slot) if cur_slot in order else 0 }}"
               next_slot: "{{ order[(idx + 1) % order | length] }}"
-              scene_to_activate: "scene.{{ room_key_input }}_{{ next_slot }}"
+              scene_to_activate: "scene.{{ entity_name }}_{{ next_slot }}"
           - service: "logbook.log"
             data:
               name: "scene_cycle DEBUG"
