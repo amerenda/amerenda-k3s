@@ -10,6 +10,14 @@ data:
     
     bathroom_custom_schedule:
       name: Bathroom - Use custom schedule
+    bathroom_morning_custom_time:
+      name: Bathroom - Use custom Morning time
+    bathroom_day_custom_time:
+      name: Bathroom - Use custom Day time
+    bathroom_evening_custom_time:
+      name: Bathroom - Use custom Evening time
+    bathroom_night_custom_time:
+      name: Bathroom - Use custom Night time
     bathroom_motion_enabled:
       name: Bathroom - Motion Control Enabled
     bathroom_timer_enabled:
@@ -39,6 +47,14 @@ data:
     
     bedroom_custom_schedule:
       name: Bedroom - Use custom schedule
+    bedroom_morning_custom_time:
+      name: Bedroom - Use custom Morning time
+    bedroom_day_custom_time:
+      name: Bedroom - Use custom Day time
+    bedroom_evening_custom_time:
+      name: Bedroom - Use custom Evening time
+    bedroom_night_custom_time:
+      name: Bedroom - Use custom Night time
     bedroom_motion_enabled:
       name: Bedroom - Motion Control Enabled
     bedroom_timer_enabled:
@@ -68,6 +84,14 @@ data:
     
     hallway_custom_schedule:
       name: Hallway - Use custom schedule
+    hallway_morning_custom_time:
+      name: Hallway - Use custom Morning time
+    hallway_day_custom_time:
+      name: Hallway - Use custom Day time
+    hallway_evening_custom_time:
+      name: Hallway - Use custom Evening time
+    hallway_night_custom_time:
+      name: Hallway - Use custom Night time
     hallway_motion_enabled:
       name: Hallway - Motion Control Enabled
     hallway_timer_enabled:
@@ -97,6 +121,14 @@ data:
     
     kitchen_custom_schedule:
       name: Kitchen - Use custom schedule
+    kitchen_morning_custom_time:
+      name: Kitchen - Use custom Morning time
+    kitchen_day_custom_time:
+      name: Kitchen - Use custom Day time
+    kitchen_evening_custom_time:
+      name: Kitchen - Use custom Evening time
+    kitchen_night_custom_time:
+      name: Kitchen - Use custom Night time
     kitchen_motion_enabled:
       name: Kitchen - Motion Control Enabled
     kitchen_timer_enabled:
@@ -126,6 +158,14 @@ data:
     
     living_room_custom_schedule:
       name: Living Room - Use custom schedule
+    living_room_morning_custom_time:
+      name: Living Room - Use custom Morning time
+    living_room_day_custom_time:
+      name: Living Room - Use custom Day time
+    living_room_evening_custom_time:
+      name: Living Room - Use custom Evening time
+    living_room_night_custom_time:
+      name: Living Room - Use custom Night time
     living_room_motion_enabled:
       name: Living Room - Motion Control Enabled
     living_room_timer_enabled:

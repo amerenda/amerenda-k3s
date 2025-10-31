@@ -4,6 +4,14 @@
 
 hallway_custom_schedule:
   name: Hallway - Use custom schedule
+hallway_morning_custom_time:
+  name: Hallway - Use custom Morning time
+hallway_day_custom_time:
+  name: Hallway - Use custom Day time
+hallway_evening_custom_time:
+  name: Hallway - Use custom Evening time
+hallway_night_custom_time:
+  name: Hallway - Use custom Night time
 hallway_motion_enabled:
   name: Hallway - Motion Control Enabled
 hallway_timer_enabled:

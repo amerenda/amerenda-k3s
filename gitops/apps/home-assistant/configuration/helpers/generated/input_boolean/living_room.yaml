@@ -4,6 +4,14 @@
 
 living_room_custom_schedule:
   name: Living Room - Use custom schedule
+living_room_morning_custom_time:
+  name: Living Room - Use custom Morning time
+living_room_day_custom_time:
+  name: Living Room - Use custom Day time
+living_room_evening_custom_time:
+  name: Living Room - Use custom Evening time
+living_room_night_custom_time:
+  name: Living Room - Use custom Night time
 living_room_motion_enabled:
   name: Living Room - Motion Control Enabled
 living_room_timer_enabled:

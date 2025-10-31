@@ -4,6 +4,14 @@
 
 bedroom_custom_schedule:
   name: Bedroom - Use custom schedule
+bedroom_morning_custom_time:
+  name: Bedroom - Use custom Morning time
+bedroom_day_custom_time:
+  name: Bedroom - Use custom Day time
+bedroom_evening_custom_time:
+  name: Bedroom - Use custom Evening time
+bedroom_night_custom_time:
+  name: Bedroom - Use custom Night time
 bedroom_motion_enabled:
   name: Bedroom - Motion Control Enabled
 bedroom_timer_enabled:

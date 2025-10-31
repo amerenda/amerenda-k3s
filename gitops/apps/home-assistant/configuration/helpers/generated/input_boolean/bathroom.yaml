@@ -4,6 +4,14 @@
 
 bathroom_custom_schedule:
   name: Bathroom - Use custom schedule
+bathroom_morning_custom_time:
+  name: Bathroom - Use custom Morning time
+bathroom_day_custom_time:
+  name: Bathroom - Use custom Day time
+bathroom_evening_custom_time:
+  name: Bathroom - Use custom Evening time
+bathroom_night_custom_time:
+  name: Bathroom - Use custom Night time
 bathroom_motion_enabled:
   name: Bathroom - Motion Control Enabled
 bathroom_timer_enabled:

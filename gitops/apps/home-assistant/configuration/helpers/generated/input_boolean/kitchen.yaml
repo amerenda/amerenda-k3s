@@ -4,6 +4,14 @@
 
 kitchen_custom_schedule:
   name: Kitchen - Use custom schedule
+kitchen_morning_custom_time:
+  name: Kitchen - Use custom Morning time
+kitchen_day_custom_time:
+  name: Kitchen - Use custom Day time
+kitchen_evening_custom_time:
+  name: Kitchen - Use custom Evening time
+kitchen_night_custom_time:
+  name: Kitchen - Use custom Night time
 kitchen_motion_enabled:
   name: Kitchen - Motion Control Enabled
 kitchen_timer_enabled:
