@@ -26,8 +26,12 @@ spec:
   dockerdWithinRunnerContainer: true
   dockerEnabled: true
   
-  # Replica configuration - HRA will manage this (set initial to match minReplicas)
-  replicas: 1
+  # Ephemeral runners - exit after completing jobs, HRA will scale up based on demand
+  ephemeral: true
+  
+  # Replica configuration - HRA will manage this
+  # Set to 0 initially, HRA will scale up to minReplicas when needed
+  replicas: 0
   
   # Service name (required)
   serviceName: arc-runner-set
