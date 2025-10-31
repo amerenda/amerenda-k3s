@@ -37,6 +37,7 @@ rules:
   resources:
   - roles
   verbs:
+  - create
   - patch
   - update
 ---
