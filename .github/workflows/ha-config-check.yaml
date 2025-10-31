@@ -38,24 +38,49 @@ jobs:
           echo "Running yamllint on raw Home Assistant configuration files..."
           echo ""
           
-          # Only lint files in the configuration directory (not generated ConfigMaps)
-          # Exclude template files and generated helper files
-          echo "Checking files in: gitops/apps/home-assistant/configuration/"
+          # Build list of directories to check (only if they exist)
+          DIRS_TO_CHECK=()
+          if [ -d "gitops/apps/home-assistant/configuration/automations" ]; then
+            DIRS_TO_CHECK+=("gitops/apps/home-assistant/configuration/automations")
+          fi
+          if [ -d "gitops/apps/home-assistant/configuration/blueprints" ]; then
+            DIRS_TO_CHECK+=("gitops/apps/home-assistant/configuration/blueprints")
+          fi
+          if [ -d "gitops/apps/home-assistant/configuration/scripts" ]; then
+            DIRS_TO_CHECK+=("gitops/apps/home-assistant/configuration/scripts")
+          fi
+          if [ -d "gitops/apps/home-assistant/configuration/dashboards" ]; then
+            DIRS_TO_CHECK+=("gitops/apps/home-assistant/configuration/dashboards")
+          fi
+          if [ -d "gitops/apps/home-assistant/configuration/helpers/input_text" ]; then
+            DIRS_TO_CHECK+=("gitops/apps/home-assistant/configuration/helpers/input_text")
+          fi
+          if [ -d "gitops/apps/home-assistant/configuration/helpers/generated" ]; then
+            DIRS_TO_CHECK+=("gitops/apps/home-assistant/configuration/helpers/generated")
+          fi
+          
+          if [ ${#DIRS_TO_CHECK[@]} -eq 0 ]; then
+            echo "No directories found to lint."
+            exit 0
+          fi
+          
+          echo "Checking directories: ${DIRS_TO_CHECK[*]}"
           echo ""
           
-          # Capture yamllint output
+          # Capture yamllint output and exit code properly
           set +e
-          yamllint -c .yamllint.yaml \
-            gitops/apps/home-assistant/configuration/automations/ \
-            gitops/apps/home-assistant/configuration/blueprints/ \
-            gitops/apps/home-assistant/configuration/scripts/ \
-            gitops/apps/home-assistant/configuration/dashboards/ \
-            gitops/apps/home-assistant/configuration/helpers/input_text/ \
-            gitops/apps/home-assistant/configuration/helpers/generated/ 2>&1 | tee /tmp/yamllint-output.txt
-          YAMLLINT_EXIT=$?
+          yamllint -c .yamllint.yaml "${DIRS_TO_CHECK[@]}" 2>&1 | tee /tmp/yamllint-output.txt
+          YAMLLINT_EXIT=${PIPESTATUS[0]}
           set -e
           
-          if [ $YAMLLINT_EXIT -ne 0 ]; then
+          # Check if there were any errors in the output (even if exit code is 0)
+          ERROR_COUNT=0
+          if [ -f /tmp/yamllint-output.txt ]; then
+            ERROR_COUNT=$(grep -c "error:" /tmp/yamllint-output.txt || true)
+          fi
+          
+          # Fail if yamllint exited with error OR if we found error messages
+          if [ $YAMLLINT_EXIT -ne 0 ] || [ "$ERROR_COUNT" -gt 0 ]; then
             echo ""
             echo "::error::YAML linting found errors in raw configuration files. See details below."
             echo ""
