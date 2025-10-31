@@ -652,16 +652,10 @@ metadata:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
   project: default
-  sources:
-    - repoURL: https://actions-runner-controller.github.io/actions-runner-controller
-      chart: actions-runner-controller
-      targetRevision: 0.23.7
-      helm:
-        valueFiles:
-          - $values/gitops/infra/arc-runners/values.yaml
-    - repoURL: https://github.com/amerenda/amerenda-k3s.git
-      targetRevision: main
-      ref: values
+  source:
+    repoURL: https://github.com/amerenda/amerenda-k3s.git
+    targetRevision: main
+    path: gitops/infra/arc-runners
   destination:
     server: https://kubernetes.default.svc
     namespace: arc-systems

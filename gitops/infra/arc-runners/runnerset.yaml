@@ -1,0 +1,53 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerSet
+metadata:
+  name: arc-runner-set
+  namespace: arc-systems
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  # GitHub configuration
+  gitHubConfigUrl: "https://github.com/amerenda"
+  gitHubConfigSecret:
+    name: controller-manager
+    namespace: arc-systems
+  
+  # Runner template
+  template:
+    spec:
+      # Runner image
+      image: ghcr.io/actions/actions-runner:latest
+      imagePullPolicy: IfNotPresent
+      
+      # Runner labels (must match runs-on in workflows)
+      labels:
+        - self-hosted
+        - linux
+        - arc-runner-set
+      
+      # Docker image for container jobs
+      dockerdWithinRunnerContainer: true
+      dockerImage: docker:dind
+      
+      # Resources
+      resources:
+        requests:
+          cpu: 200m
+          memory: 256Mi
+        limits:
+          cpu: 1000m
+          memory: 1Gi
+      
+      # Security context
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+  
+  # Replica configuration (min/max for autoscaling)
+  replicas: 0  # Start with 0, scale up on demand
+  
+  # Autoscaling configuration
+  minReplicas: 0
+  maxReplicas: 10
