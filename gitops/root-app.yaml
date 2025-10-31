@@ -677,3 +677,7 @@ spec:
     kind: CustomResourceDefinition
     jsonPointers:
     - /spec/preserveUnknownFields
+  - group: "actions.summerwind.dev"
+    kind: HorizontalRunnerAutoscaler
+    jsonPointers:
+    - /spec/scaleUpTriggers
