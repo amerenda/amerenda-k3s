@@ -105,26 +105,34 @@ mode: "restart"
 max_exceeded: "silent"
 
 variables:
+  # Materialize optional schedule inputs
+  custom_schedule_enabled_input: !input custom_schedule_enabled
+  custom_s1_start_input: !input custom_s1_start
+  custom_s2_start_input: !input custom_s2_start
+  custom_s3_start_input: !input custom_s3_start
+  custom_s4_start_input: !input custom_s4_start
+
   default_s1: "06:00:00"
   default_s2: "09:00:00"
   default_s3: "17:00:00"
   default_s4: "22:00:00"
 
   use_custom: >-
-    {{ custom_schedule_enabled is defined and custom_schedule_enabled != none and
-       is_state(custom_schedule_enabled, 'on') }}
+    {{ custom_schedule_enabled_input is not none and
+       custom_schedule_enabled_input != '' and
+       is_state(custom_schedule_enabled_input, 'on') }}
 
   s1_str: >-
-    {% set v = states(custom_s1_start) if use_custom else default_s1 %}
+    {% set v = states(custom_s1_start_input) if use_custom else default_s1 %}
     {% if v in ['unknown','unavailable',''] %}{{ default_s1 }}{% else %}{{ v }}{% endif %}
   s2_str: >-
-    {% set v = states(custom_s2_start) if use_custom else default_s2 %}
+    {% set v = states(custom_s2_start_input) if use_custom else default_s2 %}
     {% if v in ['unknown','unavailable',''] %}{{ default_s2 }}{% else %}{{ v }}{% endif %}
   s3_str: >-
-    {% set v = states(custom_s3_start) if use_custom else default_s3 %}
+    {% set v = states(custom_s3_start_input) if use_custom else default_s3 %}
     {% if v in ['unknown','unavailable',''] %}{{ default_s3 }}{% else %}{{ v }}{% endif %}
   s4_str: >-
-    {% set v = states(custom_s4_start) if use_custom else default_s4 %}
+    {% set v = states(custom_s4_start_input) if use_custom else default_s4 %}
     {% if v in ['unknown','unavailable',''] %}{{ default_s4 }}{% else %}{{ v }}{% endif %}
 
   now_ts: "{{ as_timestamp(now()) }}"
@@ -192,11 +200,11 @@ action:
           - service: "script.scheduled_light_on"
             data:
               room_key: !input room_key  # yamllint disable-line quoted-strings
-              custom_schedule_enabled: !input custom_schedule_enabled  # yamllint disable-line quoted-strings
-              custom_s1_start: !input custom_s1_start  # yamllint disable-line quoted-strings
-              custom_s2_start: !input custom_s2_start  # yamllint disable-line quoted-strings
-              custom_s3_start: !input custom_s3_start  # yamllint disable-line quoted-strings
-              custom_s4_start: !input custom_s4_start  # yamllint disable-line quoted-strings
+              custom_schedule_enabled: "{{ custom_schedule_enabled_input }}"
+              custom_s1_start: "{{ custom_s1_start_input }}"
+              custom_s2_start: "{{ custom_s2_start_input }}"
+              custom_s3_start: "{{ custom_s3_start_input }}"
+              custom_s4_start: "{{ custom_s4_start_input }}"
 
       - conditions:
           - condition: "trigger"

@@ -18,19 +18,24 @@ blueprint:
 
     # Shared schedule helpers
     custom_schedule_enabled:
-      name: "Custom schedule enabled (input_boolean)"
+      name: "(Optional) Custom schedule enabled boolean"
+      default:
       selector: { entity: { domain: "input_boolean" } }
     custom_s1_start:
-      name: "Morning start (input_datetime, time-only)"
+      name: "(Optional) Morning start (time-only)"
+      default:
       selector: { entity: { domain: "input_datetime" } }
     custom_s2_start:
-      name: "Day start (input_datetime, time-only)"
+      name: "(Optional) Day start (time-only)"
+      default:
       selector: { entity: { domain: "input_datetime" } }
     custom_s3_start:
-      name: "Evening start (input_datetime, time-only)"
+      name: "(Optional) Evening start (time-only)"
+      default:
       selector: { entity: { domain: "input_datetime" } }
     custom_s4_start:
-      name: "Night start (input_datetime, time-only)"
+      name: "(Optional) Night start (time-only)"
+      default:
       selector: { entity: { domain: "input_datetime" } }
 
     # Per-window controls (helpers; can be shared booleans or per-room ones)
@@ -74,30 +79,40 @@ mode: "restart"
 max_exceeded: "silent"
 
 variables:
+  # Materialize optional schedule inputs
+  custom_schedule_enabled_input: !input custom_schedule_enabled
+  custom_s1_start_input: !input custom_s1_start
+  custom_s2_start_input: !input custom_s2_start
+  custom_s3_start_input: !input custom_s3_start
+  custom_s4_start_input: !input custom_s4_start
+
   default_s1: "06:00:00"
   default_s2: "09:00:00"
   default_s3: "17:00:00"
   default_s4: "22:00:00"
 
   use_custom: >-
-    {{ is_state(custom_schedule_enabled, 'on') }}
+    {{ custom_schedule_enabled_input is not none and
+       custom_schedule_enabled_input != '' and
+       is_state(custom_schedule_enabled_input, 'on') }}
 
-  s1: >-
-    {% set t = states(custom_s1_start) if use_custom else default_s1 %}
-    {% set t = default_s1 if t in ['unknown','unavailable',''] else t %}
-    {{ t[:5] }}
-  s2: >-
-    {% set t = states(custom_s2_start) if use_custom else default_s2 %}
-    {% set t = default_s2 if t in ['unknown','unavailable',''] else t %}
-    {{ t[:5] }}
-  s3: >-
-    {% set t = states(custom_s3_start) if use_custom else default_s3 %}
-    {% set t = default_s3 if t in ['unknown','unavailable',''] else t %}
-    {{ t[:5] }}
-  s4: >-
-    {% set t = states(custom_s4_start) if use_custom else default_s4 %}
-    {% set t = default_s4 if t in ['unknown','unavailable',''] else t %}
-    {{ t[:5] }}
+  s1_str: >-
+    {% set v = states(custom_s1_start_input) if use_custom else default_s1 %}
+    {% if v in ['unknown','unavailable',''] %}{{ default_s1 }}{% else %}{{ v }}{% endif %}
+  s2_str: >-
+    {% set v = states(custom_s2_start_input) if use_custom else default_s2 %}
+    {% if v in ['unknown','unavailable',''] %}{{ default_s2 }}{% else %}{{ v }}{% endif %}
+  s3_str: >-
+    {% set v = states(custom_s3_start_input) if use_custom else default_s3 %}
+    {% if v in ['unknown','unavailable',''] %}{{ default_s3 }}{% else %}{{ v }}{% endif %}
+  s4_str: >-
+    {% set v = states(custom_s4_start_input) if use_custom else default_s4 %}
+    {% if v in ['unknown','unavailable',''] %}{{ default_s4 }}{% else %}{{ v }}{% endif %}
+
+  s1: "{{ s1_str[:5] }}"
+  s2: "{{ s2_str[:5] }}"
+  s3: "{{ s3_str[:5] }}"
+  s4: "{{ s4_str[:5] }}"
 
   now_hm: "{{ now().strftime('%H:%M') }}"
 
@@ -138,11 +153,11 @@ action:
                   - service: "script.scheduled_light_on"
                     data:
                       room_key: !input room_key
-                      custom_schedule_enabled: !input custom_schedule_enabled
-                      custom_s1_start: !input custom_s1_start
-                      custom_s2_start: !input custom_s2_start
-                      custom_s3_start: !input custom_s3_start
-                      custom_s4_start: !input custom_s4_start
+                      custom_schedule_enabled: "{{ custom_schedule_enabled_input }}"
+                      custom_s1_start: "{{ custom_s1_start_input }}"
+                      custom_s2_start: "{{ custom_s2_start_input }}"
+                      custom_s3_start: "{{ custom_s3_start_input }}"
+                      custom_s4_start: "{{ custom_s4_start_input }}"
 
       - conditions: "{{ fired_slot == 'day' and en_day | bool }}"
         sequence:
@@ -152,11 +167,11 @@ action:
                   - service: "script.scheduled_light_on"
                     data:
                       room_key: !input room_key
-                      custom_schedule_enabled: !input custom_schedule_enabled
-                      custom_s1_start: !input custom_s1_start
-                      custom_s2_start: !input custom_s2_start
-                      custom_s3_start: !input custom_s3_start
-                      custom_s4_start: !input custom_s4_start
+                      custom_schedule_enabled: "{{ custom_schedule_enabled_input }}"
+                      custom_s1_start: "{{ custom_s1_start_input }}"
+                      custom_s2_start: "{{ custom_s2_start_input }}"
+                      custom_s3_start: "{{ custom_s3_start_input }}"
+                      custom_s4_start: "{{ custom_s4_start_input }}"
 
       - conditions: "{{ fired_slot == 'evening' and en_evening | bool }}"
         sequence:
@@ -166,11 +181,11 @@ action:
                   - service: "script.scheduled_light_on"
                     data:
                       room_key: !input room_key
-                      custom_schedule_enabled: !input custom_schedule_enabled
-                      custom_s1_start: !input custom_s1_start
-                      custom_s2_start: !input custom_s2_start
-                      custom_s3_start: !input custom_s3_start
-                      custom_s4_start: !input custom_s4_start
+                      custom_schedule_enabled: "{{ custom_schedule_enabled_input }}"
+                      custom_s1_start: "{{ custom_s1_start_input }}"
+                      custom_s2_start: "{{ custom_s2_start_input }}"
+                      custom_s3_start: "{{ custom_s3_start_input }}"
+                      custom_s4_start: "{{ custom_s4_start_input }}"
 
       - conditions: "{{ fired_slot == 'night' and en_night | bool }}"
         sequence:
@@ -180,9 +195,9 @@ action:
                   - service: "script.scheduled_light_on"
                     data:
                       room_key: !input room_key
-                      custom_schedule_enabled: !input custom_schedule_enabled
-                      custom_s1_start: !input custom_s1_start
-                      custom_s2_start: !input custom_s2_start
-                      custom_s3_start: !input custom_s3_start
-                      custom_s4_start: !input custom_s4_start
+                      custom_schedule_enabled: "{{ custom_schedule_enabled_input }}"
+                      custom_s1_start: "{{ custom_s1_start_input }}"
+                      custom_s2_start: "{{ custom_s2_start_input }}"
+                      custom_s3_start: "{{ custom_s3_start_input }}"
+                      custom_s4_start: "{{ custom_s4_start_input }}"
 

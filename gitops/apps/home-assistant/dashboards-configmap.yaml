@@ -387,12 +387,22 @@ data:
                 {% set evening_scene = evening_override if evening_override not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_evening' %}
                 {% set night_scene = night_override if night_override not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_night' %}
                 
-                | Time Slot | Scene | Activation Time |
-                |-----------|-------|----------------|
-                | Morning | `{{ morning_scene }}` | {{ s1 }} |
-                | Day | `{{ day_scene }}` | {{ s2 }} |
-                | Evening | `{{ evening_scene }}` | {{ s3 }} |
-                | Night | `{{ night_scene }}` | {{ s4 }} |
+                {% set morning_enabled = states('input_boolean.enable_' ~ room ~ '_morning') %}
+                {% set day_enabled = states('input_boolean.enable_' ~ room ~ '_day') %}
+                {% set evening_enabled = states('input_boolean.enable_' ~ room ~ '_evening') %}
+                {% set night_enabled = states('input_boolean.enable_' ~ room ~ '_night') %}
+                
+                {% set morning_auto_on = states('input_boolean.auto_on_' ~ room ~ '_morning') %}
+                {% set day_auto_on = states('input_boolean.auto_on_' ~ room ~ '_day') %}
+                {% set evening_auto_on = states('input_boolean.auto_on_' ~ room ~ '_evening') %}
+                {% set night_auto_on = states('input_boolean.auto_on_' ~ room ~ '_night') %}
+                
+                | Time Slot | Scene | Activation Time | Timer Enabled | Auto-On |
+                |-----------|-------|----------------|---------------|---------|
+                | Morning | `{{ morning_scene }}` | {{ s1 }} | {% if morning_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if morning_auto_on == 'on' %}✓{% else %}✗{% endif %} |
+                | Day | `{{ day_scene }}` | {{ s2 }} | {% if day_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if day_auto_on == 'on' %}✓{% else %}✗{% endif %} |
+                | Evening | `{{ evening_scene }}` | {{ s3 }} | {% if evening_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if evening_auto_on == 'on' %}✓{% else %}✗{% endif %} |
+                | Night | `{{ night_scene }}` | {{ s4 }} | {% if night_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if night_auto_on == 'on' %}✓{% else %}✗{% endif %} |
                 
                 {% set any_custom = morning_custom == 'on' or day_custom == 'on' or evening_custom == 'on' or night_custom == 'on' %}
                 {% if any_custom %}
@@ -442,6 +452,8 @@ data:
                       - entity: input_boolean.bedroom_morning_custom_time
                       - entity: input_datetime.bedroom_s1_start
                       - entity: input_select.bedroom_morning_scene
+                      - entity: input_boolean.enable_bedroom_morning
+                      - entity: input_boolean.auto_on_bedroom_morning
               - type: conditional
                 conditions:
                   - entity: input_select.time_window_selector
@@ -458,6 +470,8 @@ data:
                       - entity: input_boolean.living_room_morning_custom_time
                       - entity: input_datetime.living_room_s1_start
                       - entity: input_select.living_room_morning_scene
+                      - entity: input_boolean.enable_living_room_morning
+                      - entity: input_boolean.auto_on_living_room_morning
               - type: conditional
                 conditions:
                   - entity: input_select.time_window_selector
@@ -474,6 +488,8 @@ data:
                       - entity: input_boolean.kitchen_morning_custom_time
                       - entity: input_datetime.kitchen_s1_start
                       - entity: input_select.kitchen_morning_scene
+                      - entity: input_boolean.enable_kitchen_morning
+                      - entity: input_boolean.auto_on_kitchen_morning
               - type: conditional
                 conditions:
                   - entity: input_select.time_window_selector
@@ -490,6 +506,8 @@ data:
                       - entity: input_boolean.bathroom_morning_custom_time
                       - entity: input_datetime.bathroom_s1_start
                       - entity: input_select.bathroom_morning_scene
+                      - entity: input_boolean.enable_bathroom_morning
+                      - entity: input_boolean.auto_on_bathroom_morning
               - type: conditional
                 conditions:
                   - entity: input_select.time_window_selector
@@ -506,6 +524,8 @@ data:
                       - entity: input_boolean.hallway_morning_custom_time
                       - entity: input_datetime.hallway_s1_start
                       - entity: input_select.hallway_morning_scene
+                      - entity: input_boolean.enable_hallway_morning
+                      - entity: input_boolean.auto_on_hallway_morning
     
               # Day Schedule Configuration
               - type: conditional
@@ -524,6 +544,8 @@ data:
                       - entity: input_boolean.bedroom_day_custom_time
                       - entity: input_datetime.bedroom_s2_start
                       - entity: input_select.bedroom_day_scene
+                      - entity: input_boolean.enable_bedroom_day
+                      - entity: input_boolean.auto_on_bedroom_day
               - type: conditional
                 conditions:
                   - entity: input_select.time_window_selector
@@ -540,6 +562,8 @@ data:
                       - entity: input_boolean.living_room_day_custom_time
                       - entity: input_datetime.living_room_s2_start
                       - entity: input_select.living_room_day_scene
+                      - entity: input_boolean.enable_living_room_day
+                      - entity: input_boolean.auto_on_living_room_day
               - type: conditional
                 conditions:
                   - entity: input_select.time_window_selector
@@ -556,6 +580,8 @@ data:
                       - entity: input_boolean.kitchen_day_custom_time
                       - entity: input_datetime.kitchen_s2_start
                       - entity: input_select.kitchen_day_scene
+                      - entity: input_boolean.enable_kitchen_day
+                      - entity: input_boolean.auto_on_kitchen_day
               - type: conditional
                 conditions:
                   - entity: input_select.time_window_selector
@@ -572,6 +598,8 @@ data:
                       - entity: input_boolean.bathroom_day_custom_time
                       - entity: input_datetime.bathroom_s2_start
                       - entity: input_select.bathroom_day_scene
+                      - entity: input_boolean.enable_bathroom_day
+                      - entity: input_boolean.auto_on_bathroom_day
               - type: conditional
                 conditions:
                   - entity: input_select.time_window_selector
@@ -588,6 +616,8 @@ data:
                       - entity: input_boolean.hallway_day_custom_time
                       - entity: input_datetime.hallway_s2_start
                       - entity: input_select.hallway_day_scene
+                      - entity: input_boolean.enable_hallway_day
+                      - entity: input_boolean.auto_on_hallway_day
     
               # Evening Schedule Configuration
               - type: conditional
@@ -606,6 +636,8 @@ data:
                       - entity: input_boolean.bedroom_evening_custom_time
                       - entity: input_datetime.bedroom_s3_start
                       - entity: input_select.bedroom_evening_scene
+                      - entity: input_boolean.enable_bedroom_evening
+                      - entity: input_boolean.auto_on_bedroom_evening
               - type: conditional
                 conditions:
                   - entity: input_select.time_window_selector
@@ -622,6 +654,8 @@ data:
                       - entity: input_boolean.living_room_evening_custom_time
                       - entity: input_datetime.living_room_s3_start
                       - entity: input_select.living_room_evening_scene
+                      - entity: input_boolean.enable_living_room_evening
+                      - entity: input_boolean.auto_on_living_room_evening
               - type: conditional
                 conditions:
                   - entity: input_select.time_window_selector
@@ -638,6 +672,8 @@ data:
                       - entity: input_boolean.kitchen_evening_custom_time
                       - entity: input_datetime.kitchen_s3_start
                       - entity: input_select.kitchen_evening_scene
+                      - entity: input_boolean.enable_kitchen_evening
+                      - entity: input_boolean.auto_on_kitchen_evening
               - type: conditional
                 conditions:
                   - entity: input_select.time_window_selector
@@ -654,6 +690,8 @@ data:
                       - entity: input_boolean.bathroom_evening_custom_time
                       - entity: input_datetime.bathroom_s3_start
                       - entity: input_select.bathroom_evening_scene
+                      - entity: input_boolean.enable_bathroom_evening
+                      - entity: input_boolean.auto_on_bathroom_evening
               - type: conditional
                 conditions:
                   - entity: input_select.time_window_selector
@@ -670,6 +708,8 @@ data:
                       - entity: input_boolean.hallway_evening_custom_time
                       - entity: input_datetime.hallway_s3_start
                       - entity: input_select.hallway_evening_scene
+                      - entity: input_boolean.enable_hallway_evening
+                      - entity: input_boolean.auto_on_hallway_evening
     
               # Night Schedule Configuration
               - type: conditional
@@ -688,6 +728,8 @@ data:
                       - entity: input_boolean.bedroom_night_custom_time
                       - entity: input_datetime.bedroom_s4_start
                       - entity: input_select.bedroom_night_scene
+                      - entity: input_boolean.enable_bedroom_night
+                      - entity: input_boolean.auto_on_bedroom_night
               - type: conditional
                 conditions:
                   - entity: input_select.time_window_selector
@@ -704,6 +746,8 @@ data:
                       - entity: input_boolean.living_room_night_custom_time
                       - entity: input_datetime.living_room_s4_start
                       - entity: input_select.living_room_night_scene
+                      - entity: input_boolean.enable_living_room_night
+                      - entity: input_boolean.auto_on_living_room_night
               - type: conditional
                 conditions:
                   - entity: input_select.time_window_selector
@@ -720,6 +764,8 @@ data:
                       - entity: input_boolean.kitchen_night_custom_time
                       - entity: input_datetime.kitchen_s4_start
                       - entity: input_select.kitchen_night_scene
+                      - entity: input_boolean.enable_kitchen_night
+                      - entity: input_boolean.auto_on_kitchen_night
               - type: conditional
                 conditions:
                   - entity: input_select.time_window_selector
@@ -736,6 +782,8 @@ data:
                       - entity: input_boolean.bathroom_night_custom_time
                       - entity: input_datetime.bathroom_s4_start
                       - entity: input_select.bathroom_night_scene
+                      - entity: input_boolean.enable_bathroom_night
+                      - entity: input_boolean.auto_on_bathroom_night
               - type: conditional
                 conditions:
                   - entity: input_select.time_window_selector
@@ -752,3 +800,5 @@ data:
                       - entity: input_boolean.hallway_night_custom_time
                       - entity: input_datetime.hallway_s4_start
                       - entity: input_select.hallway_night_scene
+                      - entity: input_boolean.enable_hallway_night
+                      - entity: input_boolean.auto_on_hallway_night
