@@ -56,11 +56,14 @@ containerMode:
 template:
   spec:
     # Security context for runner pods
+    # Note: Init containers need root access for volume setup
+    # The chart will set appropriate security contexts for dind containers
     securityContext:
-      runAsNonRoot: true
+      fsGroup: 1000
+      # Allow init containers to run as root, but runner containers as non-root
+      # runAsNonRoot: true  # Commented out to allow init containers to work
       runAsUser: 1000
       runAsGroup: 1000
-      fsGroup: 1000
 
 # Namespace override
 namespaceOverride: arc-runners
