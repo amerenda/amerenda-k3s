@@ -26,3 +26,23 @@ This application must be synced and healthy before the ARC runners application c
 
 - External Secrets Operator (for GitHub App credentials)
 - Bitwarden SecretStore (for credential management)
+
+## Required GitHub App Permissions
+
+Based on [GitHub REST API documentation](https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28), for organization-level runners:
+
+**Repository permissions:**
+- Actions: Read and write
+- Administration: Read and write
+- Metadata: Read-only (automatically selected)
+
+**Organization permissions:**
+- **Self-hosted runners**: Read and write (REQUIRED)
+- **Organization administration**: Read-only (may be required for registration tokens)
+
+The endpoint `POST /orgs/{org}/actions/runners/registration-token` requires authenticated users to have admin access to the organization. For GitHub Apps, this typically means "Self-hosted runners: Read and write" permission, but some setups may require "Organization administration: Read-only" as well.
+
+**Important:** After changing GitHub App permissions, you MUST:
+1. Reinstall the app (Install App → Configure → Save)
+2. Wait for ExternalSecret to refresh (it refreshes every 1 hour by default)
+3. Or manually refresh: `kubectl delete externalsecret controller-manager -n arc-systems` and let ArgoCD recreate it
