@@ -244,3 +244,13 @@ data:
         - living_room
       initial: bathroom
     
+  time_window_selector.yaml: |
+    time_window_selector:
+      name: Time Window Selector
+      options:
+        - morning
+        - day
+        - evening
+        - night
+      initial: morning
+    

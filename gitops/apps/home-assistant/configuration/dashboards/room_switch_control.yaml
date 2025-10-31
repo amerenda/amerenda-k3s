@@ -1,6 +1,6 @@
 views:
-  - title: Room Switch Control
-    path: room-switch-control
+  - title: Room Schedule Viewer
+    path: room-schedule-viewer
     cards:
       - type: vertical-stack
         cards:
@@ -340,21 +340,42 @@ views:
           {% set room = states('input_select.room_selector') %}
           {% if room and room != 'unknown' and room != 'unavailable' %}
             {% set custom_schedule = states('input_boolean.' ~ room ~ '_custom_schedule') %}
-            {% set s1 = states('input_datetime.' ~ room ~ '_s1_start') if custom_schedule == 'on' else '06:00:00' %}
-            {% set s2 = states('input_datetime.' ~ room ~ '_s2_start') if custom_schedule == 'on' else '09:00:00' %}
-            {% set s3 = states('input_datetime.' ~ room ~ '_s3_start') if custom_schedule == 'on' else '17:00:00' %}
-            {% set s4 = states('input_datetime.' ~ room ~ '_s4_start') if custom_schedule == 'on' else '22:00:00' %}
+            {% if custom_schedule == 'on' %}
+              {% set s1_raw = states('input_datetime.' ~ room ~ '_s1_start') %}
+              {% set s2_raw = states('input_datetime.' ~ room ~ '_s2_start') %}
+              {% set s3_raw = states('input_datetime.' ~ room ~ '_s3_start') %}
+              {% set s4_raw = states('input_datetime.' ~ room ~ '_s4_start') %}
+              {% set s1 = s1_raw.split(' ')[-1][:5] if ' ' in s1_raw else (s1_raw[:5] if s1_raw|length >= 5 else '06:00') %}
+              {% set s2 = s2_raw.split(' ')[-1][:5] if ' ' in s2_raw else (s2_raw[:5] if s2_raw|length >= 5 else '09:00') %}
+              {% set s3 = s3_raw.split(' ')[-1][:5] if ' ' in s3_raw else (s3_raw[:5] if s3_raw|length >= 5 else '17:00') %}
+              {% set s4 = s4_raw.split(' ')[-1][:5] if ' ' in s4_raw else (s4_raw[:5] if s4_raw|length >= 5 else '22:00') %}
+            {% else %}
+              {% set s1 = '06:00' %}
+              {% set s2 = '09:00' %}
+              {% set s3 = '17:00' %}
+              {% set s4 = '22:00' %}
+            {% endif %}
             
-            **Morning**: {{ s1[:5] }} - {{ s2[:5] }} → Day
+            {% set morning_override = states('input_select.' ~ room ~ '_morning_scene') %}
+            {% set day_override = states('input_select.' ~ room ~ '_day_scene') %}
+            {% set evening_override = states('input_select.' ~ room ~ '_evening_scene') %}
+            {% set night_override = states('input_select.' ~ room ~ '_night_scene') %}
             
-            **Day**: {{ s2[:5] }} - {{ s3[:5] }} → Evening
+            {% set morning_scene = morning_override if morning_override not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_morning' %}
+            {% set day_scene = day_override if day_override not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_day' %}
+            {% set evening_scene = evening_override if evening_override not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_evening' %}
+            {% set night_scene = night_override if night_override not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_night' %}
             
-            **Evening**: {{ s3[:5] }} - {{ s4[:5] }} → Night
-            
-            **Night**: {{ s4[:5] }} - {{ s1[:5] }} → Morning
+            | Time Slot | Scene | Activation Time |
+            |-----------|-------|----------------|
+            | Morning | `{{ morning_scene }}` | {{ s1 }} |
+            | Day | `{{ day_scene }}` | {{ s2 }} |
+            | Evening | `{{ evening_scene }}` | {{ s3 }} |
+            | Night | `{{ night_scene }}` | {{ s4 }} |
             
             {% if custom_schedule == 'on' %}
               *Custom schedule enabled*
+              <br>*Debug: s1={{ s1_raw }}, s2={{ s2_raw }}, s3={{ s3_raw }}, s4={{ s4_raw }}*
             {% else %}
               *Default schedule (06:00, 09:00, 17:00, 22:00)*
             {% endif %}
