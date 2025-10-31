@@ -69,7 +69,6 @@ rules:
   
   # Allow hyphens in flow style
   hyphens:
-    max-spaces-before: 0
     max-spaces-after: 1
   
   # Allow question marks in flow style
