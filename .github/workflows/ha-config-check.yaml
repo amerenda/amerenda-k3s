@@ -2,7 +2,7 @@ name: Home Assistant Configuration Check
 
 on:
   push:
-    branches: [ main ]
+    # Run on main branch for HA config changes OR any branch when workflow file changes (for testing)
     paths:
       - 'gitops/apps/home-assistant/**'
       - '.github/workflows/ha-config-check.yaml'
@@ -11,6 +11,8 @@ on:
     paths:
       - 'gitops/apps/home-assistant/**'
       - '.github/workflows/ha-config-check.yaml'
+  # Allow manual triggering for testing
+  workflow_dispatch:
 
 jobs:
   yaml-lint:
@@ -195,11 +197,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Home Assistant
-        uses: frenck/action-home-assistant@v1
-        with:
-          ha_version: ${{ env.HA_VERSION }}
-
       - name: Prepare Home Assistant configuration
         run: |
           # Create a temporary HA config directory
@@ -259,6 +256,12 @@ jobs:
           
           # Copy package files (if any exist in helpers directory)
           find gitops/apps/home-assistant/configuration/helpers -name "*.yaml" -not -path "*/generated/*" -not -path "*/input_text/*" -not -name "*_template.yaml.j2" -exec cp {} /tmp/ha-config/packages/ \; 2>/dev/null || true
+
+      - name: Set up Home Assistant
+        uses: frenck/action-home-assistant@v1
+        with:
+          version: ${{ env.HA_VERSION }}
+          path: /tmp/ha-config
 
       - name: Run Home Assistant configuration check
         run: |
