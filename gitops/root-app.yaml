@@ -653,8 +653,8 @@ metadata:
 spec:
   project: default
   sources:
-    - repoURL: oci://ghcr.io/actions/actions-runner-controller-charts
-      chart: gha-runner-scale-set
+    - repoURL: oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
+      path: .
       targetRevision: 0.4.0
       helm:
         valueFiles:
