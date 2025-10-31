@@ -33,7 +33,89 @@ jobs:
 
       - name: Run yamllint
         run: |
-          yamllint -c .yamllint.yaml gitops/apps/home-assistant/
+          echo "Running yamllint on Home Assistant configuration files..."
+          echo ""
+          
+          # Capture yamllint output
+          set +e
+          yamllint -c .yamllint.yaml gitops/apps/home-assistant/ 2>&1 | tee /tmp/yamllint-output.txt
+          YAMLLINT_EXIT=$?
+          set -e
+          
+          if [ $YAMLLINT_EXIT -ne 0 ]; then
+            echo ""
+            echo "::error::YAML linting found errors. See details below."
+            echo ""
+            echo "=== YAML Linting Errors ==="
+            echo ""
+            
+            # Track unique files with errors
+            declare -A files_with_errors
+            
+            # Parse yamllint output and format errors
+            while IFS= read -r line; do
+              # Match yamllint format: file:line:col: level: message
+              if [[ "$line" =~ ^([^:]+):([0-9]+):([0-9]+):[[:space:]]*(warning|error):[[:space:]]*(.+)$ ]]; then
+                file="${BASH_REMATCH[1]}"
+                line_num="${BASH_REMATCH[2]}"
+                col_num="${BASH_REMATCH[3]}"
+                level="${BASH_REMATCH[4]}"
+                message="${BASH_REMATCH[5]}"
+                
+                # Track this file
+                files_with_errors["$file"]=1
+                
+                # Create GitHub annotation
+                echo "::${level} file=${file},line=${line_num},col=${col_num}::${file}:${line_num}:${col_num}: ${message}"
+                
+                # Print formatted error
+                echo "📄 ${file}"
+                echo "   Line ${line_num}, Column ${col_num}: ${message}"
+                
+                # Provide helpful hints
+                case "$message" in
+                  *"indentation"*)
+                    echo "   💡 Hint: Use 2 spaces for indentation (not tabs)"
+                    ;;
+                  *"line too long"*|*"line-length"*)
+                    echo "   💡 Hint: Line exceeds 120 characters. Break it into multiple lines"
+                    ;;
+                  *"trailing spaces"*)
+                    echo "   💡 Hint: Remove trailing whitespace"
+                    ;;
+                  *"document-start"*)
+                    echo "   💡 Hint: Add '---' at the start of the file if needed"
+                    ;;
+                  *"duplication"*|*"key-duplicates"*)
+                    echo "   💡 Hint: Check for duplicate keys in the same section"
+                    ;;
+                  *"truthy"*)
+                    echo "   💡 Hint: Quote values like 'yes', 'no', 'on', 'off' if they're not booleans"
+                    ;;
+                  *"empty-lines"*)
+                    echo "   💡 Hint: Too many empty lines (max 2 consecutive)"
+                    ;;
+                esac
+                echo ""
+              # Handle config errors (invalid config messages)
+              elif [[ "$line" =~ "invalid config" ]] || [[ "$line" =~ "unknown option" ]] || [[ "$line" =~ "no such rule" ]]; then
+                echo "::error::${line}"
+                echo "⚠️  Configuration Error: ${line}"
+                echo ""
+              fi
+            done < /tmp/yamllint-output.txt
+            
+            echo "=== Files with errors ==="
+            for file in "${!files_with_errors[@]}"; do
+              echo "  - ${file}"
+            done | sort
+            echo ""
+            echo "=== End of YAML Linting Errors ==="
+            exit 1
+          else
+            echo ""
+            echo "✅ YAML linting passed - no errors found!"
+          fi
 
   ha-config-check:
     name: Home Assistant Configuration Check
