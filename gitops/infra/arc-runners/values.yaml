@@ -14,6 +14,12 @@ githubConfigSecret:
   # - github_app_installation_id
   # - github_app_private_key
 
+# Controller service account configuration
+# Explicitly reference the controller service account since we're using the older controller chart
+controllerServiceAccount:
+  name: arc-controller
+  namespace: arc-systems
+
 # Runner scale set configuration
 autoscalingRunnerSet:
   # Installation name (used as runs-on in workflows)
