@@ -297,15 +297,15 @@ action:
                 sequence:
                   - variables:
                       script_data_dict: >-
-                        {% set d = {'room_key': room_key_var} %}
                         {% set fb = target_lights_var.entity_id if target_lights_var is mapping else target_lights_var %}
-                        {% set _ = d.update({'fallback_lights': fb}) %}
-                        {% if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none %}{% set _ = d.update({'custom_schedule_enabled': custom_schedule_enabled_input}) %}{% endif %}
-                        {% if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none %}{% set _ = d.update({'custom_s1_start': custom_s1_start_input}) %}{% endif %}
-                        {% if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none %}{% set _ = d.update({'custom_s2_start': custom_s2_start_input}) %}{% endif %}
-                        {% if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none %}{% set _ = d.update({'custom_s3_start': custom_s3_start_input}) %}{% endif %}
-                        {% if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none %}{% set _ = d.update({'custom_s4_start': custom_s4_start_input}) %}{% endif %}
-                        {{ d }}
+                        {% set base = {'room_key': room_key_var, 'fallback_lights': fb} %}
+                        {% set custom = {} %}
+                        {% if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none %}{% set custom = custom | combine({'custom_schedule_enabled': custom_schedule_enabled_input}) %}{% endif %}
+                        {% if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none %}{% set custom = custom | combine({'custom_s1_start': custom_s1_start_input}) %}{% endif %}
+                        {% if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none %}{% set custom = custom | combine({'custom_s2_start': custom_s2_start_input}) %}{% endif %}
+                        {% if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none %}{% set custom = custom | combine({'custom_s3_start': custom_s3_start_input}) %}{% endif %}
+                        {% if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none %}{% set custom = custom | combine({'custom_s4_start': custom_s4_start_input}) %}{% endif %}
+                        {{ base | combine(custom) }}
                   - service: "script.scheduled_light_on"
                     data: "{{ script_data_dict }}"
 
@@ -316,15 +316,15 @@ action:
                 sequence:
                   - variables:
                       script_data_dict: >-
-                        {% set d = {'room_key': room_key_var} %}
                         {% set fb = target_lights_var.entity_id if target_lights_var is mapping else target_lights_var %}
-                        {% set _ = d.update({'fallback_lights': fb}) %}
-                        {% if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none %}{% set _ = d.update({'custom_schedule_enabled': custom_schedule_enabled_input}) %}{% endif %}
-                        {% if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none %}{% set _ = d.update({'custom_s1_start': custom_s1_start_input}) %}{% endif %}
-                        {% if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none %}{% set _ = d.update({'custom_s2_start': custom_s2_start_input}) %}{% endif %}
-                        {% if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none %}{% set _ = d.update({'custom_s3_start': custom_s3_start_input}) %}{% endif %}
-                        {% if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none %}{% set _ = d.update({'custom_s4_start': custom_s4_start_input}) %}{% endif %}
-                        {{ d }}
+                        {% set base = {'room_key': room_key_var, 'fallback_lights': fb} %}
+                        {% set custom = {} %}
+                        {% if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none %}{% set custom = custom | combine({'custom_schedule_enabled': custom_schedule_enabled_input}) %}{% endif %}
+                        {% if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none %}{% set custom = custom | combine({'custom_s1_start': custom_s1_start_input}) %}{% endif %}
+                        {% if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none %}{% set custom = custom | combine({'custom_s2_start': custom_s2_start_input}) %}{% endif %}
+                        {% if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none %}{% set custom = custom | combine({'custom_s3_start': custom_s3_start_input}) %}{% endif %}
+                        {% if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none %}{% set custom = custom | combine({'custom_s4_start': custom_s4_start_input}) %}{% endif %}
+                        {{ base | combine(custom) }}
                   - service: "script.scheduled_light_on"
                     data: "{{ script_data_dict }}"
 
@@ -335,15 +335,15 @@ action:
                 sequence:
                   - variables:
                       script_data_dict: >-
-                        {% set d = {'room_key': room_key_var} %}
                         {% set fb = target_lights_var.entity_id if target_lights_var is mapping else target_lights_var %}
-                        {% set _ = d.update({'fallback_lights': fb}) %}
-                        {% if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none %}{% set _ = d.update({'custom_schedule_enabled': custom_schedule_enabled_input}) %}{% endif %}
-                        {% if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none %}{% set _ = d.update({'custom_s1_start': custom_s1_start_input}) %}{% endif %}
-                        {% if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none %}{% set _ = d.update({'custom_s2_start': custom_s2_start_input}) %}{% endif %}
-                        {% if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none %}{% set _ = d.update({'custom_s3_start': custom_s3_start_input}) %}{% endif %}
-                        {% if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none %}{% set _ = d.update({'custom_s4_start': custom_s4_start_input}) %}{% endif %}
-                        {{ d }}
+                        {% set base = {'room_key': room_key_var, 'fallback_lights': fb} %}
+                        {% set custom = {} %}
+                        {% if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none %}{% set custom = custom | combine({'custom_schedule_enabled': custom_schedule_enabled_input}) %}{% endif %}
+                        {% if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none %}{% set custom = custom | combine({'custom_s1_start': custom_s1_start_input}) %}{% endif %}
+                        {% if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none %}{% set custom = custom | combine({'custom_s2_start': custom_s2_start_input}) %}{% endif %}
+                        {% if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none %}{% set custom = custom | combine({'custom_s3_start': custom_s3_start_input}) %}{% endif %}
+                        {% if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none %}{% set custom = custom | combine({'custom_s4_start': custom_s4_start_input}) %}{% endif %}
+                        {{ base | combine(custom) }}
                   - service: "script.scheduled_light_on"
                     data: "{{ script_data_dict }}"
 
@@ -364,15 +364,15 @@ action:
                         Firing night scene for room {{ room_key_var }}
                   - variables:
                       script_data_dict: >-
-                        {% set d = {'room_key': room_key_var} %}
                         {% set fb = target_lights_var.entity_id if target_lights_var is mapping else target_lights_var %}
-                        {% set _ = d.update({'fallback_lights': fb}) %}
-                        {% if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none %}{% set _ = d.update({'custom_schedule_enabled': custom_schedule_enabled_input}) %}{% endif %}
-                        {% if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none %}{% set _ = d.update({'custom_s1_start': custom_s1_start_input}) %}{% endif %}
-                        {% if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none %}{% set _ = d.update({'custom_s2_start': custom_s2_start_input}) %}{% endif %}
-                        {% if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none %}{% set _ = d.update({'custom_s3_start': custom_s3_start_input}) %}{% endif %}
-                        {% if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none %}{% set _ = d.update({'custom_s4_start': custom_s4_start_input}) %}{% endif %}
-                        {{ d }}
+                        {% set base = {'room_key': room_key_var, 'fallback_lights': fb} %}
+                        {% set custom = {} %}
+                        {% if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none %}{% set custom = custom | combine({'custom_schedule_enabled': custom_schedule_enabled_input}) %}{% endif %}
+                        {% if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none %}{% set custom = custom | combine({'custom_s1_start': custom_s1_start_input}) %}{% endif %}
+                        {% if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none %}{% set custom = custom | combine({'custom_s2_start': custom_s2_start_input}) %}{% endif %}
+                        {% if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none %}{% set custom = custom | combine({'custom_s3_start': custom_s3_start_input}) %}{% endif %}
+                        {% if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none %}{% set custom = custom | combine({'custom_s4_start': custom_s4_start_input}) %}{% endif %}
+                        {{ base | combine(custom) }}
                   - service: "script.scheduled_light_on"
                     data: "{{ script_data_dict }}"
               - conditions: []
