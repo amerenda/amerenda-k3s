@@ -30,6 +30,7 @@ rules:
   resources:
   - rolebindings
   verbs:
+  - create
   - patch
   - update
 - apiGroups:
