@@ -15,8 +15,9 @@ githubConfigSecret: controller-manager
 
 # Controller service account configuration
 # Explicitly set to avoid lookup issues during Helm template rendering
+# Service account name matches the Helm release name (ArgoCD application name)
 controllerServiceAccount:
-  name: gha-runner-scale-set-controller  # Default name from controller chart
+  name: infra-arc-controller  # Helm release name from ArgoCD application
   namespace: arc-systems  # Controller namespace
 
 # Runner scale set configuration
