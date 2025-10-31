@@ -1,17 +1,17 @@
-alias: Alex - Reolink Human Alert (Away)
-mode: queued
+alias: "Alex - Reolink Human Alert (Away)"
+mode: "queued"
 triggers:
-  - trigger: state
+  - trigger: "state"
     entity_id:
-      - binary_sensor.living_room_person
-      - binary_sensor.bedroom_person
+      - "binary_sensor.living_room_person"
+      - "binary_sensor.bedroom_person"
     from: "off"
     to: "on"
 conditions:
-  - condition: not
+  - condition: "not"
     conditions:
-      - condition: state
-        entity_id: person.alex_merenda
+      - condition: "state"
+        entity_id: "person.alex_merenda"
         state: "home"
 variables:
   CAM_MAP: >
@@ -30,16 +30,16 @@ variables:
   path: "/config/www/intruders/{{ slug }}_{{ timestamp }}.jpg"
   url: "/local/intruders/{{ slug }}_{{ timestamp }}.jpg"
 actions:
-  - action: camera.snapshot
+  - action: "camera.snapshot"
     target: { entity_id: "{{ cam }}" }
     data:
       filename: "{{ path }}"
-  - action: notify.mobile_app_pixel_9_pro_xl
+  - action: "notify.mobile_app_pixel_9_pro_xl"
     data:
       title: "Human detected - {{ room }}"
       message: "{{ now().strftime('%-I:%M %p on %b %-d') }}"
       data:
         image: "{{ url }}"
         tag: "human-{{ slug }}"
-        importance: high
+        importance: "high"
         sticky: true

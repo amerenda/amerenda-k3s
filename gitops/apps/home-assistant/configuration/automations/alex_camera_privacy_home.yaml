@@ -1,18 +1,18 @@
-alias: Alex - Camera Privacy (Home)
-mode: restart
+alias: "Alex - Camera Privacy (Home)"
+mode: "restart"
 triggers:
-  - trigger: zone
-    entity_id: person.alex_merenda
-    zone: zone.home
-    event: enter
+  - trigger: "zone"
+    entity_id: "person.alex_merenda"
+    zone: "zone.home"
+    event: "enter"
 actions:
-  - action: light.turn_off
+  - action: "light.turn_off"
     target:
       entity_id:
-        - light.bedroom_status_led
-        - light.living_room_status_led
-  - action: switch.turn_on
+        - "light.bedroom_status_led"
+        - "light.living_room_status_led"
+  - action: "switch.turn_on"
     target:
       entity_id:
-        - switch.bedroom_privacy_mode
-        - switch.living_room_privacy_mode
+        - "switch.bedroom_privacy_mode"
+        - "switch.living_room_privacy_mode"

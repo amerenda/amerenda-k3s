@@ -48,46 +48,9 @@ rules:
     max-spaces-before: 0
     max-spaces-after: 1
   
-  # Allow dashes in flow style
-  dashes:
-    max-spaces-before: 0
-    max-spaces-after: 1
-  
-  # Allow dots in flow style
-  dots:
-    max-spaces-before: 0
-    max-spaces-after: 0
-  
-  # Allow exclamation marks (for YAML anchors)
-  exclamation-marks:
-    max-spaces-before: 0
-    max-spaces-after: 0
-  
-  # Allow hash symbols in flow style
-  hash:
-    min-spaces-before: 1
-  
-  # Allow hyphens in flow style
+  # Allow hyphens in list items
   hyphens:
-    max-spaces-before: 0
     max-spaces-after: 1
-  
-  # Allow question marks in flow style
-  question-marks:
-    max-spaces-before: 0
-    max-spaces-after: 1
-  
-  # Allow semicolons in flow style
-  semicolons:
-    max-spaces-before: 0
-    max-spaces-after: 1
-  
-  # Allow square brackets in flow style
-  square-brackets:
-    min-spaces-inside: 0
-    max-spaces-inside: 1
-    min-spaces-inside-empty: 0
-    max-spaces-inside-empty: 0
   
   # Allow trailing spaces (sometimes needed for YAML)
   trailing-spaces:
@@ -107,27 +70,12 @@ rules:
   document-end:
     present: false
   
-  # Allow multiple documents
-  document-start:
-    present: false
-  
-  # Allow flow style
-  flow-style:
-    - 'forbid'
-  
-  # Allow block style
-  block-style:
-    - 'forbid'
-  
-  # Allow quoted strings
+  # Allow quoted strings (don't require quotes, but don't complain if they're used)
   quoted-strings:
     quote-type: any
     check-keys: false
+    required: false
   
   # Allow octal values
   octal-values:
     forbid-implicit-octal: false
-  
-  # Allow unicode
-  unicode:
-    check-bom: false
