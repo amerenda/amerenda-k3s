@@ -233,3 +233,14 @@ data:
         - evening
         - night
       initial: morning
+  room_selector.yaml: |
+    room_selector:
+      name: Room Selector
+      options:
+        - bathroom
+        - bedroom
+        - hallway
+        - kitchen
+        - living_room
+      initial: bathroom
+    
