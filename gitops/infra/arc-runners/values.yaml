@@ -62,8 +62,15 @@ template:
       fsGroup: 1000
       # Allow init containers to run as root, but runner containers as non-root
       # runAsNonRoot: true  # Commented out to allow init containers to work
-      runAsUser: 1000
-      runAsGroup: 1000
+      # runAsUser: 1000  # Commented out - let init containers run as root
+      # runAsGroup: 1000
+    # Set security context specifically on runner container
+    containers:
+      - name: runner
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
 
 # Namespace override
 namespaceOverride: arc-runners
