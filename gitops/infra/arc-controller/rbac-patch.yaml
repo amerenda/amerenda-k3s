@@ -2,6 +2,7 @@
 # Additional ClusterRole for ARC controller to patch service accounts and role bindings
 # The chart's default ClusterRole only grants list/watch for serviceaccounts and roles,
 # but the controller needs patch/update to remove finalizers
+# Also needs get permissions for secrets across namespaces
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -17,6 +18,13 @@ rules:
   verbs:
   - patch
   - update
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
 - apiGroups:
   - rbac.authorization.k8s.io
   resources:
