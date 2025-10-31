@@ -1,0 +1,37 @@
+---
+# Additional ClusterRole for ARC controller to patch service accounts
+# The chart's default ClusterRole only grants list/watch for serviceaccounts,
+# but the controller needs patch/update to remove finalizers
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: infra-arc-controller-serviceaccount-patch
+  labels:
+    app.kubernetes.io/name: gha-runner-scale-set-controller
+    app.kubernetes.io/instance: infra-arc-controller
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - serviceaccounts
+  verbs:
+  - patch
+  - update
+---
+# ClusterRoleBinding to grant service account patch permissions
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: infra-arc-controller-serviceaccount-patch
+  labels:
+    app.kubernetes.io/name: gha-runner-scale-set-controller
+    app.kubernetes.io/instance: infra-arc-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: infra-arc-controller-serviceaccount-patch
+subjects:
+- kind: ServiceAccount
+  name: infra-arc-controller-gha-rs-controller
+  namespace: arc-systems
+
