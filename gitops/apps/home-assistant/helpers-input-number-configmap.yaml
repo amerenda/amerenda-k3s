@@ -1,10 +1,13 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homeassistant-helpers-input-number
 data:
   bathroom.yaml: |
     # Template for input_number helpers per room
     # Usage:
     #   jinja2 input_number_template.yaml.j2 -D room=bedroom > input_number/bedroom.yaml
-
+    
     bathroom_brightness_step_pct:
       name: Bathroom Brightness step (%)
       min: 1
@@ -26,7 +29,7 @@ data:
       step: 1
       unit_of_measurement: "%"
       initial: 100
-
+    
     bathroom_morning_auto_off:
       name: Bathroom Morning auto-off (min)
       min: 1
@@ -59,7 +62,7 @@ data:
     # Template for input_number helpers per room
     # Usage:
     #   jinja2 input_number_template.yaml.j2 -D room=bedroom > input_number/bedroom.yaml
-
+    
     bedroom_brightness_step_pct:
       name: Bedroom Brightness step (%)
       min: 1
@@ -81,7 +84,7 @@ data:
       step: 1
       unit_of_measurement: "%"
       initial: 100
-
+    
     bedroom_morning_auto_off:
       name: Bedroom Morning auto-off (min)
       min: 1
@@ -114,7 +117,7 @@ data:
     # Template for input_number helpers per room
     # Usage:
     #   jinja2 input_number_template.yaml.j2 -D room=bedroom > input_number/bedroom.yaml
-
+    
     hallway_brightness_step_pct:
       name: Hallway Brightness step (%)
       min: 1
@@ -136,7 +139,7 @@ data:
       step: 1
       unit_of_measurement: "%"
       initial: 100
-
+    
     hallway_morning_auto_off:
       name: Hallway Morning auto-off (min)
       min: 1
@@ -169,7 +172,7 @@ data:
     # Template for input_number helpers per room
     # Usage:
     #   jinja2 input_number_template.yaml.j2 -D room=bedroom > input_number/bedroom.yaml
-
+    
     kitchen_brightness_step_pct:
       name: Kitchen Brightness step (%)
       min: 1
@@ -191,7 +194,7 @@ data:
       step: 1
       unit_of_measurement: "%"
       initial: 100
-
+    
     kitchen_morning_auto_off:
       name: Kitchen Morning auto-off (min)
       min: 1
@@ -224,7 +227,7 @@ data:
     # Template for input_number helpers per room
     # Usage:
     #   jinja2 input_number_template.yaml.j2 -D room=bedroom > input_number/bedroom.yaml
-
+    
     living_room_brightness_step_pct:
       name: Living Room Brightness step (%)
       min: 1
@@ -246,7 +249,7 @@ data:
       step: 1
       unit_of_measurement: "%"
       initial: 100
-
+    
     living_room_morning_auto_off:
       name: Living Room Morning auto-off (min)
       min: 1
@@ -275,6 +278,3 @@ data:
       step: 1
       unit_of_measurement: "min"
       initial: 30
-kind: ConfigMap
-metadata:
-  name: homeassistant-helpers-input-number

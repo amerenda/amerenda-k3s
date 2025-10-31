@@ -21,12 +21,6 @@ blueprint:
           entity:
             domain: "light"
 
-    dimmer:
-      name: "Hue Dimmer device"
-      selector:
-        device:
-          integration: "hue"
-
     hue_event_id:
       name: "(Optional) Hue event ID (for hue_event compatibility)"
       description: "Example: living_room_switch_button"

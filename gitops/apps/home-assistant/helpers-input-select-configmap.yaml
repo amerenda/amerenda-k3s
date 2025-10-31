@@ -1,10 +1,13 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homeassistant-helpers-input-select
 data:
   bathroom.yaml: |
     # Template for input_select helpers per room
     # Usage:
     #   jinja2 input_select_template.yaml.j2 -D room=bedroom > input_select/bedroom.yaml
-
+    
     bathroom_morning_scene:
       name: Bathroom Morning scene
       options:
@@ -37,7 +40,7 @@ data:
         - scene.bathroom_day
         - scene.bathroom_morning
       initial: scene.bathroom_night
-
+    
     bathroom_scene_cycle:
       name: Bathroom Scene Cycle
       options:
@@ -50,7 +53,7 @@ data:
     # Template for input_select helpers per room
     # Usage:
     #   jinja2 input_select_template.yaml.j2 -D room=bedroom > input_select/bedroom.yaml
-
+    
     bedroom_morning_scene:
       name: Bedroom Morning scene
       options:
@@ -83,7 +86,7 @@ data:
         - scene.bedroom_day
         - scene.bedroom_morning
       initial: scene.bedroom_night
-
+    
     bedroom_scene_cycle:
       name: Bedroom Scene Cycle
       options:
@@ -96,7 +99,7 @@ data:
     # Template for input_select helpers per room
     # Usage:
     #   jinja2 input_select_template.yaml.j2 -D room=bedroom > input_select/bedroom.yaml
-
+    
     hallway_morning_scene:
       name: Hallway Morning scene
       options:
@@ -129,7 +132,7 @@ data:
         - scene.hallway_day
         - scene.hallway_morning
       initial: scene.hallway_night
-
+    
     hallway_scene_cycle:
       name: Hallway Scene Cycle
       options:
@@ -142,7 +145,7 @@ data:
     # Template for input_select helpers per room
     # Usage:
     #   jinja2 input_select_template.yaml.j2 -D room=bedroom > input_select/bedroom.yaml
-
+    
     kitchen_morning_scene:
       name: Kitchen Morning scene
       options:
@@ -175,7 +178,7 @@ data:
         - scene.kitchen_day
         - scene.kitchen_morning
       initial: scene.kitchen_night
-
+    
     kitchen_scene_cycle:
       name: Kitchen Scene Cycle
       options:
@@ -188,7 +191,7 @@ data:
     # Template for input_select helpers per room
     # Usage:
     #   jinja2 input_select_template.yaml.j2 -D room=bedroom > input_select/bedroom.yaml
-
+    
     living_room_morning_scene:
       name: Living Room Morning scene
       options:
@@ -221,7 +224,7 @@ data:
         - scene.living_room_day
         - scene.living_room_morning
       initial: scene.living_room_night
-
+    
     living_room_scene_cycle:
       name: Living Room Scene Cycle
       options:
@@ -230,6 +233,3 @@ data:
         - evening
         - night
       initial: morning
-kind: ConfigMap
-metadata:
-  name: homeassistant-helpers-input-select

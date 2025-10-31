@@ -1,68 +1,71 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homeassistant-automations
 data:
   alex_camera_privacy_away.yaml: |
-    alias: Alex - Camera Privacy (Away)
-    mode: restart
+    alias: "Alex - Camera Privacy (Away)"
+    mode: "restart"
     triggers:
-      - trigger: zone
-        entity_id: person.alex_merenda
-        zone: zone.home
-        event: leave
+      - trigger: "zone"
+        entity_id: "person.alex_merenda"
+        zone: "zone.home"
+        event: "leave"
     actions:
-      - action: light.turn_on
+      - action: "light.turn_on"
         target:
           entity_id:
-            - light.bedroom_status_led
-            - light.living_room_status_led
-      - action: switch.turn_off
+            - "light.bedroom_status_led"
+            - "light.living_room_status_led"
+      - action: "switch.turn_off"
         target:
           entity_id:
-            - switch.bedroom_privacy_mode
-            - switch.living_room_privacy_mode
+            - "switch.bedroom_privacy_mode"
+            - "switch.living_room_privacy_mode"
   alex_camera_privacy_home.yaml: |
-    alias: Alex - Camera Privacy (Home)
-    mode: restart
+    alias: "Alex - Camera Privacy (Home)"
+    mode: "restart"
     triggers:
-      - trigger: zone
-        entity_id: person.alex_merenda
-        zone: zone.home
-        event: enter
+      - trigger: "zone"
+        entity_id: "person.alex_merenda"
+        zone: "zone.home"
+        event: "enter"
     actions:
-      - action: light.turn_off
+      - action: "light.turn_off"
         target:
           entity_id:
-            - light.bedroom_status_led
-            - light.living_room_status_led
-      - action: switch.turn_on
+            - "light.bedroom_status_led"
+            - "light.living_room_status_led"
+      - action: "switch.turn_on"
         target:
           entity_id:
-            - switch.bedroom_privacy_mode
-            - switch.living_room_privacy_mode
+            - "switch.bedroom_privacy_mode"
+            - "switch.living_room_privacy_mode"
   alex_cleanup_old_photos.yaml: |
-    alias: Alex - Cleanup Old Photos (30+ days)
-    mode: single
+    alias: "Alex - Cleanup Old Photos (30+ days)"
+    mode: "single"
     triggers:
-      - platform: time
+      - platform: "time"
         at: "02:00:00"
     conditions: []
     actions:
-      - service: shell_command.cleanup_old_photos
+      - service: "shell_command.cleanup_old_photos"
         data: {}
   alex_reolink_human_detect_alert.yaml: |
-    alias: Alex - Reolink Human Alert (Away)
-    mode: queued
+    alias: "Alex - Reolink Human Alert (Away)"
+    mode: "queued"
     triggers:
-      - trigger: state
+      - trigger: "state"
         entity_id:
-          - binary_sensor.living_room_person
-          - binary_sensor.bedroom_person
+          - "binary_sensor.living_room_person"
+          - "binary_sensor.bedroom_person"
         from: "off"
         to: "on"
     conditions:
-      - condition: not
+      - condition: "not"
         conditions:
-          - condition: state
-            entity_id: person.alex_merenda
+          - condition: "state"
+            entity_id: "person.alex_merenda"
             state: "home"
     variables:
       CAM_MAP: >
@@ -81,34 +84,34 @@ data:
       path: "/config/www/intruders/{{ slug }}_{{ timestamp }}.jpg"
       url: "/local/intruders/{{ slug }}_{{ timestamp }}.jpg"
     actions:
-      - action: camera.snapshot
+      - action: "camera.snapshot"
         target: { entity_id: "{{ cam }}" }
         data:
           filename: "{{ path }}"
-      - action: notify.mobile_app_pixel_9_pro_xl
+      - action: "notify.mobile_app_pixel_9_pro_xl"
         data:
           title: "Human detected - {{ room }}"
           message: "{{ now().strftime('%-I:%M %p on %b %-d') }}"
           data:
             image: "{{ url }}"
             tag: "human-{{ slug }}"
-            importance: high
+            importance: "high"
             sticky: true
   alex_reolink_pet_detect_snapshot.yaml: |
-    alias: Alex - Reolink Pet Snapshot (Away)
-    mode: queued
+    alias: "Alex - Reolink Pet Snapshot (Away)"
+    mode: "queued"
     triggers:
-      - trigger: state
+      - trigger: "state"
         entity_id:
-          - binary_sensor.living_room_animal
-          - binary_sensor.bedroom_animal
+          - "binary_sensor.living_room_animal"
+          - "binary_sensor.bedroom_animal"
         from: "off"
         to: "on"
     conditions:
-      - condition: not
+      - condition: "not"
         conditions:
-          - condition: state
-            entity_id: person.alex_merenda
+          - condition: "state"
+            entity_id: "person.alex_merenda"
             state: "home"
     variables:
       CAM_MAP: >
@@ -127,46 +130,22 @@ data:
       path: "/config/www/pets/{{ slug }}_{{ timestamp }}.jpg"
       url: "/local/pets/{{ slug }}_{{ timestamp }}.jpg"
     actions:
-      - action: camera.snapshot
+      - action: "camera.snapshot"
         target: { entity_id: "{{ cam }}" }
         data:
           filename: "{{ path }}"
-      - action: input_text.set_value
-        target: { entity_id: input_text.event_image_location_text }
+      - action: "input_text.set_value"
+        target: { entity_id: "input_text.event_image_location" }
         data: { value: "{{ slug }}" }
-      - action: input_text.set_value
-        target: { entity_id: input_text.event_image_timestamp_text }
+      - action: "input_text.set_value"
+        target: { entity_id: "input_text.event_image_timestamp" }
         data: { value: "{{ timestamp }}" }
-      - action: notify.mobile_app_pixel_9_pro_xl
+      - action: "notify.mobile_app_pixel_9_pro_xl"
         data:
           title: "Pet detected - {{ room }}"
           message: "{{ now().strftime('%-I:%M %p on %b %-d') }}"
           data:
             image: "{{ url }}"
             tag: "pet-{{ slug }}"
-            importance: low
+            importance: "low"
             sticky: true
-  generate-automations-configmap.sh: |
-    #!/bin/bash
-    # generate-automations-configmap.sh
-    # Generates ConfigMap manifest from automation YAML files in the automations/ directory
-
-    set -euo pipefail
-
-    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    OUTPUT_FILE="$SCRIPT_DIR/../automations-configmap.yaml"
-
-    echo "Generating automations ConfigMap..."
-
-    # Create ConfigMap from automations directory
-    kubectl create configmap homeassistant-automations \
-      --from-file="$SCRIPT_DIR/" \
-      --dry-run=client \
-      -o yaml > "$OUTPUT_FILE"
-
-    echo "Automations ConfigMap generated: $OUTPUT_FILE"
-    echo "ConfigMap includes:"
-    ls -1 "$SCRIPT_DIR"/*.yaml | sed 's/^/  /'
-kind: ConfigMap
-metadata:
-  name: homeassistant-automations

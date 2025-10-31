@@ -1,10 +1,13 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homeassistant-helpers-input-datetime
 data:
   bathroom.yaml: |
     # Template for input_datetime helpers per room
     # Usage:
     #   jinja2 input_datetime_template.yaml.j2 -D room=bedroom > input_datetime/bedroom.yaml
-
+    
     bathroom_s1_start:
       name: Bathroom Morning start
       has_time: true
@@ -21,7 +24,7 @@ data:
     # Template for input_datetime helpers per room
     # Usage:
     #   jinja2 input_datetime_template.yaml.j2 -D room=bedroom > input_datetime/bedroom.yaml
-
+    
     bedroom_s1_start:
       name: Bedroom Morning start
       has_time: true
@@ -38,7 +41,7 @@ data:
     # Template for input_datetime helpers per room
     # Usage:
     #   jinja2 input_datetime_template.yaml.j2 -D room=bedroom > input_datetime/bedroom.yaml
-
+    
     hallway_s1_start:
       name: Hallway Morning start
       has_time: true
@@ -55,7 +58,7 @@ data:
     # Template for input_datetime helpers per room
     # Usage:
     #   jinja2 input_datetime_template.yaml.j2 -D room=bedroom > input_datetime/bedroom.yaml
-
+    
     kitchen_s1_start:
       name: Kitchen Morning start
       has_time: true
@@ -72,7 +75,7 @@ data:
     # Template for input_datetime helpers per room
     # Usage:
     #   jinja2 input_datetime_template.yaml.j2 -D room=bedroom > input_datetime/bedroom.yaml
-
+    
     living_room_s1_start:
       name: Living Room Morning start
       has_time: true
@@ -85,6 +88,3 @@ data:
     living_room_s4_start:
       name: Living Room Night start
       has_time: true
-kind: ConfigMap
-metadata:
-  name: homeassistant-helpers-input-datetime

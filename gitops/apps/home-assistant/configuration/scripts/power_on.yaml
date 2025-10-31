@@ -59,8 +59,8 @@ scheduled_light_on:
         all_lights: "{{ states.light | map(attribute='entity_id') | list }}"
         dynamic_fallback: >-
           {% set fb = fallback_lights | default('') %}
-          {% if preferred_room_light in all_lights %}{{ preferred_room_light }}
-          {% elif fb in all_lights %}{{ fb }}
+          {% if fb and fb != '' and fb in all_lights %}{{ fb }}
+          {% elif preferred_room_light in all_lights %}{{ preferred_room_light }}
           {% else %}{{ '' }}{% endif %}
     - choose:
         - conditions: "{{ scene_exists }}"
