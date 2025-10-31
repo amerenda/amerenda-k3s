@@ -104,12 +104,12 @@ variables:
   # Window enable/auto_on booleans with sensible defaults
   en_morning: "{{ is_state(enable_morning_helper, 'on') if enable_morning_helper else true }}"
   ao_morning: "{{ is_state(auto_on_morning_helper, 'on') if auto_on_morning_helper else false }}"
-  en_day:     "{{ is_state(enable_day_helper, 'on') if enable_day_helper else true }}"
-  ao_day:     "{{ is_state(auto_on_day_helper, 'on') if auto_on_day_helper else false }}"
+  en_day: "{{ is_state(enable_day_helper, 'on') if enable_day_helper else true }}"
+  ao_day: "{{ is_state(auto_on_day_helper, 'on') if auto_on_day_helper else false }}"
   en_evening: "{{ is_state(enable_evening_helper, 'on') if enable_evening_helper else true }}"
   ao_evening: "{{ is_state(auto_on_evening_helper, 'on') if auto_on_evening_helper else false }}"
-  en_night:   "{{ is_state(enable_night_helper, 'on') if enable_night_helper else true }}"
-  ao_night:   "{{ is_state(auto_on_night_helper, 'on') if auto_on_night_helper else false }}"
+  en_night: "{{ is_state(enable_night_helper, 'on') if enable_night_helper else true }}"
+  ao_night: "{{ is_state(auto_on_night_helper, 'on') if auto_on_night_helper else false }}"
 
   fired_slot: >-
     {% if now_hm == s1 %}morning

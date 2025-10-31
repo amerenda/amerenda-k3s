@@ -23,7 +23,7 @@ room_toggle:
           {% else %}
             {{ [] }}
           {% endif %}
-        
+
         # Check group state directly (for Hue groups that don't expand)
         group_on: >-
           {% if id_list | length == 1 %}
@@ -31,11 +31,11 @@ room_toggle:
           {% else %}
             {{ false }}
           {% endif %}
-        
+
         # Check member entities via expand (for normal groups)
         expanded: "{{ expand(id_list) }}"
         members_on: "{{ expanded | selectattr('state','eq','on') | list | count > 0 }}"
-        
+
         # Check member entities via state_attr (for Hue groups)
         attr_members: >-
           {% if id_list | length == 1 %}
@@ -44,19 +44,18 @@ room_toggle:
             {{ [] }}
           {% endif %}
         attr_members_on: "{{ expand(attr_members) | selectattr('state','eq','on') | list | count > 0 }}"
-        
+
         # Any method indicates lights are on
         any_on: "{{ group_on or members_on or attr_members_on }}"
-    
+
     # DEBUG: Log what we detected
     - service: "logbook.log"
       data:
         name: "room_toggle DEBUG"
         message: >-
-          id_list={{ id_list }}, group_on={{ group_on }}, 
-          members_on={{ members_on }}, attr_members_on={{ attr_members_on }}, 
+          id_list={{ id_list }}, group_on={{ group_on }},
+          members_on={{ members_on }}, attr_members_on={{ attr_members_on }},
           any_on={{ any_on }}
-    
     - choose:
         - conditions: "{{ any_on }}"
           sequence:

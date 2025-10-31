@@ -20,20 +20,14 @@ jobs:
     runs-on: arc-runner-set
     # Run on PRs and pushes to main
     if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    container:
+      image: amerenda/k3s-runners:home-assistant
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Install yamllint
-        run: |
-          pip install yamllint
-
       - name: Run yamllint on raw configuration files
+        shell: bash
         run: |
           echo "Running yamllint on raw Home Assistant configuration files..."
           echo ""
@@ -156,6 +150,7 @@ jobs:
           fi
       
       - name: Validate generated ConfigMaps (basic YAML syntax only)
+        shell: bash
         run: |
           echo "Validating generated ConfigMaps for basic YAML syntax..."
           echo ""
