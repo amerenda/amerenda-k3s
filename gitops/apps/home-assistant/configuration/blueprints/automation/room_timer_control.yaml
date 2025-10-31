@@ -178,10 +178,20 @@ variables:
       {{ default_s4 }}
     {% endif %}
 
-  s1: "{{ s1_str[:5] }}"
-  s2: "{{ s2_str[:5] }}"
-  s3: "{{ s3_str[:5] }}"
-  s4: "{{ s4_str[:5] }}"
+  # Extract time portion (HH:MM) from datetime string
+  # Handles formats like "19:24:00" or "2024-01-01 19:24:00"
+  s1: >-
+    {% set raw = s1_str %}
+    {% if ' ' in raw %}{{ raw.split(' ')[-1][:5] }}{% else %}{{ raw[:5] }}{% endif %}
+  s2: >-
+    {% set raw = s2_str %}
+    {% if ' ' in raw %}{{ raw.split(' ')[-1][:5] }}{% else %}{{ raw[:5] }}{% endif %}
+  s3: >-
+    {% set raw = s3_str %}
+    {% if ' ' in raw %}{{ raw.split(' ')[-1][:5] }}{% else %}{{ raw[:5] }}{% endif %}
+  s4: >-
+    {% set raw = s4_str %}
+    {% if ' ' in raw %}{{ raw.split(' ')[-1][:5] }}{% else %}{{ raw[:5] }}{% endif %}
 
   now_hm: "{{ now().strftime('%H:%M') }}"
 
