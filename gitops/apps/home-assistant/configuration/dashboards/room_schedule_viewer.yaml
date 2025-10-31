@@ -17,11 +17,14 @@ views:
         content: |
           {% set room = states('input_select.room_selector') %}
           {% if room and room != 'unknown' and room != 'unavailable' %}
-            {% set custom_schedule = states('input_boolean.' ~ room ~ '_custom_schedule') %}
-            {% set s1 = states('input_datetime.' ~ room ~ '_s1_start') if custom_schedule == 'on' else '06:00:00' %}
-            {% set s2 = states('input_datetime.' ~ room ~ '_s2_start') if custom_schedule == 'on' else '09:00:00' %}
-            {% set s3 = states('input_datetime.' ~ room ~ '_s3_start') if custom_schedule == 'on' else '17:00:00' %}
-            {% set s4 = states('input_datetime.' ~ room ~ '_s4_start') if custom_schedule == 'on' else '22:00:00' %}
+            {% set morning_custom = states('input_boolean.' ~ room ~ '_morning_custom_time') %}
+            {% set day_custom = states('input_boolean.' ~ room ~ '_day_custom_time') %}
+            {% set evening_custom = states('input_boolean.' ~ room ~ '_evening_custom_time') %}
+            {% set night_custom = states('input_boolean.' ~ room ~ '_night_custom_time') %}
+            {% set s1 = states('input_datetime.' ~ room ~ '_s1_start') if morning_custom == 'on' else '06:00:00' %}
+            {% set s2 = states('input_datetime.' ~ room ~ '_s2_start') if day_custom == 'on' else '09:00:00' %}
+            {% set s3 = states('input_datetime.' ~ room ~ '_s3_start') if evening_custom == 'on' else '17:00:00' %}
+            {% set s4 = states('input_datetime.' ~ room ~ '_s4_start') if night_custom == 'on' else '22:00:00' %}
             {% set now_ts = as_timestamp(now()) %}
             {% set s1_ts = as_timestamp(today_at(s1)) %}
             {% set s2_ts = as_timestamp(today_at(s2)) %}
@@ -339,20 +342,32 @@ views:
         content: |
           {% set room = states('input_select.room_selector') %}
           {% if room and room != 'unknown' and room != 'unavailable' %}
-            {% set custom_schedule = states('input_boolean.' ~ room ~ '_custom_schedule') %}
-            {% if custom_schedule == 'on' %}
+            {% set morning_custom = states('input_boolean.' ~ room ~ '_morning_custom_time') %}
+            {% set day_custom = states('input_boolean.' ~ room ~ '_day_custom_time') %}
+            {% set evening_custom = states('input_boolean.' ~ room ~ '_evening_custom_time') %}
+            {% set night_custom = states('input_boolean.' ~ room ~ '_night_custom_time') %}
+            {% if morning_custom == 'on' %}
               {% set s1_raw = states('input_datetime.' ~ room ~ '_s1_start') %}
-              {% set s2_raw = states('input_datetime.' ~ room ~ '_s2_start') %}
-              {% set s3_raw = states('input_datetime.' ~ room ~ '_s3_start') %}
-              {% set s4_raw = states('input_datetime.' ~ room ~ '_s4_start') %}
               {% set s1 = s1_raw.split(' ')[-1][:5] if ' ' in s1_raw else (s1_raw[:5] if s1_raw|length >= 5 else '06:00') %}
-              {% set s2 = s2_raw.split(' ')[-1][:5] if ' ' in s2_raw else (s2_raw[:5] if s2_raw|length >= 5 else '09:00') %}
-              {% set s3 = s3_raw.split(' ')[-1][:5] if ' ' in s3_raw else (s3_raw[:5] if s3_raw|length >= 5 else '17:00') %}
-              {% set s4 = s4_raw.split(' ')[-1][:5] if ' ' in s4_raw else (s4_raw[:5] if s4_raw|length >= 5 else '22:00') %}
             {% else %}
               {% set s1 = '06:00' %}
+            {% endif %}
+            {% if day_custom == 'on' %}
+              {% set s2_raw = states('input_datetime.' ~ room ~ '_s2_start') %}
+              {% set s2 = s2_raw.split(' ')[-1][:5] if ' ' in s2_raw else (s2_raw[:5] if s2_raw|length >= 5 else '09:00') %}
+            {% else %}
               {% set s2 = '09:00' %}
+            {% endif %}
+            {% if evening_custom == 'on' %}
+              {% set s3_raw = states('input_datetime.' ~ room ~ '_s3_start') %}
+              {% set s3 = s3_raw.split(' ')[-1][:5] if ' ' in s3_raw else (s3_raw[:5] if s3_raw|length >= 5 else '17:00') %}
+            {% else %}
               {% set s3 = '17:00' %}
+            {% endif %}
+            {% if night_custom == 'on' %}
+              {% set s4_raw = states('input_datetime.' ~ room ~ '_s4_start') %}
+              {% set s4 = s4_raw.split(' ')[-1][:5] if ' ' in s4_raw else (s4_raw[:5] if s4_raw|length >= 5 else '22:00') %}
+            {% else %}
               {% set s4 = '22:00' %}
             {% endif %}
             
@@ -373,7 +388,8 @@ views:
             | Evening | `{{ evening_scene }}` | {{ s3 }} |
             | Night | `{{ night_scene }}` | {{ s4 }} |
             
-            {% if custom_schedule == 'on' %}
+            {% set any_custom = morning_custom == 'on' or day_custom == 'on' or evening_custom == 'on' or night_custom == 'on' %}
+            {% if any_custom %}
               *Custom schedule enabled*
             {% else %}
               *Default schedule (06:00, 09:00, 17:00, 22:00)*
