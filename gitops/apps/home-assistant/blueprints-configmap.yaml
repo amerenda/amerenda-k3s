@@ -999,6 +999,15 @@ data:
           name: "room_timer_control"
           message: "=== AUTOMATION STARTED === room={{ room_key_var }}, time={{ now_hm }}, fired_slot={{ fired_slot }}, en_night={{ en_night }}, ao_night={{ ao_night }}"
       
+      # Debug: Log schedule values
+      - service: "logbook.log"
+        data_template:
+          name: "room_timer_control"
+          message: >-
+            Schedule check: s1_str={{ s1_str }}, s2_str={{ s2_str }}, s3_str={{ s3_str }}, s4_str={{ s4_str }},
+            s1={{ s1 }}, s2={{ s2 }}, s3={{ s3 }}, s4={{ s4 }},
+            night_custom={{ night_custom }}, evening_custom={{ evening_custom }}
+      
       - variables:
           # Extract target entity IDs safely
           _targets_raw: >-
