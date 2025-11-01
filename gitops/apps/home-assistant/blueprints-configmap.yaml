@@ -1123,6 +1123,16 @@ data:
                             {% else %}
                               {{ target_lights_var }}
                             {% endif %}
+                          script_data_dict: >-
+                            {% set fb = _fb_var %}
+                            {% set base = {'fallback_lights': fb, 'timer_mode': true} %}
+                            {% set custom = {} %}
+                            {% if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none %}{% set custom = custom | combine({'custom_schedule_enabled': custom_schedule_enabled_input}) %}{% endif %}
+                            {% if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none %}{% set custom = custom | combine({'custom_s1_start': custom_s1_start_input}) %}{% endif %}
+                            {% if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none %}{% set custom = custom | combine({'custom_s2_start': custom_s2_start_input}) %}{% endif %}
+                            {% if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none %}{% set custom = custom | combine({'custom_s3_start': custom_s3_start_input}) %}{% endif %}
+                            {% if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none %}{% set custom = custom | combine({'custom_s4_start': custom_s4_start_input}) %}{% endif %}
+                            {{ base | combine(custom) }}
                       - service: "system_log.write"
                         data:
                           message: >-
@@ -1134,25 +1144,7 @@ data:
                           message: >-
                             Calling script.scheduled_light_on with fallback_lights={{ _fb_var }}, timer_mode=true
                       - service: "script.scheduled_light_on"
-                        data:
-                          fallback_lights: "{{ _fb_var }}"
-                          timer_mode: true
-                          room_key: "{{ room_key_var }}"
-                          {% if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none %}
-                          custom_schedule_enabled: "{{ custom_schedule_enabled_input }}"
-                          {% endif %}
-                          {% if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none %}
-                          custom_s1_start: "{{ custom_s1_start_input }}"
-                          {% endif %}
-                          {% if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none %}
-                          custom_s2_start: "{{ custom_s2_start_input }}"
-                          {% endif %}
-                          {% if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none %}
-                          custom_s3_start: "{{ custom_s3_start_input }}"
-                          {% endif %}
-                          {% if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none %}
-                          custom_s4_start: "{{ custom_s4_start_input }}"
-                          {% endif %}
+                        data: "{{ script_data_dict }}"
                       - service: "system_log.write"
                         data:
                           message: >-
