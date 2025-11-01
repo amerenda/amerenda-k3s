@@ -159,6 +159,12 @@ data:
         - choose:
             - conditions: "{{ scene_exists and lights_on_check | bool }}"
               sequence:
+                - service: "system_log.write"
+                  data:
+                    message: >-
+                      [scheduled_light_on] ACTIVATING SCENE: {{ scene_to_activate }} 
+                      (scene_exists={{ scene_exists }}, lights_on_check={{ lights_on_check }})
+                    level: "info"
                 - parallel:
                     - service: "scene.turn_on"
                       data:
@@ -174,16 +180,38 @@ data:
                             entity_id: "{{ scene_cycle_helper }}"
                           data:
                             option: "{{ slot }}"
+                - service: "system_log.write"
+                  data:
+                    message: >-
+                      [scheduled_light_on] Scene {{ scene_to_activate }} activated successfully
+                    level: "info"
             - conditions: "{{ scene_exists and not lights_on_check | bool }}"
               sequence:
+                - service: "system_log.write"
+                  data:
+                    message: >-
+                      [scheduled_light_on] SKIPPED: Scene '{{ scene_to_activate }}' - lights are off 
+                      (lights_on_check={{ lights_on_check }})
+                    level: "warning"
                 - service: "logbook.log"
                   data:
                     name: "scheduled_light_on"
                     message: "Timer mode: Scene '{{ scene_to_activate }}' skipped - lights are off"
           default:
+            - service: "system_log.write"
+              data:
+                message: >-
+                  [scheduled_light_on] Scene '{{ scene_to_activate }}' does NOT exist 
+                  (scene_exists={{ scene_exists }})
+                level: "warning"
             - choose:
                 - conditions: "{{ timer_mode_active }}"
                   sequence:
+                    - service: "system_log.write"
+                      data:
+                        message: >-
+                          [scheduled_light_on] Timer mode: Scene missing and timer mode enabled - no action taken
+                        level: "warning"
                     - service: "logbook.log"
                       data:
                         name: "scheduled_light_on"
