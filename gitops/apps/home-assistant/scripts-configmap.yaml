@@ -144,10 +144,10 @@ data:
           data:
             name: "scheduled_light_on"
             message: >-
-              Timer mode={{ timer_mode }}, fallback_lights={{ fallback_lights }}, 
-              _fb_entity={{ _fb_entity }}, _entity_name={{ _entity_name }},
-              scene={{ scene_to_activate }}, scene_exists={{ scene_exists }},
-              lights_on_check={{ lights_on_check }}, dynamic_fallback={{ dynamic_fallback }}
+              Script called: timer_mode={{ timer_mode | default('NOT_SET') }}, 
+              fallback_lights={{ fallback_lights | default('NOT_SET') }}, 
+              scene={{ scene_to_activate }}, scene_exists={{ scene_exists }}, 
+              lights_on_check={{ lights_on_check }}
         
         - choose:
             - conditions: "{{ scene_exists and lights_on_check | bool }}"
