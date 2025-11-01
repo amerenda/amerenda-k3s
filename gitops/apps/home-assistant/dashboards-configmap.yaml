@@ -878,40 +878,7 @@ data:
                     Please select a room above.
                   {% endif %}
     
-              # Room Group Control Buttons - one for each room, dynamically discover lights
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: bedroom
-                card:
-                  type: markdown
-                  content: |
-                    {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                    {% set room_lights = [] %}
-                    {% set main_light = 'light.bedroom' %}
-                    {% set numbered_lights = [] %}
-                    {% for i in range(1, 10) %}
-                      {% set numbered_light = 'light.bedroom_' ~ i %}
-                      {% if numbered_light in all_lights %}
-                        {% set _ = numbered_lights.append(numbered_light) %}
-                      {% endif %}
-                    {% endfor %}
-                    {% if numbered_lights | length == 1 and main_light in all_lights %}
-                      {% set _ = room_lights.append(numbered_lights[0]) %}
-                    {% elif numbered_lights | length > 1 %}
-                      {% for light_id in numbered_lights %}
-                        {% set _ = room_lights.append(light_id) %}
-                      {% endfor %}
-                    {% elif main_light in all_lights %}
-                      {% set _ = room_lights.append(main_light) %}
-                    {% else %}
-                      {% for light_id in numbered_lights %}
-                        {% set _ = room_lights.append(light_id) %}
-                      {% endfor %}
-                    {% endif %}
-                    Lights: {{ room_lights | join(', ') }}
-    
-              # Use a template card approach - generate cards dynamically
+              # Room Group Control Buttons - dynamically discover lights per room
               - type: entities
                 title: Room Controls
                 entities:
