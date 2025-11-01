@@ -305,7 +305,7 @@ action:
         s1={{ s1 }}, s2={{ s2 }}, s3={{ s3 }}, s4={{ s4 }},
         night_custom={{ night_custom }}, evening_custom={{ evening_custom }}, s3_debug={{ s3_debug }}
   
-  # Debug: Log raw datetime entity values
+  # Debug: Log raw datetime entity values with exact entity names
   - service: "logbook.log"
     data_template:
       name: "room_timer_control"
@@ -313,6 +313,7 @@ action:
         Raw datetime values: {{ room_key_var }}_s1={{ states('input_datetime.' ~ room_key_var ~ '_s1_start') }},
         {{ room_key_var }}_s3={{ states('input_datetime.' ~ room_key_var ~ '_s3_start') }},
         {{ room_key_var }}_s4={{ states('input_datetime.' ~ room_key_var ~ '_s4_start') }}
+        Entity names: s1=input_datetime.{{ room_key_var }}_s1_start, s3=input_datetime.{{ room_key_var }}_s3_start, s4=input_datetime.{{ room_key_var }}_s4_start
   
   - variables:
       # Extract target entity IDs safely
@@ -347,7 +348,13 @@ action:
       message: >-
         Time check: now_hm={{ now_hm }}, s1={{ s1 }}, s2={{ s2 }}, s3={{ s3 }}, s4={{ s4 }},
         matches: s1={{ now_hm == s1 }}, s2={{ now_hm == s2 }}, s3={{ now_hm == s3 }}, s4={{ now_hm == s4 }},
-        fired_slot={{ fired_slot }}
+        fired_slot={{ fired_slot }}, current_time={{ now().strftime('%H:%M:%S') }}
+        {% if fired_slot == 'none' %}
+        ⚠️ NO ACTION: Current time ({{ now_hm }}) does not match any slot time. Automation only fires when time EXACTLY matches a slot start time.
+        Note: now_hm is calculated once at automation start and remains constant throughout the action sequence.
+        {% else %}
+        ✓ SLOT MATCHED: {{ fired_slot }} slot will be processed.
+        {% endif %}
   
   - choose:
       - conditions: "{{ fired_slot == 'morning' and en_morning | bool }}"
