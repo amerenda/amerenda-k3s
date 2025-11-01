@@ -174,9 +174,22 @@ spec:
               homeassistant:
                 packages: !include_dir_named packages
         
-              # Lovelace: storage mode
+              # Lovelace: storage mode + YAML dashboards
               lovelace:
                 mode: storage
+                dashboards:
+                  room-schedule-viewer:
+                    mode: yaml
+                    title: Room Schedule Viewer
+                    icon: mdi:calendar-clock
+                    show_in_sidebar: true
+                    filename: dashboards/views/room_schedule_viewer.yaml
+                  room-schedule-configuration:
+                    mode: yaml
+                    title: Room Schedule Configuration
+                    icon: mdi:calendar-edit
+                    show_in_sidebar: true
+                    filename: dashboards/views/room_schedule_configuration.yaml
         
               # HTTP reverse proxy
               http:
