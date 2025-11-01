@@ -987,17 +987,17 @@ data:
         id: "timer_check"
     
     action:
-      # CRITICAL: Simple log FIRST - no template variables
+      # CRITICAL: Simple log FIRST - no template variables at all
       - service: "logbook.log"
         data:
           name: "room_timer_control"
-          message: "AUTOMATION ACTION STARTED"
+          message: "AUTOMATION ACTION STARTED - NO TEMPLATES"
       
-      # CRITICAL: Log with template variables
+      # CRITICAL: Log with template variables from blueprint variables section
       - service: "logbook.log"
         data_template:
           name: "room_timer_control"
-          message: "=== AUTOMATION STARTED === room={{ room_key_var }}, time={{ now_hm }}, fired_slot={{ fired_slot }}"
+          message: "=== AUTOMATION STARTED === room={{ room_key_var }}, time={{ now_hm }}, fired_slot={{ fired_slot }}, en_night={{ en_night }}, ao_night={{ ao_night }}"
       
       - variables:
           # Extract target entity IDs safely
