@@ -38,6 +38,8 @@ views:
                   - entity: input_select.bedroom_morning_scene
                   - entity: input_boolean.enable_bedroom_morning
                   - entity: input_boolean.auto_on_bedroom_morning
+                  - entity: input_boolean.motion_activated_bedroom_morning
+                  - entity: input_number.motion_auto_off_bedroom_morning
           - type: conditional
             conditions:
               - entity: input_select.time_window_selector
@@ -56,6 +58,8 @@ views:
                   - entity: input_select.living_room_morning_scene
                   - entity: input_boolean.enable_living_room_morning
                   - entity: input_boolean.auto_on_living_room_morning
+                  - entity: input_boolean.motion_activated_living_room_morning
+                  - entity: input_number.motion_auto_off_living_room_morning
           - type: conditional
             conditions:
               - entity: input_select.time_window_selector
@@ -74,6 +78,8 @@ views:
                   - entity: input_select.kitchen_morning_scene
                   - entity: input_boolean.enable_kitchen_morning
                   - entity: input_boolean.auto_on_kitchen_morning
+                  - entity: input_boolean.motion_activated_kitchen_morning
+                  - entity: input_number.motion_auto_off_kitchen_morning
           - type: conditional
             conditions:
               - entity: input_select.time_window_selector
@@ -92,6 +98,8 @@ views:
                   - entity: input_select.bathroom_morning_scene
                   - entity: input_boolean.enable_bathroom_morning
                   - entity: input_boolean.auto_on_bathroom_morning
+                  - entity: input_boolean.motion_activated_bathroom_morning
+                  - entity: input_number.motion_auto_off_bathroom_morning
           - type: conditional
             conditions:
               - entity: input_select.time_window_selector
@@ -110,6 +118,8 @@ views:
                   - entity: input_select.hallway_morning_scene
                   - entity: input_boolean.enable_hallway_morning
                   - entity: input_boolean.auto_on_hallway_morning
+                  - entity: input_boolean.motion_activated_hallway_morning
+                  - entity: input_number.motion_auto_off_hallway_morning
 
           # Day Schedule Configuration
           - type: conditional
@@ -130,6 +140,8 @@ views:
                   - entity: input_select.bedroom_day_scene
                   - entity: input_boolean.enable_bedroom_day
                   - entity: input_boolean.auto_on_bedroom_day
+                  - entity: input_boolean.motion_activated_bedroom_day
+                  - entity: input_number.motion_auto_off_bedroom_day
           - type: conditional
             conditions:
               - entity: input_select.time_window_selector
@@ -148,6 +160,8 @@ views:
                   - entity: input_select.living_room_day_scene
                   - entity: input_boolean.enable_living_room_day
                   - entity: input_boolean.auto_on_living_room_day
+                  - entity: input_boolean.motion_activated_living_room_day
+                  - entity: input_number.motion_auto_off_living_room_day
           - type: conditional
             conditions:
               - entity: input_select.time_window_selector
@@ -166,6 +180,8 @@ views:
                   - entity: input_select.kitchen_day_scene
                   - entity: input_boolean.enable_kitchen_day
                   - entity: input_boolean.auto_on_kitchen_day
+                  - entity: input_boolean.motion_activated_kitchen_day
+                  - entity: input_number.motion_auto_off_kitchen_day
           - type: conditional
             conditions:
               - entity: input_select.time_window_selector
@@ -184,6 +200,8 @@ views:
                   - entity: input_select.bathroom_day_scene
                   - entity: input_boolean.enable_bathroom_day
                   - entity: input_boolean.auto_on_bathroom_day
+                  - entity: input_boolean.motion_activated_bathroom_day
+                  - entity: input_number.motion_auto_off_bathroom_day
           - type: conditional
             conditions:
               - entity: input_select.time_window_selector
@@ -202,6 +220,8 @@ views:
                   - entity: input_select.hallway_day_scene
                   - entity: input_boolean.enable_hallway_day
                   - entity: input_boolean.auto_on_hallway_day
+                  - entity: input_boolean.motion_activated_hallway_day
+                  - entity: input_number.motion_auto_off_hallway_day
 
           # Evening Schedule Configuration
           - type: conditional
@@ -222,6 +242,8 @@ views:
                   - entity: input_select.bedroom_evening_scene
                   - entity: input_boolean.enable_bedroom_evening
                   - entity: input_boolean.auto_on_bedroom_evening
+                  - entity: input_boolean.motion_activated_bedroom_evening
+                  - entity: input_number.motion_auto_off_bedroom_evening
           - type: conditional
             conditions:
               - entity: input_select.time_window_selector
@@ -240,6 +262,8 @@ views:
                   - entity: input_select.living_room_evening_scene
                   - entity: input_boolean.enable_living_room_evening
                   - entity: input_boolean.auto_on_living_room_evening
+                  - entity: input_boolean.motion_activated_living_room_evening
+                  - entity: input_number.motion_auto_off_living_room_evening
           - type: conditional
             conditions:
               - entity: input_select.time_window_selector
@@ -258,6 +282,8 @@ views:
                   - entity: input_select.kitchen_evening_scene
                   - entity: input_boolean.enable_kitchen_evening
                   - entity: input_boolean.auto_on_kitchen_evening
+                  - entity: input_boolean.motion_activated_kitchen_evening
+                  - entity: input_number.motion_auto_off_kitchen_evening
           - type: conditional
             conditions:
               - entity: input_select.time_window_selector
@@ -276,6 +302,8 @@ views:
                   - entity: input_select.bathroom_evening_scene
                   - entity: input_boolean.enable_bathroom_evening
                   - entity: input_boolean.auto_on_bathroom_evening
+                  - entity: input_boolean.motion_activated_bathroom_evening
+                  - entity: input_number.motion_auto_off_bathroom_evening
           - type: conditional
             conditions:
               - entity: input_select.time_window_selector
@@ -294,6 +322,8 @@ views:
                   - entity: input_select.hallway_evening_scene
                   - entity: input_boolean.enable_hallway_evening
                   - entity: input_boolean.auto_on_hallway_evening
+                  - entity: input_boolean.motion_activated_hallway_evening
+                  - entity: input_number.motion_auto_off_hallway_evening
 
           # Night Schedule Configuration
           - type: conditional
@@ -314,6 +344,8 @@ views:
                   - entity: input_select.bedroom_night_scene
                   - entity: input_boolean.enable_bedroom_night
                   - entity: input_boolean.auto_on_bedroom_night
+                  - entity: input_boolean.motion_activated_bedroom_night
+                  - entity: input_number.motion_auto_off_bedroom_night
           - type: conditional
             conditions:
               - entity: input_select.time_window_selector
@@ -332,6 +364,8 @@ views:
                   - entity: input_select.living_room_night_scene
                   - entity: input_boolean.enable_living_room_night
                   - entity: input_boolean.auto_on_living_room_night
+                  - entity: input_boolean.motion_activated_living_room_night
+                  - entity: input_number.motion_auto_off_living_room_night
           - type: conditional
             conditions:
               - entity: input_select.time_window_selector
@@ -350,6 +384,8 @@ views:
                   - entity: input_select.kitchen_night_scene
                   - entity: input_boolean.enable_kitchen_night
                   - entity: input_boolean.auto_on_kitchen_night
+                  - entity: input_boolean.motion_activated_kitchen_night
+                  - entity: input_number.motion_auto_off_kitchen_night
           - type: conditional
             conditions:
               - entity: input_select.time_window_selector
@@ -368,6 +404,8 @@ views:
                   - entity: input_select.bathroom_night_scene
                   - entity: input_boolean.enable_bathroom_night
                   - entity: input_boolean.auto_on_bathroom_night
+                  - entity: input_boolean.motion_activated_bathroom_night
+                  - entity: input_number.motion_auto_off_bathroom_night
           - type: conditional
             conditions:
               - entity: input_select.time_window_selector
@@ -386,3 +424,5 @@ views:
                   - entity: input_select.hallway_night_scene
                   - entity: input_boolean.enable_hallway_night
                   - entity: input_boolean.auto_on_hallway_night
+                  - entity: input_boolean.motion_activated_hallway_night
+                  - entity: input_number.motion_auto_off_hallway_night

@@ -52,3 +52,32 @@ hallway_night_auto_off:
   step: 1
   unit_of_measurement: "min"
   initial: 30
+
+motion_auto_off_hallway_morning:
+  name: Hallway - Motion Morning Auto-off Timeout
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+motion_auto_off_hallway_day:
+  name: Hallway - Motion Day Auto-off Timeout
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+motion_auto_off_hallway_evening:
+  name: Hallway - Motion Evening Auto-off Timeout
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+motion_auto_off_hallway_night:
+  name: Hallway - Motion Night Auto-off Timeout
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15

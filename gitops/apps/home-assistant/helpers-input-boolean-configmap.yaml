@@ -40,6 +40,15 @@ data:
       name: Bathroom - Timer Evening Auto-on
     auto_on_bathroom_night:
       name: Bathroom - Timer Night Auto-on
+    
+    motion_activated_bathroom_morning:
+      name: Bathroom - Motion Morning Activated
+    motion_activated_bathroom_day:
+      name: Bathroom - Motion Day Activated
+    motion_activated_bathroom_evening:
+      name: Bathroom - Motion Evening Activated
+    motion_activated_bathroom_night:
+      name: Bathroom - Motion Night Activated
   bedroom.yaml: |
     # Template for input_boolean helpers per room
     # Usage:
@@ -77,6 +86,15 @@ data:
       name: Bedroom - Timer Evening Auto-on
     auto_on_bedroom_night:
       name: Bedroom - Timer Night Auto-on
+    
+    motion_activated_bedroom_morning:
+      name: Bedroom - Motion Morning Activated
+    motion_activated_bedroom_day:
+      name: Bedroom - Motion Day Activated
+    motion_activated_bedroom_evening:
+      name: Bedroom - Motion Evening Activated
+    motion_activated_bedroom_night:
+      name: Bedroom - Motion Night Activated
   hallway.yaml: |
     # Template for input_boolean helpers per room
     # Usage:
@@ -114,6 +132,15 @@ data:
       name: Hallway - Timer Evening Auto-on
     auto_on_hallway_night:
       name: Hallway - Timer Night Auto-on
+    
+    motion_activated_hallway_morning:
+      name: Hallway - Motion Morning Activated
+    motion_activated_hallway_day:
+      name: Hallway - Motion Day Activated
+    motion_activated_hallway_evening:
+      name: Hallway - Motion Evening Activated
+    motion_activated_hallway_night:
+      name: Hallway - Motion Night Activated
   kitchen.yaml: |
     # Template for input_boolean helpers per room
     # Usage:
@@ -151,6 +178,15 @@ data:
       name: Kitchen - Timer Evening Auto-on
     auto_on_kitchen_night:
       name: Kitchen - Timer Night Auto-on
+    
+    motion_activated_kitchen_morning:
+      name: Kitchen - Motion Morning Activated
+    motion_activated_kitchen_day:
+      name: Kitchen - Motion Day Activated
+    motion_activated_kitchen_evening:
+      name: Kitchen - Motion Evening Activated
+    motion_activated_kitchen_night:
+      name: Kitchen - Motion Night Activated
   living_room.yaml: |
     # Template for input_boolean helpers per room
     # Usage:
@@ -188,3 +224,12 @@ data:
       name: Living Room - Timer Evening Auto-on
     auto_on_living_room_night:
       name: Living Room - Timer Night Auto-on
+    
+    motion_activated_living_room_morning:
+      name: Living Room - Motion Morning Activated
+    motion_activated_living_room_day:
+      name: Living Room - Motion Day Activated
+    motion_activated_living_room_evening:
+      name: Living Room - Motion Evening Activated
+    motion_activated_living_room_night:
+      name: Living Room - Motion Night Activated

@@ -34,3 +34,12 @@ auto_on_living_room_evening:
   name: Living Room - Timer Evening Auto-on
 auto_on_living_room_night:
   name: Living Room - Timer Night Auto-on
+
+motion_activated_living_room_morning:
+  name: Living Room - Motion Morning Activated
+motion_activated_living_room_day:
+  name: Living Room - Motion Day Activated
+motion_activated_living_room_evening:
+  name: Living Room - Motion Evening Activated
+motion_activated_living_room_night:
+  name: Living Room - Motion Night Activated

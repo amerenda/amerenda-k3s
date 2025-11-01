@@ -52,3 +52,32 @@ kitchen_night_auto_off:
   step: 1
   unit_of_measurement: "min"
   initial: 30
+
+motion_auto_off_kitchen_morning:
+  name: Kitchen - Motion Morning Auto-off Timeout
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+motion_auto_off_kitchen_day:
+  name: Kitchen - Motion Day Auto-off Timeout
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+motion_auto_off_kitchen_evening:
+  name: Kitchen - Motion Evening Auto-off Timeout
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+motion_auto_off_kitchen_night:
+  name: Kitchen - Motion Night Auto-off Timeout
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15

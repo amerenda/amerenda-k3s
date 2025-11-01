@@ -52,3 +52,32 @@ living_room_night_auto_off:
   step: 1
   unit_of_measurement: "min"
   initial: 30
+
+motion_auto_off_living_room_morning:
+  name: Living Room - Motion Morning Auto-off Timeout
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+motion_auto_off_living_room_day:
+  name: Living Room - Motion Day Auto-off Timeout
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+motion_auto_off_living_room_evening:
+  name: Living Room - Motion Evening Auto-off Timeout
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+motion_auto_off_living_room_night:
+  name: Living Room - Motion Night Auto-off Timeout
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15

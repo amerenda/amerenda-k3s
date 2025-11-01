@@ -34,3 +34,12 @@ auto_on_bathroom_evening:
   name: Bathroom - Timer Evening Auto-on
 auto_on_bathroom_night:
   name: Bathroom - Timer Night Auto-on
+
+motion_activated_bathroom_morning:
+  name: Bathroom - Motion Morning Activated
+motion_activated_bathroom_day:
+  name: Bathroom - Motion Day Activated
+motion_activated_bathroom_evening:
+  name: Bathroom - Motion Evening Activated
+motion_activated_bathroom_night:
+  name: Bathroom - Motion Night Activated

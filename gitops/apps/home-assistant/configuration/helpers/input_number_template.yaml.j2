@@ -52,3 +52,32 @@
   step: 1
   unit_of_measurement: "min"
   initial: 30
+
+motion_auto_off_{{ room }}_morning:
+  name: {{ room|replace('_',' ')|title }} - Motion Morning Auto-off Timeout
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+motion_auto_off_{{ room }}_day:
+  name: {{ room|replace('_',' ')|title }} - Motion Day Auto-off Timeout
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+motion_auto_off_{{ room }}_evening:
+  name: {{ room|replace('_',' ')|title }} - Motion Evening Auto-off Timeout
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+motion_auto_off_{{ room }}_night:
+  name: {{ room|replace('_',' ')|title }} - Motion Night Auto-off Timeout
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
