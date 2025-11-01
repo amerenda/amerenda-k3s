@@ -27,6 +27,36 @@ data:
       name: Event Image Timestamp Text
       initial: ""
       max: 20
+  scene_name_bathroom.yaml: |
+    scene_name_bathroom:
+      name: "Bathroom Scene Name"
+      initial: ""
+      max: 100
+    
+  scene_name_bedroom.yaml: |
+    scene_name_bedroom:
+      name: "Bedroom Scene Name"
+      initial: ""
+      max: 100
+    
+  scene_name_hallway.yaml: |
+    scene_name_hallway:
+      name: "Hallway Scene Name"
+      initial: ""
+      max: 100
+    
+  scene_name_kitchen.yaml: |
+    scene_name_kitchen:
+      name: "Kitchen Scene Name"
+      initial: ""
+      max: 100
+    
+  scene_name_living_room.yaml: |
+    scene_name_living_room:
+      name: "Living Room Scene Name"
+      initial: ""
+      max: 100
+    
   set_value.yaml: |
     # Global input_text helper for set_value automation
     set_value:

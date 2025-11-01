@@ -190,6 +190,12 @@ spec:
                     icon: mdi:calendar-edit
                     show_in_sidebar: true
                     filename: dashboards/views/room_schedule_configuration.yaml
+                  light-control:
+                    mode: yaml
+                    title: Light Control
+                    icon: mdi:lightbulb-group
+                    show_in_sidebar: true
+                    filename: dashboards/views/light_control.yaml
         
               # HTTP reverse proxy
               http:
