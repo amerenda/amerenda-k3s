@@ -37,6 +37,7 @@ data:
         custom_s4_start: { required: false }
         transition: { required: false }
         fallback_lights: { required: false }
+        timer_mode: { required: false, default: false }
       sequence:
         - variables:
             default_s1: "06:00:00"
@@ -104,8 +105,22 @@ data:
               {% set fb = fallback_lights | default('') %}
               {% if fb and fb != '' and fb in all_lights %}{{ fb }}
               {% else %}{{ '' }}{% endif %}
+            
+            # Check if lights are on (for timer mode)
+            timer_mode_active: "{{ timer_mode | default(false) | bool }}"
+            lights_on_check: >-
+              {% if timer_mode_active and dynamic_fallback %}
+                {% set fb_entity = dynamic_fallback %}
+                {% if fb_entity is string %}
+                  {{ states(fb_entity) == 'on' if fb_entity in all_lights else false }}
+                {% else %}
+                  {{ false }}
+                {% endif %}
+              {% else %}
+                {{ true }}
+              {% endif %}
         - choose:
-            - conditions: "{{ scene_exists }}"
+            - conditions: "{{ scene_exists and lights_on_check | bool }}"
               sequence:
                 - parallel:
                     - service: "scene.turn_on"
@@ -122,23 +137,38 @@ data:
                             entity_id: "{{ scene_cycle_helper }}"
                           data:
                             option: "{{ slot }}"
-          default:
-            - choose:
-                - conditions: "{{ dynamic_fallback != '' }}"
-                  sequence:
-                    - service: "light.turn_on"
-                      target:
-                        entity_id: "{{ dynamic_fallback }}"
-                    - service: "logbook.log"
-                      data:
-                        name: "scheduled_light_on"
-                        message: "Scene '{{ scene_to_activate }}' missing; used '{{ dynamic_fallback }}'"
-                        entity_id: "{{ dynamic_fallback }}"
-              default:
+            - conditions: "{{ scene_exists and not lights_on_check | bool }}"
+              sequence:
                 - service: "logbook.log"
                   data:
                     name: "scheduled_light_on"
-                    message: "Scene '{{ scene_to_activate }}' missing; no fallback light entity available"
+                    message: "Timer mode: Scene '{{ scene_to_activate }}' skipped - lights are off"
+          default:
+            - choose:
+                - conditions: "{{ timer_mode_active }}"
+                  sequence:
+                    - service: "logbook.log"
+                      data:
+                        name: "scheduled_light_on"
+                        message: "Timer mode: Scene '{{ scene_to_activate }}' missing and timer mode enabled - no action taken"
+                - conditions: []
+                  sequence:
+                    - choose:
+                        - conditions: "{{ dynamic_fallback != '' }}"
+                          sequence:
+                            - service: "light.turn_on"
+                              target:
+                                entity_id: "{{ dynamic_fallback }}"
+                            - service: "logbook.log"
+                              data:
+                                name: "scheduled_light_on"
+                                message: "Scene '{{ scene_to_activate }}' missing; used '{{ dynamic_fallback }}'"
+                                entity_id: "{{ dynamic_fallback }}"
+                      default:
+                        - service: "logbook.log"
+                          data:
+                            name: "scheduled_light_on"
+                            message: "Scene '{{ scene_to_activate }}' missing; no fallback light entity available"
   room_toggle.yaml: |
     room_toggle:
       alias: "Room Toggle (smart with debug)"
