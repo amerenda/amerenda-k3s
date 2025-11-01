@@ -6,19 +6,15 @@ living_room_s1_start:
   name: Living Room Morning start
   has_time: true
   has_date: false
-  initial: "06:00"
 living_room_s2_start:
   name: Living Room Day start
   has_time: true
   has_date: false
-  initial: "09:00"
 living_room_s3_start:
   name: Living Room Evening start
   has_time: true
   has_date: false
-  initial: "17:00"
 living_room_s4_start:
   name: Living Room Night start
   has_time: true
   has_date: false
-  initial: "22:00"

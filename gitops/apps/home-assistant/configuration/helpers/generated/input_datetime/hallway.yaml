@@ -6,19 +6,15 @@ hallway_s1_start:
   name: Hallway Morning start
   has_time: true
   has_date: false
-  initial: "06:00"
 hallway_s2_start:
   name: Hallway Day start
   has_time: true
   has_date: false
-  initial: "09:00"
 hallway_s3_start:
   name: Hallway Evening start
   has_time: true
   has_date: false
-  initial: "17:00"
 hallway_s4_start:
   name: Hallway Night start
   has_time: true
   has_date: false
-  initial: "22:00"
