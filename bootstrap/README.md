@@ -17,6 +17,13 @@ Kubernetes Secret template for Bitwarden integration:
 - **External Secrets**: Required for fetching secrets from Bitwarden
 - **Security**: Must be applied manually for security
 
+### `appprojects.yaml`
+ArgoCD AppProject resources defining project permissions:
+- **infra Project**: For infrastructure components (storage, networking, DNS, etc.)
+- **application Project**: For application deployments (Home Assistant, Pi-hole, etc.)
+- **Permissions**: Configured to allow all repositories, namespaces, and resources
+- **Required**: Must be applied before applications using these projects can sync
+
 ## 🚀 Usage
 
 ### 1. ArgoCD Installation
@@ -26,7 +33,33 @@ The ArgoCD values are automatically used during cluster setup:
 ansible-playbook -i inventory.ini setup-k3s-cluster.yml -e k3s_token=$K3S_TOKEN
 ```
 
-### 2. Bitwarden Secret Setup
+### 2. ArgoCD Projects Setup
+**IMPORTANT**: These must be created before applications using project references can sync:
+
+1. **Apply AppProjects**:
+   ```bash
+   kubectl apply -f bootstrap/appprojects.yaml
+   ```
+
+2. **Verify Projects**:
+   ```bash
+   kubectl get appproject
+   ```
+   
+   You should see:
+   - `default` (built-in)
+   - `infra` (for infrastructure)
+   - `application` (for applications)
+
+3. **Check Project Details** (optional):
+   ```bash
+   kubectl describe appproject infra
+   kubectl describe appproject application
+   ```
+
+**Note**: These projects define which repositories, namespaces, and resources ArgoCD applications can use. Both `infra` and `application` projects are configured with permissive settings (`*` for all) to allow flexibility.
+
+### 3. Bitwarden Secret Setup
 **IMPORTANT**: This must be done manually after cluster setup:
 
 1. **Get Bitwarden Access Token**:
@@ -67,6 +100,13 @@ Edit `argocd/values.yaml` to customize:
 - **TLS**: Enable/disable TLS based on your needs
 - **Resources**: Adjust CPU/memory limits
 
+### ArgoCD Projects
+Edit `appprojects.yaml` to customize project permissions:
+- **Source Repositories**: Restrict which Git repos can be used (currently `*` allows all)
+- **Destinations**: Restrict which namespaces/clusters apps can deploy to (currently `*` allows all)
+- **Resource Whitelist**: Control which Kubernetes resources can be created (currently `*` allows all)
+- **RBAC**: For stricter security, replace `*` with specific values per project
+
 ### Bitwarden Integration
 The secret enables External Secrets Operator to fetch:
 - **Tailscale Auth Keys**: For VPN authentication
@@ -86,6 +126,24 @@ kubectl get svc -n metallb-system
 
 # Port forward as fallback
 kubectl port-forward svc/argocd-server 8080:80
+```
+
+### Applications Failing to Sync (Project Issues)
+If applications are failing with project-related errors:
+```bash
+# Check if projects exist
+kubectl get appproject
+
+# Verify project permissions
+kubectl describe appproject infra
+kubectl describe appproject application
+
+# Re-apply projects if needed
+kubectl apply -f bootstrap/appprojects.yaml
+
+# Check application status
+kubectl get application -A
+kubectl describe application <app-name> -n default
 ```
 
 ### Bitwarden Secret Issues
@@ -112,7 +170,8 @@ kubectl describe externalsecret <secret-name>
 ## 📚 Next Steps
 
 After bootstrap setup:
-1. **Access ArgoCD**: Navigate to `http://argocd.amer.home` or port-forward
-2. **Verify Applications**: Check that all applications are syncing
-3. **Monitor Secrets**: Ensure External Secrets are working correctly
-4. **Configure Applications**: Customize application configurations as needed
+1. **Apply AppProjects**: Run `kubectl apply -f bootstrap/appprojects.yaml` if not already done
+2. **Access ArgoCD**: Navigate to `http://argocd.amer.home` or port-forward
+3. **Verify Applications**: Check that all applications are syncing (some reference `infra` or `application` projects)
+4. **Monitor Secrets**: Ensure External Secrets are working correctly
+5. **Configure Applications**: Customize application configurations as needed
