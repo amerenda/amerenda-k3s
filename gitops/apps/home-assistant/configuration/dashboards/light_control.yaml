@@ -261,9 +261,6 @@ views:
                     name: >
                       {% set room = states('input_select.room_selector') %}
                       {{ room | replace('_', ' ') | title }} Light 1
-                    show_brightness_control: true
-                    show_color_control: true
-                    show_color_temp_control: true
                 - type: conditional
                   conditions:
                     - condition: template
@@ -298,9 +295,6 @@ views:
                     name: >
                       {% set room = states('input_select.room_selector') %}
                       {{ room | replace('_', ' ') | title }} Light 2
-                    show_brightness_control: true
-                    show_color_control: true
-                    show_color_temp_control: true
                 - type: conditional
                   conditions:
                     - condition: template
@@ -335,9 +329,6 @@ views:
                     name: >
                       {% set room = states('input_select.room_selector') %}
                       {{ room | replace('_', ' ') | title }} Light 3
-                    show_brightness_control: true
-                    show_color_control: true
-                    show_color_temp_control: true
                 - type: conditional
                   conditions:
                     - condition: template
@@ -372,9 +363,6 @@ views:
                     name: >
                       {% set room = states('input_select.room_selector') %}
                       {{ room | replace('_', ' ') | title }} Light 4
-                    show_brightness_control: true
-                    show_color_control: true
-                    show_color_temp_control: true
                 - type: conditional
                   conditions:
                     - condition: template
@@ -409,9 +397,6 @@ views:
                     name: >
                       {% set room = states('input_select.room_selector') %}
                       {{ room | replace('_', ' ') | title }} Light 5
-                    show_brightness_control: true
-                    show_color_control: true
-                    show_color_temp_control: true
                 - type: conditional
                   conditions:
                     - condition: template
@@ -446,9 +431,6 @@ views:
                     name: >
                       {% set room = states('input_select.room_selector') %}
                       {{ room | replace('_', ' ') | title }} Light 6
-                    show_brightness_control: true
-                    show_color_control: true
-                    show_color_temp_control: true
                 - type: conditional
                   conditions:
                     - condition: template
@@ -483,9 +465,6 @@ views:
                     name: >
                       {% set room = states('input_select.room_selector') %}
                       {{ room | replace('_', ' ') | title }} Light 7
-                    show_brightness_control: true
-                    show_color_control: true
-                    show_color_temp_control: true
                 - type: conditional
                   conditions:
                     - condition: template
@@ -520,9 +499,6 @@ views:
                     name: >
                       {% set room = states('input_select.room_selector') %}
                       {{ room | replace('_', ' ') | title }} Light 8
-                    show_brightness_control: true
-                    show_color_control: true
-                    show_color_temp_control: true
                 - type: conditional
                   conditions:
                     - condition: template
@@ -557,9 +533,6 @@ views:
                     name: >
                       {% set room = states('input_select.room_selector') %}
                       {{ room | replace('_', ' ') | title }} Light 9
-                    show_brightness_control: true
-                    show_color_control: true
-                    show_color_temp_control: true
                 # Hallway special case
                 - type: conditional
                   conditions:
@@ -571,9 +544,6 @@ views:
                     type: light
                     entity: light.hallway
                     name: Hallway
-                    show_brightness_control: true
-                    show_color_control: true
-                    show_color_temp_control: true
                 - type: conditional
                   conditions:
                     - entity: input_select.room_selector
@@ -584,9 +554,6 @@ views:
                     type: light
                     entity: light.entrance_lights
                     name: Entrance Lights
-                    show_brightness_control: true
-                    show_color_control: true
-                    show_color_temp_control: true
 
           # Scene Creation Section
           - type: markdown
