@@ -987,12 +987,12 @@ data:
         id: "timer_check"
     
     action:
-      # CRITICAL: System log to verify automation is running - FIRST THING
-      - service: "system_log.write"
+      # CRITICAL: Log to verify automation is running - FIRST THING
+      - service: "logbook.log"
         data:
+          name: "room_timer_control"
           message: >-
-            [room_timer_control] === AUTOMATION STARTED === {{ room_key_var }} at {{ now_hm }}
-          level: "info"
+            === AUTOMATION STARTED === {{ room_key_var }} at {{ now_hm }}
       
       - variables:
           # Extract target entity IDs safely
@@ -1013,12 +1013,6 @@ data:
             {% endif %}
     
       # Debug logging - this should appear every minute if automation is running
-      - service: "system_log.write"
-        data:
-          message: >-
-            [room_timer_control] {{ room_key_var }}: Time={{ now_hm }}, Slots: s1={{ s1 }}, s2={{ s2 }}, s3={{ s3 }}, s4={{ s4 }},
-            fired={{ fired_slot }}, en_night={{ en_night }}, ao_night={{ ao_night }}, lights_on={{ any_on }}
-          level: "info"
       - service: "logbook.log"
         data:
           name: "room_timer_control"
@@ -1029,11 +1023,11 @@ data:
       - choose:
           - conditions: "{{ fired_slot == 'morning' and en_morning | bool }}"
             sequence:
-              - service: "system_log.write"
+              - service: "logbook.log"
                 data:
+                  name: "room_timer_control"
                   message: >-
-                    [room_timer_control] Morning slot matched! en_morning={{ en_morning }}
-                  level: "info"
+                    Morning slot matched! en_morning={{ en_morning }}
               - choose:
                   - conditions: "{{ any_on or ao_morning | bool }}"
                     sequence:
@@ -1091,11 +1085,11 @@ data:
     
           - conditions: "{{ fired_slot == 'night' and en_night | bool }}"
             sequence:
-              - service: "system_log.write"
+              - service: "logbook.log"
                 data:
+                  name: "room_timer_control"
                   message: >-
-                    [room_timer_control] Night slot detected! en_night={{ en_night }}, any_on={{ any_on }}, ao_night={{ ao_night }}
-                  level: "info"
+                    Night slot detected! en_night={{ en_night }}, any_on={{ any_on }}, ao_night={{ ao_night }}
               - service: "logbook.log"
                 data:
                   name: "room_timer_control"
@@ -1104,11 +1098,11 @@ data:
               - choose:
                   - conditions: "{{ any_on or ao_night | bool }}"
                     sequence:
-                      - service: "system_log.write"
+                      - service: "logbook.log"
                         data:
+                          name: "room_timer_control"
                           message: >-
-                            [room_timer_control] Condition passed: any_on={{ any_on }} OR ao_night={{ ao_night }}
-                          level: "info"
+                            Condition passed: any_on={{ any_on }} OR ao_night={{ ao_night }}
                       - service: "logbook.log"
                         data:
                           name: "room_timer_control"
@@ -1133,11 +1127,11 @@ data:
                             {% if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none %}{% set custom = custom | combine({'custom_s3_start': custom_s3_start_input}) %}{% endif %}
                             {% if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none %}{% set custom = custom | combine({'custom_s4_start': custom_s4_start_input}) %}{% endif %}
                             {{ base | combine(custom) }}
-                      - service: "system_log.write"
+                      - service: "logbook.log"
                         data:
+                          name: "room_timer_control"
                           message: >-
-                            [room_timer_control] About to call script with fallback_lights={{ _fb_var }}, timer_mode=true
-                          level: "info"
+                            About to call script with fallback_lights={{ _fb_var }}, timer_mode=true
                       - service: "logbook.log"
                         data:
                           name: "room_timer_control"
@@ -1145,19 +1139,13 @@ data:
                             Calling script.scheduled_light_on with fallback_lights={{ _fb_var }}, timer_mode=true
                       - service: "script.scheduled_light_on"
                         data: "{{ script_data_dict }}"
-                      - service: "system_log.write"
+                      - service: "logbook.log"
                         data:
+                          name: "room_timer_control"
                           message: >-
-                            [room_timer_control] Script call completed (should see script logs above if successful)
-                          level: "info"
+                            Script call completed (should see script logs above if successful)
                   - conditions: []
                     sequence:
-                      - service: "system_log.write"
-                        data:
-                          message: >-
-                            [room_timer_control] CONDITION FAILED: any_on={{ any_on }}, ao_night={{ ao_night }}. 
-                            Night scene NOT fired: lights are off and auto-on is disabled.
-                          level: "warning"
                       - service: "logbook.log"
                         data:
                           name: "room_timer_control"
