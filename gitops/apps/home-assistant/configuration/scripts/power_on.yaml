@@ -169,21 +169,20 @@ scheduled_light_on:
                       data:
                         name: "scheduled_light_on"
                         message: "Lights turned on, now applying scene {{ scene_to_activate }}"
-                    - parallel:
-                        - service: "scene.turn_on"
-                          data:
-                            transition: "{{ transition | default(0) }}"
+                    - service: "scene.turn_on"
+                      data:
+                        transition: "{{ transition | default(0) }}"
+                      target:
+                        entity_id: "{{ scene_to_activate }}"
+                    - if:
+                        - condition: template
+                          value_template: "{{ scene_cycle_helper != '' }}"
+                      then:
+                        - service: "input_select.select_option"
                           target:
-                            entity_id: "{{ scene_to_activate }}"
-                        - if:
-                            - condition: template
-                              value_template: "{{ scene_cycle_helper != '' }}"
-                            then:
-                              - service: "input_select.select_option"
-                                target:
-                                  entity_id: "{{ scene_cycle_helper }}"
-                                data:
-                                  option: "{{ slot }}"
+                            entity_id: "{{ scene_cycle_helper }}"
+                          data:
+                            option: "{{ slot }}"
                     - service: "logbook.log"
                       data:
                         name: "scheduled_light_on"
