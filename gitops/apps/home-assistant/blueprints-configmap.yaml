@@ -987,11 +987,11 @@ data:
         id: "timer_check"
     
     action:
-      # CRITICAL: System log to verify automation is running
+      # CRITICAL: System log to verify automation is running - FIRST THING
       - service: "system_log.write"
         data:
           message: >-
-            [room_timer_control] Automation triggered for {{ room_key_var }} at {{ now_hm }}
+            [room_timer_control] === AUTOMATION STARTED === {{ room_key_var }} at {{ now_hm }}
           level: "info"
       
       - variables:
