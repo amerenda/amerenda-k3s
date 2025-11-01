@@ -174,16 +174,9 @@ spec:
               homeassistant:
                 packages: !include_dir_named packages
         
-              # Lovelace: storage mode + an extra YAML dashboard
+              # Lovelace: storage mode
               lovelace:
                 mode: storage
-                dashboards:
-                  lighting-config:
-                    mode: yaml
-                    title: Lighting Configuration
-                    icon: mdi:lightbulb-group
-                    show_in_sidebar: true
-                    filename: dashboards/views/living_room_lighting.yaml
         
               # HTTP reverse proxy
               http:
