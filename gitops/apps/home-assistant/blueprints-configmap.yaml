@@ -1019,12 +1019,21 @@ data:
     
       # Debug logging - this should appear every minute if automation is running
       - service: "logbook.log"
-        data:
+        data_template:
           name: "room_timer_control"
           message: >-
             [{{ room_key_var }}] Time={{ now_hm }}, Slots: s1={{ s1 }}, s2={{ s2 }}, s3={{ s3 }}, s4={{ s4 }},
             fired={{ fired_slot }}, en_night={{ en_night }}, ao_night={{ ao_night }}, lights_on={{ any_on }}
-    
+      
+      # Log when a slot matches
+      - service: "logbook.log"
+        data_template:
+          name: "room_timer_control"
+          message: >-
+            Time check: now_hm={{ now_hm }}, s1={{ s1 }}, s2={{ s2 }}, s3={{ s3 }}, s4={{ s4 }},
+            matches: s1={{ now_hm == s1 }}, s2={{ now_hm == s2 }}, s3={{ now_hm == s3 }}, s4={{ now_hm == s4 }},
+            fired_slot={{ fired_slot }}
+      
       - choose:
           - conditions: "{{ fired_slot == 'morning' and en_morning | bool }}"
             sequence:
