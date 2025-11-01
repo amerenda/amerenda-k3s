@@ -879,13 +879,21 @@ data:
         {% endif %}
       s3_str: >-
         {% if evening_custom %}
-          {% set v = states('input_datetime.' ~ room_key_var ~ '_s3_start') %}
+          {% set helper_name = 'input_datetime.' ~ room_key_var ~ '_s3_start' %}
+          {% set v = states(helper_name) %}
           {% if v in ['unknown','unavailable',''] %}{{ default_s3 }}{% else %}{{ v }}{% endif %}
         {% elif custom_s3_start_input %}
           {% set v = states(custom_s3_start_input) %}
           {% if v in ['unknown','unavailable',''] %}{{ default_s3 }}{% else %}{{ v }}{% endif %}
         {% else %}
           {{ default_s3 }}
+        {% endif %}
+      s3_debug: >-
+        {% if evening_custom %}
+          {% set helper_name = 'input_datetime.' ~ room_key_var ~ '_s3_start' %}
+          Helper={{ helper_name }}, Value={{ states(helper_name) }}, evening_custom={{ evening_custom }}
+        {% else %}
+          Not using custom evening time
         {% endif %}
       s4_str: >-
         {% if night_custom %}
@@ -1006,16 +1014,16 @@ data:
           message: >-
             Schedule check: s1_str={{ s1_str }}, s2_str={{ s2_str }}, s3_str={{ s3_str }}, s4_str={{ s4_str }},
             s1={{ s1 }}, s2={{ s2 }}, s3={{ s3 }}, s4={{ s4 }},
-            night_custom={{ night_custom }}, evening_custom={{ evening_custom }}
+            night_custom={{ night_custom }}, evening_custom={{ evening_custom }}, s3_debug={{ s3_debug }}
       
       # Debug: Log raw datetime entity values
       - service: "logbook.log"
         data_template:
           name: "room_timer_control"
           message: >-
-            Raw datetime values: living_room_s1={{ states('input_datetime.living_room_s1_start') }},
-            living_room_s3={{ states('input_datetime.living_room_s3_start') }},
-            living_room_s4={{ states('input_datetime.living_room_s4_start') }}
+            Raw datetime values: {{ room_key_var }}_s1={{ states('input_datetime.' ~ room_key_var ~ '_s1_start') }},
+            {{ room_key_var }}_s3={{ states('input_datetime.' ~ room_key_var ~ '_s3_start') }},
+            {{ room_key_var }}_s4={{ states('input_datetime.' ~ room_key_var ~ '_s4_start') }}
       
       - variables:
           # Extract target entity IDs safely
