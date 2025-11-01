@@ -988,9 +988,22 @@ data:
     
     action:
       - variables:
+          # Extract target entity IDs safely
+          _targets_raw: >-
+            {% if target_lights_var is mapping and 'entity_id' in target_lights_var %}
+              {{ target_lights_var.entity_id }}
+            {% elif target_lights_var is mapping %}
+              {{ '' }}
+            {% else %}
+              {{ target_lights_var }}
+            {% endif %}
           any_on: >-
-            {% set targets = target_lights_var.entity_id if target_lights_var is mapping else target_lights_var %}
-            {{ expand(targets) | selectattr('state','eq','on') | list | count > 0 if targets else false }}
+            {% if _targets_raw %}
+              {% set expanded = expand(_targets_raw) %}
+              {{ expanded | selectattr('state','eq','on') | list | count > 0 }}
+            {% else %}
+              {{ false }}
+            {% endif %}
     
       # Debug logging - this should appear every minute if automation is running
       - service: "logbook.log"
@@ -1072,7 +1085,7 @@ data:
                         data:
                           name: "room_timer_control"
                           message: >-
-                            Firing night scene for room {{ room_key_var }}
+                            Firing night scene for room {{ room_key_var }}, target_lights={{ _targets_raw }}
                       - variables:
                           script_data_dict: >-
                             {% set fb = target_lights_var.entity_id if target_lights_var is mapping else target_lights_var %}
@@ -1084,6 +1097,11 @@ data:
                             {% if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none %}{% set custom = custom | combine({'custom_s3_start': custom_s3_start_input}) %}{% endif %}
                             {% if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none %}{% set custom = custom | combine({'custom_s4_start': custom_s4_start_input}) %}{% endif %}
                             {{ base | combine(custom) }}
+                      - service: "logbook.log"
+                        data:
+                          name: "room_timer_control"
+                          message: >-
+                            Calling script.scheduled_light_on with fallback_lights={{ fb }}, timer_mode=true
                       - service: "script.scheduled_light_on"
                         data: "{{ script_data_dict }}"
                   - conditions: []
@@ -1093,4 +1111,5 @@ data:
                           name: "room_timer_control"
                           message: >-
                             Night scene NOT fired: lights are off (any_on={{ any_on }}) and auto-on is disabled (ao_night={{ ao_night }})
+                          entity_id: "{{ _targets_raw }}"
     
