@@ -46,7 +46,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
-  project: default
+  project: infra
   source:
     repoURL: https://github.com/amerenda/amerenda-k3s.git
     targetRevision: main
@@ -79,7 +79,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
-  project: default
+  project: infra
   sources:
     - repoURL: https://charts.longhorn.io
       chart: longhorn
@@ -146,7 +146,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
-  project: default
+  project: infra
   sources:
     - repoURL: https://charts.external-secrets.io
       chart: external-secrets
@@ -190,7 +190,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
-  project: default
+  project: infra
   source:
     repoURL: https://github.com/amerenda/amerenda-k3s.git
     targetRevision: main
@@ -223,7 +223,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
-  project: default
+  project: application
   sources:
     - repoURL: https://mojo2600.github.io/pihole-kubernetes/
       chart: pihole
@@ -266,7 +266,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
-  project: default
+  project: application
   sources:
     - repoURL: https://github.com/amerenda/amerenda-k3s.git
       targetRevision: main
@@ -299,7 +299,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
-  project: default
+  project: infra
   source:
     repoURL: https://github.com/amerenda/amerenda-k3s.git
     targetRevision: main
@@ -332,7 +332,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
-  project: default
+  project: infra
   source:
     repoURL: https://github.com/amerenda/amerenda-k3s.git
     targetRevision: main
@@ -367,7 +367,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
-  project: default
+  project: infra
   sources:
     - repoURL: https://charts.jetstack.io
       chart: cert-manager
@@ -406,7 +406,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
-  project: default
+  project: infra
   source:
     repoURL: https://github.com/amerenda/amerenda-k3s.git
     targetRevision: main
@@ -439,7 +439,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
-  project: default
+  project: infra
   source:
     repoURL: https://github.com/amerenda/amerenda-k3s.git
     targetRevision: main
@@ -472,7 +472,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
-  project: default
+  project: infra
   sources:
     - repoURL: https://traefik.github.io/charts
       chart: traefik
@@ -511,7 +511,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
-  project: default
+  project: infra
   sources:
     - repoURL: https://kubernetes-sigs.github.io/external-dns/
       chart: external-dns
@@ -550,7 +550,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
-  project: default
+  project: infra
   sources:
     - repoURL: https://stakater.github.io/stakater-charts
       chart: reloader
@@ -589,7 +589,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
-  project: default
+  project: infra
   sources:
     - repoURL: oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
       path: .
@@ -651,7 +651,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
-  project: default
+  project: infra
   sources:
     - repoURL: oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
       path: .
