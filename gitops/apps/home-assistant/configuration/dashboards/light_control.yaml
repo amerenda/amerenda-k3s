@@ -28,13 +28,18 @@ views:
               {% endif %}
 
           # Room Group Control Buttons - dynamically discover lights per room
-          - type: grid
-            square: false
-            columns: 2
-            cards:
-              - type: custom:mushroom-button-card
+          - type: entities
+            title: Room Controls
+            entities:
+              - type: button
+                name: >
+                  {% set room = states('input_select.room_selector') %}
+                  {% if room and room != 'unknown' and room != 'unavailable' %}
+                    All {{ room | replace('_', ' ') | title }} Lights On
+                  {% else %}
+                    All Lights On
+                  {% endif %}
                 icon: mdi:lightbulb-group
-                label: "{% set room = states('input_select.room_selector') %}{% if room and room != 'unknown' and room != 'unavailable' %}All {{ room | replace('_', ' ') | title }} Lights On{% else %}All Lights On{% endif %}"
                 tap_action:
                   action: call-service
                   service: light.turn_on
@@ -78,9 +83,15 @@ views:
                       {% else %}
                         []
                       {% endif %}
-              - type: custom:mushroom-button-card
+              - type: button
+                name: >
+                  {% set room = states('input_select.room_selector') %}
+                  {% if room and room != 'unknown' and room != 'unavailable' %}
+                    All {{ room | replace('_', ' ') | title }} Lights Off
+                  {% else %}
+                    All Lights Off
+                  {% endif %}
                 icon: mdi:lightbulb-group-off
-                label: "{% set room = states('input_select.room_selector') %}{% if room and room != 'unknown' and room != 'unavailable' %}All {{ room | replace('_', ' ') | title }} Lights Off{% else %}All Lights Off{% endif %}"
                 tap_action:
                   action: call-service
                   service: light.turn_off
@@ -161,7 +172,7 @@ views:
                           {{ false }}
                         {% endif %}
                   card:
-                    type: custom:mushroom-light-card
+                    type: light
                     entity: >
                       {% set room = states('input_select.room_selector') %}
                       {% set room_key = room %}
@@ -177,9 +188,6 @@ views:
                     name: >
                       {% set room = states('input_select.room_selector') %}
                       {{ room | replace('_', ' ') | title }}
-                    show_brightness_control: true
-                    show_color_control: true
-                    show_color_temp_control: true
                 # Show main light if it exists and (no numbered or multiple numbered)
                 - type: conditional
                   conditions:
@@ -206,7 +214,7 @@ views:
                           {{ false }}
                         {% endif %}
                   card:
-                    type: custom:mushroom-light-card
+                    type: light
                     entity: >
                       {% set room = states('input_select.room_selector') %}
                       {% if room and room != 'unknown' and room != 'unavailable' %}
@@ -217,9 +225,6 @@ views:
                     name: >
                       {% set room = states('input_select.room_selector') %}
                       {{ room | replace('_', ' ') | title }}
-                    show_brightness_control: true
-                    show_color_control: true
-                    show_color_temp_control: true
                 # Show numbered lights if they exist (for multiple numbered lights case)
                 # Dynamically check numbered lights 1-9 based on selected room
                 - type: conditional
@@ -249,7 +254,7 @@ views:
                           {{ false }}
                         {% endif %}
                   card:
-                    type: custom:mushroom-light-card
+                    type: light
                     entity: >
                       {% set room = states('input_select.room_selector') %}
                       light.{{ room }}_1
@@ -286,7 +291,7 @@ views:
                           {{ false }}
                         {% endif %}
                   card:
-                    type: custom:mushroom-light-card
+                    type: light
                     entity: >
                       {% set room = states('input_select.room_selector') %}
                       light.{{ room }}_2
@@ -323,7 +328,7 @@ views:
                           {{ false }}
                         {% endif %}
                   card:
-                    type: custom:mushroom-light-card
+                    type: light
                     entity: >
                       {% set room = states('input_select.room_selector') %}
                       light.{{ room }}_3
@@ -360,7 +365,7 @@ views:
                           {{ false }}
                         {% endif %}
                   card:
-                    type: custom:mushroom-light-card
+                    type: light
                     entity: >
                       {% set room = states('input_select.room_selector') %}
                       light.{{ room }}_4
@@ -397,7 +402,7 @@ views:
                           {{ false }}
                         {% endif %}
                   card:
-                    type: custom:mushroom-light-card
+                    type: light
                     entity: >
                       {% set room = states('input_select.room_selector') %}
                       light.{{ room }}_5
@@ -434,7 +439,7 @@ views:
                           {{ false }}
                         {% endif %}
                   card:
-                    type: custom:mushroom-light-card
+                    type: light
                     entity: >
                       {% set room = states('input_select.room_selector') %}
                       light.{{ room }}_6
@@ -471,7 +476,7 @@ views:
                           {{ false }}
                         {% endif %}
                   card:
-                    type: custom:mushroom-light-card
+                    type: light
                     entity: >
                       {% set room = states('input_select.room_selector') %}
                       light.{{ room }}_7
@@ -508,7 +513,7 @@ views:
                           {{ false }}
                         {% endif %}
                   card:
-                    type: custom:mushroom-light-card
+                    type: light
                     entity: >
                       {% set room = states('input_select.room_selector') %}
                       light.{{ room }}_8
@@ -545,7 +550,7 @@ views:
                           {{ false }}
                         {% endif %}
                   card:
-                    type: custom:mushroom-light-card
+                    type: light
                     entity: >
                       {% set room = states('input_select.room_selector') %}
                       light.{{ room }}_9
@@ -563,7 +568,7 @@ views:
                     - condition: template
                       value_template: "{{ states('light.hallway') != 'unavailable' }}"
                   card:
-                    type: custom:mushroom-light-card
+                    type: light
                     entity: light.hallway
                     name: Hallway
                     show_brightness_control: true
@@ -576,7 +581,7 @@ views:
                     - condition: template
                       value_template: "{{ states('light.entrance_lights') != 'unavailable' }}"
                   card:
-                    type: custom:mushroom-light-card
+                    type: light
                     entity: light.entrance_lights
                     name: Entrance Lights
                     show_brightness_control: true
