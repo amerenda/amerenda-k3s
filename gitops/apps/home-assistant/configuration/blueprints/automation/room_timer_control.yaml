@@ -297,6 +297,15 @@ action:
         s1={{ s1 }}, s2={{ s2 }}, s3={{ s3 }}, s4={{ s4 }},
         night_custom={{ night_custom }}, evening_custom={{ evening_custom }}
   
+  # Debug: Log raw datetime entity values
+  - service: "logbook.log"
+    data_template:
+      name: "room_timer_control"
+      message: >-
+        Raw datetime values: living_room_s1={{ states('input_datetime.living_room_s1_start') }},
+        living_room_s3={{ states('input_datetime.living_room_s3_start') }},
+        living_room_s4={{ states('input_datetime.living_room_s4_start') }}
+  
   - variables:
       # Extract target entity IDs safely
       _targets_raw: >-
