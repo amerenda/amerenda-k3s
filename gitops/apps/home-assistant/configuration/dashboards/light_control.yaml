@@ -28,12 +28,19 @@ views:
               {% endif %}
 
           # Room Group Control Buttons - dynamically discover lights per room
-          - type: entities
-            title: Room Controls
-            entities:
-              - type: button
-                name: "{% set room = states('input_select.room_selector') %}{% if room and room != 'unknown' and room != 'unavailable' %}All {{ room | replace('_', ' ') | title }} Lights On{% else %}All Lights On{% endif %}"
+          - type: grid
+            square: false
+            columns: 2
+            cards:
+              - type: custom:mushroom-button-card
                 icon: mdi:lightbulb-group
+                name: >
+                  {% set room = states('input_select.room_selector') %}
+                  {% if room and room != 'unknown' and room != 'unavailable' %}
+                    All {{ room | replace('_', ' ') | title }} Lights On
+                  {% else %}
+                    All Lights On
+                  {% endif %}
                 tap_action:
                   action: call-service
                   service: light.turn_on
@@ -74,10 +81,18 @@ views:
                           {% endif %}
                         {% endif %}
                         {{ room_lights }}
-                show_state: false
-              - type: button
-                name: "{% set room = states('input_select.room_selector') %}{% if room and room != 'unknown' and room != 'unavailable' %}All {{ room | replace('_', ' ') | title }} Lights Off{% else %}All Lights Off{% endif %}"
+                      {% else %}
+                        []
+                      {% endif %}
+              - type: custom:mushroom-button-card
                 icon: mdi:lightbulb-group-off
+                name: >
+                  {% set room = states('input_select.room_selector') %}
+                  {% if room and room != 'unknown' and room != 'unavailable' %}
+                    All {{ room | replace('_', ' ') | title }} Lights Off
+                  {% else %}
+                    All Lights Off
+                  {% endif %}
                 tap_action:
                   action: call-service
                   service: light.turn_off
@@ -118,7 +133,9 @@ views:
                           {% endif %}
                         {% endif %}
                         {{ room_lights }}
-                show_state: false
+                      {% else %}
+                        []
+                      {% endif %}
 
           # Individual Lights - dynamically discovered based on selected room
           - type: conditional
