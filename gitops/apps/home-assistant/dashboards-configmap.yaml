@@ -883,18 +883,12 @@ data:
                 title: Room Controls
                 entities:
                   - type: button
-                    name: >
-                      {% set room = states('input_select.room_selector') %}
-                      {% if room and room != 'unknown' and room != 'unavailable' %}
-                        All {{ room | replace('_', ' ') | title }} Lights On
-                      {% else %}
-                        All Lights On
-                      {% endif %}
+                    name: "{% set room = states('input_select.room_selector') %}{% if room and room != 'unknown' and room != 'unavailable' %}All {{ room | replace('_', ' ') | title }} Lights On{% else %}All Lights On{% endif %}"
                     icon: mdi:lightbulb-group
                     tap_action:
                       action: call-service
                       service: light.turn_on
-                      service_data_template:
+                      service_data:
                         entity_id: >
                           {% set room = states('input_select.room_selector') %}
                           {% if room and room != 'unknown' and room != 'unavailable' %}
@@ -933,18 +927,12 @@ data:
                             {{ room_lights }}
                     show_state: false
                   - type: button
-                    name: >
-                      {% set room = states('input_select.room_selector') %}
-                      {% if room and room != 'unknown' and room != 'unavailable' %}
-                        All {{ room | replace('_', ' ') | title }} Lights Off
-                      {% else %}
-                        All Lights Off
-                      {% endif %}
+                    name: "{% set room = states('input_select.room_selector') %}{% if room and room != 'unknown' and room != 'unavailable' %}All {{ room | replace('_', ' ') | title }} Lights Off{% else %}All Lights Off{% endif %}"
                     icon: mdi:lightbulb-group-off
                     tap_action:
                       action: call-service
                       service: light.turn_off
-                      service_data_template:
+                      service_data:
                         entity_id: >
                           {% set room = states('input_select.room_selector') %}
                           {% if room and room != 'unknown' and room != 'unavailable' %}
@@ -1478,7 +1466,7 @@ data:
                       tap_action:
                         action: call-service
                         service: script.create_scene_from_lights
-                        service_data_template:
+                        service_data:
                           scene_name: >
                             {% set room = states('input_select.room_selector') %}
                             {% if room and room != 'unknown' and room != 'unavailable' %}
