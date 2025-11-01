@@ -451,6 +451,7 @@ data:
                     entities:
                       - entity: input_boolean.bedroom_morning_custom_time
                       - entity: input_datetime.bedroom_s1_start
+                        name: Morning Start Time
                       - entity: input_select.bedroom_morning_scene
                       - entity: input_boolean.enable_bedroom_morning
                       - entity: input_boolean.auto_on_bedroom_morning

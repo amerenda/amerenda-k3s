@@ -5,12 +5,20 @@
 kitchen_s1_start:
   name: Kitchen Morning start
   has_time: true
+  has_date: false
+  initial: "06:00"
 kitchen_s2_start:
   name: Kitchen Day start
   has_time: true
+  has_date: false
+  initial: "09:00"
 kitchen_s3_start:
   name: Kitchen Evening start
   has_time: true
+  has_date: false
+  initial: "17:00"
 kitchen_s4_start:
   name: Kitchen Night start
   has_time: true
+  has_date: false
+  initial: "22:00"

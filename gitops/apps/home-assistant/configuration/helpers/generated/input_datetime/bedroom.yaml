@@ -5,12 +5,20 @@
 bedroom_s1_start:
   name: Bedroom Morning start
   has_time: true
+  has_date: false
+  initial: "06:00"
 bedroom_s2_start:
   name: Bedroom Day start
   has_time: true
+  has_date: false
+  initial: "09:00"
 bedroom_s3_start:
   name: Bedroom Evening start
   has_time: true
+  has_date: false
+  initial: "17:00"
 bedroom_s4_start:
   name: Bedroom Night start
   has_time: true
+  has_date: false
+  initial: "22:00"

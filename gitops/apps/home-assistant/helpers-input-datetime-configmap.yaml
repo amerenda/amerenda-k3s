@@ -11,15 +11,23 @@ data:
     bathroom_s1_start:
       name: Bathroom Morning start
       has_time: true
+      has_date: false
+      initial: "06:00"
     bathroom_s2_start:
       name: Bathroom Day start
       has_time: true
+      has_date: false
+      initial: "09:00"
     bathroom_s3_start:
       name: Bathroom Evening start
       has_time: true
+      has_date: false
+      initial: "17:00"
     bathroom_s4_start:
       name: Bathroom Night start
       has_time: true
+      has_date: false
+      initial: "22:00"
   bedroom.yaml: |
     # Template for input_datetime helpers per room
     # Usage:
@@ -28,15 +36,23 @@ data:
     bedroom_s1_start:
       name: Bedroom Morning start
       has_time: true
+      has_date: false
+      initial: "06:00"
     bedroom_s2_start:
       name: Bedroom Day start
       has_time: true
+      has_date: false
+      initial: "09:00"
     bedroom_s3_start:
       name: Bedroom Evening start
       has_time: true
+      has_date: false
+      initial: "17:00"
     bedroom_s4_start:
       name: Bedroom Night start
       has_time: true
+      has_date: false
+      initial: "22:00"
   hallway.yaml: |
     # Template for input_datetime helpers per room
     # Usage:
@@ -45,15 +61,23 @@ data:
     hallway_s1_start:
       name: Hallway Morning start
       has_time: true
+      has_date: false
+      initial: "06:00"
     hallway_s2_start:
       name: Hallway Day start
       has_time: true
+      has_date: false
+      initial: "09:00"
     hallway_s3_start:
       name: Hallway Evening start
       has_time: true
+      has_date: false
+      initial: "17:00"
     hallway_s4_start:
       name: Hallway Night start
       has_time: true
+      has_date: false
+      initial: "22:00"
   kitchen.yaml: |
     # Template for input_datetime helpers per room
     # Usage:
@@ -62,15 +86,23 @@ data:
     kitchen_s1_start:
       name: Kitchen Morning start
       has_time: true
+      has_date: false
+      initial: "06:00"
     kitchen_s2_start:
       name: Kitchen Day start
       has_time: true
+      has_date: false
+      initial: "09:00"
     kitchen_s3_start:
       name: Kitchen Evening start
       has_time: true
+      has_date: false
+      initial: "17:00"
     kitchen_s4_start:
       name: Kitchen Night start
       has_time: true
+      has_date: false
+      initial: "22:00"
   living_room.yaml: |
     # Template for input_datetime helpers per room
     # Usage:
@@ -79,12 +111,20 @@ data:
     living_room_s1_start:
       name: Living Room Morning start
       has_time: true
+      has_date: false
+      initial: "06:00"
     living_room_s2_start:
       name: Living Room Day start
       has_time: true
+      has_date: false
+      initial: "09:00"
     living_room_s3_start:
       name: Living Room Evening start
       has_time: true
+      has_date: false
+      initial: "17:00"
     living_room_s4_start:
       name: Living Room Night start
       has_time: true
+      has_date: false
+      initial: "22:00"

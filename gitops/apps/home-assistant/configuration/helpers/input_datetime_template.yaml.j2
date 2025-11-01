@@ -5,12 +5,20 @@
 {{ room }}_s1_start:
   name: {{ room|replace('_',' ')|title }} Morning start
   has_time: true
+  has_date: false
+  initial: "06:00"
 {{ room }}_s2_start:
   name: {{ room|replace('_',' ')|title }} Day start
   has_time: true
+  has_date: false
+  initial: "09:00"
 {{ room }}_s3_start:
   name: {{ room|replace('_',' ')|title }} Evening start
   has_time: true
+  has_date: false
+  initial: "17:00"
 {{ room }}_s4_start:
   name: {{ room|replace('_',' ')|title }} Night start
   has_time: true
+  has_date: false
+  initial: "22:00"
