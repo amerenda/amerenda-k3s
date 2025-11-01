@@ -74,7 +74,18 @@ data:
               {% else %}night{% endif %}
     
             # Extract entity name from fallback_lights for scene naming
-            _fb_entity: "{{ fallback_lights | default('') }}"
+            _fb_entity_raw: "{{ fallback_lights | default('') }}"
+            _fb_entity: >-
+              {% set fb = _fb_entity_raw %}
+              {% if fb is mapping and 'entity_id' in fb %}
+                {{ fb.entity_id }}
+              {% elif fb is mapping %}
+                {{ '' }}
+              {% elif fb is string %}
+                {{ fb }}
+              {% else %}
+                {{ '' }}
+              {% endif %}
             _entity_name: >-
               {% set entity = _fb_entity %}
               {% if entity is string and entity != '' and entity|length >= 6 and entity[:6] == 'light.' %}
@@ -102,9 +113,12 @@ data:
     
             all_lights: "{{ states.light | map(attribute='entity_id') | list }}"
             dynamic_fallback: >-
-              {% set fb = fallback_lights | default('') %}
-              {% if fb and fb != '' and fb in all_lights %}{{ fb }}
-              {% else %}{{ '' }}{% endif %}
+              {% set fb = _fb_entity %}
+              {% if fb and fb != '' %}
+                {{ fb }}
+              {% else %}
+                {{ '' }}
+              {% endif %}
             
             # Check if lights are on (for timer mode)
             timer_mode_active: "{{ timer_mode | default(false) | bool }}"
@@ -112,7 +126,7 @@ data:
               {% if timer_mode_active %}
                 {% if dynamic_fallback %}
                   {% set fb_entity = dynamic_fallback %}
-                  {% if fb_entity is string %}
+                  {% if fb_entity is string and fb_entity != '' %}
                     {% set expanded = expand(fb_entity) %}
                     {{ expanded | selectattr('state','eq','on') | list | count > 0 }}
                   {% else %}
@@ -131,6 +145,7 @@ data:
             name: "scheduled_light_on"
             message: >-
               Timer mode={{ timer_mode }}, fallback_lights={{ fallback_lights }}, 
+              _fb_entity={{ _fb_entity }}, _entity_name={{ _entity_name }},
               scene={{ scene_to_activate }}, scene_exists={{ scene_exists }},
               lights_on_check={{ lights_on_check }}, dynamic_fallback={{ dynamic_fallback }}
         
