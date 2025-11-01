@@ -81,10 +81,14 @@ scheduled_light_on:
         # Check if lights are on (for timer mode)
         timer_mode_active: "{{ timer_mode | default(false) | bool }}"
         lights_on_check: >-
-          {% if timer_mode_active and dynamic_fallback %}
-            {% set fb_entity = dynamic_fallback %}
-            {% if fb_entity is string %}
-              {{ states(fb_entity) == 'on' if fb_entity in all_lights else false }}
+          {% if timer_mode_active %}
+            {% if dynamic_fallback %}
+              {% set fb_entity = dynamic_fallback %}
+              {% if fb_entity is string and fb_entity in all_lights %}
+                {{ states(fb_entity) == 'on' }}
+              {% else %}
+                {{ false }}
+              {% endif %}
             {% else %}
               {{ false }}
             {% endif %}
