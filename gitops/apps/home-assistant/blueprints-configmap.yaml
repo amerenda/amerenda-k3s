@@ -1013,6 +1013,12 @@ data:
             {% endif %}
     
       # Debug logging - this should appear every minute if automation is running
+      - service: "system_log.write"
+        data:
+          message: >-
+            [room_timer_control] {{ room_key_var }}: Time={{ now_hm }}, Slots: s1={{ s1 }}, s2={{ s2 }}, s3={{ s3 }}, s4={{ s4 }},
+            fired={{ fired_slot }}, en_night={{ en_night }}, ao_night={{ ao_night }}, lights_on={{ any_on }}
+          level: "info"
       - service: "logbook.log"
         data:
           name: "room_timer_control"
@@ -1023,6 +1029,11 @@ data:
       - choose:
           - conditions: "{{ fired_slot == 'morning' and en_morning | bool }}"
             sequence:
+              - service: "system_log.write"
+                data:
+                  message: >-
+                    [room_timer_control] Morning slot matched! en_morning={{ en_morning }}
+                  level: "info"
               - choose:
                   - conditions: "{{ any_on or ao_morning | bool }}"
                     sequence:
@@ -1096,7 +1107,7 @@ data:
                       - service: "system_log.write"
                         data:
                           message: >-
-                            [room_timer_control] Firing night scene for room {{ room_key_var }}, target_lights={{ _targets_raw }}
+                            [room_timer_control] Condition passed: any_on={{ any_on }} OR ao_night={{ ao_night }}
                           level: "info"
                       - service: "logbook.log"
                         data:
@@ -1136,6 +1147,12 @@ data:
                         data: "{{ script_data_dict }}"
                   - conditions: []
                     sequence:
+                      - service: "system_log.write"
+                        data:
+                          message: >-
+                            [room_timer_control] CONDITION FAILED: any_on={{ any_on }}, ao_night={{ ao_night }}. 
+                            Night scene NOT fired: lights are off and auto-on is disabled.
+                          level: "warning"
                       - service: "logbook.log"
                         data:
                           name: "room_timer_control"
