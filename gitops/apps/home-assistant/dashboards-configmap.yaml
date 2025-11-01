@@ -3,6 +3,731 @@ kind: ConfigMap
 metadata:
   name: homeassistant-dashboards
 data:
+  light_control.yaml: |
+    views:
+      - title: Light Control
+        path: light-control
+        cards:
+          - type: vertical-stack
+            cards:
+              # Room selector
+              - type: entities
+                title: Select Room
+                entities:
+                  - entity: input_select.room_selector
+                    name: Room
+    
+              # Dynamic Room Info
+              - type: markdown
+                title: Room Lighting Control
+                content: |
+                  {% set room = states('input_select.room_selector') %}
+                  {% if room and room != 'unknown' and room != 'unavailable' %}
+                    ### {{ room|replace('_',' ')|title }} Lighting
+                    
+                    Use the controls below to:
+                    - Turn all room lights on/off
+                    - Adjust individual lights
+                    - Create a scene from current light states
+                  {% else %}
+                    Please select a room above.
+                  {% endif %}
+    
+              # Room Group Control Buttons - dynamically discover lights per room
+              - type: entities
+                title: Room Controls
+                entities:
+                  - type: button
+                    name: >
+                      {% set room = states('input_select.room_selector') %}
+                      {% if room and room != 'unknown' and room != 'unavailable' %}
+                        All {{ room | replace('_', ' ') | title }} Lights On
+                      {% else %}
+                        All Lights On
+                      {% endif %}
+                    icon: mdi:lightbulb-group
+                    tap_action:
+                      action: call-service
+                      service: light.turn_on
+                      service_data_template:
+                        entity_id: >
+                          {% set room = states('input_select.room_selector') %}
+                          {% if room and room != 'unknown' and room != 'unavailable' %}
+                            {% set room_key = room %}
+                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                            {% set room_lights = [] %}
+                            {% if room_key == 'hallway' %}
+                              {% for light_id in ['light.hallway', 'light.entrance_lights'] %}
+                                {% if light_id in all_lights %}
+                                  {% set _ = room_lights.append(light_id) %}
+                                {% endif %}
+                              {% endfor %}
+                            {% else %}
+                              {% set main_light = 'light.' ~ room_key %}
+                              {% set numbered_lights = [] %}
+                              {% for i in range(1, 10) %}
+                                {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
+                                {% if numbered_light in all_lights %}
+                                  {% set _ = numbered_lights.append(numbered_light) %}
+                                {% endif %}
+                              {% endfor %}
+                              {% if numbered_lights | length == 1 and main_light in all_lights %}
+                                {% set _ = room_lights.append(numbered_lights[0]) %}
+                              {% elif numbered_lights | length > 1 %}
+                                {% for light_id in numbered_lights %}
+                                  {% set _ = room_lights.append(light_id) %}
+                                {% endfor %}
+                              {% elif main_light in all_lights %}
+                                {% set _ = room_lights.append(main_light) %}
+                              {% else %}
+                                {% for light_id in numbered_lights %}
+                                  {% set _ = room_lights.append(light_id) %}
+                                {% endfor %}
+                              {% endif %}
+                            {% endif %}
+                            {{ room_lights }}
+                    show_state: false
+                  - type: button
+                    name: >
+                      {% set room = states('input_select.room_selector') %}
+                      {% if room and room != 'unknown' and room != 'unavailable' %}
+                        All {{ room | replace('_', ' ') | title }} Lights Off
+                      {% else %}
+                        All Lights Off
+                      {% endif %}
+                    icon: mdi:lightbulb-group-off
+                    tap_action:
+                      action: call-service
+                      service: light.turn_off
+                      service_data_template:
+                        entity_id: >
+                          {% set room = states('input_select.room_selector') %}
+                          {% if room and room != 'unknown' and room != 'unavailable' %}
+                            {% set room_key = room %}
+                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                            {% set room_lights = [] %}
+                            {% if room_key == 'hallway' %}
+                              {% for light_id in ['light.hallway', 'light.entrance_lights'] %}
+                                {% if light_id in all_lights %}
+                                  {% set _ = room_lights.append(light_id) %}
+                                {% endif %}
+                              {% endfor %}
+                            {% else %}
+                              {% set main_light = 'light.' ~ room_key %}
+                              {% set numbered_lights = [] %}
+                              {% for i in range(1, 10) %}
+                                {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
+                                {% if numbered_light in all_lights %}
+                                  {% set _ = numbered_lights.append(numbered_light) %}
+                                {% endif %}
+                              {% endfor %}
+                              {% if numbered_lights | length == 1 and main_light in all_lights %}
+                                {% set _ = room_lights.append(numbered_lights[0]) %}
+                              {% elif numbered_lights | length > 1 %}
+                                {% for light_id in numbered_lights %}
+                                  {% set _ = room_lights.append(light_id) %}
+                                {% endfor %}
+                              {% elif main_light in all_lights %}
+                                {% set _ = room_lights.append(main_light) %}
+                              {% else %}
+                                {% for light_id in numbered_lights %}
+                                  {% set _ = room_lights.append(light_id) %}
+                                {% endfor %}
+                              {% endif %}
+                            {% endif %}
+                            {{ room_lights }}
+                    show_state: false
+    
+              # Individual Lights - Bedroom
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: bedroom
+                card:
+                  type: grid
+                  square: false
+                  columns: 2
+                  cards:
+                    # Smart logic: if only bedroom_1 exists with bedroom, show bedroom_1 only
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                            {% set main_light = 'light.bedroom' %}
+                            {% set numbered_lights = [] %}
+                            {% for i in range(1, 10) %}
+                              {% set numbered_light = 'light.bedroom_' ~ i %}
+                              {% if numbered_light in all_lights %}
+                                {% set _ = numbered_lights.append(numbered_light) %}
+                              {% endif %}
+                            {% endfor %}
+                            {{ numbered_lights | length == 1 and main_light in all_lights }}
+                      card:
+                        type: custom:mushroom-light-card
+                        entity: >
+                          {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                          {% set numbered_lights = [] %}
+                          {% for i in range(1, 10) %}
+                            {% set numbered_light = 'light.bedroom_' ~ i %}
+                            {% if numbered_light in all_lights %}
+                              {% set _ = numbered_lights.append(numbered_light) %}
+                            {% endif %}
+                          {% endfor %}
+                          {{ numbered_lights[0] if numbered_lights | length == 1 else 'light.bedroom' }}
+                        name: Bedroom
+                        show_brightness_control: true
+                        show_color_control: true
+                        show_color_temp_control: true
+                    # Show main light if it exists and (no numbered or multiple numbered)
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                            {% set main_light = 'light.bedroom' %}
+                            {% set numbered_lights = [] %}
+                            {% for i in range(1, 10) %}
+                              {% set numbered_light = 'light.bedroom_' ~ i %}
+                              {% if numbered_light in all_lights %}
+                                {% set _ = numbered_lights.append(numbered_light) %}
+                              {% endif %}
+                            {% endfor %}
+                            {{ main_light in all_lights and (numbered_lights | length == 0 or numbered_lights | length > 1) }}
+                      card:
+                        type: custom:mushroom-light-card
+                        entity: light.bedroom
+                        name: Bedroom
+                        show_brightness_control: true
+                        show_color_control: true
+                        show_color_temp_control: true
+                    # Show numbered lights if they exist (for multiple numbered lights case)
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: "{{ states('light.bedroom_1') != 'unavailable' }}"
+                      card:
+                        type: custom:mushroom-light-card
+                        entity: light.bedroom_1
+                        name: Bedroom Light 1
+                        show_brightness_control: true
+                        show_color_control: true
+                        show_color_temp_control: true
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: "{{ states('light.bedroom_2') != 'unavailable' }}"
+                      card:
+                        type: custom:mushroom-light-card
+                        entity: light.bedroom_2
+                        name: Bedroom Light 2
+                        show_brightness_control: true
+                        show_color_control: true
+                        show_color_temp_control: true
+    
+              # Individual Lights - Living Room
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: living_room
+                card:
+                  type: grid
+                  square: false
+                  columns: 2
+                  cards:
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                            {% set main_light = 'light.living_room' %}
+                            {% set numbered_lights = [] %}
+                            {% for i in range(1, 10) %}
+                              {% set numbered_light = 'light.living_room_' ~ i %}
+                              {% if numbered_light in all_lights %}
+                                {% set _ = numbered_lights.append(numbered_light) %}
+                              {% endif %}
+                            {% endfor %}
+                            {{ numbered_lights | length == 1 and main_light in all_lights }}
+                      card:
+                        type: custom:mushroom-light-card
+                        entity: >
+                          {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                          {% set numbered_lights = [] %}
+                          {% for i in range(1, 10) %}
+                            {% set numbered_light = 'light.living_room_' ~ i %}
+                            {% if numbered_light in all_lights %}
+                              {% set _ = numbered_lights.append(numbered_light) %}
+                            {% endif %}
+                          {% endfor %}
+                          {{ numbered_lights[0] if numbered_lights | length == 1 else 'light.living_room' }}
+                        name: Living Room
+                        show_brightness_control: true
+                        show_color_control: true
+                        show_color_temp_control: true
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                            {% set main_light = 'light.living_room' %}
+                            {% set numbered_lights = [] %}
+                            {% for i in range(1, 10) %}
+                              {% set numbered_light = 'light.living_room_' ~ i %}
+                              {% if numbered_light in all_lights %}
+                                {% set _ = numbered_lights.append(numbered_light) %}
+                              {% endif %}
+                            {% endfor %}
+                            {{ main_light in all_lights and (numbered_lights | length == 0 or numbered_lights | length > 1) }}
+                      card:
+                        type: custom:mushroom-light-card
+                        entity: light.living_room
+                        name: Living Room
+                        show_brightness_control: true
+                        show_color_control: true
+                        show_color_temp_control: true
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: "{{ states('light.living_room_1') != 'unavailable' }}"
+                      card:
+                        type: custom:mushroom-light-card
+                        entity: light.living_room_1
+                        name: Living Room Light 1
+                        show_brightness_control: true
+                        show_color_control: true
+                        show_color_temp_control: true
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: "{{ states('light.living_room_2') != 'unavailable' }}"
+                      card:
+                        type: custom:mushroom-light-card
+                        entity: light.living_room_2
+                        name: Living Room Light 2
+                        show_brightness_control: true
+                        show_color_control: true
+                        show_color_temp_control: true
+    
+              # Individual Lights - Kitchen
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: kitchen
+                card:
+                  type: grid
+                  square: false
+                  columns: 2
+                  cards:
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                            {% set main_light = 'light.kitchen' %}
+                            {% set numbered_lights = [] %}
+                            {% for i in range(1, 10) %}
+                              {% set numbered_light = 'light.kitchen_' ~ i %}
+                              {% if numbered_light in all_lights %}
+                                {% set _ = numbered_lights.append(numbered_light) %}
+                              {% endif %}
+                            {% endfor %}
+                            {{ numbered_lights | length == 1 and main_light in all_lights }}
+                      card:
+                        type: custom:mushroom-light-card
+                        entity: >
+                          {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                          {% set numbered_lights = [] %}
+                          {% for i in range(1, 10) %}
+                            {% set numbered_light = 'light.kitchen_' ~ i %}
+                            {% if numbered_light in all_lights %}
+                              {% set _ = numbered_lights.append(numbered_light) %}
+                            {% endif %}
+                          {% endfor %}
+                          {{ numbered_lights[0] if numbered_lights | length == 1 else 'light.kitchen' }}
+                        name: Kitchen
+                        show_brightness_control: true
+                        show_color_control: true
+                        show_color_temp_control: true
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                            {% set main_light = 'light.kitchen' %}
+                            {% set numbered_lights = [] %}
+                            {% for i in range(1, 10) %}
+                              {% set numbered_light = 'light.kitchen_' ~ i %}
+                              {% if numbered_light in all_lights %}
+                                {% set _ = numbered_lights.append(numbered_light) %}
+                              {% endif %}
+                            {% endfor %}
+                            {{ main_light in all_lights and (numbered_lights | length == 0 or numbered_lights | length > 1) }}
+                      card:
+                        type: custom:mushroom-light-card
+                        entity: light.kitchen
+                        name: Kitchen
+                        show_brightness_control: true
+                        show_color_control: true
+                        show_color_temp_control: true
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: "{{ states('light.kitchen_1') != 'unavailable' }}"
+                      card:
+                        type: custom:mushroom-light-card
+                        entity: light.kitchen_1
+                        name: Kitchen Light 1
+                        show_brightness_control: true
+                        show_color_control: true
+                        show_color_temp_control: true
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: "{{ states('light.kitchen_2') != 'unavailable' }}"
+                      card:
+                        type: custom:mushroom-light-card
+                        entity: light.kitchen_2
+                        name: Kitchen Light 2
+                        show_brightness_control: true
+                        show_color_control: true
+                        show_color_temp_control: true
+    
+              # Individual Lights - Bathroom
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: bathroom
+                card:
+                  type: grid
+                  square: false
+                  columns: 2
+                  cards:
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                            {% set main_light = 'light.bathroom' %}
+                            {% set numbered_lights = [] %}
+                            {% for i in range(1, 10) %}
+                              {% set numbered_light = 'light.bathroom_' ~ i %}
+                              {% if numbered_light in all_lights %}
+                                {% set _ = numbered_lights.append(numbered_light) %}
+                              {% endif %}
+                            {% endfor %}
+                            {{ numbered_lights | length == 1 and main_light in all_lights }}
+                      card:
+                        type: custom:mushroom-light-card
+                        entity: >
+                          {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                          {% set numbered_lights = [] %}
+                          {% for i in range(1, 10) %}
+                            {% set numbered_light = 'light.bathroom_' ~ i %}
+                            {% if numbered_light in all_lights %}
+                              {% set _ = numbered_lights.append(numbered_light) %}
+                            {% endif %}
+                          {% endfor %}
+                          {{ numbered_lights[0] if numbered_lights | length == 1 else 'light.bathroom' }}
+                        name: Bathroom
+                        show_brightness_control: true
+                        show_color_control: true
+                        show_color_temp_control: true
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                            {% set main_light = 'light.bathroom' %}
+                            {% set numbered_lights = [] %}
+                            {% for i in range(1, 10) %}
+                              {% set numbered_light = 'light.bathroom_' ~ i %}
+                              {% if numbered_light in all_lights %}
+                                {% set _ = numbered_lights.append(numbered_light) %}
+                              {% endif %}
+                            {% endfor %}
+                            {{ main_light in all_lights and (numbered_lights | length == 0 or numbered_lights | length > 1) }}
+                      card:
+                        type: custom:mushroom-light-card
+                        entity: light.bathroom
+                        name: Bathroom
+                        show_brightness_control: true
+                        show_color_control: true
+                        show_color_temp_control: true
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: "{{ states('light.bathroom_1') != 'unavailable' }}"
+                      card:
+                        type: custom:mushroom-light-card
+                        entity: light.bathroom_1
+                        name: Bathroom Light 1
+                        show_brightness_control: true
+                        show_color_control: true
+                        show_color_temp_control: true
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: "{{ states('light.bathroom_2') != 'unavailable' }}"
+                      card:
+                        type: custom:mushroom-light-card
+                        entity: light.bathroom_2
+                        name: Bathroom Light 2
+                        show_brightness_control: true
+                        show_color_control: true
+                        show_color_temp_control: true
+    
+              # Individual Lights - Hallway
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: hallway
+                card:
+                  type: grid
+                  square: false
+                  columns: 2
+                  cards:
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: "{{ states('light.hallway') != 'unavailable' }}"
+                      card:
+                        type: custom:mushroom-light-card
+                        entity: light.hallway
+                        name: Hallway
+                        show_brightness_control: true
+                        show_color_control: true
+                        show_color_temp_control: true
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: "{{ states('light.entrance_lights') != 'unavailable' }}"
+                      card:
+                        type: custom:mushroom-light-card
+                        entity: light.entrance_lights
+                        name: Entrance Lights
+                        show_brightness_control: true
+                        show_color_control: true
+                        show_color_temp_control: true
+    
+              # Scene Creation Section
+              - type: markdown
+                title: Create Scene
+                content: |
+                  Adjust the lights above to your desired settings, then:
+                  1. Enter a scene name below
+                  2. Click "Create Scene" to save the current state
+    
+              # Scene Creation - per room with discovered lights
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: bedroom
+                card:
+                  type: entities
+                  title: Bedroom Scene Creation
+                  entities:
+                    - entity: input_text.scene_name_bedroom
+                      name: Scene Name
+                    - type: button
+                      name: Create Scene from Current Lights
+                      icon: mdi:content-save
+                      tap_action:
+                        action: call-service
+                        service: script.create_scene_from_lights
+                        service_data_template:
+                          scene_name: "{{ states('input_text.scene_name_bedroom') }}"
+                          scene_id: "bedroom_{{ states('input_text.scene_name_bedroom') | lower | replace(' ', '_') }}"
+                          light_entities: >
+                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                            {% set room_lights = [] %}
+                            {% set main_light = 'light.bedroom' %}
+                            {% set numbered_lights = [] %}
+                            {% for i in range(1, 10) %}
+                              {% set numbered_light = 'light.bedroom_' ~ i %}
+                              {% if numbered_light in all_lights %}
+                                {% set _ = numbered_lights.append(numbered_light) %}
+                              {% endif %}
+                            {% endfor %}
+                            {% if numbered_lights | length == 1 and main_light in all_lights %}
+                              {% set _ = room_lights.append(numbered_lights[0]) %}
+                            {% elif numbered_lights | length > 1 %}
+                              {% for light_id in numbered_lights %}
+                                {% set _ = room_lights.append(light_id) %}
+                              {% endfor %}
+                            {% elif main_light in all_lights %}
+                              {% set _ = room_lights.append(main_light) %}
+                            {% else %}
+                              {% for light_id in numbered_lights %}
+                                {% set _ = room_lights.append(light_id) %}
+                              {% endfor %}
+                            {% endif %}
+                            {{ room_lights }}
+    
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: living_room
+                card:
+                  type: entities
+                  title: Living Room Scene Creation
+                  entities:
+                    - entity: input_text.scene_name_living_room
+                      name: Scene Name
+                    - type: button
+                      name: Create Scene from Current Lights
+                      icon: mdi:content-save
+                      tap_action:
+                        action: call-service
+                        service: script.create_scene_from_lights
+                        service_data_template:
+                          scene_name: "{{ states('input_text.scene_name_living_room') }}"
+                          scene_id: "living_room_{{ states('input_text.scene_name_living_room') | lower | replace(' ', '_') }}"
+                          light_entities: >
+                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                            {% set room_lights = [] %}
+                            {% set main_light = 'light.living_room' %}
+                            {% set numbered_lights = [] %}
+                            {% for i in range(1, 10) %}
+                              {% set numbered_light = 'light.living_room_' ~ i %}
+                              {% if numbered_light in all_lights %}
+                                {% set _ = numbered_lights.append(numbered_light) %}
+                              {% endif %}
+                            {% endfor %}
+                            {% if numbered_lights | length == 1 and main_light in all_lights %}
+                              {% set _ = room_lights.append(numbered_lights[0]) %}
+                            {% elif numbered_lights | length > 1 %}
+                              {% for light_id in numbered_lights %}
+                                {% set _ = room_lights.append(light_id) %}
+                              {% endfor %}
+                            {% elif main_light in all_lights %}
+                              {% set _ = room_lights.append(main_light) %}
+                            {% else %}
+                              {% for light_id in numbered_lights %}
+                                {% set _ = room_lights.append(light_id) %}
+                              {% endfor %}
+                            {% endif %}
+                            {{ room_lights }}
+    
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: kitchen
+                card:
+                  type: entities
+                  title: Kitchen Scene Creation
+                  entities:
+                    - entity: input_text.scene_name_kitchen
+                      name: Scene Name
+                    - type: button
+                      name: Create Scene from Current Lights
+                      icon: mdi:content-save
+                      tap_action:
+                        action: call-service
+                        service: script.create_scene_from_lights
+                        service_data_template:
+                          scene_name: "{{ states('input_text.scene_name_kitchen') }}"
+                          scene_id: "kitchen_{{ states('input_text.scene_name_kitchen') | lower | replace(' ', '_') }}"
+                          light_entities: >
+                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                            {% set room_lights = [] %}
+                            {% set main_light = 'light.kitchen' %}
+                            {% set numbered_lights = [] %}
+                            {% for i in range(1, 10) %}
+                              {% set numbered_light = 'light.kitchen_' ~ i %}
+                              {% if numbered_light in all_lights %}
+                                {% set _ = numbered_lights.append(numbered_light) %}
+                              {% endif %}
+                            {% endfor %}
+                            {% if numbered_lights | length == 1 and main_light in all_lights %}
+                              {% set _ = room_lights.append(numbered_lights[0]) %}
+                            {% elif numbered_lights | length > 1 %}
+                              {% for light_id in numbered_lights %}
+                                {% set _ = room_lights.append(light_id) %}
+                              {% endfor %}
+                            {% elif main_light in all_lights %}
+                              {% set _ = room_lights.append(main_light) %}
+                            {% else %}
+                              {% for light_id in numbered_lights %}
+                                {% set _ = room_lights.append(light_id) %}
+                              {% endfor %}
+                            {% endif %}
+                            {{ room_lights }}
+    
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: bathroom
+                card:
+                  type: entities
+                  title: Bathroom Scene Creation
+                  entities:
+                    - entity: input_text.scene_name_bathroom
+                      name: Scene Name
+                    - type: button
+                      name: Create Scene from Current Lights
+                      icon: mdi:content-save
+                      tap_action:
+                        action: call-service
+                        service: script.create_scene_from_lights
+                        service_data_template:
+                          scene_name: "{{ states('input_text.scene_name_bathroom') }}"
+                          scene_id: "bathroom_{{ states('input_text.scene_name_bathroom') | lower | replace(' ', '_') }}"
+                          light_entities: >
+                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                            {% set room_lights = [] %}
+                            {% set main_light = 'light.bathroom' %}
+                            {% set numbered_lights = [] %}
+                            {% for i in range(1, 10) %}
+                              {% set numbered_light = 'light.bathroom_' ~ i %}
+                              {% if numbered_light in all_lights %}
+                                {% set _ = numbered_lights.append(numbered_light) %}
+                              {% endif %}
+                            {% endfor %}
+                            {% if numbered_lights | length == 1 and main_light in all_lights %}
+                              {% set _ = room_lights.append(numbered_lights[0]) %}
+                            {% elif numbered_lights | length > 1 %}
+                              {% for light_id in numbered_lights %}
+                                {% set _ = room_lights.append(light_id) %}
+                              {% endfor %}
+                            {% elif main_light in all_lights %}
+                              {% set _ = room_lights.append(main_light) %}
+                            {% else %}
+                              {% for light_id in numbered_lights %}
+                                {% set _ = room_lights.append(light_id) %}
+                              {% endfor %}
+                            {% endif %}
+                            {{ room_lights }}
+    
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: hallway
+                card:
+                  type: entities
+                  title: Hallway Scene Creation
+                  entities:
+                    - entity: input_text.scene_name_hallway
+                      name: Scene Name
+                    - type: button
+                      name: Create Scene from Current Lights
+                      icon: mdi:content-save
+                      tap_action:
+                        action: call-service
+                        service: script.create_scene_from_lights
+                        service_data_template:
+                          scene_name: "{{ states('input_text.scene_name_hallway') }}"
+                          scene_id: "hallway_{{ states('input_text.scene_name_hallway') | lower | replace(' ', '_') }}"
+                          light_entities: >
+                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                            {% set room_lights = [] %}
+                            {% if 'light.hallway' in all_lights %}
+                              {% set _ = room_lights.append('light.hallway') %}
+                            {% endif %}
+                            {% if 'light.entrance_lights' in all_lights %}
+                              {% set _ = room_lights.append('light.entrance_lights') %}
+                            {% endif %}
+                            {{ room_lights }}
   room_schedule_viewer.yaml: |
     views:
       - title: Room Schedule Viewer
@@ -848,728 +1573,3 @@ data:
                       - entity: input_boolean.auto_on_hallway_night
                       - entity: input_boolean.motion_activated_hallway_night
                       - entity: input_number.motion_auto_off_hallway_night
-  light_control.yaml: |
-    views:
-      - title: Light Control
-        path: light-control
-        cards:
-          - type: vertical-stack
-            cards:
-              # Room selector
-              - type: entities
-                title: Select Room
-                entities:
-                  - entity: input_select.room_selector
-                    name: Room
-    
-              # Dynamic Room Info
-              - type: markdown
-                title: Room Lighting Control
-                content: |
-                  {% set room = states('input_select.room_selector') %}
-                  {% if room and room != 'unknown' and room != 'unavailable' %}
-                    ### {{ room|replace('_',' ')|title }} Lighting
-                    
-                    Use the controls below to:
-                    - Turn all room lights on/off
-                    - Adjust individual lights
-                    - Create a scene from current light states
-                  {% else %}
-                    Please select a room above.
-                  {% endif %}
-    
-              # Room Group Control Buttons - dynamically discover lights per room
-              - type: entities
-                title: Room Controls
-                entities:
-                  - type: button
-                    name: >
-                      {% set room = states('input_select.room_selector') %}
-                      {% if room and room != 'unknown' and room != 'unavailable' %}
-                        All {{ room | replace('_', ' ') | title }} Lights On
-                      {% else %}
-                        All Lights On
-                      {% endif %}
-                    icon: mdi:lightbulb-group
-                    tap_action:
-                      action: call-service
-                      service: light.turn_on
-                      service_data_template:
-                        entity_id: >
-                          {% set room = states('input_select.room_selector') %}
-                          {% if room and room != 'unknown' and room != 'unavailable' %}
-                            {% set room_key = room %}
-                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                            {% set room_lights = [] %}
-                            {% if room_key == 'hallway' %}
-                              {% for light_id in ['light.hallway', 'light.entrance_lights'] %}
-                                {% if light_id in all_lights %}
-                                  {% set _ = room_lights.append(light_id) %}
-                                {% endif %}
-                              {% endfor %}
-                            {% else %}
-                              {% set main_light = 'light.' ~ room_key %}
-                              {% set numbered_lights = [] %}
-                              {% for i in range(1, 10) %}
-                                {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
-                                {% if numbered_light in all_lights %}
-                                  {% set _ = numbered_lights.append(numbered_light) %}
-                                {% endif %}
-                              {% endfor %}
-                              {% if numbered_lights | length == 1 and main_light in all_lights %}
-                                {% set _ = room_lights.append(numbered_lights[0]) %}
-                              {% elif numbered_lights | length > 1 %}
-                                {% for light_id in numbered_lights %}
-                                  {% set _ = room_lights.append(light_id) %}
-                                {% endfor %}
-                              {% elif main_light in all_lights %}
-                                {% set _ = room_lights.append(main_light) %}
-                              {% else %}
-                                {% for light_id in numbered_lights %}
-                                  {% set _ = room_lights.append(light_id) %}
-                                {% endfor %}
-                              {% endif %}
-                            {% endif %}
-                            {{ room_lights }}
-                    show_state: false
-                  - type: button
-                    name: >
-                      {% set room = states('input_select.room_selector') %}
-                      {% if room and room != 'unknown' and room != 'unavailable' %}
-                        All {{ room | replace('_', ' ') | title }} Lights Off
-                      {% else %}
-                        All Lights Off
-                      {% endif %}
-                    icon: mdi:lightbulb-group-off
-                    tap_action:
-                      action: call-service
-                      service: light.turn_off
-                      service_data_template:
-                        entity_id: >
-                          {% set room = states('input_select.room_selector') %}
-                          {% if room and room != 'unknown' and room != 'unavailable' %}
-                            {% set room_key = room %}
-                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                            {% set room_lights = [] %}
-                            {% if room_key == 'hallway' %}
-                              {% for light_id in ['light.hallway', 'light.entrance_lights'] %}
-                                {% if light_id in all_lights %}
-                                  {% set _ = room_lights.append(light_id) %}
-                                {% endif %}
-                              {% endfor %}
-                            {% else %}
-                              {% set main_light = 'light.' ~ room_key %}
-                              {% set numbered_lights = [] %}
-                              {% for i in range(1, 10) %}
-                                {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
-                                {% if numbered_light in all_lights %}
-                                  {% set _ = numbered_lights.append(numbered_light) %}
-                                {% endif %}
-                              {% endfor %}
-                              {% if numbered_lights | length == 1 and main_light in all_lights %}
-                                {% set _ = room_lights.append(numbered_lights[0]) %}
-                              {% elif numbered_lights | length > 1 %}
-                                {% for light_id in numbered_lights %}
-                                  {% set _ = room_lights.append(light_id) %}
-                                {% endfor %}
-                              {% elif main_light in all_lights %}
-                                {% set _ = room_lights.append(main_light) %}
-                              {% else %}
-                                {% for light_id in numbered_lights %}
-                                  {% set _ = room_lights.append(light_id) %}
-                                {% endfor %}
-                              {% endif %}
-                            {% endif %}
-                            {{ room_lights }}
-                    show_state: false
-    
-              # Individual Lights - Bedroom
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: bedroom
-                card:
-                  type: grid
-                  square: false
-                  columns: 2
-                  cards:
-                    # Smart logic: if only bedroom_1 exists with bedroom, show bedroom_1 only
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                            {% set main_light = 'light.bedroom' %}
-                            {% set numbered_lights = [] %}
-                            {% for i in range(1, 10) %}
-                              {% set numbered_light = 'light.bedroom_' ~ i %}
-                              {% if numbered_light in all_lights %}
-                                {% set _ = numbered_lights.append(numbered_light) %}
-                              {% endif %}
-                            {% endfor %}
-                            {{ numbered_lights | length == 1 and main_light in all_lights }}
-                      card:
-                        type: custom:mushroom-light-card
-                        entity: >
-                          {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                          {% set numbered_lights = [] %}
-                          {% for i in range(1, 10) %}
-                            {% set numbered_light = 'light.bedroom_' ~ i %}
-                            {% if numbered_light in all_lights %}
-                              {% set _ = numbered_lights.append(numbered_light) %}
-                            {% endif %}
-                          {% endfor %}
-                          {{ numbered_lights[0] if numbered_lights | length == 1 else 'light.bedroom' }}
-                        name: Bedroom
-                        show_brightness_control: true
-                        show_color_control: true
-                        show_color_temp_control: true
-                    # Show main light if it exists and (no numbered or multiple numbered)
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                            {% set main_light = 'light.bedroom' %}
-                            {% set numbered_lights = [] %}
-                            {% for i in range(1, 10) %}
-                              {% set numbered_light = 'light.bedroom_' ~ i %}
-                              {% if numbered_light in all_lights %}
-                                {% set _ = numbered_lights.append(numbered_light) %}
-                              {% endif %}
-                            {% endfor %}
-                            {{ main_light in all_lights and (numbered_lights | length == 0 or numbered_lights | length > 1) }}
-                      card:
-                        type: custom:mushroom-light-card
-                        entity: light.bedroom
-                        name: Bedroom
-                        show_brightness_control: true
-                        show_color_control: true
-                        show_color_temp_control: true
-                    # Show numbered lights if they exist (for multiple numbered lights case)
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: "{{ states('light.bedroom_1') != 'unavailable' }}"
-                      card:
-                        type: custom:mushroom-light-card
-                        entity: light.bedroom_1
-                        name: Bedroom Light 1
-                        show_brightness_control: true
-                        show_color_control: true
-                        show_color_temp_control: true
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: "{{ states('light.bedroom_2') != 'unavailable' }}"
-                      card:
-                        type: custom:mushroom-light-card
-                        entity: light.bedroom_2
-                        name: Bedroom Light 2
-                        show_brightness_control: true
-                        show_color_control: true
-                        show_color_temp_control: true
-    
-              # Individual Lights - Living Room
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: living_room
-                card:
-                  type: grid
-                  square: false
-                  columns: 2
-                  cards:
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                            {% set main_light = 'light.living_room' %}
-                            {% set numbered_lights = [] %}
-                            {% for i in range(1, 10) %}
-                              {% set numbered_light = 'light.living_room_' ~ i %}
-                              {% if numbered_light in all_lights %}
-                                {% set _ = numbered_lights.append(numbered_light) %}
-                              {% endif %}
-                            {% endfor %}
-                            {{ numbered_lights | length == 1 and main_light in all_lights }}
-                      card:
-                        type: custom:mushroom-light-card
-                        entity: >
-                          {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                          {% set numbered_lights = [] %}
-                          {% for i in range(1, 10) %}
-                            {% set numbered_light = 'light.living_room_' ~ i %}
-                            {% if numbered_light in all_lights %}
-                              {% set _ = numbered_lights.append(numbered_light) %}
-                            {% endif %}
-                          {% endfor %}
-                          {{ numbered_lights[0] if numbered_lights | length == 1 else 'light.living_room' }}
-                        name: Living Room
-                        show_brightness_control: true
-                        show_color_control: true
-                        show_color_temp_control: true
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                            {% set main_light = 'light.living_room' %}
-                            {% set numbered_lights = [] %}
-                            {% for i in range(1, 10) %}
-                              {% set numbered_light = 'light.living_room_' ~ i %}
-                              {% if numbered_light in all_lights %}
-                                {% set _ = numbered_lights.append(numbered_light) %}
-                              {% endif %}
-                            {% endfor %}
-                            {{ main_light in all_lights and (numbered_lights | length == 0 or numbered_lights | length > 1) }}
-                      card:
-                        type: custom:mushroom-light-card
-                        entity: light.living_room
-                        name: Living Room
-                        show_brightness_control: true
-                        show_color_control: true
-                        show_color_temp_control: true
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: "{{ states('light.living_room_1') != 'unavailable' }}"
-                      card:
-                        type: custom:mushroom-light-card
-                        entity: light.living_room_1
-                        name: Living Room Light 1
-                        show_brightness_control: true
-                        show_color_control: true
-                        show_color_temp_control: true
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: "{{ states('light.living_room_2') != 'unavailable' }}"
-                      card:
-                        type: custom:mushroom-light-card
-                        entity: light.living_room_2
-                        name: Living Room Light 2
-                        show_brightness_control: true
-                        show_color_control: true
-                        show_color_temp_control: true
-    
-              # Individual Lights - Kitchen
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: kitchen
-                card:
-                  type: grid
-                  square: false
-                  columns: 2
-                  cards:
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                            {% set main_light = 'light.kitchen' %}
-                            {% set numbered_lights = [] %}
-                            {% for i in range(1, 10) %}
-                              {% set numbered_light = 'light.kitchen_' ~ i %}
-                              {% if numbered_light in all_lights %}
-                                {% set _ = numbered_lights.append(numbered_light) %}
-                              {% endif %}
-                            {% endfor %}
-                            {{ numbered_lights | length == 1 and main_light in all_lights }}
-                      card:
-                        type: custom:mushroom-light-card
-                        entity: >
-                          {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                          {% set numbered_lights = [] %}
-                          {% for i in range(1, 10) %}
-                            {% set numbered_light = 'light.kitchen_' ~ i %}
-                            {% if numbered_light in all_lights %}
-                              {% set _ = numbered_lights.append(numbered_light) %}
-                            {% endif %}
-                          {% endfor %}
-                          {{ numbered_lights[0] if numbered_lights | length == 1 else 'light.kitchen' }}
-                        name: Kitchen
-                        show_brightness_control: true
-                        show_color_control: true
-                        show_color_temp_control: true
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                            {% set main_light = 'light.kitchen' %}
-                            {% set numbered_lights = [] %}
-                            {% for i in range(1, 10) %}
-                              {% set numbered_light = 'light.kitchen_' ~ i %}
-                              {% if numbered_light in all_lights %}
-                                {% set _ = numbered_lights.append(numbered_light) %}
-                              {% endif %}
-                            {% endfor %}
-                            {{ main_light in all_lights and (numbered_lights | length == 0 or numbered_lights | length > 1) }}
-                      card:
-                        type: custom:mushroom-light-card
-                        entity: light.kitchen
-                        name: Kitchen
-                        show_brightness_control: true
-                        show_color_control: true
-                        show_color_temp_control: true
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: "{{ states('light.kitchen_1') != 'unavailable' }}"
-                      card:
-                        type: custom:mushroom-light-card
-                        entity: light.kitchen_1
-                        name: Kitchen Light 1
-                        show_brightness_control: true
-                        show_color_control: true
-                        show_color_temp_control: true
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: "{{ states('light.kitchen_2') != 'unavailable' }}"
-                      card:
-                        type: custom:mushroom-light-card
-                        entity: light.kitchen_2
-                        name: Kitchen Light 2
-                        show_brightness_control: true
-                        show_color_control: true
-                        show_color_temp_control: true
-    
-              # Individual Lights - Bathroom
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: bathroom
-                card:
-                  type: grid
-                  square: false
-                  columns: 2
-                  cards:
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                            {% set main_light = 'light.bathroom' %}
-                            {% set numbered_lights = [] %}
-                            {% for i in range(1, 10) %}
-                              {% set numbered_light = 'light.bathroom_' ~ i %}
-                              {% if numbered_light in all_lights %}
-                                {% set _ = numbered_lights.append(numbered_light) %}
-                              {% endif %}
-                            {% endfor %}
-                            {{ numbered_lights | length == 1 and main_light in all_lights }}
-                      card:
-                        type: custom:mushroom-light-card
-                        entity: >
-                          {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                          {% set numbered_lights = [] %}
-                          {% for i in range(1, 10) %}
-                            {% set numbered_light = 'light.bathroom_' ~ i %}
-                            {% if numbered_light in all_lights %}
-                              {% set _ = numbered_lights.append(numbered_light) %}
-                            {% endif %}
-                          {% endfor %}
-                          {{ numbered_lights[0] if numbered_lights | length == 1 else 'light.bathroom' }}
-                        name: Bathroom
-                        show_brightness_control: true
-                        show_color_control: true
-                        show_color_temp_control: true
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                            {% set main_light = 'light.bathroom' %}
-                            {% set numbered_lights = [] %}
-                            {% for i in range(1, 10) %}
-                              {% set numbered_light = 'light.bathroom_' ~ i %}
-                              {% if numbered_light in all_lights %}
-                                {% set _ = numbered_lights.append(numbered_light) %}
-                              {% endif %}
-                            {% endfor %}
-                            {{ main_light in all_lights and (numbered_lights | length == 0 or numbered_lights | length > 1) }}
-                      card:
-                        type: custom:mushroom-light-card
-                        entity: light.bathroom
-                        name: Bathroom
-                        show_brightness_control: true
-                        show_color_control: true
-                        show_color_temp_control: true
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: "{{ states('light.bathroom_1') != 'unavailable' }}"
-                      card:
-                        type: custom:mushroom-light-card
-                        entity: light.bathroom_1
-                        name: Bathroom Light 1
-                        show_brightness_control: true
-                        show_color_control: true
-                        show_color_temp_control: true
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: "{{ states('light.bathroom_2') != 'unavailable' }}"
-                      card:
-                        type: custom:mushroom-light-card
-                        entity: light.bathroom_2
-                        name: Bathroom Light 2
-                        show_brightness_control: true
-                        show_color_control: true
-                        show_color_temp_control: true
-    
-              # Individual Lights - Hallway
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: hallway
-                card:
-                  type: grid
-                  square: false
-                  columns: 2
-                  cards:
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: "{{ states('light.hallway') != 'unavailable' }}"
-                      card:
-                        type: custom:mushroom-light-card
-                        entity: light.hallway
-                        name: Hallway
-                        show_brightness_control: true
-                        show_color_control: true
-                        show_color_temp_control: true
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: "{{ states('light.entrance_lights') != 'unavailable' }}"
-                      card:
-                        type: custom:mushroom-light-card
-                        entity: light.entrance_lights
-                        name: Entrance Lights
-                        show_brightness_control: true
-                        show_color_control: true
-                        show_color_temp_control: true
-    
-              # Scene Creation Section
-              - type: markdown
-                title: Create Scene
-                content: |
-                  Adjust the lights above to your desired settings, then:
-                  1. Enter a scene name below
-                  2. Click "Create Scene" to save the current state
-    
-              # Scene Creation - per room with discovered lights
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: bedroom
-                card:
-                  type: entities
-                  title: Bedroom Scene Creation
-                  entities:
-                    - entity: input_text.scene_name_bedroom
-                      name: Scene Name
-                    - type: button
-                      name: Create Scene from Current Lights
-                      icon: mdi:content-save
-                      tap_action:
-                        action: call-service
-                        service: script.create_scene_from_lights
-                        service_data_template:
-                          scene_name: "{{ states('input_text.scene_name_bedroom') }}"
-                          scene_id: "bedroom_{{ states('input_text.scene_name_bedroom') | lower | replace(' ', '_') }}"
-                          light_entities: >
-                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                            {% set room_lights = [] %}
-                            {% set main_light = 'light.bedroom' %}
-                            {% set numbered_lights = [] %}
-                            {% for i in range(1, 10) %}
-                              {% set numbered_light = 'light.bedroom_' ~ i %}
-                              {% if numbered_light in all_lights %}
-                                {% set _ = numbered_lights.append(numbered_light) %}
-                              {% endif %}
-                            {% endfor %}
-                            {% if numbered_lights | length == 1 and main_light in all_lights %}
-                              {% set _ = room_lights.append(numbered_lights[0]) %}
-                            {% elif numbered_lights | length > 1 %}
-                              {% for light_id in numbered_lights %}
-                                {% set _ = room_lights.append(light_id) %}
-                              {% endfor %}
-                            {% elif main_light in all_lights %}
-                              {% set _ = room_lights.append(main_light) %}
-                            {% else %}
-                              {% for light_id in numbered_lights %}
-                                {% set _ = room_lights.append(light_id) %}
-                              {% endfor %}
-                            {% endif %}
-                            {{ room_lights }}
-    
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: living_room
-                card:
-                  type: entities
-                  title: Living Room Scene Creation
-                  entities:
-                    - entity: input_text.scene_name_living_room
-                      name: Scene Name
-                    - type: button
-                      name: Create Scene from Current Lights
-                      icon: mdi:content-save
-                      tap_action:
-                        action: call-service
-                        service: script.create_scene_from_lights
-                        service_data_template:
-                          scene_name: "{{ states('input_text.scene_name_living_room') }}"
-                          scene_id: "living_room_{{ states('input_text.scene_name_living_room') | lower | replace(' ', '_') }}"
-                          light_entities: >
-                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                            {% set room_lights = [] %}
-                            {% set main_light = 'light.living_room' %}
-                            {% set numbered_lights = [] %}
-                            {% for i in range(1, 10) %}
-                              {% set numbered_light = 'light.living_room_' ~ i %}
-                              {% if numbered_light in all_lights %}
-                                {% set _ = numbered_lights.append(numbered_light) %}
-                              {% endif %}
-                            {% endfor %}
-                            {% if numbered_lights | length == 1 and main_light in all_lights %}
-                              {% set _ = room_lights.append(numbered_lights[0]) %}
-                            {% elif numbered_lights | length > 1 %}
-                              {% for light_id in numbered_lights %}
-                                {% set _ = room_lights.append(light_id) %}
-                              {% endfor %}
-                            {% elif main_light in all_lights %}
-                              {% set _ = room_lights.append(main_light) %}
-                            {% else %}
-                              {% for light_id in numbered_lights %}
-                                {% set _ = room_lights.append(light_id) %}
-                              {% endfor %}
-                            {% endif %}
-                            {{ room_lights }}
-    
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: kitchen
-                card:
-                  type: entities
-                  title: Kitchen Scene Creation
-                  entities:
-                    - entity: input_text.scene_name_kitchen
-                      name: Scene Name
-                    - type: button
-                      name: Create Scene from Current Lights
-                      icon: mdi:content-save
-                      tap_action:
-                        action: call-service
-                        service: script.create_scene_from_lights
-                        service_data_template:
-                          scene_name: "{{ states('input_text.scene_name_kitchen') }}"
-                          scene_id: "kitchen_{{ states('input_text.scene_name_kitchen') | lower | replace(' ', '_') }}"
-                          light_entities: >
-                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                            {% set room_lights = [] %}
-                            {% set main_light = 'light.kitchen' %}
-                            {% set numbered_lights = [] %}
-                            {% for i in range(1, 10) %}
-                              {% set numbered_light = 'light.kitchen_' ~ i %}
-                              {% if numbered_light in all_lights %}
-                                {% set _ = numbered_lights.append(numbered_light) %}
-                              {% endif %}
-                            {% endfor %}
-                            {% if numbered_lights | length == 1 and main_light in all_lights %}
-                              {% set _ = room_lights.append(numbered_lights[0]) %}
-                            {% elif numbered_lights | length > 1 %}
-                              {% for light_id in numbered_lights %}
-                                {% set _ = room_lights.append(light_id) %}
-                              {% endfor %}
-                            {% elif main_light in all_lights %}
-                              {% set _ = room_lights.append(main_light) %}
-                            {% else %}
-                              {% for light_id in numbered_lights %}
-                                {% set _ = room_lights.append(light_id) %}
-                              {% endfor %}
-                            {% endif %}
-                            {{ room_lights }}
-    
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: bathroom
-                card:
-                  type: entities
-                  title: Bathroom Scene Creation
-                  entities:
-                    - entity: input_text.scene_name_bathroom
-                      name: Scene Name
-                    - type: button
-                      name: Create Scene from Current Lights
-                      icon: mdi:content-save
-                      tap_action:
-                        action: call-service
-                        service: script.create_scene_from_lights
-                        service_data_template:
-                          scene_name: "{{ states('input_text.scene_name_bathroom') }}"
-                          scene_id: "bathroom_{{ states('input_text.scene_name_bathroom') | lower | replace(' ', '_') }}"
-                          light_entities: >
-                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                            {% set room_lights = [] %}
-                            {% set main_light = 'light.bathroom' %}
-                            {% set numbered_lights = [] %}
-                            {% for i in range(1, 10) %}
-                              {% set numbered_light = 'light.bathroom_' ~ i %}
-                              {% if numbered_light in all_lights %}
-                                {% set _ = numbered_lights.append(numbered_light) %}
-                              {% endif %}
-                            {% endfor %}
-                            {% if numbered_lights | length == 1 and main_light in all_lights %}
-                              {% set _ = room_lights.append(numbered_lights[0]) %}
-                            {% elif numbered_lights | length > 1 %}
-                              {% for light_id in numbered_lights %}
-                                {% set _ = room_lights.append(light_id) %}
-                              {% endfor %}
-                            {% elif main_light in all_lights %}
-                              {% set _ = room_lights.append(main_light) %}
-                            {% else %}
-                              {% for light_id in numbered_lights %}
-                                {% set _ = room_lights.append(light_id) %}
-                              {% endfor %}
-                            {% endif %}
-                            {{ room_lights }}
-    
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: hallway
-                card:
-                  type: entities
-                  title: Hallway Scene Creation
-                  entities:
-                    - entity: input_text.scene_name_hallway
-                      name: Scene Name
-                    - type: button
-                      name: Create Scene from Current Lights
-                      icon: mdi:content-save
-                      tap_action:
-                        action: call-service
-                        service: script.create_scene_from_lights
-                        service_data_template:
-                          scene_name: "{{ states('input_text.scene_name_hallway') }}"
-                          scene_id: "hallway_{{ states('input_text.scene_name_hallway') | lower | replace(' ', '_') }}"
-                          light_entities: >
-                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                            {% set room_lights = [] %}
-                            {% if 'light.hallway' in all_lights %}
-                              {% set _ = room_lights.append('light.hallway') %}
-                            {% endif %}
-                            {% if 'light.entrance_lights' in all_lights %}
-                              {% set _ = room_lights.append('light.entrance_lights') %}
-                            {% endif %}
-                            {{ room_lights }}
