@@ -205,6 +205,9 @@ spec:
                   - 10.43.0.0/16
                   - 10.42.0.0/16
         
+              # Media sources - expose local media folders to Media dashboard
+              media_source: {}
+        
               # Shell commands
               shell_command:
                 cleanup_old_photos: 'find /config/www/pets -name "*.jpg" -mtime +30 -delete && find /config/www/intruders -name "*.jpg" -mtime +30 -delete'
