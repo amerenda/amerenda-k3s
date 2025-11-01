@@ -10,6 +10,7 @@ scheduled_light_on:
     transition: { required: false }
     fallback_lights: { required: false }
     timer_mode: { required: false, default: false }
+    auto_on: { required: false, default: false }
   sequence:
     - variables:
         default_s1: "06:00:00"
@@ -152,16 +153,54 @@ scheduled_light_on:
                   Scene {{ scene_to_activate }} activated successfully
         - conditions: "{{ scene_exists and not lights_on_check | bool }}"
           sequence:
-            - service: "logbook.log"
-              data:
-                name: "scheduled_light_on"
-                message: >-
-                  SKIPPED: Scene '{{ scene_to_activate }}' - lights are off 
-                  (lights_on_check={{ lights_on_check }})
-            - service: "logbook.log"
-              data:
-                name: "scheduled_light_on"
-                message: "Timer mode: Scene '{{ scene_to_activate }}' skipped - lights are off"
+            - choose:
+                - conditions: "{{ timer_mode_active and (auto_on | default(false) | bool) }}"
+                  sequence:
+                    - service: "logbook.log"
+                      data:
+                        name: "scheduled_light_on"
+                        message: >-
+                          Lights are off but auto_on=True - turning on lights first, then applying scene
+                          (fallback_lights={{ dynamic_fallback }})
+                    - service: "light.turn_on"
+                      target:
+                        entity_id: "{{ dynamic_fallback }}"
+                    - service: "logbook.log"
+                      data:
+                        name: "scheduled_light_on"
+                        message: "Lights turned on, now applying scene {{ scene_to_activate }}"
+                    - parallel:
+                        - service: "scene.turn_on"
+                          data:
+                            transition: "{{ transition | default(0) }}"
+                          target:
+                            entity_id: "{{ scene_to_activate }}"
+                        - if:
+                            - condition: template
+                              value_template: "{{ scene_cycle_helper != '' }}"
+                            then:
+                              - service: "input_select.select_option"
+                                target:
+                                  entity_id: "{{ scene_cycle_helper }}"
+                                data:
+                                  option: "{{ slot }}"
+                    - service: "logbook.log"
+                      data:
+                        name: "scheduled_light_on"
+                        message: >-
+                          Scene {{ scene_to_activate }} activated successfully (auto_on enabled)
+                - conditions: []
+                  sequence:
+                    - service: "logbook.log"
+                      data:
+                        name: "scheduled_light_on"
+                        message: >-
+                          SKIPPED: Scene '{{ scene_to_activate }}' - lights are off 
+                          (lights_on_check={{ lights_on_check }}, auto_on={{ auto_on | default(false) }})
+                    - service: "logbook.log"
+                      data:
+                        name: "scheduled_light_on"
+                        message: "Timer mode: Scene '{{ scene_to_activate }}' skipped - lights are off and auto_on is disabled"
       default:
         - service: "logbook.log"
           data:

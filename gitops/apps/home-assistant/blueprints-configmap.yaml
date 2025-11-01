@@ -995,12 +995,6 @@ data:
         id: "timer_check"
     
     action:
-      # CRITICAL: Simple log FIRST - no template variables at all
-      - service: "logbook.log"
-        data:
-          name: "room_timer_control"
-          message: "AUTOMATION ACTION STARTED - NO TEMPLATES"
-      
       # CRITICAL: Log with template variables from blueprint variables section
       - service: "logbook.log"
         data_template:
@@ -1078,38 +1072,60 @@ data:
               - choose:
                   - conditions: "{{ any_on or ao_morning | bool }}"
                     sequence:
+                      - service: "logbook.log"
+                        data_template:
+                          name: "room_timer_control"
+                          message: >-
+                            Condition passed: any_on={{ any_on }} OR ao_morning={{ ao_morning }}
                       - variables:
-                          script_data_dict: >-
-                            {% set fb = target_lights_var.entity_id if target_lights_var is mapping else target_lights_var %}
-                            {% set base = {'room_key': room_key_var, 'fallback_lights': fb, 'timer_mode': true} %}
-                            {% set custom = {} %}
-                            {% if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none %}{% set custom = custom | combine({'custom_schedule_enabled': custom_schedule_enabled_input}) %}{% endif %}
-                            {% if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none %}{% set custom = custom | combine({'custom_s1_start': custom_s1_start_input}) %}{% endif %}
-                            {% if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none %}{% set custom = custom | combine({'custom_s2_start': custom_s2_start_input}) %}{% endif %}
-                            {% if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none %}{% set custom = custom | combine({'custom_s3_start': custom_s3_start_input}) %}{% endif %}
-                            {% if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none %}{% set custom = custom | combine({'custom_s4_start': custom_s4_start_input}) %}{% endif %}
-                            {{ base | combine(custom) }}
+                          _fb_var: >-
+                            {% if target_lights_var is mapping and 'entity_id' in target_lights_var %}
+                              {{ target_lights_var.entity_id }}
+                            {% elif target_lights_var is mapping %}
+                              {{ '' }}
+                            {% else %}
+                              {{ target_lights_var }}
+                            {% endif %}
                       - service: "script.scheduled_light_on"
-                        data: "{{ script_data_dict }}"
+                        data_template:
+                          fallback_lights: "{{ _fb_var }}"
+                          timer_mode: true
+                          auto_on: "{{ ao_morning }}"
+                          custom_schedule_enabled: "{{ custom_schedule_enabled_input if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none else '' }}"
+                          custom_s1_start: "{{ custom_s1_start_input if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none else '' }}"
+                          custom_s2_start: "{{ custom_s2_start_input if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none else '' }}"
+                          custom_s3_start: "{{ custom_s3_start_input if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none else '' }}"
+                          custom_s4_start: "{{ custom_s4_start_input if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none else '' }}"
     
           - conditions: "{{ fired_slot == 'day' and en_day | bool }}"
             sequence:
               - choose:
                   - conditions: "{{ any_on or ao_day | bool }}"
                     sequence:
+                      - service: "logbook.log"
+                        data_template:
+                          name: "room_timer_control"
+                          message: >-
+                            Condition passed: any_on={{ any_on }} OR ao_day={{ ao_day }}
                       - variables:
-                          script_data_dict: >-
-                            {% set fb = target_lights_var.entity_id if target_lights_var is mapping else target_lights_var %}
-                            {% set base = {'room_key': room_key_var, 'fallback_lights': fb, 'timer_mode': true} %}
-                            {% set custom = {} %}
-                            {% if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none %}{% set custom = custom | combine({'custom_schedule_enabled': custom_schedule_enabled_input}) %}{% endif %}
-                            {% if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none %}{% set custom = custom | combine({'custom_s1_start': custom_s1_start_input}) %}{% endif %}
-                            {% if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none %}{% set custom = custom | combine({'custom_s2_start': custom_s2_start_input}) %}{% endif %}
-                            {% if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none %}{% set custom = custom | combine({'custom_s3_start': custom_s3_start_input}) %}{% endif %}
-                            {% if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none %}{% set custom = custom | combine({'custom_s4_start': custom_s4_start_input}) %}{% endif %}
-                            {{ base | combine(custom) }}
+                          _fb_var: >-
+                            {% if target_lights_var is mapping and 'entity_id' in target_lights_var %}
+                              {{ target_lights_var.entity_id }}
+                            {% elif target_lights_var is mapping %}
+                              {{ '' }}
+                            {% else %}
+                              {{ target_lights_var }}
+                            {% endif %}
                       - service: "script.scheduled_light_on"
-                        data: "{{ script_data_dict }}"
+                        data_template:
+                          fallback_lights: "{{ _fb_var }}"
+                          timer_mode: true
+                          auto_on: "{{ ao_day }}"
+                          custom_schedule_enabled: "{{ custom_schedule_enabled_input if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none else '' }}"
+                          custom_s1_start: "{{ custom_s1_start_input if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none else '' }}"
+                          custom_s2_start: "{{ custom_s2_start_input if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none else '' }}"
+                          custom_s3_start: "{{ custom_s3_start_input if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none else '' }}"
+                          custom_s4_start: "{{ custom_s4_start_input if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none else '' }}"
     
           - conditions: "{{ fired_slot == 'evening' and en_evening | bool }}"
             sequence:
@@ -1145,11 +1161,12 @@ data:
                         data_template:
                           name: "room_timer_control"
                           message: >-
-                            Calling script.scheduled_light_on with fallback_lights={{ _fb_var }}, timer_mode=true
+                            Calling script.scheduled_light_on with fallback_lights={{ _fb_var }}, timer_mode=true, auto_on={{ ao_evening }}
                       - service: "script.scheduled_light_on"
                         data_template:
                           fallback_lights: "{{ _fb_var }}"
                           timer_mode: true
+                          auto_on: "{{ ao_evening }}"
                           custom_schedule_enabled: "{{ custom_schedule_enabled_input if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none else '' }}"
                           custom_s1_start: "{{ custom_s1_start_input if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none else '' }}"
                           custom_s2_start: "{{ custom_s2_start_input if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none else '' }}"
@@ -1204,15 +1221,25 @@ data:
                               {{ target_lights_var }}
                             {% endif %}
                       - service: "logbook.log"
-                        data:
+                        data_template:
                           name: "room_timer_control"
                           message: >-
-                            About to call script with fallback_lights={{ _fb_var }}, timer_mode=true
+                            About to call script with fallback_lights={{ _fb_var }}, timer_mode=true, auto_on={{ ao_night }}
                       - service: "logbook.log"
-                        data:
+                        data_template:
                           name: "room_timer_control"
                           message: >-
-                            Calling script.scheduled_light_on with fallback_lights={{ _fb_var }}, timer_mode=true
+                            Calling script.scheduled_light_on with fallback_lights={{ _fb_var }}, timer_mode=true, auto_on={{ ao_night }}
+                      - service: "script.scheduled_light_on"
+                        data_template:
+                          fallback_lights: "{{ _fb_var }}"
+                          timer_mode: true
+                          auto_on: "{{ ao_night }}"
+                          custom_schedule_enabled: "{{ custom_schedule_enabled_input if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none else '' }}"
+                          custom_s1_start: "{{ custom_s1_start_input if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none else '' }}"
+                          custom_s2_start: "{{ custom_s2_start_input if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none else '' }}"
+                          custom_s3_start: "{{ custom_s3_start_input if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none else '' }}"
+                          custom_s4_start: "{{ custom_s4_start_input if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none else '' }}"
           - conditions: "{{ fired_slot == 'evening' and en_evening | bool }}"
             sequence:
               - service: "logbook.log"
@@ -1247,11 +1274,12 @@ data:
                         data_template:
                           name: "room_timer_control"
                           message: >-
-                            Calling script.scheduled_light_on with fallback_lights={{ _fb_var }}, timer_mode=true
+                            Calling script.scheduled_light_on with fallback_lights={{ _fb_var }}, timer_mode=true, auto_on={{ ao_evening }}
                       - service: "script.scheduled_light_on"
                         data_template:
                           fallback_lights: "{{ _fb_var }}"
                           timer_mode: true
+                          auto_on: "{{ ao_evening }}"
                           custom_schedule_enabled: "{{ custom_schedule_enabled_input if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none else '' }}"
                           custom_s1_start: "{{ custom_s1_start_input if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none else '' }}"
                           custom_s2_start: "{{ custom_s2_start_input if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none else '' }}"
