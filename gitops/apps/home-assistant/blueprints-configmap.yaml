@@ -987,12 +987,17 @@ data:
         id: "timer_check"
     
     action:
-      # CRITICAL: Log to verify automation is running - FIRST THING
+      # CRITICAL: Simple log FIRST - no template variables
       - service: "logbook.log"
         data:
           name: "room_timer_control"
-          message: >-
-            === AUTOMATION STARTED === {{ room_key_var }} at {{ now_hm }}
+          message: "AUTOMATION ACTION STARTED"
+      
+      # CRITICAL: Log with template variables
+      - service: "logbook.log"
+        data_template:
+          name: "room_timer_control"
+          message: "=== AUTOMATION STARTED === room={{ room_key_var }}, time={{ now_hm }}, fired_slot={{ fired_slot }}"
       
       - variables:
           # Extract target entity IDs safely
