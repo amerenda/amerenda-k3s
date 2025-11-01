@@ -111,7 +111,14 @@ scheduled_light_on:
             {{ true }}
           {% endif %}
     
-    # Debug logging
+    # Debug logging - system log first to ensure we see it
+    - service: "system_log.write"
+      data:
+        message: >-
+          [scheduled_light_on] Script called: timer_mode={{ timer_mode }}, 
+          fallback_lights={{ fallback_lights }}, scene={{ scene_to_activate }}, 
+          scene_exists={{ scene_exists }}, lights_on_check={{ lights_on_check }}
+        level: "info"
     - service: "logbook.log"
       data:
         name: "scheduled_light_on"
