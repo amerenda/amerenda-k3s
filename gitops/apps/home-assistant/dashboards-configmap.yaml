@@ -537,79 +537,65 @@ data:
         # Extra cards (below area cards)
         extra_cards:
           - type: custom:mushroom-title-card
-            title: Additional Information
+            title: Home Scene Control
+          # Scene Control Card - Toggle home lights and activate scenes for all rooms
           - type: grid
-            square: false
-            columns: 2
+            square: true
+            columns: 3
             cards:
-              # Energy monitoring - commented out as not available yet
-              # - type: entities
-              #   title: Energy
-              #   entities:
-              #     - entity: sensor.energy_consumption
-              #       name: Energy Usage
-              #       icon: mdi:lightning-bolt
-              #       secondary_info: last-updated
-              #     - entity: sensor.power_consumption
-              #       name: Current Power
-              #       icon: mdi:flash
-              #       secondary_info: last-updated
-              - type: entities
-                title: Environment
-                entities:
-                  - entity: sensor.humidity
-                    name: Humidity
-                    icon: mdi:water-percent
-                    secondary_info: last-updated
-              # Scene Control Card - Toggle home lights and activate scenes for all rooms
-              - type: grid
-                square: true
-                columns: 3
-                cards:
-                  # Toggle home lights button - icon only
-                  - type: button
-                    entity: light.home
-                    show_name: false
-                    icon: mdi:lightbulb
-                    tap_action:
-                      action: toggle
-                    show_state: false
-                  # Morning scene button - icon only
-                  - type: button
-                    show_name: false
-                    icon: mdi:weather-sunset-up
-                    tap_action:
-                      action: call-service
-                      service: script.activate_all_room_scenes
-                      service_data:
-                        slot: morning
-                  # Day scene button - icon only
-                  - type: button
-                    show_name: false
-                    icon: mdi:weather-sunny
-                    tap_action:
-                      action: call-service
-                      service: script.activate_all_room_scenes
-                      service_data:
-                        slot: day
-                  # Evening scene button - icon only
-                  - type: button
-                    show_name: false
-                    icon: mdi:weather-sunset-down
-                    tap_action:
-                      action: call-service
-                      service: script.activate_all_room_scenes
-                      service_data:
-                        slot: evening
-                  # Night scene button - icon only
-                  - type: button
-                    show_name: false
-                    icon: mdi:weather-night
-                    tap_action:
-                      action: call-service
-                      service: script.activate_all_room_scenes
-                      service_data:
-                        slot: night
+              # Toggle home lights button - icon only
+              - type: button
+                entity: light.home
+                show_name: false
+                icon: mdi:lightbulb
+                tap_action:
+                  action: toggle
+                show_state: false
+              # Morning scene button - icon only
+              - type: button
+                show_name: false
+                icon: mdi:weather-sunset-up
+                tap_action:
+                  action: call-service
+                  service: script.activate_all_room_scenes
+                  service_data:
+                    slot: morning
+              # Day scene button - icon only
+              - type: button
+                show_name: false
+                icon: mdi:weather-sunny
+                tap_action:
+                  action: call-service
+                  service: script.activate_all_room_scenes
+                  service_data:
+                    slot: day
+              # Evening scene button - icon only
+              - type: button
+                show_name: false
+                icon: mdi:weather-sunset-down
+                tap_action:
+                  action: call-service
+                  service: script.activate_all_room_scenes
+                  service_data:
+                    slot: evening
+              # Night scene button - icon only
+              - type: button
+                show_name: false
+                icon: mdi:weather-night
+                tap_action:
+                  action: call-service
+                  service: script.activate_all_room_scenes
+                  service_data:
+                    slot: night
+              # Movie scene button - icon only
+              - type: button
+                show_name: false
+                icon: mdi:movie-open
+                tap_action:
+                  action: call-service
+                  service: scene.turn_on
+                  target:
+                    entity_id: scene.home_movie
     
         # View customizations
         views:
