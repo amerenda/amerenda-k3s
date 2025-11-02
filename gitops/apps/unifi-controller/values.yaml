@@ -1,5 +1,11 @@
 # UniFi Controller Helm Chart Values
 
+# Image Configuration
+image:
+  repository: linuxserver/unifi-network-application
+  tag: 9.5.21
+  pullPolicy: IfNotPresent
+
 # Persistence Configuration
 persistence:
   enabled: true
