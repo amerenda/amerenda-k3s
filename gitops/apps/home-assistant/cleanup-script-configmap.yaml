@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: home-assistant-cleanup-script
   namespace: home-assistant
+  annotations:
+    reloader.stakater.com/auto: "false"  # Exclude from Reloader - only used by CronJob
 data:
   cleanup_orphaned_entities.py: |
     #!/usr/bin/env python3
@@ -21,7 +23,7 @@ data:
     import json
     
     # Configuration from environment
-    HA_URL = os.getenv('HA_URL', 'http://homeassistant.home-assistant:8123')
+    HA_URL = os.getenv('HA_URL', 'http://ha.amer.home')
     HA_TOKEN = os.getenv('HA_ACCESS_TOKEN')
     DRY_RUN = os.getenv('DRY_RUN', 'true').lower() == 'true'
     
@@ -54,85 +56,41 @@ data:
             log(f'ERROR: Failed to fetch entities: {e}')
             sys.exit(1)
     
-    def get_entity_registry():
-        """Retrieve entity registry from Home Assistant."""
-        try:
-            response = requests.get(f'{HA_URL}/api/config/entity_registry/list', headers=HEADERS, timeout=30)
-            response.raise_for_status()
-            return response.json()
-        except requests.exceptions.RequestException as e:
-            log(f'ERROR: Failed to fetch entity registry: {e}')
-            sys.exit(1)
-    
     def is_helper_entity(entity_id):
         """Check if entity is a helper entity."""
         domain = entity_id.split('.')[0]
         return domain in HELPER_DOMAINS
     
-    def is_orphaned(entity, entity_registry_map):
+    def is_orphaned(entity):
         """
         Determine if an entity is orphaned.
         
-        An entity is considered orphaned if:
-        1. It has 'restored: true' in attributes (common indicator)
-        2. It's not in the entity registry (definitely orphaned)
-        3. The entity registry entry shows it's disabled or orphaned
+        An entity is considered orphaned if it has 'restored: true' in attributes.
+        This indicates the entity is no longer being provided by its integration.
         """
-        entity_id = entity['entity_id']
-        
         # Check if entity has restored attribute set to true
-        if entity.get('attributes', {}).get('restored', False):
-            return True
-        
-        # Check if entity exists in entity registry
-        if entity_id not in entity_registry_map:
-            return True
-        
-        # Check entity registry entry for disabled/orphaned status
-        registry_entry = entity_registry_map[entity_id]
-        if registry_entry.get('disabled_by') is not None:
-            return True
-        
-        return False
+        return entity.get('attributes', {}).get('restored', False)
     
     def delete_entity(entity_id):
-        """Delete an entity from Home Assistant entity registry."""
+        """
+        Delete an orphaned entity using Home Assistant's state API.
+        
+        Note: For restored entities, we remove the state. The entity registry
+        entry will be cleaned up automatically by Home Assistant.
+        """
         try:
-            # Use entity registry API to remove the entity
-            # First get the entity registry ID (not entity_id)
-            registry_id = None
-            
-            # Try to get registry entry to find the ID
-            response = requests.get(
-                f'{HA_URL}/api/config/entity_registry/get/{entity_id}',
+            # Delete the entity state - this removes it from Home Assistant
+            response = requests.delete(
+                f'{HA_URL}/api/states/{entity_id}',
                 headers=HEADERS,
                 timeout=30
             )
-            if response.status_code == 200:
-                registry_entry = response.json()
-                registry_id = registry_entry.get('id')
             
-            if not registry_id:
-                log(f'WARNING: Could not find registry ID for {entity_id}, trying direct delete')
-                # Try deleting by entity_id directly
-                response = requests.delete(
-                    f'{HA_URL}/api/config/entity_registry/remove/{entity_id}',
-                    headers=HEADERS,
-                    timeout=30
-                )
-            else:
-                # Delete using registry ID
-                response = requests.delete(
-                    f'{HA_URL}/api/config/entity_registry/remove/{registry_id}',
-                    headers=HEADERS,
-                    timeout=30
-                )
-            
-            if response.status_code in [200, 404]:  # 404 means already deleted
+            if response.status_code in [200, 204, 404]:  # 200/204 = success, 404 = already deleted
                 log(f'Successfully deleted entity: {entity_id}')
                 return True
             else:
-                log(f'WARNING: Failed to delete {entity_id}: HTTP {response.status_code}')
+                log(f'WARNING: Failed to delete {entity_id}: HTTP {response.status_code} - {response.text}')
                 return False
                 
         except requests.exceptions.RequestException as e:
@@ -153,23 +111,14 @@ data:
         entities = get_entities()
         log(f'Found {len(entities)} total entities')
         
-        # Fetch entity registry
-        log('Fetching entity registry...')
-        registry_response = get_entity_registry()
-        # Convert registry to map by entity_id for easy lookup
-        entity_registry_map = {}
-        for entry in registry_response:
-            entity_registry_map[entry['entity_id']] = entry
-        log(f'Found {len(entity_registry_map)} entities in registry')
-        
         # Filter for helper entities
         helper_entities = [e for e in entities if is_helper_entity(e['entity_id'])]
         log(f'Found {len(helper_entities)} helper entities')
         
-        # Identify orphaned entities
+        # Identify orphaned entities (those with restored: true)
         orphaned_entities = []
         for entity in helper_entities:
-            if is_orphaned(entity, entity_registry_map):
+            if is_orphaned(entity):
                 orphaned_entities.append(entity)
         
         if not orphaned_entities:
@@ -180,8 +129,7 @@ data:
         for entity in orphaned_entities:
             entity_id = entity['entity_id']
             restored = entity.get('attributes', {}).get('restored', False)
-            in_registry = entity_id in entity_registry_map
-            log(f'  - {entity_id} (restored={restored}, in_registry={in_registry})')
+            log(f'  - {entity_id} (restored={restored})')
         
         # Delete orphaned entities if not in dry-run mode
         if DRY_RUN:
