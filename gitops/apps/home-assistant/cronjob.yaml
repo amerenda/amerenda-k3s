@@ -87,7 +87,7 @@ spec:
               - /bin/sh
               - -c
               - |
-                apk add --no-cache curl && \
+                apk add --no-cache curl python3 && \
                 /scripts/download_calendar.sh
             volumeMounts:
             - name: calendar-script
@@ -101,6 +101,13 @@ spec:
             configMap:
               name: home-assistant-calendar-script
               defaultMode: 0755
+              items:
+              - key: download_calendar.sh
+                path: download_calendar.sh
+                mode: 0755
+              - key: filter_calendar.py
+                path: filter_calendar.py
+                mode: 0755
           - name: config
             persistentVolumeClaim:
               claimName: homeassistant-config

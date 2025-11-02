@@ -17,6 +17,7 @@ server:
   config:
     url: "https://argocd.amer.home"
     application.instanceLabelKey: "argocd.argoproj.io/instance"
+    exec.enabled: "true"
 
 # Repository server configuration
 repoServer:
