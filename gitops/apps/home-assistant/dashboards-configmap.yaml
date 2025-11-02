@@ -426,26 +426,10 @@ data:
         # Hide unavailable binary sensors (camera privacy mode)
         card_options:
           # Person detection sensors
-          binary_sensor.living_room_person:
-            hidden: "{{ is_state('binary_sensor.living_room_person', 'unavailable') }}"
-          binary_sensor.bedroom_person:
-            hidden: "{{ is_state('binary_sensor.bedroom_person', 'unavailable') }}"
-          # Animal detection sensors
-          binary_sensor.living_room_animal:
-            hidden: "{{ is_state('binary_sensor.living_room_animal', 'unavailable') }}"
-          binary_sensor.bedroom_animal:
-            hidden: "{{ is_state('binary_sensor.bedroom_animal', 'unavailable') }}"
-          binary_sensor.bedroom_baby_crying:
-            hidden: true
-          binary_sensor.living_room_baby_crying:
-            hidden: true
-          # Hide camera cards when privacy mode is enabled
           camera.bedroom_fluent:
             hidden: "{{ is_state('switch.bedroom_privacy_mode', 'on') }}"
           camera.living_room_fluent:
             hidden: "{{ is_state('switch.living_room_privacy_mode', 'on') }}"
-          # Hide individual lights that duplicate single-member groups
-          # These individual lights are hidden so only the group is shown
           light.fixture:
             hidden: true
           light.bathroom_1:
@@ -453,12 +437,18 @@ data:
           light.hallway_1:
             hidden: true
     
-        # Domain-level filtering for binary sensors
+        # Domain-level filtering to hide unavailable entities
         domains:
           binary_sensor:
             exclude:
               entities:
                 # Exclude unavailable binary sensors from areas
+                - filter:
+                    state: unavailable
+          button:
+            exclude:
+              entities:
+                # Exclude unavailable buttons from areas
                 - filter:
                     state: unavailable
     
