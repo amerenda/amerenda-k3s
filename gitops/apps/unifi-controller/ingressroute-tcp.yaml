@@ -1,0 +1,23 @@
+---
+# IngressRouteTCP for UniFi Controller with TLS Passthrough
+# Standard Ingress resources don't support TLS passthrough, so we use IngressRouteTCP
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: unifi-controller-tcp
+  namespace: unifi-controller
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: unifi.amer.home
+    external-dns.alpha.kubernetes.io/ttl: "3600"
+    external-dns.alpha.kubernetes.io/manage-record-types: "A"
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: HostSNI(`unifi.amer.home`)
+      services:
+        - name: app-unifi-controller-tcp
+          port: 8443
+  tls:
+    passthrough: true
+

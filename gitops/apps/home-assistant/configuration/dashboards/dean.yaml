@@ -22,70 +22,14 @@ strategy:
         hidden: "{{ is_state('switch.bedroom_privacy_mode', 'on') }}"
       camera.living_room_fluent:
         hidden: "{{ is_state('switch.living_room_privacy_mode', 'on') }}"
-      # Hide light groups that only contain one member (to prevent duplicates)
-      # Example: light.living_room group containing only light.fixture
-      # Try multiple methods to check group membership since different group types store members differently
-      light.living_room:
-        hidden: >
-          {% set attr_entities = state_attr('light.living_room', 'entity_id') | default([]) %}
-          {% set expanded = expand('light.living_room') | list %}
-          {% set expanded_ids = expanded | map(attribute='entity_id') | list %}
-          {# Check if expanded list excludes the group itself and has only 1 member #}
-          {% set members_only = expanded_ids | reject('eq', 'light.living_room') | list %}
-          {% if attr_entities is iterable and attr_entities is not string and attr_entities | list | length > 0 %}
-            {{ (attr_entities | list | length) == 1 }}
-          {% elif members_only | length == 1 %}
-            true
-          {% elif expanded | length == 2 %}
-            {# expand() includes the group itself, so 2 items means group + 1 member #}
-            true
-          {% else %}
-            false
-          {% endif %}
-      light.bathroom:
-        hidden: >
-          {% set attr_entities = state_attr('light.bathroom', 'entity_id') | default([]) %}
-          {% set expanded = expand('light.bathroom') | list %}
-          {% if attr_entities is iterable and attr_entities is not string and attr_entities | list | length > 0 %}
-            {{ (attr_entities | list | length) == 1 }}
-          {% elif expanded | length > 1 %}
-            {{ expanded | length == 2 }}
-          {% else %}
-            false
-          {% endif %}
-      light.hallway:
-        hidden: >
-          {% set attr_entities = state_attr('light.hallway', 'entity_id') | default([]) %}
-          {% set expanded = expand('light.hallway') | list %}
-          {% set expanded_ids = expanded | map(attribute='entity_id') | list %}
-          {# Check if expanded list excludes the group itself and has only 1 member #}
-          {% set members_only = expanded_ids | reject('eq', 'light.hallway') | list %}
-          {% if attr_entities is iterable and attr_entities is not string and attr_entities | list | length > 0 %}
-            {{ (attr_entities | list | length) == 1 }}
-          {% elif members_only | length == 1 %}
-            true
-          {% elif expanded | length == 2 %}
-            {# expand() includes the group itself, so 2 items means group + 1 member #}
-            true
-          {% else %}
-            false
-          {% endif %}
-      light.bedroom:
-        hidden: >
-          {% set group_entities = state_attr('light.bedroom', 'entity_id') | default([]) %}
-          {% if group_entities is iterable and group_entities is not string %}
-            {{ (group_entities | list | length) == 1 }}
-          {% else %}
-            false
-          {% endif %}
-      light.kitchen:
-        hidden: >
-          {% set group_entities = state_attr('light.kitchen', 'entity_id') | default([]) %}
-          {% if group_entities is iterable and group_entities is not string %}
-            {{ (group_entities | list | length) == 1 }}
-          {% else %}
-            false
-          {% endif %}
+      # Hide individual lights that duplicate single-member groups
+      # These individual lights are hidden so only the group is shown
+      light.fixture:
+        hidden: true
+      light.bathroom_1:
+        hidden: true
+      light.hallway_1:
+        hidden: true
 
     # Domain-level filtering for binary sensors
     domains:
@@ -95,31 +39,6 @@ strategy:
             # Exclude unavailable binary sensors from areas
             - filter:
                 state: unavailable
-      # Domain-level filtering for lights - hide groups that only contain one member
-      # Note: This uses template filter which may not work for all group types
-      # The card_options approach above should handle most cases
-      light:
-        exclude:
-          entities:
-            # Exclude light groups that only have one member
-            - filter:
-                entity_id: "light.living_room"
-                template: >
-                  {% set group_entities = state_attr('light.living_room', 'entity_id') | default([]) %}
-                  {% if group_entities is iterable and group_entities is not string %}
-                    {{ (group_entities | list | length) == 1 }}
-                  {% else %}
-                    {{ false }}
-                  {% endif %}
-            - filter:
-                entity_id: "light.hallway"
-                template: >
-                  {% set group_entities = state_attr('light.hallway', 'entity_id') | default([]) %}
-                  {% if group_entities is iterable and group_entities is not string %}
-                    {{ (group_entities | list | length) == 1 }}
-                  {% else %}
-                    {{ false }}
-                  {% endif %}
 
     # Quick access cards (between greeting and area cards)
     quick_access_cards:
@@ -216,21 +135,108 @@ strategy:
           - type: entities
             title: Environment
             entities:
-              # Temperature from midea_ac_lan integration
-              - entity: >
-                  {% set midea_entities = states.climate | selectattr('entity_id', 'match', '.*midea.*') | map(attribute='entity_id') | list %}
-                  {% if midea_entities | length > 0 %}
-                    {{ midea_entities[0] }}
-                  {% else %}
-                    sensor.temperature
-                  {% endif %}
-                name: Temperature
-                icon: mdi:thermometer
-                secondary_info: state
               - entity: sensor.humidity
                 name: Humidity
                 icon: mdi:water-percent
                 secondary_info: last-updated
+          # Scene Control Card - Toggle home lights and activate scenes for all rooms
+          - type: grid
+            square: false
+            columns: 5
+            cards:
+              # Toggle home lights button
+              - type: button
+                name: Home Lights
+                icon: >
+                  {% if is_state('light.home', 'on') %}
+                    mdi:lightbulb-on
+                  {% else %}
+                    mdi:lightbulb-off
+                  {% endif %}
+                tap_action:
+                  action: toggle
+                  entity: light.home
+                show_state: true
+              # Morning scene button - activates morning scenes for all rooms
+              - type: button
+                name: Morning
+                icon: mdi:weather-sunset-up
+                tap_action:
+                  action: call-service
+                  service: scene.turn_on
+                  target:
+                    entity_id: >
+                      {% set rooms = ['living_room', 'bedroom', 'bathroom', 'hallway', 'kitchen'] %}
+                      {% set scene_list = [] %}
+                      {% for room in rooms %}
+                        {% set override_select = 'input_select.' ~ room ~ '_morning_scene' %}
+                        {% set override_val = states(override_select) | default('') %}
+                        {% set scene_name = override_val if override_val not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_morning' %}
+                        {% if scene_name in (states.scene | map(attribute='entity_id') | list) %}
+                          {% set _ = scene_list.append(scene_name) %}
+                        {% endif %}
+                      {% endfor %}
+                      {{ scene_list }}
+              # Day scene button - activates day scenes for all rooms
+              - type: button
+                name: Day
+                icon: mdi:weather-sunny
+                tap_action:
+                  action: call-service
+                  service: scene.turn_on
+                  target:
+                    entity_id: >
+                      {% set rooms = ['living_room', 'bedroom', 'bathroom', 'hallway', 'kitchen'] %}
+                      {% set scene_list = [] %}
+                      {% for room in rooms %}
+                        {% set override_select = 'input_select.' ~ room ~ '_day_scene' %}
+                        {% set override_val = states(override_select) | default('') %}
+                        {% set scene_name = override_val if override_val not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_day' %}
+                        {% if scene_name in (states.scene | map(attribute='entity_id') | list) %}
+                          {% set _ = scene_list.append(scene_name) %}
+                        {% endif %}
+                      {% endfor %}
+                      {{ scene_list }}
+              # Evening scene button - activates evening scenes for all rooms
+              - type: button
+                name: Evening
+                icon: mdi:weather-sunset-down
+                tap_action:
+                  action: call-service
+                  service: scene.turn_on
+                  target:
+                    entity_id: >
+                      {% set rooms = ['living_room', 'bedroom', 'bathroom', 'hallway', 'kitchen'] %}
+                      {% set scene_list = [] %}
+                      {% for room in rooms %}
+                        {% set override_select = 'input_select.' ~ room ~ '_evening_scene' %}
+                        {% set override_val = states(override_select) | default('') %}
+                        {% set scene_name = override_val if override_val not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_evening' %}
+                        {% if scene_name in (states.scene | map(attribute='entity_id') | list) %}
+                          {% set _ = scene_list.append(scene_name) %}
+                        {% endif %}
+                      {% endfor %}
+                      {{ scene_list }}
+              # Night scene button - activates night scenes for all rooms
+              - type: button
+                name: Night
+                icon: mdi:weather-night
+                tap_action:
+                  action: call-service
+                  service: scene.turn_on
+                  target:
+                    entity_id: >
+                      {% set rooms = ['living_room', 'bedroom', 'bathroom', 'hallway', 'kitchen'] %}
+                      {% set scene_list = [] %}
+                      {% for room in rooms %}
+                        {% set override_select = 'input_select.' ~ room ~ '_night_scene' %}
+                        {% set override_val = states(override_select) | default('') %}
+                        {% set scene_name = override_val if override_val not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_night' %}
+                        {% if scene_name in (states.scene | map(attribute='entity_id') | list) %}
+                          {% set _ = scene_list.append(scene_name) %}
+                        {% endif %}
+                      {% endfor %}
+                      {{ scene_list }}
 
     # View customizations
     views:
