@@ -423,34 +423,68 @@ data:
     strategy:
       type: custom:mushroom-strategy
       options:
-        # Hide unavailable binary sensors (camera privacy mode)
+        # Hide unavailable entities and specific entity configurations
         card_options:
-          # Person detection sensors
+          # Camera cards - hide when privacy mode is enabled
           camera.bedroom_fluent:
             hidden: "{{ is_state('switch.bedroom_privacy_mode', 'on') }}"
           camera.living_room_fluent:
             hidden: "{{ is_state('switch.living_room_privacy_mode', 'on') }}"
+          # Hide individual lights that duplicate single-member groups
           light.fixture:
             hidden: true
           light.bathroom_1:
             hidden: true
           light.hallway_1:
             hidden: true
+          # Hide PTZ and guard buttons, sirens, and motion/animal sensors for bedroom and living room when unavailable
+          # Bedroom entities
+          button.bedroom_guard_go_to:
+            hidden: "{{ is_state('button.bedroom_guard_go_to', 'unavailable') }}"
+          button.bedroom_ptz_down:
+            hidden: "{{ is_state('button.bedroom_ptz_down', 'unavailable') }}"
+          button.bedroom_ptz_left:
+            hidden: "{{ is_state('button.bedroom_ptz_left', 'unavailable') }}"
+          button.bedroom_ptz_right:
+            hidden: "{{ is_state('button.bedroom_ptz_right', 'unavailable') }}"
+          button.bedroom_ptz_up:
+            hidden: "{{ is_state('button.bedroom_ptz_up', 'unavailable') }}"
+          button.bedroom_ptz_stop:
+            hidden: "{{ is_state('button.bedroom_ptz_stop', 'unavailable') }}"
+          siren.bedroom_siren:
+            hidden: "{{ is_state('siren.bedroom_siren', 'unavailable') }}"
+          binary_sensor.bedroom_animal:
+            hidden: "{{ is_state('binary_sensor.bedroom_animal', 'unavailable') }}"
+          binary_sensor.bedroom_motion:
+            hidden: "{{ is_state('binary_sensor.bedroom_motion', 'unavailable') }}"
+          binary_sensor.bedroom_baby_crying:
+            hidden: "{{ is_state('binary_sensor.bedroom_baby_crying', 'unavailable') }}"
+          # Living room entities
+          button.living_room_guard_go_to:
+            hidden: "{{ is_state('button.living_room_guard_go_to', 'unavailable') }}"
+          button.living_room_ptz_down:
+            hidden: "{{ is_state('button.living_room_ptz_down', 'unavailable') }}"
+          button.living_room_ptz_left:
+            hidden: "{{ is_state('button.living_room_ptz_left', 'unavailable') }}"
+          button.living_room_ptz_right:
+            hidden: "{{ is_state('button.living_room_ptz_right', 'unavailable') }}"
+          button.living_room_ptz_up:
+            hidden: "{{ is_state('button.living_room_ptz_up', 'unavailable') }}"
+          button.living_room_ptz_stop:
+            hidden: "{{ is_state('button.living_room_ptz_stop', 'unavailable') }}"
+          siren.living_room_siren:
+            hidden: "{{ is_state('siren.living_room_siren', 'unavailable') }}"
+          binary_sensor.living_room_animal:
+            hidden: "{{ is_state('binary_sensor.living_room_animal', 'unavailable') }}"
+          binary_sensor.living_room_motion:
+            hidden: "{{ is_state('binary_sensor.living_room_motion', 'unavailable') }}"
+          binary_sensor.living_room_baby_crying:
+            hidden: "{{ is_state('binary_sensor.living_room_baby_crying', 'unavailable') }}"
     
-        # Domain-level filtering to hide unavailable entities
-        domains:
-          binary_sensor:
-            exclude:
-              entities:
-                # Exclude unavailable binary sensors from areas
-                - filter:
-                    state: unavailable
-          button:
-            exclude:
-              entities:
-                # Exclude unavailable buttons from areas
-                - filter:
-                    state: unavailable
+        # Hide unavailable entities using card_options templates
+        # Note: mushroom-strategy doesn't support domain-level filtering by state
+        # We need to add specific entities here as they're discovered
+        # Alternatively, entities can be hidden individually in card_options above
     
         # Quick access cards (between greeting and area cards)
         quick_access_cards:

@@ -989,13 +989,6 @@ data:
         {% else %}
           {{ default_s3 }}
         {% endif %}
-      s3_debug: >-
-        {% if evening_custom %}
-          {% set helper_name = 'input_datetime.' ~ room_key_var ~ '_s3_start' %}
-          Helper={{ helper_name }}, Value={{ states(helper_name) }}, evening_custom={{ evening_custom }}
-        {% else %}
-          Not using custom evening time
-        {% endif %}
       s4_str: >-
         {% if night_custom %}
           {% set v = states('input_datetime.' ~ room_key_var ~ '_s4_start') %}
@@ -1021,8 +1014,6 @@ data:
       s4: >-
         {% set raw = s4_str %}
         {% if ' ' in raw %}{{ raw.split(' ')[-1][:5] }}{% else %}{{ raw[:5] }}{% endif %}
-    
-      now_hm: "{{ now().strftime('%H:%M') }}"
     
       # Window enable/auto_on booleans with sensible defaults
       en_morning: >-
@@ -1082,48 +1073,36 @@ data:
           {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
         {% endif %}
     
-      fired_slot: >-
-        {% if now_hm == s1 %}morning
-        {% elif now_hm == s2 %}day
-        {% elif now_hm == s3 %}evening
-        {% elif now_hm == s4 %}night
-        {% else %}none{% endif %}
-    
     trigger:
-      # Evaluate every minute; if it matches any boundary, the action will run
+      # Use time_pattern to check every minute at :00 seconds, but only fire when time matches a slot
       - platform: "time_pattern"
-        minutes: "/1"
-        id: "timer_check"
+        seconds: "0"
+        id: "minute_check"
+    
+    condition:
+      # Only proceed if current time matches one of the slot times AND that slot is enabled
+      - condition: template
+        value_template: >-
+          {% set now_hm = now().strftime('%H:%M') %}
+          {% set matches_morning = now_hm == s1 and en_morning | bool %}
+          {% set matches_day = now_hm == s2 and en_day | bool %}
+          {% set matches_evening = now_hm == s3 and en_evening | bool %}
+          {% set matches_night = now_hm == s4 and en_night | bool %}
+          {{ matches_morning or matches_day or matches_evening or matches_night }}
     
     action:
-      # CRITICAL: Log with template variables from blueprint variables section
-      - service: "logbook.log"
-        data_template:
-          name: "room_timer_control"
-          message: "=== AUTOMATION STARTED === room={{ room_key_var }}, time={{ now_hm }}, fired_slot={{ fired_slot }}, en_night={{ en_night }}, ao_night={{ ao_night }}"
-      
-      # Debug: Log schedule values
-      - service: "logbook.log"
-        data_template:
-          name: "room_timer_control"
-          message: >-
-            Schedule check: s1_str={{ s1_str }}, s2_str={{ s2_str }}, s3_str={{ s3_str }}, s4_str={{ s4_str }},
-            s1={{ s1 }}, s2={{ s2 }}, s3={{ s3 }}, s4={{ s4 }},
-            night_custom={{ night_custom }}, evening_custom={{ evening_custom }}, s3_debug={{ s3_debug }}
-      
-      # Debug: Log raw datetime entity values with exact entity names
-      - service: "logbook.log"
-        data_template:
-          name: "room_timer_control"
-          message: >-
-            Raw datetime values: {{ room_key_var }}_s1={{ states('input_datetime.' ~ room_key_var ~ '_s1_start') }},
-            {{ room_key_var }}_s3={{ states('input_datetime.' ~ room_key_var ~ '_s3_start') }},
-            {{ room_key_var }}_s4={{ states('input_datetime.' ~ room_key_var ~ '_s4_start') }}
-            Entity names: s1=input_datetime.{{ room_key_var }}_s1_start, s3=input_datetime.{{ room_key_var }}_s3_start, s4=input_datetime.{{ room_key_var }}_s4_start
-      
       - variables:
+          # Determine which slot fired
+          fired_slot: >-
+            {% set now_hm = now().strftime('%H:%M') %}
+            {% if now_hm == s1 and en_morning | bool %}morning
+            {% elif now_hm == s2 and en_day | bool %}day
+            {% elif now_hm == s3 and en_evening | bool %}evening
+            {% elif now_hm == s4 and en_night | bool %}night
+            {% else %}none{% endif %}
+          
           # Extract target entity IDs safely
-          _targets_raw: >-
+          _fb_var: >-
             {% if target_lights_var is mapping and 'entity_id' in target_lights_var %}
               {{ target_lights_var.entity_id }}
             {% elif target_lights_var is mapping %}
@@ -1131,280 +1110,31 @@ data:
             {% else %}
               {{ target_lights_var }}
             {% endif %}
-          any_on: >-
-            {% if _targets_raw %}
-              {% set expanded = expand(_targets_raw) %}
-              {{ expanded | selectattr('state','eq','on') | list | count > 0 }}
-            {% else %}
-              {{ false }}
-            {% endif %}
+          
+          # Get enable/auto_on for the fired slot
+          slot_enabled: >-
+            {% if fired_slot == 'morning' %}{{ en_morning | bool }}
+            {% elif fired_slot == 'day' %}{{ en_day | bool }}
+            {% elif fired_slot == 'evening' %}{{ en_evening | bool }}
+            {% elif fired_slot == 'night' %}{{ en_night | bool }}
+            {% else %}false{% endif %}
+          
+          slot_auto_on: >-
+            {% if fired_slot == 'morning' %}{{ ao_morning | bool }}
+            {% elif fired_slot == 'day' %}{{ ao_day | bool }}
+            {% elif fired_slot == 'evening' %}{{ ao_evening | bool }}
+            {% elif fired_slot == 'night' %}{{ ao_night | bool }}
+            {% else %}false{% endif %}
     
-      # Debug logging - this should appear every minute if automation is running
-      - service: "logbook.log"
+      # Call the script which handles: turn on lights if off (if auto_on), apply scene to lights that are on
+      - service: "script.scheduled_light_on"
         data_template:
-          name: "room_timer_control"
-          message: >-
-            [{{ room_key_var }}] Time={{ now_hm }}, Slots: s1={{ s1 }}, s2={{ s2 }}, s3={{ s3 }}, s4={{ s4 }},
-            fired={{ fired_slot }}, en_night={{ en_night }}, ao_night={{ ao_night }}, lights_on={{ any_on }}
-      
-      # Log when a slot matches
-      - service: "logbook.log"
-        data_template:
-          name: "room_timer_control"
-          message: >-
-            Time check: now_hm={{ now_hm }}, s1={{ s1 }}, s2={{ s2 }}, s3={{ s3 }}, s4={{ s4 }},
-            matches: s1={{ now_hm == s1 }}, s2={{ now_hm == s2 }}, s3={{ now_hm == s3 }}, s4={{ now_hm == s4 }},
-            fired_slot={{ fired_slot }}, current_time={{ now().strftime('%H:%M:%S') }}
-            {% if fired_slot == 'none' %}
-            ⚠️ NO ACTION: Current time ({{ now_hm }}) does not match any slot time. Automation only fires when time EXACTLY matches a slot start time.
-            Note: now_hm is calculated once at automation start and remains constant throughout the action sequence.
-            {% else %}
-            ✓ SLOT MATCHED: {{ fired_slot }} slot will be processed.
-            {% endif %}
-      
-      - choose:
-          - conditions: "{{ fired_slot == 'morning' and en_morning | bool }}"
-            sequence:
-              - service: "logbook.log"
-                data:
-                  name: "room_timer_control"
-                  message: >-
-                    Morning slot matched! en_morning={{ en_morning }}
-              - choose:
-                  - conditions: "{{ any_on or ao_morning | bool }}"
-                    sequence:
-                      - service: "logbook.log"
-                        data_template:
-                          name: "room_timer_control"
-                          message: >-
-                            Condition passed: any_on={{ any_on }} OR ao_morning={{ ao_morning }}
-                      - variables:
-                          _fb_var: >-
-                            {% if target_lights_var is mapping and 'entity_id' in target_lights_var %}
-                              {{ target_lights_var.entity_id }}
-                            {% elif target_lights_var is mapping %}
-                              {{ '' }}
-                            {% else %}
-                              {{ target_lights_var }}
-                            {% endif %}
-                      - service: "script.scheduled_light_on"
-                        data_template:
-                          fallback_lights: "{{ _fb_var }}"
-                          timer_mode: true
-                          auto_on: "{{ ao_morning }}"
-                          custom_schedule_enabled: "{{ custom_schedule_enabled_input if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none else '' }}"
-                          custom_s1_start: "{{ custom_s1_start_input if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none else '' }}"
-                          custom_s2_start: "{{ custom_s2_start_input if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none else '' }}"
-                          custom_s3_start: "{{ custom_s3_start_input if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none else '' }}"
-                          custom_s4_start: "{{ custom_s4_start_input if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none else '' }}"
-    
-          - conditions: "{{ fired_slot == 'day' and en_day | bool }}"
-            sequence:
-              - choose:
-                  - conditions: "{{ any_on or ao_day | bool }}"
-                    sequence:
-                      - service: "logbook.log"
-                        data_template:
-                          name: "room_timer_control"
-                          message: >-
-                            Condition passed: any_on={{ any_on }} OR ao_day={{ ao_day }}
-                      - variables:
-                          _fb_var: >-
-                            {% if target_lights_var is mapping and 'entity_id' in target_lights_var %}
-                              {{ target_lights_var.entity_id }}
-                            {% elif target_lights_var is mapping %}
-                              {{ '' }}
-                            {% else %}
-                              {{ target_lights_var }}
-                            {% endif %}
-                      - service: "script.scheduled_light_on"
-                        data_template:
-                          fallback_lights: "{{ _fb_var }}"
-                          timer_mode: true
-                          auto_on: "{{ ao_day }}"
-                          custom_schedule_enabled: "{{ custom_schedule_enabled_input if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none else '' }}"
-                          custom_s1_start: "{{ custom_s1_start_input if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none else '' }}"
-                          custom_s2_start: "{{ custom_s2_start_input if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none else '' }}"
-                          custom_s3_start: "{{ custom_s3_start_input if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none else '' }}"
-                          custom_s4_start: "{{ custom_s4_start_input if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none else '' }}"
-    
-          - conditions: "{{ fired_slot == 'evening' and en_evening | bool }}"
-            sequence:
-              - service: "logbook.log"
-                data_template:
-                  name: "room_timer_control"
-                  message: >-
-                    EVENING SLOT MATCHED! fired_slot={{ fired_slot }}, en_evening={{ en_evening }}, 
-                    any_on={{ any_on }}, ao_evening={{ ao_evening }}, now_hm={{ now_hm }}, s3={{ s3 }}
-              - choose:
-                  - conditions: "{{ any_on or ao_evening | bool }}"
-                    sequence:
-                      - service: "logbook.log"
-                        data_template:
-                          name: "room_timer_control"
-                          message: >-
-                            Condition passed: any_on={{ any_on }} OR ao_evening={{ ao_evening }}
-                      - variables:
-                          _fb_var: >-
-                            {% if target_lights_var is mapping and 'entity_id' in target_lights_var %}
-                              {{ target_lights_var.entity_id }}
-                            {% elif target_lights_var is mapping %}
-                              {{ '' }}
-                            {% else %}
-                              {{ target_lights_var }}
-                            {% endif %}
-                      - service: "logbook.log"
-                        data_template:
-                          name: "room_timer_control"
-                          message: >-
-                            About to call script with fallback_lights={{ _fb_var }}, timer_mode=true
-                      - service: "logbook.log"
-                        data_template:
-                          name: "room_timer_control"
-                          message: >-
-                            Calling script.scheduled_light_on with fallback_lights={{ _fb_var }}, timer_mode=true, auto_on={{ ao_evening }}
-                      - service: "script.scheduled_light_on"
-                        data_template:
-                          fallback_lights: "{{ _fb_var }}"
-                          timer_mode: true
-                          auto_on: "{{ ao_evening }}"
-                          custom_schedule_enabled: "{{ custom_schedule_enabled_input if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none else '' }}"
-                          custom_s1_start: "{{ custom_s1_start_input if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none else '' }}"
-                          custom_s2_start: "{{ custom_s2_start_input if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none else '' }}"
-                          custom_s3_start: "{{ custom_s3_start_input if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none else '' }}"
-                          custom_s4_start: "{{ custom_s4_start_input if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none else '' }}"
-                      - service: "logbook.log"
-                        data:
-                          name: "room_timer_control"
-                          message: >-
-                            Script call completed (should see script logs above if successful)
-                  - conditions: []
-                    sequence:
-                      - service: "logbook.log"
-                        data_template:
-                          name: "room_timer_control"
-                          message: >-
-                            CONDITION FAILED: any_on={{ any_on }}, ao_evening={{ ao_evening }}. 
-                            Evening scene NOT fired: lights are off and auto-on is disabled.
-    
-          - conditions: "{{ fired_slot == 'night' and en_night | bool }}"
-            sequence:
-              - service: "logbook.log"
-                data:
-                  name: "room_timer_control"
-                  message: >-
-                    Night slot detected! en_night={{ en_night }}, any_on={{ any_on }}, ao_night={{ ao_night }}
-              - service: "logbook.log"
-                data:
-                  name: "room_timer_control"
-                  message: >-
-                    Night slot detected! en_night={{ en_night }}, any_on={{ any_on }}, ao_night={{ ao_night }}
-              - choose:
-                  - conditions: "{{ any_on or ao_night | bool }}"
-                    sequence:
-                      - service: "logbook.log"
-                        data:
-                          name: "room_timer_control"
-                          message: >-
-                            Condition passed: any_on={{ any_on }} OR ao_night={{ ao_night }}
-                      - service: "logbook.log"
-                        data:
-                          name: "room_timer_control"
-                          message: >-
-                            Firing night scene for room {{ room_key_var }}, target_lights={{ _targets_raw }}
-                      - variables:
-                          _fb_var: >-
-                            {% if target_lights_var is mapping and 'entity_id' in target_lights_var %}
-                              {{ target_lights_var.entity_id }}
-                            {% elif target_lights_var is mapping %}
-                              {{ '' }}
-                            {% else %}
-                              {{ target_lights_var }}
-                            {% endif %}
-                      - service: "logbook.log"
-                        data_template:
-                          name: "room_timer_control"
-                          message: >-
-                            About to call script with fallback_lights={{ _fb_var }}, timer_mode=true, auto_on={{ ao_night }}
-                      - service: "logbook.log"
-                        data_template:
-                          name: "room_timer_control"
-                          message: >-
-                            Calling script.scheduled_light_on with fallback_lights={{ _fb_var }}, timer_mode=true, auto_on={{ ao_night }}
-                      - service: "script.scheduled_light_on"
-                        data_template:
-                          fallback_lights: "{{ _fb_var }}"
-                          timer_mode: true
-                          auto_on: "{{ ao_night }}"
-                          custom_schedule_enabled: "{{ custom_schedule_enabled_input if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none else '' }}"
-                          custom_s1_start: "{{ custom_s1_start_input if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none else '' }}"
-                          custom_s2_start: "{{ custom_s2_start_input if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none else '' }}"
-                          custom_s3_start: "{{ custom_s3_start_input if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none else '' }}"
-                          custom_s4_start: "{{ custom_s4_start_input if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none else '' }}"
-          - conditions: "{{ fired_slot == 'evening' and en_evening | bool }}"
-            sequence:
-              - service: "logbook.log"
-                data_template:
-                  name: "room_timer_control"
-                  message: >-
-                    EVENING SLOT MATCHED! fired_slot={{ fired_slot }}, en_evening={{ en_evening }}, 
-                    any_on={{ any_on }}, ao_evening={{ ao_evening }}, now_hm={{ now_hm }}, s3={{ s3 }}
-              - choose:
-                  - conditions: "{{ any_on or ao_evening | bool }}"
-                    sequence:
-                      - service: "logbook.log"
-                        data_template:
-                          name: "room_timer_control"
-                          message: >-
-                            Condition passed: any_on={{ any_on }} OR ao_evening={{ ao_evening }}
-                      - variables:
-                          _fb_var: >-
-                            {% if target_lights_var is mapping and 'entity_id' in target_lights_var %}
-                              {{ target_lights_var.entity_id }}
-                            {% elif target_lights_var is mapping %}
-                              {{ '' }}
-                            {% else %}
-                              {{ target_lights_var }}
-                            {% endif %}
-                      - service: "logbook.log"
-                        data_template:
-                          name: "room_timer_control"
-                          message: >-
-                            About to call script with fallback_lights={{ _fb_var }}, timer_mode=true
-                      - service: "logbook.log"
-                        data_template:
-                          name: "room_timer_control"
-                          message: >-
-                            Calling script.scheduled_light_on with fallback_lights={{ _fb_var }}, timer_mode=true, auto_on={{ ao_evening }}
-                      - service: "script.scheduled_light_on"
-                        data_template:
-                          fallback_lights: "{{ _fb_var }}"
-                          timer_mode: true
-                          auto_on: "{{ ao_evening }}"
-                          custom_schedule_enabled: "{{ custom_schedule_enabled_input if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none else '' }}"
-                          custom_s1_start: "{{ custom_s1_start_input if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none else '' }}"
-                          custom_s2_start: "{{ custom_s2_start_input if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none else '' }}"
-                          custom_s3_start: "{{ custom_s3_start_input if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none else '' }}"
-                          custom_s4_start: "{{ custom_s4_start_input if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none else '' }}"
-                      - service: "logbook.log"
-                        data:
-                          name: "room_timer_control"
-                          message: >-
-                            Script call completed (should see script logs above if successful)
-                  - conditions: []
-                    sequence:
-                      - service: "logbook.log"
-                        data_template:
-                          name: "room_timer_control"
-                          message: >-
-                            CONDITION FAILED: any_on={{ any_on }}, ao_evening={{ ao_evening }}. 
-                            Evening scene NOT fired: lights are off and auto-on is disabled.
-                  - conditions: []
-                    sequence:
-                      - service: "logbook.log"
-                        data:
-                          name: "room_timer_control"
-                          message: >-
-                            Night scene NOT fired: lights are off (any_on={{ any_on }}) and auto-on is disabled (ao_night={{ ao_night }})
-                          entity_id: "{{ _targets_raw }}"
+          fallback_lights: "{{ _fb_var }}"
+          timer_mode: true
+          auto_on: "{{ slot_auto_on }}"
+          custom_schedule_enabled: "{{ custom_schedule_enabled_input if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none else '' }}"
+          custom_s1_start: "{{ custom_s1_start_input if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none else '' }}"
+          custom_s2_start: "{{ custom_s2_start_input if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none else '' }}"
+          custom_s3_start: "{{ custom_s3_start_input if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none else '' }}"
+          custom_s4_start: "{{ custom_s4_start_input if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none else '' }}"
     
