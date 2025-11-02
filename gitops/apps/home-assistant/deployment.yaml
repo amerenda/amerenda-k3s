@@ -199,12 +199,6 @@ spec:
                     icon: mdi:lightbulb-group
                     show_in_sidebar: true
                     filename: dashboards/views/light_control.yaml
-                  dean-dashboard:
-                    mode: yaml
-                    title: Dean
-                    icon: mdi:home
-                    show_in_sidebar: true
-                    filename: dashboards/dean.yaml
         
               # HTTP reverse proxy
               http:

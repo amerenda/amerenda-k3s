@@ -35,12 +35,13 @@ repoServer:
 controller:
   replicas: 1
   # Resource limits for Pi hardware
+  # Increased memory limits due to OOM issues with multiple applications
   resources:
     requests:
-      memory: "256Mi"
+      memory: "512Mi"
       cpu: "100m"
     limits:
-      memory: "512Mi"
+      memory: "1536Mi"  # 1.5Gi - increased from 512Mi to handle ~17 applications
       cpu: "500m"
 
 # Application controller configuration

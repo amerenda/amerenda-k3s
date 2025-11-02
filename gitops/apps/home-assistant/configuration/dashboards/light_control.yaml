@@ -146,6 +146,42 @@ views:
               square: false
               columns: 2
               cards:
+                # Show individual light if room group contains only one light (e.g., light.living_room with only light.fixture)
+                - type: conditional
+                  conditions:
+                    - condition: template
+                      value_template: >
+                        {% set room = states('input_select.room_selector') %}
+                        {% if room and room != 'unknown' and room != 'unavailable' %}
+                          {% set room_key = room %}
+                          {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                          {% set main_light = 'light.' ~ room_key %}
+                          {% if room_key == 'hallway' %}
+                            {{ false }}
+                          {% elif main_light in all_lights %}
+                            {% set main_light_entities = state_attr(main_light, 'entity_id') | default([]) %}
+                            {{ main_light_entities | length == 1 }}
+                          {% else %}
+                            {{ false }}
+                          {% endif %}
+                        {% else %}
+                          {{ false }}
+                        {% endif %}
+                  card:
+                    type: light
+                    entity: >
+                      {% set room = states('input_select.room_selector') %}
+                      {% if room and room != 'unknown' and room != 'unavailable' %}
+                        {% set room_key = room %}
+                        {% set main_light = 'light.' ~ room_key %}
+                        {% set main_light_entities = state_attr(main_light, 'entity_id') | default([]) %}
+                        {{ main_light_entities[0] if main_light_entities | length == 1 else main_light }}
+                      {% else %}
+                        light.bedroom
+                      {% endif %}
+                    name: >
+                      {% set room = states('input_select.room_selector') %}
+                      {{ room | replace('_', ' ') | title }}
                 # Smart logic: if only one numbered light exists with main, show numbered only
                 - type: conditional
                   conditions:
@@ -159,6 +195,7 @@ views:
                           {% if room_key == 'hallway' %}
                             {{ false }}
                           {% else %}
+                            {% set main_light_entities = state_attr(main_light, 'entity_id') | default([]) %}
                             {% set numbered_lights = [] %}
                             {% for i in range(1, 10) %}
                               {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
@@ -166,7 +203,7 @@ views:
                                 {% set _ = numbered_lights.append(numbered_light) %}
                               {% endif %}
                             {% endfor %}
-                            {{ numbered_lights | length == 1 and main_light in all_lights }}
+                            {{ numbered_lights | length == 1 and main_light in all_lights and (main_light_entities | length != 1) }}
                           {% endif %}
                         {% else %}
                           {{ false }}
@@ -188,7 +225,7 @@ views:
                     name: >
                       {% set room = states('input_select.room_selector') %}
                       {{ room | replace('_', ' ') | title }}
-                # Show main light if it exists and (no numbered or multiple numbered)
+                # Show main light if it exists, has multiple entities (not a single-member group), and (no numbered or multiple numbered)
                 - type: conditional
                   conditions:
                     - condition: template
@@ -201,14 +238,23 @@ views:
                             {{ false }}
                           {% else %}
                             {% set main_light = 'light.' ~ room_key %}
-                            {% set numbered_lights = [] %}
-                            {% for i in range(1, 10) %}
-                              {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
-                              {% if numbered_light in all_lights %}
-                                {% set _ = numbered_lights.append(numbered_light) %}
+                            {% if main_light in all_lights %}
+                              {% set main_light_entities = state_attr(main_light, 'entity_id') | default([]) %}
+                              {% if main_light_entities | length == 1 %}
+                                {{ false }}  {# Hide group if it only contains one light #}
+                              {% else %}
+                                {% set numbered_lights = [] %}
+                                {% for i in range(1, 10) %}
+                                  {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
+                                  {% if numbered_light in all_lights %}
+                                    {% set _ = numbered_lights.append(numbered_light) %}
+                                  {% endif %}
+                                {% endfor %}
+                                {{ numbered_lights | length == 0 or numbered_lights | length > 1 }}
                               {% endif %}
-                            {% endfor %}
-                            {{ main_light in all_lights and (numbered_lights | length == 0 or numbered_lights | length > 1) }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
                           {% endif %}
                         {% else %}
                           {{ false }}

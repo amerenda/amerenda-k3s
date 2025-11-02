@@ -13,6 +13,10 @@ strategy:
         hidden: "{{ is_state('binary_sensor.living_room_animal', 'unavailable') }}"
       binary_sensor.bedroom_animal:
         hidden: "{{ is_state('binary_sensor.bedroom_animal', 'unavailable') }}"
+      binary_sensor.bedroom_baby_crying:
+        hidden: true
+      binary_sensor.living_room_baby_crying:
+        hidden: true
 
     # Domain-level filtering for binary sensors
     domains:
@@ -39,32 +43,34 @@ strategy:
           show_conditions: true
           primary_info: state
           secondary_info: temperature
-      - type: entities
-        title: System Status
-        entities:
-          - entity: sensor.home_assistant_version
-            name: Home Assistant
-            secondary_info: state
-          - entity: binary_sensor.ha_system_health
-            name: System Health
-            secondary_info: state
+      # System Status - commented out as it requires System Health integration
+      # - type: entities
+      #   title: System Status
+      #   entities:
+      #     - entity: sensor.home_assistant_version
+      #       name: Home Assistant
+      #       secondary_info: state
+      #     - entity: binary_sensor.ha_system_health
+      #       name: System Health
+      #       secondary_info: state
 
     # Custom chips on home view
     chips:
       extra_chips:
-        - type: entity
-          entity: binary_sensor.ha_system_health
-          icon: mdi:heart-pulse
-          icon_color: |
-            {% if is_state('binary_sensor.ha_system_health', 'on') %}
-              green
-            {% else %}
-              red
-            {% endif %}
-          content_info: none
-          tap_action:
-            action: navigate
-            navigation_path: /config/info
+          # System Health chip - commented out as it requires System Health integration
+          # - type: entity
+          #   entity: binary_sensor.ha_system_health
+          #   icon: mdi:heart-pulse
+          #   icon_color: |
+          #     {% if is_state('binary_sensor.ha_system_health', 'on') %}
+          #       green
+          #     {% else %}
+          #       red
+          #     {% endif %}
+          #   content_info: none
+          #   tap_action:
+          #     action: navigate
+          #     navigation_path: /config/info
         - type: entity
           entity: sun.sun
           icon: mdi:weather-sunset
@@ -101,24 +107,32 @@ strategy:
         square: false
         columns: 2
         cards:
-          - type: entities
-            title: Energy
-            entities:
-              - entity: sensor.energy_consumption
-                name: Energy Usage
-                icon: mdi:lightning-bolt
-                secondary_info: last-updated
-              - entity: sensor.power_consumption
-                name: Current Power
-                icon: mdi:flash
-                secondary_info: last-updated
+          # Energy monitoring - commented out as not available yet
+          # - type: entities
+          #   title: Energy
+          #   entities:
+          #     - entity: sensor.energy_consumption
+          #       name: Energy Usage
+          #       icon: mdi:lightning-bolt
+          #       secondary_info: last-updated
+          #     - entity: sensor.power_consumption
+          #       name: Current Power
+          #       icon: mdi:flash
+          #       secondary_info: last-updated
           - type: entities
             title: Environment
             entities:
-              - entity: sensor.temperature
+              # Temperature from midea_ac_lan integration
+              - entity: >
+                  {% set midea_entities = states.climate | selectattr('entity_id', 'match', '.*midea.*') | map(attribute='entity_id') | list %}
+                  {% if midea_entities | length > 0 %}
+                    {{ midea_entities[0] }}
+                  {% else %}
+                    sensor.temperature
+                  {% endif %}
                 name: Temperature
                 icon: mdi:thermometer
-                secondary_info: last-updated
+                secondary_info: state
               - entity: sensor.humidity
                 name: Humidity
                 icon: mdi:water-percent
