@@ -652,6 +652,141 @@ data:
                             {% else %}
                               []
                             {% endif %}
+  dean.yaml: |
+    strategy:
+      type: custom:mushroom-strategy
+      options:
+        # Hide unavailable binary sensors (camera privacy mode)
+        card_options:
+          # Person detection sensors
+          binary_sensor.living_room_person:
+            hidden: "{{ is_state('binary_sensor.living_room_person', 'unavailable') }}"
+          binary_sensor.bedroom_person:
+            hidden: "{{ is_state('binary_sensor.bedroom_person', 'unavailable') }}"
+          # Animal detection sensors
+          binary_sensor.living_room_animal:
+            hidden: "{{ is_state('binary_sensor.living_room_animal', 'unavailable') }}"
+          binary_sensor.bedroom_animal:
+            hidden: "{{ is_state('binary_sensor.bedroom_animal', 'unavailable') }}"
+    
+        # Domain-level filtering for binary sensors
+        domains:
+          binary_sensor:
+            exclude:
+              entities:
+                # Exclude unavailable binary sensors from areas
+                - filter:
+                    state: unavailable
+    
+        # Quick access cards (between greeting and area cards)
+        quick_access_cards:
+          - type: custom:mushroom-title-card
+            title: Quick Access
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: weather.home
+                state: available
+            card:
+              type: custom:mushroom-weather-card
+              entity: weather.home
+              show_temperature: true
+              show_conditions: true
+              primary_info: state
+              secondary_info: temperature
+          - type: entities
+            title: System Status
+            entities:
+              - entity: sensor.home_assistant_version
+                name: Home Assistant
+                secondary_info: state
+              - entity: binary_sensor.ha_system_health
+                name: System Health
+                secondary_info: state
+    
+        # Custom chips on home view
+        chips:
+          extra_chips:
+            - type: entity
+              entity: binary_sensor.ha_system_health
+              icon: mdi:heart-pulse
+              icon_color: |
+                {% if is_state('binary_sensor.ha_system_health', 'on') %}
+                  green
+                {% else %}
+                  red
+                {% endif %}
+              content_info: none
+              tap_action:
+                action: navigate
+                navigation_path: /config/info
+            - type: entity
+              entity: sun.sun
+              icon: mdi:weather-sunset
+              content_info: elevation
+              tap_action:
+                action: navigate
+                navigation_path: /config/energy
+            - type: conditional
+              conditions:
+                - condition: state
+                  entity: alarm_control_panel.home_alarm
+                  state: available
+              chip:
+                type: entity
+                entity: alarm_control_panel.home_alarm
+                icon: mdi:shield-home
+                icon_color: |
+                  {% if is_state('alarm_control_panel.home_alarm', 'armed_away') %}
+                    red
+                  {% elif is_state('alarm_control_panel.home_alarm', 'armed_home') %}
+                    orange
+                  {% else %}
+                    green
+                  {% endif %}
+                content_info: none
+                tap_action:
+                  action: toggle
+    
+        # Extra cards (below area cards)
+        extra_cards:
+          - type: custom:mushroom-title-card
+            title: Additional Information
+          - type: grid
+            square: false
+            columns: 2
+            cards:
+              - type: entities
+                title: Energy
+                entities:
+                  - entity: sensor.energy_consumption
+                    name: Energy Usage
+                    icon: mdi:lightning-bolt
+                    secondary_info: last-updated
+                  - entity: sensor.power_consumption
+                    name: Current Power
+                    icon: mdi:flash
+                    secondary_info: last-updated
+              - type: entities
+                title: Environment
+                entities:
+                  - entity: sensor.temperature
+                    name: Temperature
+                    icon: mdi:thermometer
+                    secondary_info: last-updated
+                  - entity: sensor.humidity
+                    name: Humidity
+                    icon: mdi:water-percent
+                    secondary_info: last-updated
+    
+        # View customizations
+        views:
+          # Customize default view
+          default:
+            title: Home
+            icon: mdi:home
+            path: home
+    
   room_schedule_viewer.yaml: |
     views:
       - title: Room Schedule Viewer
