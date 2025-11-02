@@ -163,80 +163,36 @@ strategy:
                 icon: mdi:weather-sunset-up
                 tap_action:
                   action: call-service
-                  service: scene.turn_on
-                  target:
-                    entity_id: >
-                      {% set rooms = ['living_room', 'bedroom', 'bathroom', 'hallway', 'kitchen'] %}
-                      {% set scene_list = [] %}
-                      {% for room in rooms %}
-                        {% set override_select = 'input_select.' ~ room ~ '_morning_scene' %}
-                        {% set override_val = states(override_select) | default('') %}
-                        {% set scene_name = override_val if override_val not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_morning' %}
-                        {% if scene_name in (states.scene | map(attribute='entity_id') | list) %}
-                          {% set _ = scene_list.append(scene_name) %}
-                        {% endif %}
-                      {% endfor %}
-                      {{ scene_list }}
+                  service: script.activate_all_room_scenes
+                  service_data:
+                    slot: morning
               # Day scene button - activates day scenes for all rooms
               - type: button
                 name: Day
                 icon: mdi:weather-sunny
                 tap_action:
                   action: call-service
-                  service: scene.turn_on
-                  target:
-                    entity_id: >
-                      {% set rooms = ['living_room', 'bedroom', 'bathroom', 'hallway', 'kitchen'] %}
-                      {% set scene_list = [] %}
-                      {% for room in rooms %}
-                        {% set override_select = 'input_select.' ~ room ~ '_day_scene' %}
-                        {% set override_val = states(override_select) | default('') %}
-                        {% set scene_name = override_val if override_val not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_day' %}
-                        {% if scene_name in (states.scene | map(attribute='entity_id') | list) %}
-                          {% set _ = scene_list.append(scene_name) %}
-                        {% endif %}
-                      {% endfor %}
-                      {{ scene_list }}
+                  service: script.activate_all_room_scenes
+                  service_data:
+                    slot: day
               # Evening scene button - activates evening scenes for all rooms
               - type: button
                 name: Evening
                 icon: mdi:weather-sunset-down
                 tap_action:
                   action: call-service
-                  service: scene.turn_on
-                  target:
-                    entity_id: >
-                      {% set rooms = ['living_room', 'bedroom', 'bathroom', 'hallway', 'kitchen'] %}
-                      {% set scene_list = [] %}
-                      {% for room in rooms %}
-                        {% set override_select = 'input_select.' ~ room ~ '_evening_scene' %}
-                        {% set override_val = states(override_select) | default('') %}
-                        {% set scene_name = override_val if override_val not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_evening' %}
-                        {% if scene_name in (states.scene | map(attribute='entity_id') | list) %}
-                          {% set _ = scene_list.append(scene_name) %}
-                        {% endif %}
-                      {% endfor %}
-                      {{ scene_list }}
+                  service: script.activate_all_room_scenes
+                  service_data:
+                    slot: evening
               # Night scene button - activates night scenes for all rooms
               - type: button
                 name: Night
                 icon: mdi:weather-night
                 tap_action:
                   action: call-service
-                  service: scene.turn_on
-                  target:
-                    entity_id: >
-                      {% set rooms = ['living_room', 'bedroom', 'bathroom', 'hallway', 'kitchen'] %}
-                      {% set scene_list = [] %}
-                      {% for room in rooms %}
-                        {% set override_select = 'input_select.' ~ room ~ '_night_scene' %}
-                        {% set override_val = states(override_select) | default('') %}
-                        {% set scene_name = override_val if override_val not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_night' %}
-                        {% if scene_name in (states.scene | map(attribute='entity_id') | list) %}
-                          {% set _ = scene_list.append(scene_name) %}
-                        {% endif %}
-                      {% endfor %}
-                      {{ scene_list }}
+                  service: script.activate_all_room_scenes
+                  service_data:
+                    slot: night
 
     # View customizations
     views:
