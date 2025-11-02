@@ -1,0 +1,8 @@
+# UniFi Controller Helm Chart Values
+
+# Persistence Configuration
+persistence:
+  enabled: true
+  storageClass: longhorn
+  size: 8Gi
+
