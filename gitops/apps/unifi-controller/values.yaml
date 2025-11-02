@@ -20,3 +20,11 @@ persistence:
 # Disabled - using IngressRouteTCP for TLS passthrough (standard Ingress doesn't support passthrough)
 ingress:
   enabled: false
+
+service:
+  type: "LoadBalancer"
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: unifi-controller.amer.home
+    external-dns.alpha.kubernetes.io/ttl: "3600"
+    external-dns.alpha.kubernetes.io/manage-record-types: "A"
+  appDiscovery: true
