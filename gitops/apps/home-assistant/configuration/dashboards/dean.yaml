@@ -146,11 +146,11 @@ strategy:
             cards:
               # Toggle home lights button - icon only
               - type: button
+                entity: light.home
                 show_name: false
                 icon: mdi:lightbulb
                 tap_action:
                   action: toggle
-                  entity: light.home
                 show_state: false
               # Morning scene button - icon only
               - type: button
