@@ -147,6 +147,7 @@ views:
               columns: 2
               cards:
                 # Show individual light if room group contains only one light (e.g., light.living_room with only light.fixture)
+                # Check if the group entity has entity_id attribute (which contains members) with only one member
                 - type: conditional
                   conditions:
                     - condition: template
@@ -159,8 +160,13 @@ views:
                           {% if room_key == 'hallway' %}
                             {{ false }}
                           {% elif main_light in all_lights %}
-                            {% set main_light_entities = state_attr(main_light, 'entity_id') | default([]) %}
-                            {{ main_light_entities | length == 1 }}
+                            {% set main_light_attr = state_attr(main_light, 'entity_id') | default([]) %}
+                            {% if main_light_attr is iterable and main_light_attr is not string %}
+                              {# Check if it's a list/array with exactly one item #}
+                              {{ main_light_attr | list | length == 1 }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
                           {% else %}
                             {{ false }}
                           {% endif %}
@@ -174,8 +180,13 @@ views:
                       {% if room and room != 'unknown' and room != 'unavailable' %}
                         {% set room_key = room %}
                         {% set main_light = 'light.' ~ room_key %}
-                        {% set main_light_entities = state_attr(main_light, 'entity_id') | default([]) %}
-                        {{ main_light_entities[0] if main_light_entities | length == 1 else main_light }}
+                        {% set main_light_attr = state_attr(main_light, 'entity_id') | default([]) %}
+                        {% if main_light_attr is iterable and main_light_attr is not string %}
+                          {% set attr_list = main_light_attr | list %}
+                          {{ attr_list[0] if attr_list | length == 1 else main_light }}
+                        {% else %}
+                          {{ main_light }}
+                        {% endif %}
                       {% else %}
                         light.bedroom
                       {% endif %}
@@ -239,10 +250,24 @@ views:
                           {% else %}
                             {% set main_light = 'light.' ~ room_key %}
                             {% if main_light in all_lights %}
+                              {# Check if main_light is a group with only one member #}
                               {% set main_light_entities = state_attr(main_light, 'entity_id') | default([]) %}
-                              {% if main_light_entities | length == 1 %}
-                                {{ false }}  {# Hide group if it only contains one light #}
+                              {% if main_light_entities is iterable and main_light_entities is not string %}
+                                {% set entity_list = main_light_entities | list %}
+                                {% if entity_list | length == 1 %}
+                                  {{ false }}  {# Hide group if it only contains one light #}
+                                {% else %}
+                                  {% set numbered_lights = [] %}
+                                  {% for i in range(1, 10) %}
+                                    {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
+                                    {% if numbered_light in all_lights %}
+                                      {% set _ = numbered_lights.append(numbered_light) %}
+                                    {% endif %}
+                                  {% endfor %}
+                                  {{ numbered_lights | length == 0 or numbered_lights | length > 1 }}
+                                {% endif %}
                               {% else %}
+                                {# Not a group or can't determine members, show the group normally #}
                                 {% set numbered_lights = [] %}
                                 {% for i in range(1, 10) %}
                                   {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}

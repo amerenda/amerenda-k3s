@@ -17,6 +17,37 @@ strategy:
         hidden: true
       binary_sensor.living_room_baby_crying:
         hidden: true
+      # Hide camera cards when privacy mode is enabled
+      camera.bedroom_fluent:
+        hidden: "{{ is_state('switch.bedroom_privacy_mode', 'on') }}"
+      camera.living_room_fluent:
+        hidden: "{{ is_state('switch.living_room_privacy_mode', 'on') }}"
+      # Hide light groups that only contain one member (to prevent duplicates)
+      # Example: light.living_room group containing only light.fixture
+      # Check entity_id attribute which contains the list of member entities
+      # expand() includes the group itself, so we check attributes directly
+      light.living_room:
+        hidden: "{{ (state_attr('light.living_room', 'entity_id') | default(state_attr('light.living_room', 'all_lights')) | default([]) | list | length) == 1 if (state_attr('light.living_room', 'entity_id') | default(state_attr('light.living_room', 'all_lights')) | default([])) is iterable else false }}"
+      light.bathroom:
+        hidden: "{{ (state_attr('light.bathroom', 'entity_id') | default(state_attr('light.bathroom', 'all_lights')) | default([]) | list | length) == 1 if (state_attr('light.bathroom', 'entity_id') | default(state_attr('light.bathroom', 'all_lights')) | default([])) is iterable else false }}"
+      light.hallway:
+        hidden: "{{ (state_attr('light.hallway', 'entity_id') | default(state_attr('light.hallway', 'all_lights')) | default([]) | list | length) == 1 if (state_attr('light.hallway', 'entity_id') | default(state_attr('light.hallway', 'all_lights')) | default([])) is iterable else false }}"
+      light.bedroom:
+        hidden: >
+          {% set group_entities = state_attr('light.bedroom', 'entity_id') | default([]) %}
+          {% if group_entities is iterable and group_entities is not string %}
+            {{ (group_entities | list | length) == 1 }}
+          {% else %}
+            false
+          {% endif %}
+      light.kitchen:
+        hidden: >
+          {% set group_entities = state_attr('light.kitchen', 'entity_id') | default([]) %}
+          {% if group_entities is iterable and group_entities is not string %}
+            {{ (group_entities | list | length) == 1 }}
+          {% else %}
+            false
+          {% endif %}
 
     # Domain-level filtering for binary sensors
     domains:
@@ -26,6 +57,26 @@ strategy:
             # Exclude unavailable binary sensors from areas
             - filter:
                 state: unavailable
+      # Domain-level filtering for lights - hide groups that only contain one member
+      light:
+        exclude:
+          entities:
+            # Hide light groups that only have one member (to prevent duplicates)
+            - filter:
+                # Check if entity has entity_id attribute (indicating it's a group)
+                # and if that attribute is a list with exactly one item
+                template: >
+                  {% set entity_id = entity.entity_id %}
+                  {% if entity_id is defined %}
+                    {% set group_entities = state_attr(entity_id, 'entity_id') | default([]) %}
+                    {% if group_entities is iterable and group_entities is not string %}
+                      {{ (group_entities | list | length) == 1 }}
+                    {% else %}
+                      {{ false }}
+                    {% endif %}
+                  {% else %}
+                    {{ false }}
+                  {% endif %}
 
     # Quick access cards (between greeting and area cards)
     quick_access_cards:
