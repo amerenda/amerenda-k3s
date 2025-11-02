@@ -173,6 +173,9 @@ spec:
               # Packages (loads your generated per-room helpers under packages/helpers/generated/)
               homeassistant:
                 packages: !include_dir_named packages
+                media_dirs:
+                  pets: /config/www/pets
+                  intruders: /config/www/intruders
         
               # Lovelace: storage mode + YAML dashboards
               lovelace:
