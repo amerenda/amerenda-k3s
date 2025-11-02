@@ -14,8 +14,8 @@ ingress:
   enabled: true
   className: "infra-traefik"
   annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls.passthrough: "true"
     external-dns.alpha.kubernetes.io/hostname: unifi.amer.home
     external-dns.alpha.kubernetes.io/ttl: "3600"
     external-dns.alpha.kubernetes.io/manage-record-types: "A"
@@ -25,6 +25,5 @@ ingress:
         - path: /
           pathType: Prefix
   tls:
-    - secretName: unifi-controller-tls
-      hosts:
+    - hosts:
         - unifi.amer.home
