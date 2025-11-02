@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: home-assistant-cleanup-orphaned
+  namespace: home-assistant
+spec:
+  schedule: "0 2 * * *"  # Daily at 2:00 AM
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cleanup-orphaned-entities
+            image: python:3.9-slim
+            command:
+              - /bin/sh
+              - -c
+              - |
+                pip install --quiet --no-cache-dir requests && \
+                python /scripts/cleanup_orphaned_entities.py
+            env:
+            - name: HA_URL
+              value: "http://homeassistant.home-assistant:8123"
+            - name: HA_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: home-assistant-access-token
+                  key: token
+            - name: DRY_RUN
+              value: "true"  # Start in dry-run mode for safety
+            volumeMounts:
+            - name: cleanup-script
+              mountPath: /scripts
+              readOnly: true
+          restartPolicy: OnFailure
+          volumes:
+          - name: cleanup-script
+            configMap:
+              name: home-assistant-cleanup-script
+              defaultMode: 0755
+
