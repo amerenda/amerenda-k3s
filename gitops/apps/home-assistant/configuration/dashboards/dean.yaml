@@ -141,52 +141,47 @@ strategy:
                 secondary_info: last-updated
           # Scene Control Card - Toggle home lights and activate scenes for all rooms
           - type: grid
-            square: false
-            columns: 5
+            square: true
+            columns: 3
             cards:
-              # Toggle home lights button
+              # Toggle home lights button - icon only
               - type: button
-                name: Home Lights
-                icon: >
-                  {% if is_state('light.home', 'on') %}
-                    mdi:lightbulb-on
-                  {% else %}
-                    mdi:lightbulb-off
-                  {% endif %}
+                show_name: false
+                icon: mdi:lightbulb
                 tap_action:
                   action: toggle
                   entity: light.home
-                show_state: true
-              # Morning scene button - activates morning scenes for all rooms
+                show_state: false
+              # Morning scene button - icon only
               - type: button
-                name: Morning
+                show_name: false
                 icon: mdi:weather-sunset-up
                 tap_action:
                   action: call-service
                   service: script.activate_all_room_scenes
                   service_data:
                     slot: morning
-              # Day scene button - activates day scenes for all rooms
+              # Day scene button - icon only
               - type: button
-                name: Day
+                show_name: false
                 icon: mdi:weather-sunny
                 tap_action:
                   action: call-service
                   service: script.activate_all_room_scenes
                   service_data:
                     slot: day
-              # Evening scene button - activates evening scenes for all rooms
+              # Evening scene button - icon only
               - type: button
-                name: Evening
+                show_name: false
                 icon: mdi:weather-sunset-down
                 tap_action:
                   action: call-service
                   service: script.activate_all_room_scenes
                   service_data:
                     slot: evening
-              # Night scene button - activates night scenes for all rooms
+              # Night scene button - icon only
               - type: button
-                name: Night
+                show_name: false
                 icon: mdi:weather-night
                 tap_action:
                   action: call-service
