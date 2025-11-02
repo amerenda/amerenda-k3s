@@ -152,6 +152,42 @@ data:
                   square: false
                   columns: 2
                   cards:
+                    # Show individual light if room group contains only one light (e.g., light.living_room with only light.fixture)
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' %}
+                              {% set room_key = room %}
+                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                              {% set main_light = 'light.' ~ room_key %}
+                              {% if room_key == 'hallway' %}
+                                {{ false }}
+                              {% elif main_light in all_lights %}
+                                {% set main_light_entities = state_attr(main_light, 'entity_id') | default([]) %}
+                                {{ main_light_entities | length == 1 }}
+                              {% else %}
+                                {{ false }}
+                              {% endif %}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                      card:
+                        type: light
+                        entity: >
+                          {% set room = states('input_select.room_selector') %}
+                          {% if room and room != 'unknown' and room != 'unavailable' %}
+                            {% set room_key = room %}
+                            {% set main_light = 'light.' ~ room_key %}
+                            {% set main_light_entities = state_attr(main_light, 'entity_id') | default([]) %}
+                            {{ main_light_entities[0] if main_light_entities | length == 1 else main_light }}
+                          {% else %}
+                            light.bedroom
+                          {% endif %}
+                        name: >
+                          {% set room = states('input_select.room_selector') %}
+                          {{ room | replace('_', ' ') | title }}
                     # Smart logic: if only one numbered light exists with main, show numbered only
                     - type: conditional
                       conditions:
@@ -165,6 +201,7 @@ data:
                               {% if room_key == 'hallway' %}
                                 {{ false }}
                               {% else %}
+                                {% set main_light_entities = state_attr(main_light, 'entity_id') | default([]) %}
                                 {% set numbered_lights = [] %}
                                 {% for i in range(1, 10) %}
                                   {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
@@ -172,7 +209,7 @@ data:
                                     {% set _ = numbered_lights.append(numbered_light) %}
                                   {% endif %}
                                 {% endfor %}
-                                {{ numbered_lights | length == 1 and main_light in all_lights }}
+                                {{ numbered_lights | length == 1 and main_light in all_lights and (main_light_entities | length != 1) }}
                               {% endif %}
                             {% else %}
                               {{ false }}
@@ -194,7 +231,7 @@ data:
                         name: >
                           {% set room = states('input_select.room_selector') %}
                           {{ room | replace('_', ' ') | title }}
-                    # Show main light if it exists and (no numbered or multiple numbered)
+                    # Show main light if it exists, has multiple entities (not a single-member group), and (no numbered or multiple numbered)
                     - type: conditional
                       conditions:
                         - condition: template
@@ -207,14 +244,23 @@ data:
                                 {{ false }}
                               {% else %}
                                 {% set main_light = 'light.' ~ room_key %}
-                                {% set numbered_lights = [] %}
-                                {% for i in range(1, 10) %}
-                                  {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
-                                  {% if numbered_light in all_lights %}
-                                    {% set _ = numbered_lights.append(numbered_light) %}
+                                {% if main_light in all_lights %}
+                                  {% set main_light_entities = state_attr(main_light, 'entity_id') | default([]) %}
+                                  {% if main_light_entities | length == 1 %}
+                                    {{ false }}  {# Hide group if it only contains one light #}
+                                  {% else %}
+                                    {% set numbered_lights = [] %}
+                                    {% for i in range(1, 10) %}
+                                      {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
+                                      {% if numbered_light in all_lights %}
+                                        {% set _ = numbered_lights.append(numbered_light) %}
+                                      {% endif %}
+                                    {% endfor %}
+                                    {{ numbered_lights | length == 0 or numbered_lights | length > 1 }}
                                   {% endif %}
-                                {% endfor %}
-                                {{ main_light in all_lights and (numbered_lights | length == 0 or numbered_lights | length > 1) }}
+                                {% else %}
+                                  {{ false }}
+                                {% endif %}
                               {% endif %}
                             {% else %}
                               {{ false }}
@@ -668,6 +714,10 @@ data:
             hidden: "{{ is_state('binary_sensor.living_room_animal', 'unavailable') }}"
           binary_sensor.bedroom_animal:
             hidden: "{{ is_state('binary_sensor.bedroom_animal', 'unavailable') }}"
+          binary_sensor.bedroom_baby_crying:
+            hidden: true
+          binary_sensor.living_room_baby_crying:
+            hidden: true
     
         # Domain-level filtering for binary sensors
         domains:
@@ -694,32 +744,34 @@ data:
               show_conditions: true
               primary_info: state
               secondary_info: temperature
-          - type: entities
-            title: System Status
-            entities:
-              - entity: sensor.home_assistant_version
-                name: Home Assistant
-                secondary_info: state
-              - entity: binary_sensor.ha_system_health
-                name: System Health
-                secondary_info: state
+          # System Status - commented out as it requires System Health integration
+          # - type: entities
+          #   title: System Status
+          #   entities:
+          #     - entity: sensor.home_assistant_version
+          #       name: Home Assistant
+          #       secondary_info: state
+          #     - entity: binary_sensor.ha_system_health
+          #       name: System Health
+          #       secondary_info: state
     
         # Custom chips on home view
         chips:
           extra_chips:
-            - type: entity
-              entity: binary_sensor.ha_system_health
-              icon: mdi:heart-pulse
-              icon_color: |
-                {% if is_state('binary_sensor.ha_system_health', 'on') %}
-                  green
-                {% else %}
-                  red
-                {% endif %}
-              content_info: none
-              tap_action:
-                action: navigate
-                navigation_path: /config/info
+              # System Health chip - commented out as it requires System Health integration
+              # - type: entity
+              #   entity: binary_sensor.ha_system_health
+              #   icon: mdi:heart-pulse
+              #   icon_color: |
+              #     {% if is_state('binary_sensor.ha_system_health', 'on') %}
+              #       green
+              #     {% else %}
+              #       red
+              #     {% endif %}
+              #   content_info: none
+              #   tap_action:
+              #     action: navigate
+              #     navigation_path: /config/info
             - type: entity
               entity: sun.sun
               icon: mdi:weather-sunset
@@ -756,24 +808,32 @@ data:
             square: false
             columns: 2
             cards:
-              - type: entities
-                title: Energy
-                entities:
-                  - entity: sensor.energy_consumption
-                    name: Energy Usage
-                    icon: mdi:lightning-bolt
-                    secondary_info: last-updated
-                  - entity: sensor.power_consumption
-                    name: Current Power
-                    icon: mdi:flash
-                    secondary_info: last-updated
+              # Energy monitoring - commented out as not available yet
+              # - type: entities
+              #   title: Energy
+              #   entities:
+              #     - entity: sensor.energy_consumption
+              #       name: Energy Usage
+              #       icon: mdi:lightning-bolt
+              #       secondary_info: last-updated
+              #     - entity: sensor.power_consumption
+              #       name: Current Power
+              #       icon: mdi:flash
+              #       secondary_info: last-updated
               - type: entities
                 title: Environment
                 entities:
-                  - entity: sensor.temperature
+                  # Temperature from midea_ac_lan integration
+                  - entity: >
+                      {% set midea_entities = states.climate | selectattr('entity_id', 'match', '.*midea.*') | map(attribute='entity_id') | list %}
+                      {% if midea_entities | length > 0 %}
+                        {{ midea_entities[0] }}
+                      {% else %}
+                        sensor.temperature
+                      {% endif %}
                     name: Temperature
                     icon: mdi:thermometer
-                    secondary_info: last-updated
+                    secondary_info: state
                   - entity: sensor.humidity
                     name: Humidity
                     icon: mdi:water-percent
