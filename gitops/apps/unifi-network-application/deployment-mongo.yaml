@@ -1,0 +1,93 @@
+---
+# MongoDB Deployment (Bitnami container)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unifi-db
+  namespace: unifi-network-application
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: unifi-db
+  template:
+    metadata:
+      labels:
+        app: unifi-db
+    spec:
+      initContainers:
+        - name: fix-permissions
+          image: bitnami/mongodb:4.4.10
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+            privileged: true
+          command:
+            - /bin/bash
+            - -c
+            - |
+              echo "[DEBUG] fix-permissions initContainer started as user $(id -u):$(id -g)."
+              echo "[DEBUG] Current ownership in /bitnami/mongodb:"
+              ls -la /bitnami/mongodb || true
+
+              echo "[DEBUG] Setting everything wide open with chown/chmod."
+              chown -R root:root /bitnami/mongodb || true
+              chmod -R 0777 /bitnami/mongodb || true
+
+              echo "[DEBUG] Post-chown/chmod listing:"
+              ls -la /bitnami/mongodb
+              echo "[DEBUG] fix-permissions complete. Next container..."
+          volumeMounts:
+            - name: mongo-data
+              mountPath: /bitnami/mongodb
+
+      containers:
+        - name: mongo
+          image: bitnami/mongodb:4.4.10
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+            privileged: true
+          env:
+            - name: BITNAMI_DEBUG
+              value: "true"
+            - name: MONGODB_DATABASE
+              value: "unifi"
+            - name: MONGODB_USERNAME
+              value: "unifi"
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: unifi-mongo-credentials
+                  key: password
+
+            - name: MONGODB_ROOT_USER
+              value: "root"
+            - name: MONGODB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: unifi-mongo-credentials
+                  key: password
+
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "no"
+
+          volumeMounts:
+            - name: mongo-data
+              mountPath: /bitnami/mongodb
+            - name: mongo-init-scripts
+              mountPath: /docker-entrypoint-initdb.d
+              readOnly: true
+
+      volumes:
+        - name: mongo-data
+          persistentVolumeClaim:
+            claimName: mongo-data
+        - name: mongo-init-scripts
+          configMap:
+            name: mongo-init-grant
+            items:
+              - key: zzz-grant-unifi-stat.sh
+                path: zzz-grant-unifi-stat.sh
+
