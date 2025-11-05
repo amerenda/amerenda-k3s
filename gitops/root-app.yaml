@@ -289,11 +289,11 @@ spec:
         maxDuration: 3m
 
 ---
-# Application: UniFi Controller
+# Application: UniFi Network Application
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app-unifi-controller
+  name: app-unifi-network-application
   namespace: default
   annotations:
     argocd.argoproj.io/sync-wave: "5"  # Install after infrastructure (needs storage)
@@ -301,22 +301,13 @@ metadata:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
   project: application
-  sources:
-    - repoURL: https://qonstrukt.github.io/helm-charts
-      chart: unifi-controller
-      targetRevision: 2.6.1
-      helm:
-        valueFiles:
-          - $values/gitops/apps/unifi-controller/values.yaml
-    - repoURL: https://github.com/amerenda/amerenda-k3s.git
-      targetRevision: main
-      ref: values
-    - repoURL: https://github.com/amerenda/amerenda-k3s.git
-      targetRevision: main
-      path: gitops/apps/unifi-controller
+  source:
+    repoURL: https://github.com/amerenda/amerenda-k3s.git
+    targetRevision: main
+    path: gitops/apps/unifi-network-application
   destination:
     server: https://kubernetes.default.svc
-    namespace: unifi-controller
+    namespace: unifi-network-application
   syncPolicy:
     automated:
       prune: true

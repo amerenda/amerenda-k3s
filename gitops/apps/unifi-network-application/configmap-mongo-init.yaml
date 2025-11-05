@@ -1,0 +1,23 @@
+---
+# ConfigMap: post-init script to grant 'unifi' dbOwner on 'unifi_stat'
+# This is a hacky workaround, Ubiquiti, do better.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-init-grant
+  namespace: unifi-network-application
+data:
+  zzz-grant-unifi-stat.sh: |
+    #!/bin/bash
+    echo "[INFO] Granting 'unifi' user dbOwner on 'unifi_stat'..."
+    echo "[INFO] Running as user: $(id -u):$(id -g)"
+    ls -la /bitnami/mongodb || true
+
+    mongo --username "${MONGODB_ROOT_USER}" --password "${MONGODB_ROOT_PASSWORD}" <<EOF
+      use unifi
+      db.grantRolesToUser("unifi", [
+        { role: "dbOwner", db: "unifi_stat" }
+      ]);
+    EOF
+    echo "[INFO] Done granting dbOwner on unifi_stat."
+
