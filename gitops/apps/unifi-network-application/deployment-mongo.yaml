@@ -7,6 +7,13 @@ metadata:
   namespace: unifi-network-application
 spec:
   replicas: 1
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
   selector:
     matchLabels:
       app: unifi-db
@@ -15,6 +22,8 @@ spec:
       labels:
         app: unifi-db
     spec:
+      securityContext:
+        fsGroup: 999
       initContainers:
         - name: fix-permissions
           image: mongo:4.4.10
@@ -48,7 +57,6 @@ spec:
           securityContext:
             runAsUser: 999
             runAsGroup: 999
-            fsGroup: 999
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
               value: "root"
@@ -62,6 +70,8 @@ spec:
 
           args:
             - --bind_ip_all
+
+          resources: {}
 
           volumeMounts:
             - name: mongo-data
