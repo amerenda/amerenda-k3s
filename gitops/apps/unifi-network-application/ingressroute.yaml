@@ -1,0 +1,23 @@
+---
+# IngressRoute for UniFi Controller with TLS
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: unifi-controller
+  namespace: unifi-network-application
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: unifi.amer.home
+    external-dns.alpha.kubernetes.io/ttl: "3600"
+    external-dns.alpha.kubernetes.io/manage-record-types: "A"
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`unifi.amer.home`)
+      kind: Rule
+      services:
+        - name: unifi-controller
+          port: 8443
+  tls:
+    secretName: unifi-amer-home-tls
+
