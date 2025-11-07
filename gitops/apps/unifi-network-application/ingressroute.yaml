@@ -1,9 +1,10 @@
 ---
-# IngressRoute for UniFi Controller with TLS
+# IngressRouteTCP for UniFi Controller with TLS Passthrough
+# UniFi controller uses its own TLS certificates, so we need passthrough
 apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
+kind: IngressRouteTCP
 metadata:
-  name: unifi-controller
+  name: unifi-controller-tcp
   namespace: unifi-network-application
   annotations:
     external-dns.alpha.kubernetes.io/hostname: unifi.amer.home
@@ -13,11 +14,10 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`unifi.amer.home`)
-      kind: Rule
+    - match: HostSNI(`unifi.amer.home`)
       services:
         - name: unifi-controller
           port: 8443
   tls:
-    secretName: unifi-amer-home-tls
+    passthrough: true
 
