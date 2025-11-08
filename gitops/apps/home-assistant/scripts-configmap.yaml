@@ -741,31 +741,35 @@ data:
                       next_states_count={{ next_scene_states | length }}
                     # Get list of light entities from both scenes (union)
                     scene_lights: >-
-                      {% set lights = [] %}
-                      {% for entity_id, state_data in current_scene_states.items() %}
-                        {% if entity_id.startswith('light.') and entity_id not in lights %}
-                          {% set _ = lights.append(entity_id) %}
+                      {% set current_lights = [] %}
+                      {% for entity_id in current_scene_states.keys() %}
+                        {% if entity_id.startswith('light.') %}
+                          {% set current_lights = current_lights + [entity_id] %}
                         {% endif %}
                       {% endfor %}
-                      {% for entity_id, state_data in next_scene_states.items() %}
-                        {% if entity_id.startswith('light.') and entity_id not in lights %}
-                          {% set _ = lights.append(entity_id) %}
+                      {% set next_lights = [] %}
+                      {% for entity_id in next_scene_states.keys() %}
+                        {% if entity_id.startswith('light.') and entity_id not in current_lights %}
+                          {% set next_lights = next_lights + [entity_id] %}
                         {% endif %}
                       {% endfor %}
+                      {% set lights = current_lights + next_lights %}
                       {# Fallback: if no lights found in scenes, try to find lights by room name #}
                       {# Uses 'light.{{ room }}' pattern (e.g., 'light.living_room' when room='living_room') #}
                       {% if lights | length == 0 %}
                         {% set all_lights = states.light | map(attribute='entity_id') | list %}
                         {% set room_light = 'light.' ~ room %}
+                        {% set fallback_lights = [] %}
                         {% if room_light in all_lights %}
-                          {% set _ = lights.append(room_light) %}
+                          {% set fallback_lights = [room_light] %}
                         {% endif %}
                         {% for i in range(1, 10) %}
                           {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
                           {% if numbered_light in all_lights %}
-                            {% set _ = lights.append(numbered_light) %}
+                            {% set fallback_lights = fallback_lights + [numbered_light] %}
                           {% endif %}
                         {% endfor %}
+                        {% set lights = fallback_lights %}
                       {% endif %}
                       {{ lights }}
     
@@ -874,15 +878,16 @@ data:
                                   {% set target_state = next_scene_states[light_id] %}
                                   {% if target_state is mapping and 'attributes' in target_state %}
                                     {% set target_attrs = target_state.attributes %}
-                                    {% set _ = light_data.update({
+                                    {% set target_updates = {
                                       'target_brightness': target_attrs.brightness | default(0) | int,
                                       'target_color_temp': target_attrs.color_temp if 'color_temp' in target_attrs else None,
                                       'target_rgb_color': target_attrs.rgb_color if 'rgb_color' in target_attrs else None,
                                       'target_hs_color': target_attrs.hs_color if 'hs_color' in target_attrs else None
-                                    }) %}
+                                    } %}
+                                    {% set light_data = light_data | combine(target_updates) %}
                                   {% endif %}
                                 {% endif %}
-                                {% set _ = transitions.append(light_data) %}
+                                {% set transitions = transitions + [light_data] %}
                               {% endfor %}
                               {{ transitions }}
     
@@ -916,12 +921,12 @@ data:
                                         data_template: >-
                                           {% set data = {'transition': transition_seconds | int} %}
                                           {% if light.supports_color_temp and light.target_color_temp is not none %}
-                                            {% set _ = data.update({'color_temp': light.target_color_temp}) %}
+                                            {% set data = data | combine({'color_temp': light.target_color_temp}) %}
                                           {% endif %}
                                           {% if light.supports_rgb and light.target_rgb_color is not none %}
-                                            {% set _ = data.update({'rgb_color': light.target_rgb_color}) %}
+                                            {% set data = data | combine({'rgb_color': light.target_rgb_color}) %}
                                           {% elif light.supports_hs and light.target_hs_color is not none %}
-                                            {% set _ = data.update({'hs_color': light.target_hs_color}) %}
+                                            {% set data = data | combine({'hs_color': light.target_hs_color}) %}
                                           {% endif %}
                                           {{ data }}
     
@@ -955,12 +960,12 @@ data:
                                       data_template: >-
                                         {% set data = {'brightness': new_brightness | int} %}
                                         {% if light.supports_color_temp and light.target_color_temp is not none %}
-                                          {% set _ = data.update({'color_temp': light.target_color_temp}) %}
+                                          {% set data = data | combine({'color_temp': light.target_color_temp}) %}
                                         {% endif %}
                                         {% if light.supports_rgb and light.target_rgb_color is not none %}
-                                          {% set _ = data.update({'rgb_color': light.target_rgb_color}) %}
+                                          {% set data = data | combine({'rgb_color': light.target_rgb_color}) %}
                                         {% elif light.supports_hs and light.target_hs_color is not none %}
-                                          {% set _ = data.update({'hs_color': light.target_hs_color}) %}
+                                          {% set data = data | combine({'hs_color': light.target_hs_color}) %}
                                         {% endif %}
                                         {{ data }}
                               - delay:
