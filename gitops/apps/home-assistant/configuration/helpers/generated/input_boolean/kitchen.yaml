@@ -24,6 +24,9 @@ kitchen_motion_enabled:
   name: Kitchen - Motion Control Enabled
 kitchen_timer_enabled:
   name: Kitchen - Timer Control Enabled
+kitchen_smooth_transition:
+  name: Kitchen - Smooth Transition
+  initial: true
 
 enable_kitchen_morning:
   name: Kitchen - Timer Morning Enabled

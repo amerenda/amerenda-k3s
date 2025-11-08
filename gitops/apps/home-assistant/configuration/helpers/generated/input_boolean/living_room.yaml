@@ -24,6 +24,9 @@ living_room_motion_enabled:
   name: Living Room - Motion Control Enabled
 living_room_timer_enabled:
   name: Living Room - Timer Control Enabled
+living_room_smooth_transition:
+  name: Living Room - Smooth Transition
+  initial: true
 
 enable_living_room_morning:
   name: Living Room - Timer Morning Enabled

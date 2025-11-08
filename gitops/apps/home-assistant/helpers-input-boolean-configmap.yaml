@@ -30,6 +30,9 @@ data:
       name: Bathroom - Motion Control Enabled
     bathroom_timer_enabled:
       name: Bathroom - Timer Control Enabled
+    bathroom_smooth_transition:
+      name: Bathroom - Smooth Transition
+      initial: true
     
     enable_bathroom_morning:
       name: Bathroom - Timer Morning Enabled
@@ -240,6 +243,9 @@ data:
       name: Bedroom - Motion Control Enabled
     bedroom_timer_enabled:
       name: Bedroom - Timer Control Enabled
+    bedroom_smooth_transition:
+      name: Bedroom - Smooth Transition
+      initial: true
     
     enable_bedroom_morning:
       name: Bedroom - Timer Morning Enabled
@@ -450,6 +456,9 @@ data:
       name: Hallway - Motion Control Enabled
     hallway_timer_enabled:
       name: Hallway - Timer Control Enabled
+    hallway_smooth_transition:
+      name: Hallway - Smooth Transition
+      initial: true
     
     enable_hallway_morning:
       name: Hallway - Timer Morning Enabled
@@ -660,6 +669,9 @@ data:
       name: Kitchen - Motion Control Enabled
     kitchen_timer_enabled:
       name: Kitchen - Timer Control Enabled
+    kitchen_smooth_transition:
+      name: Kitchen - Smooth Transition
+      initial: true
     
     enable_kitchen_morning:
       name: Kitchen - Timer Morning Enabled
@@ -870,6 +882,9 @@ data:
       name: Living Room - Motion Control Enabled
     living_room_timer_enabled:
       name: Living Room - Timer Control Enabled
+    living_room_smooth_transition:
+      name: Living Room - Smooth Transition
+      initial: true
     
     enable_living_room_morning:
       name: Living Room - Timer Morning Enabled

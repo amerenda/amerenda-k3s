@@ -24,6 +24,9 @@
   name: {{ room|replace('_',' ')|title }} - Motion Control Enabled
 {{ room }}_timer_enabled:
   name: {{ room|replace('_',' ')|title }} - Timer Control Enabled
+{{ room }}_smooth_transition:
+  name: {{ room|replace('_',' ')|title }} - Smooth Transition
+  initial: true
 
 enable_{{ room }}_morning:
   name: {{ room|replace('_',' ')|title }} - Timer Morning Enabled

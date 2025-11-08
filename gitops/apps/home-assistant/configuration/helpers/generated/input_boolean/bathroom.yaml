@@ -24,6 +24,9 @@ bathroom_motion_enabled:
   name: Bathroom - Motion Control Enabled
 bathroom_timer_enabled:
   name: Bathroom - Timer Control Enabled
+bathroom_smooth_transition:
+  name: Bathroom - Smooth Transition
+  initial: true
 
 enable_bathroom_morning:
   name: Bathroom - Timer Morning Enabled

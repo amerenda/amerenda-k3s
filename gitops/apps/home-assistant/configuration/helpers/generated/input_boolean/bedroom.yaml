@@ -24,6 +24,9 @@ bedroom_motion_enabled:
   name: Bedroom - Motion Control Enabled
 bedroom_timer_enabled:
   name: Bedroom - Timer Control Enabled
+bedroom_smooth_transition:
+  name: Bedroom - Smooth Transition
+  initial: true
 
 enable_bedroom_morning:
   name: Bedroom - Timer Morning Enabled
