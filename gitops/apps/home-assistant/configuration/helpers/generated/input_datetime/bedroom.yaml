@@ -10,12 +10,10 @@ bedroom_s1_weekday_start:
   name: Bedroom Morning Weekday start
   has_time: true
   has_date: false
-  initial: "06:00:00"
 bedroom_s1_weekend_start:
   name: Bedroom Morning Weekend start
   has_time: true
   has_date: false
-  initial: "06:00:00"
 bedroom_s2_start:
   name: Bedroom Day start
   has_time: true
@@ -24,12 +22,10 @@ bedroom_s2_weekday_start:
   name: Bedroom Day Weekday start
   has_time: true
   has_date: false
-  initial: "09:00:00"
 bedroom_s2_weekend_start:
   name: Bedroom Day Weekend start
   has_time: true
   has_date: false
-  initial: "09:00:00"
 bedroom_s3_start:
   name: Bedroom Evening start
   has_time: true
@@ -38,12 +34,10 @@ bedroom_s3_weekday_start:
   name: Bedroom Evening Weekday start
   has_time: true
   has_date: false
-  initial: "17:00:00"
 bedroom_s3_weekend_start:
   name: Bedroom Evening Weekend start
   has_time: true
   has_date: false
-  initial: "17:00:00"
 bedroom_s4_start:
   name: Bedroom Night start
   has_time: true
@@ -52,9 +46,7 @@ bedroom_s4_weekday_start:
   name: Bedroom Night Weekday start
   has_time: true
   has_date: false
-  initial: "22:00:00"
 bedroom_s4_weekend_start:
   name: Bedroom Night Weekend start
   has_time: true
   has_date: false
-  initial: "22:00:00"

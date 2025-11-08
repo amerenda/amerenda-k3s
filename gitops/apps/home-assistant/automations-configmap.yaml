@@ -152,465 +152,1586 @@ data:
   sync_weekday_weekend_times.yaml: |
     # Automation to sync weekday/weekend start times when separate_weekday_weekend is toggled
     # This ensures that when separate_weekday_weekend is enabled, the weekday/weekend helpers
-    # are initialized with the current value from the regular start time helper
+    # are initialized with the current value from the regular start time helper (or default if not set)
+    # Only sets values if the weekday/weekend helpers don't already have values set
     
     - id: sync_bedroom_morning_weekday_weekend_times
       alias: "Sync Bedroom Morning Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.bedroom_morning_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.bedroom_s1_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.bedroom_s1_weekday_start
-              - input_datetime.bedroom_s1_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.bedroom_s1_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.bedroom_s1_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.bedroom_s1_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.bedroom_s1_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bedroom_s1_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.bedroom_s1_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bedroom_s1_weekday_start
+                          data:
+                            datetime: "06:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.bedroom_s1_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.bedroom_s1_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.bedroom_s1_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bedroom_s1_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.bedroom_s1_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bedroom_s1_weekend_start
+                          data:
+                            datetime: "06:00:00"
       mode: single
     
     - id: sync_bedroom_day_weekday_weekend_times
       alias: "Sync Bedroom Day Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.bedroom_day_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.bedroom_s2_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.bedroom_s2_weekday_start
-              - input_datetime.bedroom_s2_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.bedroom_s2_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.bedroom_s2_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.bedroom_s2_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.bedroom_s2_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bedroom_s2_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.bedroom_s2_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bedroom_s2_weekday_start
+                          data:
+                            datetime: "09:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.bedroom_s2_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.bedroom_s2_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.bedroom_s2_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bedroom_s2_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.bedroom_s2_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bedroom_s2_weekend_start
+                          data:
+                            datetime: "09:00:00"
       mode: single
     
     - id: sync_bedroom_evening_weekday_weekend_times
       alias: "Sync Bedroom Evening Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.bedroom_evening_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.bedroom_s3_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.bedroom_s3_weekday_start
-              - input_datetime.bedroom_s3_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.bedroom_s3_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.bedroom_s3_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.bedroom_s3_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.bedroom_s3_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bedroom_s3_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.bedroom_s3_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bedroom_s3_weekday_start
+                          data:
+                            datetime: "17:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.bedroom_s3_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.bedroom_s3_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.bedroom_s3_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bedroom_s3_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.bedroom_s3_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bedroom_s3_weekend_start
+                          data:
+                            datetime: "17:00:00"
       mode: single
     
     - id: sync_bedroom_night_weekday_weekend_times
       alias: "Sync Bedroom Night Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.bedroom_night_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.bedroom_s4_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.bedroom_s4_weekday_start
-              - input_datetime.bedroom_s4_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.bedroom_s4_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.bedroom_s4_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.bedroom_s4_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.bedroom_s4_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bedroom_s4_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.bedroom_s4_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bedroom_s4_weekday_start
+                          data:
+                            datetime: "22:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.bedroom_s4_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.bedroom_s4_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.bedroom_s4_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bedroom_s4_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.bedroom_s4_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bedroom_s4_weekend_start
+                          data:
+                            datetime: "22:00:00"
       mode: single
     
     - id: sync_living_room_morning_weekday_weekend_times
       alias: "Sync Living Room Morning Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.living_room_morning_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.living_room_s1_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.living_room_s1_weekday_start
-              - input_datetime.living_room_s1_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.living_room_s1_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.living_room_s1_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.living_room_s1_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.living_room_s1_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.living_room_s1_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.living_room_s1_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.living_room_s1_weekday_start
+                          data:
+                            datetime: "06:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.living_room_s1_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.living_room_s1_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.living_room_s1_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.living_room_s1_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.living_room_s1_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.living_room_s1_weekend_start
+                          data:
+                            datetime: "06:00:00"
       mode: single
     
     - id: sync_living_room_day_weekday_weekend_times
       alias: "Sync Living Room Day Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.living_room_day_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.living_room_s2_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.living_room_s2_weekday_start
-              - input_datetime.living_room_s2_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.living_room_s2_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.living_room_s2_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.living_room_s2_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.living_room_s2_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.living_room_s2_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.living_room_s2_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.living_room_s2_weekday_start
+                          data:
+                            datetime: "09:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.living_room_s2_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.living_room_s2_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.living_room_s2_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.living_room_s2_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.living_room_s2_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.living_room_s2_weekend_start
+                          data:
+                            datetime: "09:00:00"
       mode: single
     
     - id: sync_living_room_evening_weekday_weekend_times
       alias: "Sync Living Room Evening Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.living_room_evening_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.living_room_s3_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.living_room_s3_weekday_start
-              - input_datetime.living_room_s3_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.living_room_s3_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.living_room_s3_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.living_room_s3_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.living_room_s3_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.living_room_s3_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.living_room_s3_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.living_room_s3_weekday_start
+                          data:
+                            datetime: "17:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.living_room_s3_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.living_room_s3_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.living_room_s3_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.living_room_s3_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.living_room_s3_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.living_room_s3_weekend_start
+                          data:
+                            datetime: "17:00:00"
       mode: single
     
     - id: sync_living_room_night_weekday_weekend_times
       alias: "Sync Living Room Night Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.living_room_night_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.living_room_s4_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.living_room_s4_weekday_start
-              - input_datetime.living_room_s4_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.living_room_s4_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.living_room_s4_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.living_room_s4_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.living_room_s4_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.living_room_s4_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.living_room_s4_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.living_room_s4_weekday_start
+                          data:
+                            datetime: "22:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.living_room_s4_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.living_room_s4_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.living_room_s4_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.living_room_s4_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.living_room_s4_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.living_room_s4_weekend_start
+                          data:
+                            datetime: "22:00:00"
       mode: single
     
     - id: sync_kitchen_morning_weekday_weekend_times
       alias: "Sync Kitchen Morning Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.kitchen_morning_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.kitchen_s1_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.kitchen_s1_weekday_start
-              - input_datetime.kitchen_s1_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.kitchen_s1_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.kitchen_s1_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.kitchen_s1_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.kitchen_s1_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.kitchen_s1_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.kitchen_s1_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.kitchen_s1_weekday_start
+                          data:
+                            datetime: "06:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.kitchen_s1_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.kitchen_s1_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.kitchen_s1_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.kitchen_s1_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.kitchen_s1_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.kitchen_s1_weekend_start
+                          data:
+                            datetime: "06:00:00"
       mode: single
     
     - id: sync_kitchen_day_weekday_weekend_times
       alias: "Sync Kitchen Day Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.kitchen_day_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.kitchen_s2_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.kitchen_s2_weekday_start
-              - input_datetime.kitchen_s2_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.kitchen_s2_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.kitchen_s2_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.kitchen_s2_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.kitchen_s2_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.kitchen_s2_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.kitchen_s2_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.kitchen_s2_weekday_start
+                          data:
+                            datetime: "09:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.kitchen_s2_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.kitchen_s2_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.kitchen_s2_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.kitchen_s2_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.kitchen_s2_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.kitchen_s2_weekend_start
+                          data:
+                            datetime: "09:00:00"
       mode: single
     
     - id: sync_kitchen_evening_weekday_weekend_times
       alias: "Sync Kitchen Evening Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.kitchen_evening_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.kitchen_s3_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.kitchen_s3_weekday_start
-              - input_datetime.kitchen_s3_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.kitchen_s3_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.kitchen_s3_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.kitchen_s3_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.kitchen_s3_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.kitchen_s3_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.kitchen_s3_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.kitchen_s3_weekday_start
+                          data:
+                            datetime: "17:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.kitchen_s3_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.kitchen_s3_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.kitchen_s3_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.kitchen_s3_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.kitchen_s3_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.kitchen_s3_weekend_start
+                          data:
+                            datetime: "17:00:00"
       mode: single
     
     - id: sync_kitchen_night_weekday_weekend_times
       alias: "Sync Kitchen Night Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.kitchen_night_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.kitchen_s4_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.kitchen_s4_weekday_start
-              - input_datetime.kitchen_s4_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.kitchen_s4_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.kitchen_s4_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.kitchen_s4_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.kitchen_s4_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.kitchen_s4_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.kitchen_s4_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.kitchen_s4_weekday_start
+                          data:
+                            datetime: "22:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.kitchen_s4_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.kitchen_s4_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.kitchen_s4_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.kitchen_s4_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.kitchen_s4_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.kitchen_s4_weekend_start
+                          data:
+                            datetime: "22:00:00"
       mode: single
     
     - id: sync_bathroom_morning_weekday_weekend_times
       alias: "Sync Bathroom Morning Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.bathroom_morning_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.bathroom_s1_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.bathroom_s1_weekday_start
-              - input_datetime.bathroom_s1_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.bathroom_s1_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.bathroom_s1_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.bathroom_s1_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.bathroom_s1_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bathroom_s1_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.bathroom_s1_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bathroom_s1_weekday_start
+                          data:
+                            datetime: "06:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.bathroom_s1_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.bathroom_s1_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.bathroom_s1_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bathroom_s1_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.bathroom_s1_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bathroom_s1_weekend_start
+                          data:
+                            datetime: "06:00:00"
       mode: single
     
     - id: sync_bathroom_day_weekday_weekend_times
       alias: "Sync Bathroom Day Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.bathroom_day_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.bathroom_s2_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.bathroom_s2_weekday_start
-              - input_datetime.bathroom_s2_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.bathroom_s2_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.bathroom_s2_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.bathroom_s2_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.bathroom_s2_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bathroom_s2_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.bathroom_s2_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bathroom_s2_weekday_start
+                          data:
+                            datetime: "09:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.bathroom_s2_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.bathroom_s2_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.bathroom_s2_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bathroom_s2_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.bathroom_s2_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bathroom_s2_weekend_start
+                          data:
+                            datetime: "09:00:00"
       mode: single
     
     - id: sync_bathroom_evening_weekday_weekend_times
       alias: "Sync Bathroom Evening Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.bathroom_evening_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.bathroom_s3_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.bathroom_s3_weekday_start
-              - input_datetime.bathroom_s3_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.bathroom_s3_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.bathroom_s3_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.bathroom_s3_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.bathroom_s3_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bathroom_s3_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.bathroom_s3_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bathroom_s3_weekday_start
+                          data:
+                            datetime: "17:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.bathroom_s3_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.bathroom_s3_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.bathroom_s3_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bathroom_s3_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.bathroom_s3_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bathroom_s3_weekend_start
+                          data:
+                            datetime: "17:00:00"
       mode: single
     
     - id: sync_bathroom_night_weekday_weekend_times
       alias: "Sync Bathroom Night Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.bathroom_night_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.bathroom_s4_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.bathroom_s4_weekday_start
-              - input_datetime.bathroom_s4_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.bathroom_s4_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.bathroom_s4_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.bathroom_s4_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.bathroom_s4_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bathroom_s4_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.bathroom_s4_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bathroom_s4_weekday_start
+                          data:
+                            datetime: "22:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.bathroom_s4_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.bathroom_s4_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.bathroom_s4_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bathroom_s4_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.bathroom_s4_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.bathroom_s4_weekend_start
+                          data:
+                            datetime: "22:00:00"
       mode: single
     
     - id: sync_hallway_morning_weekday_weekend_times
       alias: "Sync Hallway Morning Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.hallway_morning_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.hallway_s1_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.hallway_s1_weekday_start
-              - input_datetime.hallway_s1_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.hallway_s1_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.hallway_s1_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.hallway_s1_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.hallway_s1_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.hallway_s1_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.hallway_s1_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.hallway_s1_weekday_start
+                          data:
+                            datetime: "06:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.hallway_s1_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.hallway_s1_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.hallway_s1_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.hallway_s1_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.hallway_s1_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.hallway_s1_weekend_start
+                          data:
+                            datetime: "06:00:00"
       mode: single
     
     - id: sync_hallway_day_weekday_weekend_times
       alias: "Sync Hallway Day Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.hallway_day_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.hallway_s2_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.hallway_s2_weekday_start
-              - input_datetime.hallway_s2_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.hallway_s2_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.hallway_s2_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.hallway_s2_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.hallway_s2_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.hallway_s2_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.hallway_s2_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.hallway_s2_weekday_start
+                          data:
+                            datetime: "09:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.hallway_s2_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.hallway_s2_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.hallway_s2_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.hallway_s2_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.hallway_s2_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.hallway_s2_weekend_start
+                          data:
+                            datetime: "09:00:00"
       mode: single
     
     - id: sync_hallway_evening_weekday_weekend_times
       alias: "Sync Hallway Evening Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.hallway_evening_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.hallway_s3_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.hallway_s3_weekday_start
-              - input_datetime.hallway_s3_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.hallway_s3_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.hallway_s3_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.hallway_s3_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.hallway_s3_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.hallway_s3_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.hallway_s3_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.hallway_s3_weekday_start
+                          data:
+                            datetime: "17:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.hallway_s3_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.hallway_s3_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.hallway_s3_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.hallway_s3_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.hallway_s3_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.hallway_s3_weekend_start
+                          data:
+                            datetime: "17:00:00"
       mode: single
     
     - id: sync_hallway_night_weekday_weekend_times
       alias: "Sync Hallway Night Weekday/Weekend Times"
-      description: "When separate_weekday_weekend is toggled on, copy current start time to weekday/weekend helpers"
+      description: "When separate_weekday_weekend is toggled on, initialize weekday/weekend helpers if they don't have values"
       trigger:
         - platform: state
           entity_id: input_boolean.hallway_night_separate_weekday_weekend
           to: "on"
-      condition:
-        - condition: state
-          entity_id: input_datetime.hallway_s4_start
-          state: not
-            - unknown
-            - unavailable
       action:
-        - service: input_datetime.set_datetime
-          target:
-            entity_id:
-              - input_datetime.hallway_s4_weekday_start
-              - input_datetime.hallway_s4_weekend_start
-          data:
-            datetime: "{{ states('input_datetime.hallway_s4_start') }}"
+        - choose:
+            # If weekday helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.hallway_s4_weekday_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.hallway_s4_weekday_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.hallway_s4_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.hallway_s4_weekday_start
+                          data:
+                            datetime: "{{ states('input_datetime.hallway_s4_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.hallway_s4_weekday_start
+                          data:
+                            datetime: "22:00:00"
+            # If weekend helper doesn't have a value, set it
+            - conditions:
+                - condition: or
+                  conditions:
+                    - condition: state
+                      entity_id: input_datetime.hallway_s4_weekend_start
+                      state: unknown
+                    - condition: state
+                      entity_id: input_datetime.hallway_s4_weekend_start
+                      state: unavailable
+              sequence:
+                - choose:
+                    # Use regular start time if it has a value, otherwise use default
+                    - conditions:
+                        - condition: and
+                          conditions:
+                            - condition: state
+                              entity_id: input_datetime.hallway_s4_start
+                              state: not
+                                - unknown
+                                - unavailable
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.hallway_s4_weekend_start
+                          data:
+                            datetime: "{{ states('input_datetime.hallway_s4_start') }}"
+                    - conditions: []
+                      sequence:
+                        - service: input_datetime.set_datetime
+                          target:
+                            entity_id: input_datetime.hallway_s4_weekend_start
+                          data:
+                            datetime: "22:00:00"
       mode: single
     
