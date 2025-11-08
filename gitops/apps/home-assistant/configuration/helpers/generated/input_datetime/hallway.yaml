@@ -10,10 +10,12 @@ hallway_s1_weekday_start:
   name: Hallway Morning Weekday start
   has_time: true
   has_date: false
+  initial: "06:00:00"
 hallway_s1_weekend_start:
   name: Hallway Morning Weekend start
   has_time: true
   has_date: false
+  initial: "06:00:00"
 hallway_s2_start:
   name: Hallway Day start
   has_time: true
@@ -22,10 +24,12 @@ hallway_s2_weekday_start:
   name: Hallway Day Weekday start
   has_time: true
   has_date: false
+  initial: "09:00:00"
 hallway_s2_weekend_start:
   name: Hallway Day Weekend start
   has_time: true
   has_date: false
+  initial: "09:00:00"
 hallway_s3_start:
   name: Hallway Evening start
   has_time: true
@@ -34,10 +38,12 @@ hallway_s3_weekday_start:
   name: Hallway Evening Weekday start
   has_time: true
   has_date: false
+  initial: "17:00:00"
 hallway_s3_weekend_start:
   name: Hallway Evening Weekend start
   has_time: true
   has_date: false
+  initial: "17:00:00"
 hallway_s4_start:
   name: Hallway Night start
   has_time: true
@@ -46,7 +52,9 @@ hallway_s4_weekday_start:
   name: Hallway Night Weekday start
   has_time: true
   has_date: false
+  initial: "22:00:00"
 hallway_s4_weekend_start:
   name: Hallway Night Weekend start
   has_time: true
   has_date: false
+  initial: "22:00:00"

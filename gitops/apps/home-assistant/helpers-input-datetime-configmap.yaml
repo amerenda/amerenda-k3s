@@ -16,10 +16,12 @@ data:
       name: Bathroom Morning Weekday start
       has_time: true
       has_date: false
+      initial: "06:00:00"
     bathroom_s1_weekend_start:
       name: Bathroom Morning Weekend start
       has_time: true
       has_date: false
+      initial: "06:00:00"
     bathroom_s2_start:
       name: Bathroom Day start
       has_time: true
@@ -28,10 +30,12 @@ data:
       name: Bathroom Day Weekday start
       has_time: true
       has_date: false
+      initial: "09:00:00"
     bathroom_s2_weekend_start:
       name: Bathroom Day Weekend start
       has_time: true
       has_date: false
+      initial: "09:00:00"
     bathroom_s3_start:
       name: Bathroom Evening start
       has_time: true
@@ -40,10 +44,12 @@ data:
       name: Bathroom Evening Weekday start
       has_time: true
       has_date: false
+      initial: "17:00:00"
     bathroom_s3_weekend_start:
       name: Bathroom Evening Weekend start
       has_time: true
       has_date: false
+      initial: "17:00:00"
     bathroom_s4_start:
       name: Bathroom Night start
       has_time: true
@@ -52,10 +58,12 @@ data:
       name: Bathroom Night Weekday start
       has_time: true
       has_date: false
+      initial: "22:00:00"
     bathroom_s4_weekend_start:
       name: Bathroom Night Weekend start
       has_time: true
       has_date: false
+      initial: "22:00:00"
   bedroom.yaml: |
     # Template for input_datetime helpers per room
     # Usage:
@@ -69,10 +77,12 @@ data:
       name: Bedroom Morning Weekday start
       has_time: true
       has_date: false
+      initial: "06:00:00"
     bedroom_s1_weekend_start:
       name: Bedroom Morning Weekend start
       has_time: true
       has_date: false
+      initial: "06:00:00"
     bedroom_s2_start:
       name: Bedroom Day start
       has_time: true
@@ -81,10 +91,12 @@ data:
       name: Bedroom Day Weekday start
       has_time: true
       has_date: false
+      initial: "09:00:00"
     bedroom_s2_weekend_start:
       name: Bedroom Day Weekend start
       has_time: true
       has_date: false
+      initial: "09:00:00"
     bedroom_s3_start:
       name: Bedroom Evening start
       has_time: true
@@ -93,10 +105,12 @@ data:
       name: Bedroom Evening Weekday start
       has_time: true
       has_date: false
+      initial: "17:00:00"
     bedroom_s3_weekend_start:
       name: Bedroom Evening Weekend start
       has_time: true
       has_date: false
+      initial: "17:00:00"
     bedroom_s4_start:
       name: Bedroom Night start
       has_time: true
@@ -105,10 +119,12 @@ data:
       name: Bedroom Night Weekday start
       has_time: true
       has_date: false
+      initial: "22:00:00"
     bedroom_s4_weekend_start:
       name: Bedroom Night Weekend start
       has_time: true
       has_date: false
+      initial: "22:00:00"
   hallway.yaml: |
     # Template for input_datetime helpers per room
     # Usage:
@@ -122,10 +138,12 @@ data:
       name: Hallway Morning Weekday start
       has_time: true
       has_date: false
+      initial: "06:00:00"
     hallway_s1_weekend_start:
       name: Hallway Morning Weekend start
       has_time: true
       has_date: false
+      initial: "06:00:00"
     hallway_s2_start:
       name: Hallway Day start
       has_time: true
@@ -134,10 +152,12 @@ data:
       name: Hallway Day Weekday start
       has_time: true
       has_date: false
+      initial: "09:00:00"
     hallway_s2_weekend_start:
       name: Hallway Day Weekend start
       has_time: true
       has_date: false
+      initial: "09:00:00"
     hallway_s3_start:
       name: Hallway Evening start
       has_time: true
@@ -146,10 +166,12 @@ data:
       name: Hallway Evening Weekday start
       has_time: true
       has_date: false
+      initial: "17:00:00"
     hallway_s3_weekend_start:
       name: Hallway Evening Weekend start
       has_time: true
       has_date: false
+      initial: "17:00:00"
     hallway_s4_start:
       name: Hallway Night start
       has_time: true
@@ -158,10 +180,12 @@ data:
       name: Hallway Night Weekday start
       has_time: true
       has_date: false
+      initial: "22:00:00"
     hallway_s4_weekend_start:
       name: Hallway Night Weekend start
       has_time: true
       has_date: false
+      initial: "22:00:00"
   kitchen.yaml: |
     # Template for input_datetime helpers per room
     # Usage:
@@ -175,10 +199,12 @@ data:
       name: Kitchen Morning Weekday start
       has_time: true
       has_date: false
+      initial: "06:00:00"
     kitchen_s1_weekend_start:
       name: Kitchen Morning Weekend start
       has_time: true
       has_date: false
+      initial: "06:00:00"
     kitchen_s2_start:
       name: Kitchen Day start
       has_time: true
@@ -187,10 +213,12 @@ data:
       name: Kitchen Day Weekday start
       has_time: true
       has_date: false
+      initial: "09:00:00"
     kitchen_s2_weekend_start:
       name: Kitchen Day Weekend start
       has_time: true
       has_date: false
+      initial: "09:00:00"
     kitchen_s3_start:
       name: Kitchen Evening start
       has_time: true
@@ -199,10 +227,12 @@ data:
       name: Kitchen Evening Weekday start
       has_time: true
       has_date: false
+      initial: "17:00:00"
     kitchen_s3_weekend_start:
       name: Kitchen Evening Weekend start
       has_time: true
       has_date: false
+      initial: "17:00:00"
     kitchen_s4_start:
       name: Kitchen Night start
       has_time: true
@@ -211,10 +241,12 @@ data:
       name: Kitchen Night Weekday start
       has_time: true
       has_date: false
+      initial: "22:00:00"
     kitchen_s4_weekend_start:
       name: Kitchen Night Weekend start
       has_time: true
       has_date: false
+      initial: "22:00:00"
   living_room.yaml: |
     # Template for input_datetime helpers per room
     # Usage:
@@ -228,10 +260,12 @@ data:
       name: Living Room Morning Weekday start
       has_time: true
       has_date: false
+      initial: "06:00:00"
     living_room_s1_weekend_start:
       name: Living Room Morning Weekend start
       has_time: true
       has_date: false
+      initial: "06:00:00"
     living_room_s2_start:
       name: Living Room Day start
       has_time: true
@@ -240,10 +274,12 @@ data:
       name: Living Room Day Weekday start
       has_time: true
       has_date: false
+      initial: "09:00:00"
     living_room_s2_weekend_start:
       name: Living Room Day Weekend start
       has_time: true
       has_date: false
+      initial: "09:00:00"
     living_room_s3_start:
       name: Living Room Evening start
       has_time: true
@@ -252,10 +288,12 @@ data:
       name: Living Room Evening Weekday start
       has_time: true
       has_date: false
+      initial: "17:00:00"
     living_room_s3_weekend_start:
       name: Living Room Evening Weekend start
       has_time: true
       has_date: false
+      initial: "17:00:00"
     living_room_s4_start:
       name: Living Room Night start
       has_time: true
@@ -264,7 +302,9 @@ data:
       name: Living Room Night Weekday start
       has_time: true
       has_date: false
+      initial: "22:00:00"
     living_room_s4_weekend_start:
       name: Living Room Night Weekend start
       has_time: true
       has_date: false
+      initial: "22:00:00"
