@@ -532,10 +532,10 @@ data:
                 
                 | Time Slot | Scene | Activation Time | Days | Timer Enabled | Auto-On | Motion Activated |
                 |-----------|-------|----------------|------|---------------|---------|------------------|
-                | Morning | `{{ morning_scene }}` | {{ s1 }} | {{ morning_days_display }} | {% if morning_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if morning_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if morning_motion == 'on' %}✓{% else %}✗{% endif %} |
-                | Day | `{{ day_scene }}` | {{ s2 }} | {{ day_days_display }} | {% if day_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if day_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if day_motion == 'on' %}✓{% else %}✗{% endif %} |
-                | Evening | `{{ evening_scene }}` | {{ s3 }} | {{ evening_days_display }} | {% if evening_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if evening_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if evening_motion == 'on' %}✓{% else %}✗{% endif %} |
-                | Night | `{{ night_scene }}` | {{ s4 }} | {{ night_days_display }} | {% if night_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if night_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if night_motion == 'on' %}✓{% else %}✗{% endif %} |
+                | Morning | `morning` | {{ s1 }} | {{ morning_days_display }} | {% if morning_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if morning_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if morning_motion == 'on' %}✓{% else %}✗{% endif %} |
+                | Day | `day` | {{ s2 }} | {{ day_days_display }} | {% if day_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if day_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if day_motion == 'on' %}✓{% else %}✗{% endif %} |
+                | Evening | `evening` | {{ s3 }} | {{ evening_days_display }} | {% if evening_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if evening_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if evening_motion == 'on' %}✓{% else %}✗{% endif %} |
+                | Night | `night` | {{ s4 }} | {{ night_days_display }} | {% if night_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if night_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if night_motion == 'on' %}✓{% else %}✗{% endif %} |
                 
                 {% set any_custom = morning_custom == 'on' or day_custom == 'on' or evening_custom == 'on' or night_custom == 'on' %}
                 {% if any_custom %}
