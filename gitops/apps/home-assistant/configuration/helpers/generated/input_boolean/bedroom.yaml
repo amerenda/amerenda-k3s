@@ -8,22 +8,18 @@ bedroom_morning_custom_time:
   name: Bedroom - Use custom Morning time
 bedroom_morning_separate_weekday_weekend:
   name: Bedroom - Morning separate weekday/weekend times
-  initial: false
 bedroom_day_custom_time:
   name: Bedroom - Use custom Day time
 bedroom_day_separate_weekday_weekend:
   name: Bedroom - Day separate weekday/weekend times
-  initial: false
 bedroom_evening_custom_time:
   name: Bedroom - Use custom Evening time
 bedroom_evening_separate_weekday_weekend:
   name: Bedroom - Evening separate weekday/weekend times
-  initial: false
 bedroom_night_custom_time:
   name: Bedroom - Use custom Night time
 bedroom_night_separate_weekday_weekend:
   name: Bedroom - Night separate weekday/weekend times
-  initial: false
 bedroom_motion_enabled:
   name: Bedroom - Motion Control Enabled
 bedroom_timer_enabled:

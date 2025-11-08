@@ -8,22 +8,18 @@ living_room_morning_custom_time:
   name: Living Room - Use custom Morning time
 living_room_morning_separate_weekday_weekend:
   name: Living Room - Morning separate weekday/weekend times
-  initial: false
 living_room_day_custom_time:
   name: Living Room - Use custom Day time
 living_room_day_separate_weekday_weekend:
   name: Living Room - Day separate weekday/weekend times
-  initial: false
 living_room_evening_custom_time:
   name: Living Room - Use custom Evening time
 living_room_evening_separate_weekday_weekend:
   name: Living Room - Evening separate weekday/weekend times
-  initial: false
 living_room_night_custom_time:
   name: Living Room - Use custom Night time
 living_room_night_separate_weekday_weekend:
   name: Living Room - Night separate weekday/weekend times
-  initial: false
 living_room_motion_enabled:
   name: Living Room - Motion Control Enabled
 living_room_timer_enabled:
