@@ -753,6 +753,7 @@ data:
                         {% endif %}
                       {% endfor %}
                       {# Fallback: if no lights found in scenes, try to find lights by room name #}
+                      {# Uses 'light.{{ room }}' pattern (e.g., 'light.living_room' when room='living_room') #}
                       {% if lights | length == 0 %}
                         {% set all_lights = states.light | map(attribute='entity_id') | list %}
                         {% set room_light = 'light.' ~ room %}
