@@ -30,6 +30,14 @@ data:
       unit_of_measurement: "%"
       initial: 100
     
+    bathroom_transition_time:
+      name: Bathroom Transition Time (min)
+      min: 1
+      max: 120
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    
     bathroom_morning_auto_off:
       name: Bathroom Morning auto-off (min)
       min: 1
@@ -169,6 +177,14 @@ data:
       step: 1
       unit_of_measurement: "%"
       initial: 100
+    
+    bedroom_transition_time:
+      name: Bedroom Transition Time (min)
+      min: 1
+      max: 120
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
     
     bedroom_morning_auto_off:
       name: Bedroom Morning auto-off (min)
@@ -310,6 +326,14 @@ data:
       unit_of_measurement: "%"
       initial: 100
     
+    hallway_transition_time:
+      name: Hallway Transition Time (min)
+      min: 1
+      max: 120
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    
     hallway_morning_auto_off:
       name: Hallway Morning auto-off (min)
       min: 1
@@ -450,6 +474,14 @@ data:
       unit_of_measurement: "%"
       initial: 100
     
+    kitchen_transition_time:
+      name: Kitchen Transition Time (min)
+      min: 1
+      max: 120
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    
     kitchen_morning_auto_off:
       name: Kitchen Morning auto-off (min)
       min: 1
@@ -589,6 +621,14 @@ data:
       step: 1
       unit_of_measurement: "%"
       initial: 100
+    
+    living_room_transition_time:
+      name: Living Room Transition Time (min)
+      min: 1
+      max: 120
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
     
     living_room_morning_auto_off:
       name: Living Room Morning auto-off (min)

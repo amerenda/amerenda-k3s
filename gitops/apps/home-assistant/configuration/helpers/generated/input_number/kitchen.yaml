@@ -24,6 +24,14 @@ kitchen_max_brightness_pct:
   unit_of_measurement: "%"
   initial: 100
 
+kitchen_transition_time:
+  name: Kitchen Transition Time (min)
+  min: 1
+  max: 120
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+
 kitchen_morning_auto_off:
   name: Kitchen Morning auto-off (min)
   min: 1

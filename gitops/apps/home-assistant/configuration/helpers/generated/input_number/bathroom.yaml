@@ -24,6 +24,14 @@ bathroom_max_brightness_pct:
   unit_of_measurement: "%"
   initial: 100
 
+bathroom_transition_time:
+  name: Bathroom Transition Time (min)
+  min: 1
+  max: 120
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+
 bathroom_morning_auto_off:
   name: Bathroom Morning auto-off (min)
   min: 1

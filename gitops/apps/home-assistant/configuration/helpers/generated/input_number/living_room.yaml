@@ -24,6 +24,14 @@ living_room_max_brightness_pct:
   unit_of_measurement: "%"
   initial: 100
 
+living_room_transition_time:
+  name: Living Room Transition Time (min)
+  min: 1
+  max: 120
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+
 living_room_morning_auto_off:
   name: Living Room Morning auto-off (min)
   min: 1

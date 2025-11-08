@@ -71,6 +71,8 @@ views:
                     - entity: input_number.motion_auto_off_bedroom_morning_weekday
                     - entity: input_boolean.bedroom_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.bedroom_transition_time
+                      name: Transition Time
 
           # Bedroom Weekday Day Configuration
           - type: conditional
@@ -120,6 +122,8 @@ views:
                     - entity: input_number.motion_auto_off_bedroom_day_weekday
                     - entity: input_boolean.bedroom_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.bedroom_transition_time
+                      name: Transition Time
 
           # Bedroom Weekday Evening Configuration
           - type: conditional
@@ -169,6 +173,8 @@ views:
                     - entity: input_number.motion_auto_off_bedroom_evening_weekday
                     - entity: input_boolean.bedroom_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.bedroom_transition_time
+                      name: Transition Time
 
           # Bedroom Weekday Night Configuration
           - type: conditional
@@ -218,6 +224,8 @@ views:
                     - entity: input_number.motion_auto_off_bedroom_night_weekday
                     - entity: input_boolean.bedroom_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.bedroom_transition_time
+                      name: Transition Time
 
           # Bedroom Weekend Morning Configuration
           - type: conditional
@@ -267,6 +275,8 @@ views:
                     - entity: input_number.motion_auto_off_bedroom_morning_weekend
                     - entity: input_boolean.bedroom_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.bedroom_transition_time
+                      name: Transition Time
 
           # Bedroom Weekend Day Configuration
           - type: conditional
@@ -316,6 +326,8 @@ views:
                     - entity: input_number.motion_auto_off_bedroom_day_weekend
                     - entity: input_boolean.bedroom_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.bedroom_transition_time
+                      name: Transition Time
 
           # Bedroom Weekend Evening Configuration
           - type: conditional
@@ -365,6 +377,8 @@ views:
                     - entity: input_number.motion_auto_off_bedroom_evening_weekend
                     - entity: input_boolean.bedroom_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.bedroom_transition_time
+                      name: Transition Time
 
           # Bedroom Weekend Night Configuration
           - type: conditional
@@ -463,6 +477,8 @@ views:
                     - entity: input_number.motion_auto_off_living_room_morning_weekday
                     - entity: input_boolean.living_room_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.living_room_transition_time
+                      name: Transition Time
 
           # Living Room Weekday Day Configuration
           - type: conditional
@@ -512,6 +528,8 @@ views:
                     - entity: input_number.motion_auto_off_living_room_day_weekday
                     - entity: input_boolean.living_room_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.living_room_transition_time
+                      name: Transition Time
 
           # Living Room Weekday Evening Configuration
           - type: conditional
@@ -561,6 +579,8 @@ views:
                     - entity: input_number.motion_auto_off_living_room_evening_weekday
                     - entity: input_boolean.living_room_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.living_room_transition_time
+                      name: Transition Time
 
           # Living Room Weekday Night Configuration
           - type: conditional
@@ -610,6 +630,8 @@ views:
                     - entity: input_number.motion_auto_off_living_room_night_weekday
                     - entity: input_boolean.living_room_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.living_room_transition_time
+                      name: Transition Time
 
           # Living Room Weekend Morning Configuration
           - type: conditional
@@ -659,6 +681,8 @@ views:
                     - entity: input_number.motion_auto_off_living_room_morning_weekend
                     - entity: input_boolean.living_room_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.living_room_transition_time
+                      name: Transition Time
 
           # Living Room Weekend Day Configuration
           - type: conditional
@@ -708,6 +732,8 @@ views:
                     - entity: input_number.motion_auto_off_living_room_day_weekend
                     - entity: input_boolean.living_room_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.living_room_transition_time
+                      name: Transition Time
 
           # Living Room Weekend Evening Configuration
           - type: conditional
@@ -757,6 +783,8 @@ views:
                     - entity: input_number.motion_auto_off_living_room_evening_weekend
                     - entity: input_boolean.living_room_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.living_room_transition_time
+                      name: Transition Time
 
           # Living Room Weekend Night Configuration
           - type: conditional
@@ -855,6 +883,8 @@ views:
                     - entity: input_number.motion_auto_off_kitchen_morning_weekday
                     - entity: input_boolean.kitchen_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.kitchen_transition_time
+                      name: Transition Time
 
           # Kitchen Weekday Day Configuration
           - type: conditional
@@ -904,6 +934,8 @@ views:
                     - entity: input_number.motion_auto_off_kitchen_day_weekday
                     - entity: input_boolean.kitchen_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.kitchen_transition_time
+                      name: Transition Time
 
           # Kitchen Weekday Evening Configuration
           - type: conditional
@@ -953,6 +985,8 @@ views:
                     - entity: input_number.motion_auto_off_kitchen_evening_weekday
                     - entity: input_boolean.kitchen_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.kitchen_transition_time
+                      name: Transition Time
 
           # Kitchen Weekday Night Configuration
           - type: conditional
@@ -1002,6 +1036,8 @@ views:
                     - entity: input_number.motion_auto_off_kitchen_night_weekday
                     - entity: input_boolean.kitchen_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.kitchen_transition_time
+                      name: Transition Time
 
           # Kitchen Weekend Morning Configuration
           - type: conditional
@@ -1051,6 +1087,8 @@ views:
                     - entity: input_number.motion_auto_off_kitchen_morning_weekend
                     - entity: input_boolean.kitchen_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.kitchen_transition_time
+                      name: Transition Time
 
           # Kitchen Weekend Day Configuration
           - type: conditional
@@ -1100,6 +1138,8 @@ views:
                     - entity: input_number.motion_auto_off_kitchen_day_weekend
                     - entity: input_boolean.kitchen_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.kitchen_transition_time
+                      name: Transition Time
 
           # Kitchen Weekend Evening Configuration
           - type: conditional
@@ -1149,6 +1189,8 @@ views:
                     - entity: input_number.motion_auto_off_kitchen_evening_weekend
                     - entity: input_boolean.kitchen_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.kitchen_transition_time
+                      name: Transition Time
 
           # Kitchen Weekend Night Configuration
           - type: conditional
@@ -1247,6 +1289,8 @@ views:
                     - entity: input_number.motion_auto_off_bathroom_morning_weekday
                     - entity: input_boolean.bathroom_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.bathroom_transition_time
+                      name: Transition Time
 
           # Bathroom Weekday Day Configuration
           - type: conditional
@@ -1296,6 +1340,8 @@ views:
                     - entity: input_number.motion_auto_off_bathroom_day_weekday
                     - entity: input_boolean.bathroom_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.bathroom_transition_time
+                      name: Transition Time
 
           # Bathroom Weekday Evening Configuration
           - type: conditional
@@ -1345,6 +1391,8 @@ views:
                     - entity: input_number.motion_auto_off_bathroom_evening_weekday
                     - entity: input_boolean.bathroom_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.bathroom_transition_time
+                      name: Transition Time
 
           # Bathroom Weekday Night Configuration
           - type: conditional
@@ -1394,6 +1442,8 @@ views:
                     - entity: input_number.motion_auto_off_bathroom_night_weekday
                     - entity: input_boolean.bathroom_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.bathroom_transition_time
+                      name: Transition Time
 
           # Bathroom Weekend Morning Configuration
           - type: conditional
@@ -1443,6 +1493,8 @@ views:
                     - entity: input_number.motion_auto_off_bathroom_morning_weekend
                     - entity: input_boolean.bathroom_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.bathroom_transition_time
+                      name: Transition Time
 
           # Bathroom Weekend Day Configuration
           - type: conditional
@@ -1492,6 +1544,8 @@ views:
                     - entity: input_number.motion_auto_off_bathroom_day_weekend
                     - entity: input_boolean.bathroom_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.bathroom_transition_time
+                      name: Transition Time
 
           # Bathroom Weekend Evening Configuration
           - type: conditional
@@ -1541,6 +1595,8 @@ views:
                     - entity: input_number.motion_auto_off_bathroom_evening_weekend
                     - entity: input_boolean.bathroom_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.bathroom_transition_time
+                      name: Transition Time
 
           # Bathroom Weekend Night Configuration
           - type: conditional
@@ -1639,6 +1695,8 @@ views:
                     - entity: input_number.motion_auto_off_hallway_morning_weekday
                     - entity: input_boolean.hallway_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.hallway_transition_time
+                      name: Transition Time
 
           # Hallway Weekday Day Configuration
           - type: conditional
@@ -1688,6 +1746,8 @@ views:
                     - entity: input_number.motion_auto_off_hallway_day_weekday
                     - entity: input_boolean.hallway_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.hallway_transition_time
+                      name: Transition Time
 
           # Hallway Weekday Evening Configuration
           - type: conditional
@@ -1737,6 +1797,8 @@ views:
                     - entity: input_number.motion_auto_off_hallway_evening_weekday
                     - entity: input_boolean.hallway_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.hallway_transition_time
+                      name: Transition Time
 
           # Hallway Weekday Night Configuration
           - type: conditional
@@ -1786,6 +1848,8 @@ views:
                     - entity: input_number.motion_auto_off_hallway_night_weekday
                     - entity: input_boolean.hallway_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.hallway_transition_time
+                      name: Transition Time
 
           # Hallway Weekend Morning Configuration
           - type: conditional
@@ -1835,6 +1899,8 @@ views:
                     - entity: input_number.motion_auto_off_hallway_morning_weekend
                     - entity: input_boolean.hallway_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.hallway_transition_time
+                      name: Transition Time
 
           # Hallway Weekend Day Configuration
           - type: conditional
@@ -1884,6 +1950,8 @@ views:
                     - entity: input_number.motion_auto_off_hallway_day_weekend
                     - entity: input_boolean.hallway_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.hallway_transition_time
+                      name: Transition Time
 
           # Hallway Weekend Evening Configuration
           - type: conditional
@@ -1933,6 +2001,8 @@ views:
                     - entity: input_number.motion_auto_off_hallway_evening_weekend
                     - entity: input_boolean.hallway_smooth_transition
                       name: Smooth Transition
+                    - entity: input_number.hallway_transition_time
+                      name: Transition Time
 
           # Hallway Weekend Night Configuration
           - type: conditional

@@ -24,6 +24,14 @@
   unit_of_measurement: "%"
   initial: 100
 
+{{ room }}_transition_time:
+  name: {{ room|replace('_',' ')|title }} Transition Time (min)
+  min: 1
+  max: 120
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+
 {{ room }}_morning_auto_off:
   name: {{ room|replace('_',' ')|title }} Morning auto-off (min)
   min: 1

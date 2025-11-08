@@ -24,6 +24,14 @@ hallway_max_brightness_pct:
   unit_of_measurement: "%"
   initial: 100
 
+hallway_transition_time:
+  name: Hallway Transition Time (min)
+  min: 1
+  max: 120
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+
 hallway_morning_auto_off:
   name: Hallway Morning auto-off (min)
   min: 1
