@@ -795,8 +795,30 @@ data:
                         title: Morning Schedule
                         entities:
                           - entity: input_boolean.bedroom_morning_custom_time
-                          - entity: input_datetime.bedroom_s1_start
-                            name: Morning Start Time
+                          - entity: input_boolean.bedroom_morning_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.bedroom_morning_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Morning Start Times
+                          entities:
+                            - entity: input_datetime.bedroom_s1_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.bedroom_s1_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.bedroom_morning_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Morning Start Time
+                          entities:
+                            - entity: input_datetime.bedroom_s1_start
+                              name: Morning Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button
@@ -860,7 +882,30 @@ data:
                         title: Morning Schedule
                         entities:
                           - entity: input_boolean.living_room_morning_custom_time
-                          - entity: input_datetime.living_room_s1_start
+                          - entity: input_boolean.living_room_morning_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.living_room_morning_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Morning Start Times
+                          entities:
+                            - entity: input_datetime.living_room_s1_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.living_room_s1_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.living_room_morning_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Morning Start Time
+                          entities:
+                            - entity: input_datetime.living_room_s1_start
+                              name: Morning Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button
@@ -924,7 +969,30 @@ data:
                         title: Morning Schedule
                         entities:
                           - entity: input_boolean.kitchen_morning_custom_time
-                          - entity: input_datetime.kitchen_s1_start
+                          - entity: input_boolean.kitchen_morning_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.kitchen_morning_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Morning Start Times
+                          entities:
+                            - entity: input_datetime.kitchen_s1_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.kitchen_s1_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.kitchen_morning_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Morning Start Time
+                          entities:
+                            - entity: input_datetime.kitchen_s1_start
+                              name: Morning Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button
@@ -988,7 +1056,30 @@ data:
                         title: Morning Schedule
                         entities:
                           - entity: input_boolean.bathroom_morning_custom_time
-                          - entity: input_datetime.bathroom_s1_start
+                          - entity: input_boolean.bathroom_morning_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.bathroom_morning_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Morning Start Times
+                          entities:
+                            - entity: input_datetime.bathroom_s1_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.bathroom_s1_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.bathroom_morning_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Morning Start Time
+                          entities:
+                            - entity: input_datetime.bathroom_s1_start
+                              name: Morning Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button
@@ -1052,7 +1143,30 @@ data:
                         title: Morning Schedule
                         entities:
                           - entity: input_boolean.hallway_morning_custom_time
-                          - entity: input_datetime.hallway_s1_start
+                          - entity: input_boolean.hallway_morning_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.hallway_morning_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Morning Start Times
+                          entities:
+                            - entity: input_datetime.hallway_s1_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.hallway_s1_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.hallway_morning_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Morning Start Time
+                          entities:
+                            - entity: input_datetime.hallway_s1_start
+                              name: Morning Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button
@@ -1118,7 +1232,30 @@ data:
                         title: Day Schedule
                         entities:
                           - entity: input_boolean.bedroom_day_custom_time
-                          - entity: input_datetime.bedroom_s2_start
+                          - entity: input_boolean.bedroom_day_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.bedroom_day_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Day Start Times
+                          entities:
+                            - entity: input_datetime.bedroom_s2_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.bedroom_s2_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.bedroom_day_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Day Start Time
+                          entities:
+                            - entity: input_datetime.bedroom_s2_start
+                              name: Day Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button
@@ -1182,7 +1319,30 @@ data:
                         title: Day Schedule
                         entities:
                           - entity: input_boolean.living_room_day_custom_time
-                          - entity: input_datetime.living_room_s2_start
+                          - entity: input_boolean.living_room_day_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.living_room_day_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Day Start Times
+                          entities:
+                            - entity: input_datetime.living_room_s2_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.living_room_s2_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.living_room_day_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Day Start Time
+                          entities:
+                            - entity: input_datetime.living_room_s2_start
+                              name: Day Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button
@@ -1246,7 +1406,30 @@ data:
                         title: Day Schedule
                         entities:
                           - entity: input_boolean.kitchen_day_custom_time
-                          - entity: input_datetime.kitchen_s2_start
+                          - entity: input_boolean.kitchen_day_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.kitchen_day_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Day Start Times
+                          entities:
+                            - entity: input_datetime.kitchen_s2_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.kitchen_s2_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.kitchen_day_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Day Start Time
+                          entities:
+                            - entity: input_datetime.kitchen_s2_start
+                              name: Day Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button
@@ -1310,7 +1493,30 @@ data:
                         title: Day Schedule
                         entities:
                           - entity: input_boolean.bathroom_day_custom_time
-                          - entity: input_datetime.bathroom_s2_start
+                          - entity: input_boolean.bathroom_day_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.bathroom_day_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Day Start Times
+                          entities:
+                            - entity: input_datetime.bathroom_s2_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.bathroom_s2_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.bathroom_day_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Day Start Time
+                          entities:
+                            - entity: input_datetime.bathroom_s2_start
+                              name: Day Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button
@@ -1374,7 +1580,30 @@ data:
                         title: Day Schedule
                         entities:
                           - entity: input_boolean.hallway_day_custom_time
-                          - entity: input_datetime.hallway_s2_start
+                          - entity: input_boolean.hallway_day_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.hallway_day_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Day Start Times
+                          entities:
+                            - entity: input_datetime.hallway_s2_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.hallway_s2_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.hallway_day_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Day Start Time
+                          entities:
+                            - entity: input_datetime.hallway_s2_start
+                              name: Day Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button
@@ -1440,7 +1669,30 @@ data:
                         title: Evening Schedule
                         entities:
                           - entity: input_boolean.bedroom_evening_custom_time
-                          - entity: input_datetime.bedroom_s3_start
+                          - entity: input_boolean.bedroom_evening_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.bedroom_evening_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Evening Start Times
+                          entities:
+                            - entity: input_datetime.bedroom_s3_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.bedroom_s3_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.bedroom_evening_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Evening Start Time
+                          entities:
+                            - entity: input_datetime.bedroom_s3_start
+                              name: Evening Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button
@@ -1504,7 +1756,30 @@ data:
                         title: Evening Schedule
                         entities:
                           - entity: input_boolean.living_room_evening_custom_time
-                          - entity: input_datetime.living_room_s3_start
+                          - entity: input_boolean.living_room_evening_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.living_room_evening_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Evening Start Times
+                          entities:
+                            - entity: input_datetime.living_room_s3_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.living_room_s3_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.living_room_evening_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Evening Start Time
+                          entities:
+                            - entity: input_datetime.living_room_s3_start
+                              name: Evening Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button
@@ -1568,7 +1843,30 @@ data:
                         title: Evening Schedule
                         entities:
                           - entity: input_boolean.kitchen_evening_custom_time
-                          - entity: input_datetime.kitchen_s3_start
+                          - entity: input_boolean.kitchen_evening_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.kitchen_evening_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Evening Start Times
+                          entities:
+                            - entity: input_datetime.kitchen_s3_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.kitchen_s3_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.kitchen_evening_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Evening Start Time
+                          entities:
+                            - entity: input_datetime.kitchen_s3_start
+                              name: Evening Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button
@@ -1632,7 +1930,30 @@ data:
                         title: Evening Schedule
                         entities:
                           - entity: input_boolean.bathroom_evening_custom_time
-                          - entity: input_datetime.bathroom_s3_start
+                          - entity: input_boolean.bathroom_evening_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.bathroom_evening_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Evening Start Times
+                          entities:
+                            - entity: input_datetime.bathroom_s3_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.bathroom_s3_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.bathroom_evening_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Evening Start Time
+                          entities:
+                            - entity: input_datetime.bathroom_s3_start
+                              name: Evening Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button
@@ -1696,7 +2017,30 @@ data:
                         title: Evening Schedule
                         entities:
                           - entity: input_boolean.hallway_evening_custom_time
-                          - entity: input_datetime.hallway_s3_start
+                          - entity: input_boolean.hallway_evening_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.hallway_evening_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Evening Start Times
+                          entities:
+                            - entity: input_datetime.hallway_s3_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.hallway_s3_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.hallway_evening_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Evening Start Time
+                          entities:
+                            - entity: input_datetime.hallway_s3_start
+                              name: Evening Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button
@@ -1762,7 +2106,30 @@ data:
                         title: Night Schedule
                         entities:
                           - entity: input_boolean.bedroom_night_custom_time
-                          - entity: input_datetime.bedroom_s4_start
+                          - entity: input_boolean.bedroom_night_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.bedroom_night_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Night Start Times
+                          entities:
+                            - entity: input_datetime.bedroom_s4_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.bedroom_s4_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.bedroom_night_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Night Start Time
+                          entities:
+                            - entity: input_datetime.bedroom_s4_start
+                              name: Night Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button
@@ -1826,7 +2193,30 @@ data:
                         title: Night Schedule
                         entities:
                           - entity: input_boolean.living_room_night_custom_time
-                          - entity: input_datetime.living_room_s4_start
+                          - entity: input_boolean.living_room_night_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.living_room_night_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Night Start Times
+                          entities:
+                            - entity: input_datetime.living_room_s4_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.living_room_s4_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.living_room_night_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Night Start Time
+                          entities:
+                            - entity: input_datetime.living_room_s4_start
+                              name: Night Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button
@@ -1890,7 +2280,30 @@ data:
                         title: Night Schedule
                         entities:
                           - entity: input_boolean.kitchen_night_custom_time
-                          - entity: input_datetime.kitchen_s4_start
+                          - entity: input_boolean.kitchen_night_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.kitchen_night_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Night Start Times
+                          entities:
+                            - entity: input_datetime.kitchen_s4_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.kitchen_s4_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.kitchen_night_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Night Start Time
+                          entities:
+                            - entity: input_datetime.kitchen_s4_start
+                              name: Night Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button
@@ -1954,7 +2367,30 @@ data:
                         title: Night Schedule
                         entities:
                           - entity: input_boolean.bathroom_night_custom_time
-                          - entity: input_datetime.bathroom_s4_start
+                          - entity: input_boolean.bathroom_night_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.bathroom_night_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Night Start Times
+                          entities:
+                            - entity: input_datetime.bathroom_s4_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.bathroom_s4_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.bathroom_night_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Night Start Time
+                          entities:
+                            - entity: input_datetime.bathroom_s4_start
+                              name: Night Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button
@@ -2018,7 +2454,30 @@ data:
                         title: Night Schedule
                         entities:
                           - entity: input_boolean.hallway_night_custom_time
-                          - entity: input_datetime.hallway_s4_start
+                          - entity: input_boolean.hallway_night_separate_weekday_weekend
+                            name: Separate Weekday/Weekend Times
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.hallway_night_separate_weekday_weekend
+                            state: "on"
+                        card:
+                          type: entities
+                          title: Night Start Times
+                          entities:
+                            - entity: input_datetime.hallway_s4_weekday_start
+                              name: Weekday Start Time
+                            - entity: input_datetime.hallway_s4_weekend_start
+                              name: Weekend Start Time
+                      - type: conditional
+                        conditions:
+                          - entity: input_boolean.hallway_night_separate_weekday_weekend
+                            state: "off"
+                        card:
+                          type: entities
+                          title: Night Start Time
+                          entities:
+                            - entity: input_datetime.hallway_s4_start
+                              name: Night Start Time
                       - type: horizontal-stack
                         cards:
                           - type: button

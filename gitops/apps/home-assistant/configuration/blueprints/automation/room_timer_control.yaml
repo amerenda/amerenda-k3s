@@ -146,9 +146,26 @@ variables:
       {{ false }}
     {% endif %}
 
+  # Check if separate weekday/weekend times are enabled
+  morning_separate: >-
+    {% set helper = 'input_boolean.' ~ room_key_var ~ '_morning_separate_weekday_weekend' %}
+    {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+  # Check if today is a weekday (Mon-Fri) or weekend (Sat-Sun)
+  is_weekday: >-
+    {% set day = now().strftime('%A').lower() %}
+    {{ day in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] }}
+  
   s1_str: >-
     {% if morning_custom %}
-      {% set v = states('input_datetime.' ~ room_key_var ~ '_s1_start') %}
+      {% if morning_separate %}
+        {% if is_weekday %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s1_weekday_start') %}
+        {% else %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s1_weekend_start') %}
+        {% endif %}
+      {% else %}
+        {% set v = states('input_datetime.' ~ room_key_var ~ '_s1_start') %}
+      {% endif %}
       {% if v in ['unknown','unavailable',''] %}{{ default_s1 }}{% else %}{{ v }}{% endif %}
     {% elif custom_s1_start_input %}
       {% set v = states(custom_s1_start_input) %}
@@ -156,9 +173,21 @@ variables:
     {% else %}
       {{ default_s1 }}
     {% endif %}
+  day_separate: >-
+    {% set helper = 'input_boolean.' ~ room_key_var ~ '_day_separate_weekday_weekend' %}
+    {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+  
   s2_str: >-
     {% if day_custom %}
-      {% set v = states('input_datetime.' ~ room_key_var ~ '_s2_start') %}
+      {% if day_separate %}
+        {% if is_weekday %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s2_weekday_start') %}
+        {% else %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s2_weekend_start') %}
+        {% endif %}
+      {% else %}
+        {% set v = states('input_datetime.' ~ room_key_var ~ '_s2_start') %}
+      {% endif %}
       {% if v in ['unknown','unavailable',''] %}{{ default_s2 }}{% else %}{{ v }}{% endif %}
     {% elif custom_s2_start_input %}
       {% set v = states(custom_s2_start_input) %}
@@ -166,10 +195,22 @@ variables:
     {% else %}
       {{ default_s2 }}
     {% endif %}
+  evening_separate: >-
+    {% set helper = 'input_boolean.' ~ room_key_var ~ '_evening_separate_weekday_weekend' %}
+    {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+  
   s3_str: >-
     {% if evening_custom %}
-      {% set helper_name = 'input_datetime.' ~ room_key_var ~ '_s3_start' %}
-      {% set v = states(helper_name) %}
+      {% if evening_separate %}
+        {% if is_weekday %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s3_weekday_start') %}
+        {% else %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s3_weekend_start') %}
+        {% endif %}
+      {% else %}
+        {% set helper_name = 'input_datetime.' ~ room_key_var ~ '_s3_start' %}
+        {% set v = states(helper_name) %}
+      {% endif %}
       {% if v in ['unknown','unavailable',''] %}{{ default_s3 }}{% else %}{{ v }}{% endif %}
     {% elif custom_s3_start_input %}
       {% set v = states(custom_s3_start_input) %}
@@ -177,9 +218,21 @@ variables:
     {% else %}
       {{ default_s3 }}
     {% endif %}
+  night_separate: >-
+    {% set helper = 'input_boolean.' ~ room_key_var ~ '_night_separate_weekday_weekend' %}
+    {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+  
   s4_str: >-
     {% if night_custom %}
-      {% set v = states('input_datetime.' ~ room_key_var ~ '_s4_start') %}
+      {% if night_separate %}
+        {% if is_weekday %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s4_weekday_start') %}
+        {% else %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s4_weekend_start') %}
+        {% endif %}
+      {% else %}
+        {% set v = states('input_datetime.' ~ room_key_var ~ '_s4_start') %}
+      {% endif %}
       {% if v in ['unknown','unavailable',''] %}{{ default_s4 }}{% else %}{{ v }}{% endif %}
     {% elif custom_s4_start_input %}
       {% set v = states(custom_s4_start_input) %}

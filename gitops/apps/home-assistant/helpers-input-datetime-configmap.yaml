@@ -12,16 +12,48 @@ data:
       name: Bathroom Morning start
       has_time: true
       has_date: false
+    bathroom_s1_weekday_start:
+      name: Bathroom Morning Weekday start
+      has_time: true
+      has_date: false
+    bathroom_s1_weekend_start:
+      name: Bathroom Morning Weekend start
+      has_time: true
+      has_date: false
     bathroom_s2_start:
       name: Bathroom Day start
+      has_time: true
+      has_date: false
+    bathroom_s2_weekday_start:
+      name: Bathroom Day Weekday start
+      has_time: true
+      has_date: false
+    bathroom_s2_weekend_start:
+      name: Bathroom Day Weekend start
       has_time: true
       has_date: false
     bathroom_s3_start:
       name: Bathroom Evening start
       has_time: true
       has_date: false
+    bathroom_s3_weekday_start:
+      name: Bathroom Evening Weekday start
+      has_time: true
+      has_date: false
+    bathroom_s3_weekend_start:
+      name: Bathroom Evening Weekend start
+      has_time: true
+      has_date: false
     bathroom_s4_start:
       name: Bathroom Night start
+      has_time: true
+      has_date: false
+    bathroom_s4_weekday_start:
+      name: Bathroom Night Weekday start
+      has_time: true
+      has_date: false
+    bathroom_s4_weekend_start:
+      name: Bathroom Night Weekend start
       has_time: true
       has_date: false
   bedroom.yaml: |
@@ -33,16 +65,48 @@ data:
       name: Bedroom Morning start
       has_time: true
       has_date: false
+    bedroom_s1_weekday_start:
+      name: Bedroom Morning Weekday start
+      has_time: true
+      has_date: false
+    bedroom_s1_weekend_start:
+      name: Bedroom Morning Weekend start
+      has_time: true
+      has_date: false
     bedroom_s2_start:
       name: Bedroom Day start
+      has_time: true
+      has_date: false
+    bedroom_s2_weekday_start:
+      name: Bedroom Day Weekday start
+      has_time: true
+      has_date: false
+    bedroom_s2_weekend_start:
+      name: Bedroom Day Weekend start
       has_time: true
       has_date: false
     bedroom_s3_start:
       name: Bedroom Evening start
       has_time: true
       has_date: false
+    bedroom_s3_weekday_start:
+      name: Bedroom Evening Weekday start
+      has_time: true
+      has_date: false
+    bedroom_s3_weekend_start:
+      name: Bedroom Evening Weekend start
+      has_time: true
+      has_date: false
     bedroom_s4_start:
       name: Bedroom Night start
+      has_time: true
+      has_date: false
+    bedroom_s4_weekday_start:
+      name: Bedroom Night Weekday start
+      has_time: true
+      has_date: false
+    bedroom_s4_weekend_start:
+      name: Bedroom Night Weekend start
       has_time: true
       has_date: false
   hallway.yaml: |
@@ -54,16 +118,48 @@ data:
       name: Hallway Morning start
       has_time: true
       has_date: false
+    hallway_s1_weekday_start:
+      name: Hallway Morning Weekday start
+      has_time: true
+      has_date: false
+    hallway_s1_weekend_start:
+      name: Hallway Morning Weekend start
+      has_time: true
+      has_date: false
     hallway_s2_start:
       name: Hallway Day start
+      has_time: true
+      has_date: false
+    hallway_s2_weekday_start:
+      name: Hallway Day Weekday start
+      has_time: true
+      has_date: false
+    hallway_s2_weekend_start:
+      name: Hallway Day Weekend start
       has_time: true
       has_date: false
     hallway_s3_start:
       name: Hallway Evening start
       has_time: true
       has_date: false
+    hallway_s3_weekday_start:
+      name: Hallway Evening Weekday start
+      has_time: true
+      has_date: false
+    hallway_s3_weekend_start:
+      name: Hallway Evening Weekend start
+      has_time: true
+      has_date: false
     hallway_s4_start:
       name: Hallway Night start
+      has_time: true
+      has_date: false
+    hallway_s4_weekday_start:
+      name: Hallway Night Weekday start
+      has_time: true
+      has_date: false
+    hallway_s4_weekend_start:
+      name: Hallway Night Weekend start
       has_time: true
       has_date: false
   kitchen.yaml: |
@@ -75,16 +171,48 @@ data:
       name: Kitchen Morning start
       has_time: true
       has_date: false
+    kitchen_s1_weekday_start:
+      name: Kitchen Morning Weekday start
+      has_time: true
+      has_date: false
+    kitchen_s1_weekend_start:
+      name: Kitchen Morning Weekend start
+      has_time: true
+      has_date: false
     kitchen_s2_start:
       name: Kitchen Day start
+      has_time: true
+      has_date: false
+    kitchen_s2_weekday_start:
+      name: Kitchen Day Weekday start
+      has_time: true
+      has_date: false
+    kitchen_s2_weekend_start:
+      name: Kitchen Day Weekend start
       has_time: true
       has_date: false
     kitchen_s3_start:
       name: Kitchen Evening start
       has_time: true
       has_date: false
+    kitchen_s3_weekday_start:
+      name: Kitchen Evening Weekday start
+      has_time: true
+      has_date: false
+    kitchen_s3_weekend_start:
+      name: Kitchen Evening Weekend start
+      has_time: true
+      has_date: false
     kitchen_s4_start:
       name: Kitchen Night start
+      has_time: true
+      has_date: false
+    kitchen_s4_weekday_start:
+      name: Kitchen Night Weekday start
+      has_time: true
+      has_date: false
+    kitchen_s4_weekend_start:
+      name: Kitchen Night Weekend start
       has_time: true
       has_date: false
   living_room.yaml: |
@@ -96,15 +224,47 @@ data:
       name: Living Room Morning start
       has_time: true
       has_date: false
+    living_room_s1_weekday_start:
+      name: Living Room Morning Weekday start
+      has_time: true
+      has_date: false
+    living_room_s1_weekend_start:
+      name: Living Room Morning Weekend start
+      has_time: true
+      has_date: false
     living_room_s2_start:
       name: Living Room Day start
+      has_time: true
+      has_date: false
+    living_room_s2_weekday_start:
+      name: Living Room Day Weekday start
+      has_time: true
+      has_date: false
+    living_room_s2_weekend_start:
+      name: Living Room Day Weekend start
       has_time: true
       has_date: false
     living_room_s3_start:
       name: Living Room Evening start
       has_time: true
       has_date: false
+    living_room_s3_weekday_start:
+      name: Living Room Evening Weekday start
+      has_time: true
+      has_date: false
+    living_room_s3_weekend_start:
+      name: Living Room Evening Weekend start
+      has_time: true
+      has_date: false
     living_room_s4_start:
       name: Living Room Night start
+      has_time: true
+      has_date: false
+    living_room_s4_weekday_start:
+      name: Living Room Night Weekday start
+      has_time: true
+      has_date: false
+    living_room_s4_weekend_start:
+      name: Living Room Night Weekend start
       has_time: true
       has_date: false

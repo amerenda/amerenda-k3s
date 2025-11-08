@@ -6,12 +6,24 @@
   name: {{ room|replace('_',' ')|title }} - Use custom schedule
 {{ room }}_morning_custom_time:
   name: {{ room|replace('_',' ')|title }} - Use custom Morning time
+{{ room }}_morning_separate_weekday_weekend:
+  name: {{ room|replace('_',' ')|title }} - Morning separate weekday/weekend times
+  initial: false
 {{ room }}_day_custom_time:
   name: {{ room|replace('_',' ')|title }} - Use custom Day time
+{{ room }}_day_separate_weekday_weekend:
+  name: {{ room|replace('_',' ')|title }} - Day separate weekday/weekend times
+  initial: false
 {{ room }}_evening_custom_time:
   name: {{ room|replace('_',' ')|title }} - Use custom Evening time
+{{ room }}_evening_separate_weekday_weekend:
+  name: {{ room|replace('_',' ')|title }} - Evening separate weekday/weekend times
+  initial: false
 {{ room }}_night_custom_time:
   name: {{ room|replace('_',' ')|title }} - Use custom Night time
+{{ room }}_night_separate_weekday_weekend:
+  name: {{ room|replace('_',' ')|title }} - Night separate weekday/weekend times
+  initial: false
 {{ room }}_motion_enabled:
   name: {{ room|replace('_',' ')|title }} - Motion Control Enabled
 {{ room }}_timer_enabled:

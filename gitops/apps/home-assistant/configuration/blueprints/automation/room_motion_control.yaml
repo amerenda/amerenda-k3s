@@ -139,19 +139,85 @@ variables:
     {{ custom_schedule_enabled_input is not none and
        custom_schedule_enabled_input != '' and
        is_state(custom_schedule_enabled_input, 'on') }}
+  
+  # Check if separate weekday/weekend times are enabled
+  morning_separate: >-
+    {% set helper = 'input_boolean.' ~ room_key_var ~ '_morning_separate_weekday_weekend' %}
+    {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+  day_separate: >-
+    {% set helper = 'input_boolean.' ~ room_key_var ~ '_day_separate_weekday_weekend' %}
+    {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+  evening_separate: >-
+    {% set helper = 'input_boolean.' ~ room_key_var ~ '_evening_separate_weekday_weekend' %}
+    {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+  night_separate: >-
+    {% set helper = 'input_boolean.' ~ room_key_var ~ '_night_separate_weekday_weekend' %}
+    {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+  # Check if today is a weekday (Mon-Fri) or weekend (Sat-Sun)
+  is_weekday: >-
+    {% set day = now().strftime('%A').lower() %}
+    {{ day in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] }}
 
   s1_str: >-
-    {% set v = states(custom_s1_start_input) if use_custom else default_s1 %}
-    {% if v in ['unknown','unavailable',''] %}{{ default_s1 }}{% else %}{{ v }}{% endif %}
+    {% if use_custom %}
+      {% if morning_separate %}
+        {% if is_weekday %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s1_weekday_start') %}
+        {% else %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s1_weekend_start') %}
+        {% endif %}
+      {% else %}
+        {% set v = states(custom_s1_start_input) %}
+      {% endif %}
+      {% if v in ['unknown','unavailable',''] %}{{ default_s1 }}{% else %}{{ v }}{% endif %}
+    {% else %}
+      {{ default_s1 }}
+    {% endif %}
   s2_str: >-
-    {% set v = states(custom_s2_start_input) if use_custom else default_s2 %}
-    {% if v in ['unknown','unavailable',''] %}{{ default_s2 }}{% else %}{{ v }}{% endif %}
+    {% if use_custom %}
+      {% if day_separate %}
+        {% if is_weekday %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s2_weekday_start') %}
+        {% else %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s2_weekend_start') %}
+        {% endif %}
+      {% else %}
+        {% set v = states(custom_s2_start_input) %}
+      {% endif %}
+      {% if v in ['unknown','unavailable',''] %}{{ default_s2 }}{% else %}{{ v }}{% endif %}
+    {% else %}
+      {{ default_s2 }}
+    {% endif %}
   s3_str: >-
-    {% set v = states(custom_s3_start_input) if use_custom else default_s3 %}
-    {% if v in ['unknown','unavailable',''] %}{{ default_s3 }}{% else %}{{ v }}{% endif %}
+    {% if use_custom %}
+      {% if evening_separate %}
+        {% if is_weekday %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s3_weekday_start') %}
+        {% else %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s3_weekend_start') %}
+        {% endif %}
+      {% else %}
+        {% set v = states(custom_s3_start_input) %}
+      {% endif %}
+      {% if v in ['unknown','unavailable',''] %}{{ default_s3 }}{% else %}{{ v }}{% endif %}
+    {% else %}
+      {{ default_s3 }}
+    {% endif %}
   s4_str: >-
-    {% set v = states(custom_s4_start_input) if use_custom else default_s4 %}
-    {% if v in ['unknown','unavailable',''] %}{{ default_s4 }}{% else %}{{ v }}{% endif %}
+    {% if use_custom %}
+      {% if night_separate %}
+        {% if is_weekday %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s4_weekday_start') %}
+        {% else %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s4_weekend_start') %}
+        {% endif %}
+      {% else %}
+        {% set v = states(custom_s4_start_input) %}
+      {% endif %}
+      {% if v in ['unknown','unavailable',''] %}{{ default_s4 }}{% else %}{{ v }}{% endif %}
+    {% else %}
+      {{ default_s4 }}
+    {% endif %}
 
   now_ts: "{{ as_timestamp(now()) }}"
   s1: "{{ as_timestamp(today_at(s1_str)) }}"

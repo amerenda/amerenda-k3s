@@ -6,12 +6,24 @@ hallway_custom_schedule:
   name: Hallway - Use custom schedule
 hallway_morning_custom_time:
   name: Hallway - Use custom Morning time
+hallway_morning_separate_weekday_weekend:
+  name: Hallway - Morning separate weekday/weekend times
+  initial: false
 hallway_day_custom_time:
   name: Hallway - Use custom Day time
+hallway_day_separate_weekday_weekend:
+  name: Hallway - Day separate weekday/weekend times
+  initial: false
 hallway_evening_custom_time:
   name: Hallway - Use custom Evening time
+hallway_evening_separate_weekday_weekend:
+  name: Hallway - Evening separate weekday/weekend times
+  initial: false
 hallway_night_custom_time:
   name: Hallway - Use custom Night time
+hallway_night_separate_weekday_weekend:
+  name: Hallway - Night separate weekday/weekend times
+  initial: false
 hallway_motion_enabled:
   name: Hallway - Motion Control Enabled
 hallway_timer_enabled:

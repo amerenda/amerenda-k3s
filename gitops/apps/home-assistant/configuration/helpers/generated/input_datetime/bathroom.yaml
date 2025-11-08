@@ -6,15 +6,47 @@ bathroom_s1_start:
   name: Bathroom Morning start
   has_time: true
   has_date: false
+bathroom_s1_weekday_start:
+  name: Bathroom Morning Weekday start
+  has_time: true
+  has_date: false
+bathroom_s1_weekend_start:
+  name: Bathroom Morning Weekend start
+  has_time: true
+  has_date: false
 bathroom_s2_start:
   name: Bathroom Day start
+  has_time: true
+  has_date: false
+bathroom_s2_weekday_start:
+  name: Bathroom Day Weekday start
+  has_time: true
+  has_date: false
+bathroom_s2_weekend_start:
+  name: Bathroom Day Weekend start
   has_time: true
   has_date: false
 bathroom_s3_start:
   name: Bathroom Evening start
   has_time: true
   has_date: false
+bathroom_s3_weekday_start:
+  name: Bathroom Evening Weekday start
+  has_time: true
+  has_date: false
+bathroom_s3_weekend_start:
+  name: Bathroom Evening Weekend start
+  has_time: true
+  has_date: false
 bathroom_s4_start:
   name: Bathroom Night start
+  has_time: true
+  has_date: false
+bathroom_s4_weekday_start:
+  name: Bathroom Night Weekday start
+  has_time: true
+  has_date: false
+bathroom_s4_weekend_start:
+  name: Bathroom Night Weekend start
   has_time: true
   has_date: false
