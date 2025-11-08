@@ -301,6 +301,14 @@ smooth_transition:
                 current_scene_states: "{{ current_scene_attrs.states if current_scene_attrs else {} }}"
                 next_scene_attrs: "{{ state_attr(next_scene, 'attributes') }}"
                 next_scene_states: "{{ next_scene_attrs.states if next_scene_attrs else {} }}"
+                # Debug: log scene structure
+                scene_debug: >-
+                  current_scene={{ current_scene }}, 
+                  current_attrs_keys={{ current_scene_attrs.keys() | list if current_scene_attrs else 'none' }},
+                  current_states_count={{ current_scene_states | length }},
+                  next_scene={{ next_scene }},
+                  next_attrs_keys={{ next_scene_attrs.keys() | list if next_scene_attrs else 'none' }},
+                  next_states_count={{ next_scene_states | length }}
                 # Get list of light entities from both scenes (union)
                 scene_lights: >-
                   {% set lights = [] %}
@@ -314,7 +322,42 @@ smooth_transition:
                       {% set _ = lights.append(entity_id) %}
                     {% endif %}
                   {% endfor %}
+                  {# Fallback: if no lights found in scenes, try to find lights by room name #}
+                  {% if lights | length == 0 %}
+                    {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                    {% set room_light = 'light.' ~ room %}
+                    {% if room_light in all_lights %}
+                      {% set _ = lights.append(room_light) %}
+                    {% endif %}
+                    {% for i in range(1, 10) %}
+                      {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
+                      {% if numbered_light in all_lights %}
+                        {% set _ = lights.append(numbered_light) %}
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
                   {{ lights }}
+
+            # Debug: log scene structure and lights found
+            - service: "logbook.log"
+              data:
+                name: "smooth_transition"
+                message: >-
+                  Scene debug: {{ scene_debug }}, 
+                  scene_lights={{ scene_lights | length }}, 
+                  lights={{ scene_lights }}
+
+            # Exit early if no lights found
+            - choose:
+                - conditions: "{{ scene_lights | length == 0 }}"
+                  sequence:
+                    - service: "logbook.log"
+                      data:
+                        name: "smooth_transition"
+                        message: >-
+                          ERROR: No lights found in scenes {{ current_scene }} or {{ next_scene }}. 
+                          Cannot transition. Please ensure scenes contain light entities.
+                    - stop: "No lights found in scenes"
 
             # Check if lights are on (check all lights from both scenes)
             - variables:
