@@ -416,7 +416,9 @@ smooth_transition:
                                         {{ target_br }}
                                       {% else %}
                                         {% set calculated = (current_br + (brightness_delta * step_progress)) | int %}
-                                        {{ [0, 255, calculated] | sort | list[1] }}
+                                        {% set sorted_vals = [0, 255, calculated] | sort %}
+                                        {% set clamped = sorted_vals[1] %}
+                                        {{ clamped }}
                                       {% endif %}
                                 - service: "light.turn_on"
                                   target:
