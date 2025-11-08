@@ -31,30 +31,102 @@
 
 enable_{{ room }}_morning:
   name: {{ room|replace('_',' ')|title }} - Timer Morning Enabled
+enable_{{ room }}_morning_weekday:
+  name: {{ room|replace('_',' ')|title }} - Timer Morning Enabled (Weekday)
+  initial: true
+enable_{{ room }}_morning_weekend:
+  name: {{ room|replace('_',' ')|title }} - Timer Morning Enabled (Weekend)
+  initial: true
 enable_{{ room }}_day:
   name: {{ room|replace('_',' ')|title }} - Timer Day Enabled
+enable_{{ room }}_day_weekday:
+  name: {{ room|replace('_',' ')|title }} - Timer Day Enabled (Weekday)
+  initial: true
+enable_{{ room }}_day_weekend:
+  name: {{ room|replace('_',' ')|title }} - Timer Day Enabled (Weekend)
+  initial: true
 enable_{{ room }}_evening:
   name: {{ room|replace('_',' ')|title }} - Timer Evening Enabled
+enable_{{ room }}_evening_weekday:
+  name: {{ room|replace('_',' ')|title }} - Timer Evening Enabled (Weekday)
+  initial: true
+enable_{{ room }}_evening_weekend:
+  name: {{ room|replace('_',' ')|title }} - Timer Evening Enabled (Weekend)
+  initial: true
 enable_{{ room }}_night:
   name: {{ room|replace('_',' ')|title }} - Timer Night Enabled
+enable_{{ room }}_night_weekday:
+  name: {{ room|replace('_',' ')|title }} - Timer Night Enabled (Weekday)
+  initial: true
+enable_{{ room }}_night_weekend:
+  name: {{ room|replace('_',' ')|title }} - Timer Night Enabled (Weekend)
+  initial: true
 
 auto_on_{{ room }}_morning:
   name: {{ room|replace('_',' ')|title }} - Timer Morning Auto-on
+auto_on_{{ room }}_morning_weekday:
+  name: {{ room|replace('_',' ')|title }} - Timer Morning Auto-on (Weekday)
+  initial: false
+auto_on_{{ room }}_morning_weekend:
+  name: {{ room|replace('_',' ')|title }} - Timer Morning Auto-on (Weekend)
+  initial: false
 auto_on_{{ room }}_day:
   name: {{ room|replace('_',' ')|title }} - Timer Day Auto-on
+auto_on_{{ room }}_day_weekday:
+  name: {{ room|replace('_',' ')|title }} - Timer Day Auto-on (Weekday)
+  initial: false
+auto_on_{{ room }}_day_weekend:
+  name: {{ room|replace('_',' ')|title }} - Timer Day Auto-on (Weekend)
+  initial: false
 auto_on_{{ room }}_evening:
   name: {{ room|replace('_',' ')|title }} - Timer Evening Auto-on
+auto_on_{{ room }}_evening_weekday:
+  name: {{ room|replace('_',' ')|title }} - Timer Evening Auto-on (Weekday)
+  initial: false
+auto_on_{{ room }}_evening_weekend:
+  name: {{ room|replace('_',' ')|title }} - Timer Evening Auto-on (Weekend)
+  initial: false
 auto_on_{{ room }}_night:
   name: {{ room|replace('_',' ')|title }} - Timer Night Auto-on
+auto_on_{{ room }}_night_weekday:
+  name: {{ room|replace('_',' ')|title }} - Timer Night Auto-on (Weekday)
+  initial: false
+auto_on_{{ room }}_night_weekend:
+  name: {{ room|replace('_',' ')|title }} - Timer Night Auto-on (Weekend)
+  initial: false
 
 motion_activated_{{ room }}_morning:
   name: {{ room|replace('_',' ')|title }} - Motion Morning Activated
+motion_activated_{{ room }}_morning_weekday:
+  name: {{ room|replace('_',' ')|title }} - Motion Morning Activated (Weekday)
+  initial: true
+motion_activated_{{ room }}_morning_weekend:
+  name: {{ room|replace('_',' ')|title }} - Motion Morning Activated (Weekend)
+  initial: true
 motion_activated_{{ room }}_day:
   name: {{ room|replace('_',' ')|title }} - Motion Day Activated
+motion_activated_{{ room }}_day_weekday:
+  name: {{ room|replace('_',' ')|title }} - Motion Day Activated (Weekday)
+  initial: true
+motion_activated_{{ room }}_day_weekend:
+  name: {{ room|replace('_',' ')|title }} - Motion Day Activated (Weekend)
+  initial: true
 motion_activated_{{ room }}_evening:
   name: {{ room|replace('_',' ')|title }} - Motion Evening Activated
+motion_activated_{{ room }}_evening_weekday:
+  name: {{ room|replace('_',' ')|title }} - Motion Evening Activated (Weekday)
+  initial: true
+motion_activated_{{ room }}_evening_weekend:
+  name: {{ room|replace('_',' ')|title }} - Motion Evening Activated (Weekend)
+  initial: true
 motion_activated_{{ room }}_night:
   name: {{ room|replace('_',' ')|title }} - Motion Night Activated
+motion_activated_{{ room }}_night_weekday:
+  name: {{ room|replace('_',' ')|title }} - Motion Night Activated (Weekday)
+  initial: true
+motion_activated_{{ room }}_night_weekend:
+  name: {{ room|replace('_',' ')|title }} - Motion Night Activated (Weekend)
+  initial: true
 
 # Day-of-week helpers for morning slot
 {{ room }}_morning_sunday:

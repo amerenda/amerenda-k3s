@@ -62,13 +62,13 @@ views:
                       - entity: input_datetime.bedroom_s1_start
                         name: Morning Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.bedroom_morning_scene
-                    - entity: input_boolean.enable_bedroom_morning
-                    - entity: input_boolean.auto_on_bedroom_morning
-                    - entity: input_boolean.motion_activated_bedroom_morning
-                    - entity: input_number.motion_auto_off_bedroom_morning
+                    - entity: input_boolean.enable_bedroom_morning_weekday
+                    - entity: input_boolean.auto_on_bedroom_morning_weekday
+                    - entity: input_boolean.motion_activated_bedroom_morning_weekday
+                    - entity: input_number.motion_auto_off_bedroom_morning_weekday
 
           # Bedroom Weekday Day Configuration
           - type: conditional
@@ -109,13 +109,13 @@ views:
                       - entity: input_datetime.bedroom_s2_start
                         name: Day Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.bedroom_day_scene
-                    - entity: input_boolean.enable_bedroom_day
-                    - entity: input_boolean.auto_on_bedroom_day
-                    - entity: input_boolean.motion_activated_bedroom_day
-                    - entity: input_number.motion_auto_off_bedroom_day
+                    - entity: input_boolean.enable_bedroom_day_weekday
+                    - entity: input_boolean.auto_on_bedroom_day_weekday
+                    - entity: input_boolean.motion_activated_bedroom_day_weekday
+                    - entity: input_number.motion_auto_off_bedroom_day_weekday
 
           # Bedroom Weekday Evening Configuration
           - type: conditional
@@ -156,13 +156,13 @@ views:
                       - entity: input_datetime.bedroom_s3_start
                         name: Evening Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.bedroom_evening_scene
-                    - entity: input_boolean.enable_bedroom_evening
-                    - entity: input_boolean.auto_on_bedroom_evening
-                    - entity: input_boolean.motion_activated_bedroom_evening
-                    - entity: input_number.motion_auto_off_bedroom_evening
+                    - entity: input_boolean.enable_bedroom_evening_weekday
+                    - entity: input_boolean.auto_on_bedroom_evening_weekday
+                    - entity: input_boolean.motion_activated_bedroom_evening_weekday
+                    - entity: input_number.motion_auto_off_bedroom_evening_weekday
 
           # Bedroom Weekday Night Configuration
           - type: conditional
@@ -203,13 +203,13 @@ views:
                       - entity: input_datetime.bedroom_s4_start
                         name: Night Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.bedroom_night_scene
-                    - entity: input_boolean.enable_bedroom_night
-                    - entity: input_boolean.auto_on_bedroom_night
-                    - entity: input_boolean.motion_activated_bedroom_night
-                    - entity: input_number.motion_auto_off_bedroom_night
+                    - entity: input_boolean.enable_bedroom_night_weekday
+                    - entity: input_boolean.auto_on_bedroom_night_weekday
+                    - entity: input_boolean.motion_activated_bedroom_night_weekday
+                    - entity: input_number.motion_auto_off_bedroom_night_weekday
 
           # Bedroom Weekend Morning Configuration
           - type: conditional
@@ -250,13 +250,13 @@ views:
                       - entity: input_datetime.bedroom_s1_start
                         name: Morning Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.bedroom_morning_scene
-                    - entity: input_boolean.enable_bedroom_morning
-                    - entity: input_boolean.auto_on_bedroom_morning
-                    - entity: input_boolean.motion_activated_bedroom_morning
-                    - entity: input_number.motion_auto_off_bedroom_morning
+                    - entity: input_boolean.enable_bedroom_morning_weekend
+                    - entity: input_boolean.auto_on_bedroom_morning_weekend
+                    - entity: input_boolean.motion_activated_bedroom_morning_weekend
+                    - entity: input_number.motion_auto_off_bedroom_morning_weekend
 
           # Bedroom Weekend Day Configuration
           - type: conditional
@@ -297,13 +297,13 @@ views:
                       - entity: input_datetime.bedroom_s2_start
                         name: Day Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.bedroom_day_scene
-                    - entity: input_boolean.enable_bedroom_day
-                    - entity: input_boolean.auto_on_bedroom_day
-                    - entity: input_boolean.motion_activated_bedroom_day
-                    - entity: input_number.motion_auto_off_bedroom_day
+                    - entity: input_boolean.enable_bedroom_day_weekend
+                    - entity: input_boolean.auto_on_bedroom_day_weekend
+                    - entity: input_boolean.motion_activated_bedroom_day_weekend
+                    - entity: input_number.motion_auto_off_bedroom_day_weekend
 
           # Bedroom Weekend Evening Configuration
           - type: conditional
@@ -344,13 +344,13 @@ views:
                       - entity: input_datetime.bedroom_s3_start
                         name: Evening Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.bedroom_evening_scene
-                    - entity: input_boolean.enable_bedroom_evening
-                    - entity: input_boolean.auto_on_bedroom_evening
-                    - entity: input_boolean.motion_activated_bedroom_evening
-                    - entity: input_number.motion_auto_off_bedroom_evening
+                    - entity: input_boolean.enable_bedroom_evening_weekend
+                    - entity: input_boolean.auto_on_bedroom_evening_weekend
+                    - entity: input_boolean.motion_activated_bedroom_evening_weekend
+                    - entity: input_number.motion_auto_off_bedroom_evening_weekend
 
           # Bedroom Weekend Night Configuration
           - type: conditional
@@ -391,13 +391,13 @@ views:
                       - entity: input_datetime.bedroom_s4_start
                         name: Night Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.bedroom_night_scene
-                    - entity: input_boolean.enable_bedroom_night
-                    - entity: input_boolean.auto_on_bedroom_night
-                    - entity: input_boolean.motion_activated_bedroom_night
-                    - entity: input_number.motion_auto_off_bedroom_night
+                    - entity: input_boolean.enable_bedroom_night_weekend
+                    - entity: input_boolean.auto_on_bedroom_night_weekend
+                    - entity: input_boolean.motion_activated_bedroom_night_weekend
+                    - entity: input_number.motion_auto_off_bedroom_night_weekend
 
           # Living Room Weekday Morning Configuration
           - type: conditional
@@ -438,13 +438,13 @@ views:
                       - entity: input_datetime.living_room_s1_start
                         name: Morning Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.living_room_morning_scene
-                    - entity: input_boolean.enable_living_room_morning
-                    - entity: input_boolean.auto_on_living_room_morning
-                    - entity: input_boolean.motion_activated_living_room_morning
-                    - entity: input_number.motion_auto_off_living_room_morning
+                    - entity: input_boolean.enable_living_room_morning_weekday
+                    - entity: input_boolean.auto_on_living_room_morning_weekday
+                    - entity: input_boolean.motion_activated_living_room_morning_weekday
+                    - entity: input_number.motion_auto_off_living_room_morning_weekday
 
           # Living Room Weekday Day Configuration
           - type: conditional
@@ -485,13 +485,13 @@ views:
                       - entity: input_datetime.living_room_s2_start
                         name: Day Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.living_room_day_scene
-                    - entity: input_boolean.enable_living_room_day
-                    - entity: input_boolean.auto_on_living_room_day
-                    - entity: input_boolean.motion_activated_living_room_day
-                    - entity: input_number.motion_auto_off_living_room_day
+                    - entity: input_boolean.enable_living_room_day_weekday
+                    - entity: input_boolean.auto_on_living_room_day_weekday
+                    - entity: input_boolean.motion_activated_living_room_day_weekday
+                    - entity: input_number.motion_auto_off_living_room_day_weekday
 
           # Living Room Weekday Evening Configuration
           - type: conditional
@@ -532,13 +532,13 @@ views:
                       - entity: input_datetime.living_room_s3_start
                         name: Evening Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.living_room_evening_scene
-                    - entity: input_boolean.enable_living_room_evening
-                    - entity: input_boolean.auto_on_living_room_evening
-                    - entity: input_boolean.motion_activated_living_room_evening
-                    - entity: input_number.motion_auto_off_living_room_evening
+                    - entity: input_boolean.enable_living_room_evening_weekday
+                    - entity: input_boolean.auto_on_living_room_evening_weekday
+                    - entity: input_boolean.motion_activated_living_room_evening_weekday
+                    - entity: input_number.motion_auto_off_living_room_evening_weekday
 
           # Living Room Weekday Night Configuration
           - type: conditional
@@ -579,13 +579,13 @@ views:
                       - entity: input_datetime.living_room_s4_start
                         name: Night Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.living_room_night_scene
-                    - entity: input_boolean.enable_living_room_night
-                    - entity: input_boolean.auto_on_living_room_night
-                    - entity: input_boolean.motion_activated_living_room_night
-                    - entity: input_number.motion_auto_off_living_room_night
+                    - entity: input_boolean.enable_living_room_night_weekday
+                    - entity: input_boolean.auto_on_living_room_night_weekday
+                    - entity: input_boolean.motion_activated_living_room_night_weekday
+                    - entity: input_number.motion_auto_off_living_room_night_weekday
 
           # Living Room Weekend Morning Configuration
           - type: conditional
@@ -626,13 +626,13 @@ views:
                       - entity: input_datetime.living_room_s1_start
                         name: Morning Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.living_room_morning_scene
-                    - entity: input_boolean.enable_living_room_morning
-                    - entity: input_boolean.auto_on_living_room_morning
-                    - entity: input_boolean.motion_activated_living_room_morning
-                    - entity: input_number.motion_auto_off_living_room_morning
+                    - entity: input_boolean.enable_living_room_morning_weekend
+                    - entity: input_boolean.auto_on_living_room_morning_weekend
+                    - entity: input_boolean.motion_activated_living_room_morning_weekend
+                    - entity: input_number.motion_auto_off_living_room_morning_weekend
 
           # Living Room Weekend Day Configuration
           - type: conditional
@@ -673,13 +673,13 @@ views:
                       - entity: input_datetime.living_room_s2_start
                         name: Day Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.living_room_day_scene
-                    - entity: input_boolean.enable_living_room_day
-                    - entity: input_boolean.auto_on_living_room_day
-                    - entity: input_boolean.motion_activated_living_room_day
-                    - entity: input_number.motion_auto_off_living_room_day
+                    - entity: input_boolean.enable_living_room_day_weekend
+                    - entity: input_boolean.auto_on_living_room_day_weekend
+                    - entity: input_boolean.motion_activated_living_room_day_weekend
+                    - entity: input_number.motion_auto_off_living_room_day_weekend
 
           # Living Room Weekend Evening Configuration
           - type: conditional
@@ -720,13 +720,13 @@ views:
                       - entity: input_datetime.living_room_s3_start
                         name: Evening Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.living_room_evening_scene
-                    - entity: input_boolean.enable_living_room_evening
-                    - entity: input_boolean.auto_on_living_room_evening
-                    - entity: input_boolean.motion_activated_living_room_evening
-                    - entity: input_number.motion_auto_off_living_room_evening
+                    - entity: input_boolean.enable_living_room_evening_weekend
+                    - entity: input_boolean.auto_on_living_room_evening_weekend
+                    - entity: input_boolean.motion_activated_living_room_evening_weekend
+                    - entity: input_number.motion_auto_off_living_room_evening_weekend
 
           # Living Room Weekend Night Configuration
           - type: conditional
@@ -767,13 +767,13 @@ views:
                       - entity: input_datetime.living_room_s4_start
                         name: Night Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.living_room_night_scene
-                    - entity: input_boolean.enable_living_room_night
-                    - entity: input_boolean.auto_on_living_room_night
-                    - entity: input_boolean.motion_activated_living_room_night
-                    - entity: input_number.motion_auto_off_living_room_night
+                    - entity: input_boolean.enable_living_room_night_weekend
+                    - entity: input_boolean.auto_on_living_room_night_weekend
+                    - entity: input_boolean.motion_activated_living_room_night_weekend
+                    - entity: input_number.motion_auto_off_living_room_night_weekend
 
           # Kitchen Weekday Morning Configuration
           - type: conditional
@@ -814,13 +814,13 @@ views:
                       - entity: input_datetime.kitchen_s1_start
                         name: Morning Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.kitchen_morning_scene
-                    - entity: input_boolean.enable_kitchen_morning
-                    - entity: input_boolean.auto_on_kitchen_morning
-                    - entity: input_boolean.motion_activated_kitchen_morning
-                    - entity: input_number.motion_auto_off_kitchen_morning
+                    - entity: input_boolean.enable_kitchen_morning_weekday
+                    - entity: input_boolean.auto_on_kitchen_morning_weekday
+                    - entity: input_boolean.motion_activated_kitchen_morning_weekday
+                    - entity: input_number.motion_auto_off_kitchen_morning_weekday
 
           # Kitchen Weekday Day Configuration
           - type: conditional
@@ -861,13 +861,13 @@ views:
                       - entity: input_datetime.kitchen_s2_start
                         name: Day Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.kitchen_day_scene
-                    - entity: input_boolean.enable_kitchen_day
-                    - entity: input_boolean.auto_on_kitchen_day
-                    - entity: input_boolean.motion_activated_kitchen_day
-                    - entity: input_number.motion_auto_off_kitchen_day
+                    - entity: input_boolean.enable_kitchen_day_weekday
+                    - entity: input_boolean.auto_on_kitchen_day_weekday
+                    - entity: input_boolean.motion_activated_kitchen_day_weekday
+                    - entity: input_number.motion_auto_off_kitchen_day_weekday
 
           # Kitchen Weekday Evening Configuration
           - type: conditional
@@ -908,13 +908,13 @@ views:
                       - entity: input_datetime.kitchen_s3_start
                         name: Evening Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.kitchen_evening_scene
-                    - entity: input_boolean.enable_kitchen_evening
-                    - entity: input_boolean.auto_on_kitchen_evening
-                    - entity: input_boolean.motion_activated_kitchen_evening
-                    - entity: input_number.motion_auto_off_kitchen_evening
+                    - entity: input_boolean.enable_kitchen_evening_weekday
+                    - entity: input_boolean.auto_on_kitchen_evening_weekday
+                    - entity: input_boolean.motion_activated_kitchen_evening_weekday
+                    - entity: input_number.motion_auto_off_kitchen_evening_weekday
 
           # Kitchen Weekday Night Configuration
           - type: conditional
@@ -955,13 +955,13 @@ views:
                       - entity: input_datetime.kitchen_s4_start
                         name: Night Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.kitchen_night_scene
-                    - entity: input_boolean.enable_kitchen_night
-                    - entity: input_boolean.auto_on_kitchen_night
-                    - entity: input_boolean.motion_activated_kitchen_night
-                    - entity: input_number.motion_auto_off_kitchen_night
+                    - entity: input_boolean.enable_kitchen_night_weekday
+                    - entity: input_boolean.auto_on_kitchen_night_weekday
+                    - entity: input_boolean.motion_activated_kitchen_night_weekday
+                    - entity: input_number.motion_auto_off_kitchen_night_weekday
 
           # Kitchen Weekend Morning Configuration
           - type: conditional
@@ -1002,13 +1002,13 @@ views:
                       - entity: input_datetime.kitchen_s1_start
                         name: Morning Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.kitchen_morning_scene
-                    - entity: input_boolean.enable_kitchen_morning
-                    - entity: input_boolean.auto_on_kitchen_morning
-                    - entity: input_boolean.motion_activated_kitchen_morning
-                    - entity: input_number.motion_auto_off_kitchen_morning
+                    - entity: input_boolean.enable_kitchen_morning_weekend
+                    - entity: input_boolean.auto_on_kitchen_morning_weekend
+                    - entity: input_boolean.motion_activated_kitchen_morning_weekend
+                    - entity: input_number.motion_auto_off_kitchen_morning_weekend
 
           # Kitchen Weekend Day Configuration
           - type: conditional
@@ -1049,13 +1049,13 @@ views:
                       - entity: input_datetime.kitchen_s2_start
                         name: Day Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.kitchen_day_scene
-                    - entity: input_boolean.enable_kitchen_day
-                    - entity: input_boolean.auto_on_kitchen_day
-                    - entity: input_boolean.motion_activated_kitchen_day
-                    - entity: input_number.motion_auto_off_kitchen_day
+                    - entity: input_boolean.enable_kitchen_day_weekend
+                    - entity: input_boolean.auto_on_kitchen_day_weekend
+                    - entity: input_boolean.motion_activated_kitchen_day_weekend
+                    - entity: input_number.motion_auto_off_kitchen_day_weekend
 
           # Kitchen Weekend Evening Configuration
           - type: conditional
@@ -1096,13 +1096,13 @@ views:
                       - entity: input_datetime.kitchen_s3_start
                         name: Evening Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.kitchen_evening_scene
-                    - entity: input_boolean.enable_kitchen_evening
-                    - entity: input_boolean.auto_on_kitchen_evening
-                    - entity: input_boolean.motion_activated_kitchen_evening
-                    - entity: input_number.motion_auto_off_kitchen_evening
+                    - entity: input_boolean.enable_kitchen_evening_weekend
+                    - entity: input_boolean.auto_on_kitchen_evening_weekend
+                    - entity: input_boolean.motion_activated_kitchen_evening_weekend
+                    - entity: input_number.motion_auto_off_kitchen_evening_weekend
 
           # Kitchen Weekend Night Configuration
           - type: conditional
@@ -1143,13 +1143,13 @@ views:
                       - entity: input_datetime.kitchen_s4_start
                         name: Night Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.kitchen_night_scene
-                    - entity: input_boolean.enable_kitchen_night
-                    - entity: input_boolean.auto_on_kitchen_night
-                    - entity: input_boolean.motion_activated_kitchen_night
-                    - entity: input_number.motion_auto_off_kitchen_night
+                    - entity: input_boolean.enable_kitchen_night_weekend
+                    - entity: input_boolean.auto_on_kitchen_night_weekend
+                    - entity: input_boolean.motion_activated_kitchen_night_weekend
+                    - entity: input_number.motion_auto_off_kitchen_night_weekend
 
           # Bathroom Weekday Morning Configuration
           - type: conditional
@@ -1190,13 +1190,13 @@ views:
                       - entity: input_datetime.bathroom_s1_start
                         name: Morning Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.bathroom_morning_scene
-                    - entity: input_boolean.enable_bathroom_morning
-                    - entity: input_boolean.auto_on_bathroom_morning
-                    - entity: input_boolean.motion_activated_bathroom_morning
-                    - entity: input_number.motion_auto_off_bathroom_morning
+                    - entity: input_boolean.enable_bathroom_morning_weekday
+                    - entity: input_boolean.auto_on_bathroom_morning_weekday
+                    - entity: input_boolean.motion_activated_bathroom_morning_weekday
+                    - entity: input_number.motion_auto_off_bathroom_morning_weekday
 
           # Bathroom Weekday Day Configuration
           - type: conditional
@@ -1237,13 +1237,13 @@ views:
                       - entity: input_datetime.bathroom_s2_start
                         name: Day Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.bathroom_day_scene
-                    - entity: input_boolean.enable_bathroom_day
-                    - entity: input_boolean.auto_on_bathroom_day
-                    - entity: input_boolean.motion_activated_bathroom_day
-                    - entity: input_number.motion_auto_off_bathroom_day
+                    - entity: input_boolean.enable_bathroom_day_weekday
+                    - entity: input_boolean.auto_on_bathroom_day_weekday
+                    - entity: input_boolean.motion_activated_bathroom_day_weekday
+                    - entity: input_number.motion_auto_off_bathroom_day_weekday
 
           # Bathroom Weekday Evening Configuration
           - type: conditional
@@ -1284,13 +1284,13 @@ views:
                       - entity: input_datetime.bathroom_s3_start
                         name: Evening Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.bathroom_evening_scene
-                    - entity: input_boolean.enable_bathroom_evening
-                    - entity: input_boolean.auto_on_bathroom_evening
-                    - entity: input_boolean.motion_activated_bathroom_evening
-                    - entity: input_number.motion_auto_off_bathroom_evening
+                    - entity: input_boolean.enable_bathroom_evening_weekday
+                    - entity: input_boolean.auto_on_bathroom_evening_weekday
+                    - entity: input_boolean.motion_activated_bathroom_evening_weekday
+                    - entity: input_number.motion_auto_off_bathroom_evening_weekday
 
           # Bathroom Weekday Night Configuration
           - type: conditional
@@ -1331,13 +1331,13 @@ views:
                       - entity: input_datetime.bathroom_s4_start
                         name: Night Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.bathroom_night_scene
-                    - entity: input_boolean.enable_bathroom_night
-                    - entity: input_boolean.auto_on_bathroom_night
-                    - entity: input_boolean.motion_activated_bathroom_night
-                    - entity: input_number.motion_auto_off_bathroom_night
+                    - entity: input_boolean.enable_bathroom_night_weekday
+                    - entity: input_boolean.auto_on_bathroom_night_weekday
+                    - entity: input_boolean.motion_activated_bathroom_night_weekday
+                    - entity: input_number.motion_auto_off_bathroom_night_weekday
 
           # Bathroom Weekend Morning Configuration
           - type: conditional
@@ -1378,13 +1378,13 @@ views:
                       - entity: input_datetime.bathroom_s1_start
                         name: Morning Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.bathroom_morning_scene
-                    - entity: input_boolean.enable_bathroom_morning
-                    - entity: input_boolean.auto_on_bathroom_morning
-                    - entity: input_boolean.motion_activated_bathroom_morning
-                    - entity: input_number.motion_auto_off_bathroom_morning
+                    - entity: input_boolean.enable_bathroom_morning_weekend
+                    - entity: input_boolean.auto_on_bathroom_morning_weekend
+                    - entity: input_boolean.motion_activated_bathroom_morning_weekend
+                    - entity: input_number.motion_auto_off_bathroom_morning_weekend
 
           # Bathroom Weekend Day Configuration
           - type: conditional
@@ -1425,13 +1425,13 @@ views:
                       - entity: input_datetime.bathroom_s2_start
                         name: Day Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.bathroom_day_scene
-                    - entity: input_boolean.enable_bathroom_day
-                    - entity: input_boolean.auto_on_bathroom_day
-                    - entity: input_boolean.motion_activated_bathroom_day
-                    - entity: input_number.motion_auto_off_bathroom_day
+                    - entity: input_boolean.enable_bathroom_day_weekend
+                    - entity: input_boolean.auto_on_bathroom_day_weekend
+                    - entity: input_boolean.motion_activated_bathroom_day_weekend
+                    - entity: input_number.motion_auto_off_bathroom_day_weekend
 
           # Bathroom Weekend Evening Configuration
           - type: conditional
@@ -1472,13 +1472,13 @@ views:
                       - entity: input_datetime.bathroom_s3_start
                         name: Evening Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.bathroom_evening_scene
-                    - entity: input_boolean.enable_bathroom_evening
-                    - entity: input_boolean.auto_on_bathroom_evening
-                    - entity: input_boolean.motion_activated_bathroom_evening
-                    - entity: input_number.motion_auto_off_bathroom_evening
+                    - entity: input_boolean.enable_bathroom_evening_weekend
+                    - entity: input_boolean.auto_on_bathroom_evening_weekend
+                    - entity: input_boolean.motion_activated_bathroom_evening_weekend
+                    - entity: input_number.motion_auto_off_bathroom_evening_weekend
 
           # Bathroom Weekend Night Configuration
           - type: conditional
@@ -1519,13 +1519,13 @@ views:
                       - entity: input_datetime.bathroom_s4_start
                         name: Night Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.bathroom_night_scene
-                    - entity: input_boolean.enable_bathroom_night
-                    - entity: input_boolean.auto_on_bathroom_night
-                    - entity: input_boolean.motion_activated_bathroom_night
-                    - entity: input_number.motion_auto_off_bathroom_night
+                    - entity: input_boolean.enable_bathroom_night_weekend
+                    - entity: input_boolean.auto_on_bathroom_night_weekend
+                    - entity: input_boolean.motion_activated_bathroom_night_weekend
+                    - entity: input_number.motion_auto_off_bathroom_night_weekend
 
           # Hallway Weekday Morning Configuration
           - type: conditional
@@ -1566,13 +1566,13 @@ views:
                       - entity: input_datetime.hallway_s1_start
                         name: Morning Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.hallway_morning_scene
-                    - entity: input_boolean.enable_hallway_morning
-                    - entity: input_boolean.auto_on_hallway_morning
-                    - entity: input_boolean.motion_activated_hallway_morning
-                    - entity: input_number.motion_auto_off_hallway_morning
+                    - entity: input_boolean.enable_hallway_morning_weekday
+                    - entity: input_boolean.auto_on_hallway_morning_weekday
+                    - entity: input_boolean.motion_activated_hallway_morning_weekday
+                    - entity: input_number.motion_auto_off_hallway_morning_weekday
 
           # Hallway Weekday Day Configuration
           - type: conditional
@@ -1613,13 +1613,13 @@ views:
                       - entity: input_datetime.hallway_s2_start
                         name: Day Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.hallway_day_scene
-                    - entity: input_boolean.enable_hallway_day
-                    - entity: input_boolean.auto_on_hallway_day
-                    - entity: input_boolean.motion_activated_hallway_day
-                    - entity: input_number.motion_auto_off_hallway_day
+                    - entity: input_boolean.enable_hallway_day_weekday
+                    - entity: input_boolean.auto_on_hallway_day_weekday
+                    - entity: input_boolean.motion_activated_hallway_day_weekday
+                    - entity: input_number.motion_auto_off_hallway_day_weekday
 
           # Hallway Weekday Evening Configuration
           - type: conditional
@@ -1660,13 +1660,13 @@ views:
                       - entity: input_datetime.hallway_s3_start
                         name: Evening Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.hallway_evening_scene
-                    - entity: input_boolean.enable_hallway_evening
-                    - entity: input_boolean.auto_on_hallway_evening
-                    - entity: input_boolean.motion_activated_hallway_evening
-                    - entity: input_number.motion_auto_off_hallway_evening
+                    - entity: input_boolean.enable_hallway_evening_weekday
+                    - entity: input_boolean.auto_on_hallway_evening_weekday
+                    - entity: input_boolean.motion_activated_hallway_evening_weekday
+                    - entity: input_number.motion_auto_off_hallway_evening_weekday
 
           # Hallway Weekday Night Configuration
           - type: conditional
@@ -1707,13 +1707,13 @@ views:
                       - entity: input_datetime.hallway_s4_start
                         name: Night Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekday)
                   entities:
                     - entity: input_select.hallway_night_scene
-                    - entity: input_boolean.enable_hallway_night
-                    - entity: input_boolean.auto_on_hallway_night
-                    - entity: input_boolean.motion_activated_hallway_night
-                    - entity: input_number.motion_auto_off_hallway_night
+                    - entity: input_boolean.enable_hallway_night_weekday
+                    - entity: input_boolean.auto_on_hallway_night_weekday
+                    - entity: input_boolean.motion_activated_hallway_night_weekday
+                    - entity: input_number.motion_auto_off_hallway_night_weekday
 
           # Hallway Weekend Morning Configuration
           - type: conditional
@@ -1754,13 +1754,13 @@ views:
                       - entity: input_datetime.hallway_s1_start
                         name: Morning Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.hallway_morning_scene
-                    - entity: input_boolean.enable_hallway_morning
-                    - entity: input_boolean.auto_on_hallway_morning
-                    - entity: input_boolean.motion_activated_hallway_morning
-                    - entity: input_number.motion_auto_off_hallway_morning
+                    - entity: input_boolean.enable_hallway_morning_weekend
+                    - entity: input_boolean.auto_on_hallway_morning_weekend
+                    - entity: input_boolean.motion_activated_hallway_morning_weekend
+                    - entity: input_number.motion_auto_off_hallway_morning_weekend
 
           # Hallway Weekend Day Configuration
           - type: conditional
@@ -1801,13 +1801,13 @@ views:
                       - entity: input_datetime.hallway_s2_start
                         name: Day Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.hallway_day_scene
-                    - entity: input_boolean.enable_hallway_day
-                    - entity: input_boolean.auto_on_hallway_day
-                    - entity: input_boolean.motion_activated_hallway_day
-                    - entity: input_number.motion_auto_off_hallway_day
+                    - entity: input_boolean.enable_hallway_day_weekend
+                    - entity: input_boolean.auto_on_hallway_day_weekend
+                    - entity: input_boolean.motion_activated_hallway_day_weekend
+                    - entity: input_number.motion_auto_off_hallway_day_weekend
 
           # Hallway Weekend Evening Configuration
           - type: conditional
@@ -1848,13 +1848,13 @@ views:
                       - entity: input_datetime.hallway_s3_start
                         name: Evening Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.hallway_evening_scene
-                    - entity: input_boolean.enable_hallway_evening
-                    - entity: input_boolean.auto_on_hallway_evening
-                    - entity: input_boolean.motion_activated_hallway_evening
-                    - entity: input_number.motion_auto_off_hallway_evening
+                    - entity: input_boolean.enable_hallway_evening_weekend
+                    - entity: input_boolean.auto_on_hallway_evening_weekend
+                    - entity: input_boolean.motion_activated_hallway_evening_weekend
+                    - entity: input_number.motion_auto_off_hallway_evening_weekend
 
           # Hallway Weekend Night Configuration
           - type: conditional
@@ -1895,10 +1895,10 @@ views:
                       - entity: input_datetime.hallway_s4_start
                         name: Night Start Time
                 - type: entities
-                  title: Schedule Options
+                  title: Schedule Options (Weekend)
                   entities:
                     - entity: input_select.hallway_night_scene
-                    - entity: input_boolean.enable_hallway_night
-                    - entity: input_boolean.auto_on_hallway_night
-                    - entity: input_boolean.motion_activated_hallway_night
-                    - entity: input_number.motion_auto_off_hallway_night
+                    - entity: input_boolean.enable_hallway_night_weekend
+                    - entity: input_boolean.auto_on_hallway_night_weekend
+                    - entity: input_boolean.motion_activated_hallway_night_weekend
+                    - entity: input_number.motion_auto_off_hallway_night_weekend

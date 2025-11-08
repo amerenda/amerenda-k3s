@@ -242,28 +242,44 @@ data:
         {% if morning_motion_activated_helper_input %}
           {{ is_state(morning_motion_activated_helper_input, 'on') }}
         {% else %}
-          {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_morning' %}
+          {% if is_weekday %}
+            {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_morning_weekday' %}
+          {% else %}
+            {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_morning_weekend' %}
+          {% endif %}
           {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else true }}
         {% endif %}
       motion_activated_day: >-
         {% if day_motion_activated_helper_input %}
           {{ is_state(day_motion_activated_helper_input, 'on') }}
         {% else %}
-          {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_day' %}
+          {% if is_weekday %}
+            {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_day_weekday' %}
+          {% else %}
+            {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_day_weekend' %}
+          {% endif %}
           {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else true }}
         {% endif %}
       motion_activated_evening: >-
         {% if evening_motion_activated_helper_input %}
           {{ is_state(evening_motion_activated_helper_input, 'on') }}
         {% else %}
-          {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_evening' %}
+          {% if is_weekday %}
+            {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_evening_weekday' %}
+          {% else %}
+            {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_evening_weekend' %}
+          {% endif %}
           {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else true }}
         {% endif %}
       motion_activated_night: >-
         {% if night_motion_activated_helper_input %}
           {{ is_state(night_motion_activated_helper_input, 'on') }}
         {% else %}
-          {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_night' %}
+          {% if is_weekday %}
+            {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_night_weekday' %}
+          {% else %}
+            {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_night_weekend' %}
+          {% endif %}
           {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else true }}
         {% endif %}
     
@@ -271,7 +287,11 @@ data:
         {% if morning_auto_off_helper %}
           {{ states(morning_auto_off_helper) | int(0) }}
         {% else %}
-          {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_morning' %}
+          {% if is_weekday %}
+            {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_morning_weekday' %}
+          {% else %}
+            {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_morning_weekend' %}
+          {% endif %}
           {% set val = states(helper) %}
           {% if val not in ['unknown', 'unavailable', ''] %}
             {{ val | int(15) }}
@@ -283,7 +303,11 @@ data:
         {% if day_auto_off_helper %}
           {{ states(day_auto_off_helper) | int(0) }}
         {% else %}
-          {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_day' %}
+          {% if is_weekday %}
+            {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_day_weekday' %}
+          {% else %}
+            {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_day_weekend' %}
+          {% endif %}
           {% set val = states(helper) %}
           {% if val not in ['unknown', 'unavailable', ''] %}
             {{ val | int(15) }}
@@ -295,7 +319,11 @@ data:
         {% if evening_auto_off_helper %}
           {{ states(evening_auto_off_helper) | int(0) }}
         {% else %}
-          {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_evening' %}
+          {% if is_weekday %}
+            {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_evening_weekday' %}
+          {% else %}
+            {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_evening_weekend' %}
+          {% endif %}
           {% set val = states(helper) %}
           {% if val not in ['unknown', 'unavailable', ''] %}
             {{ val | int(15) }}
@@ -307,7 +335,11 @@ data:
         {% if night_auto_off_helper %}
           {{ states(night_auto_off_helper) | int(0) }}
         {% else %}
-          {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_night' %}
+          {% if is_weekday %}
+            {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_night_weekday' %}
+          {% else %}
+            {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_night_weekend' %}
+          {% endif %}
           {% set val = states(helper) %}
           {% if val not in ['unknown', 'unavailable', ''] %}
             {{ val | int(15) }}
@@ -1221,56 +1253,88 @@ data:
         {% if enable_morning_helper_input %}
           {{ is_state(enable_morning_helper_input, 'on') }}
         {% else %}
-          {% set helper = 'input_boolean.enable_' ~ room_key_var ~ '_morning' %}
+          {% if is_weekday %}
+            {% set helper = 'input_boolean.enable_' ~ room_key_var ~ '_morning_weekday' %}
+          {% else %}
+            {% set helper = 'input_boolean.enable_' ~ room_key_var ~ '_morning_weekend' %}
+          {% endif %}
           {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else true }}
         {% endif %}
       ao_morning: >-
         {% if auto_on_morning_helper_input %}
           {{ is_state(auto_on_morning_helper_input, 'on') }}
         {% else %}
-          {% set helper = 'input_boolean.auto_on_' ~ room_key_var ~ '_morning' %}
+          {% if is_weekday %}
+            {% set helper = 'input_boolean.auto_on_' ~ room_key_var ~ '_morning_weekday' %}
+          {% else %}
+            {% set helper = 'input_boolean.auto_on_' ~ room_key_var ~ '_morning_weekend' %}
+          {% endif %}
           {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
         {% endif %}
       en_day: >-
         {% if enable_day_helper_input %}
           {{ is_state(enable_day_helper_input, 'on') }}
         {% else %}
-          {% set helper = 'input_boolean.enable_' ~ room_key_var ~ '_day' %}
+          {% if is_weekday %}
+            {% set helper = 'input_boolean.enable_' ~ room_key_var ~ '_day_weekday' %}
+          {% else %}
+            {% set helper = 'input_boolean.enable_' ~ room_key_var ~ '_day_weekend' %}
+          {% endif %}
           {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else true }}
         {% endif %}
       ao_day: >-
         {% if auto_on_day_helper_input %}
           {{ is_state(auto_on_day_helper_input, 'on') }}
         {% else %}
-          {% set helper = 'input_boolean.auto_on_' ~ room_key_var ~ '_day' %}
+          {% if is_weekday %}
+            {% set helper = 'input_boolean.auto_on_' ~ room_key_var ~ '_day_weekday' %}
+          {% else %}
+            {% set helper = 'input_boolean.auto_on_' ~ room_key_var ~ '_day_weekend' %}
+          {% endif %}
           {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
         {% endif %}
       en_evening: >-
         {% if enable_evening_helper_input %}
           {{ is_state(enable_evening_helper_input, 'on') }}
         {% else %}
-          {% set helper = 'input_boolean.enable_' ~ room_key_var ~ '_evening' %}
+          {% if is_weekday %}
+            {% set helper = 'input_boolean.enable_' ~ room_key_var ~ '_evening_weekday' %}
+          {% else %}
+            {% set helper = 'input_boolean.enable_' ~ room_key_var ~ '_evening_weekend' %}
+          {% endif %}
           {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else true }}
         {% endif %}
       ao_evening: >-
         {% if auto_on_evening_helper_input %}
           {{ is_state(auto_on_evening_helper_input, 'on') }}
         {% else %}
-          {% set helper = 'input_boolean.auto_on_' ~ room_key_var ~ '_evening' %}
+          {% if is_weekday %}
+            {% set helper = 'input_boolean.auto_on_' ~ room_key_var ~ '_evening_weekday' %}
+          {% else %}
+            {% set helper = 'input_boolean.auto_on_' ~ room_key_var ~ '_evening_weekend' %}
+          {% endif %}
           {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
         {% endif %}
       en_night: >-
         {% if enable_night_helper_input %}
           {{ is_state(enable_night_helper_input, 'on') }}
         {% else %}
-          {% set helper = 'input_boolean.enable_' ~ room_key_var ~ '_night' %}
+          {% if is_weekday %}
+            {% set helper = 'input_boolean.enable_' ~ room_key_var ~ '_night_weekday' %}
+          {% else %}
+            {% set helper = 'input_boolean.enable_' ~ room_key_var ~ '_night_weekend' %}
+          {% endif %}
           {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else true }}
         {% endif %}
       ao_night: >-
         {% if auto_on_night_helper_input %}
           {{ is_state(auto_on_night_helper_input, 'on') }}
         {% else %}
-          {% set helper = 'input_boolean.auto_on_' ~ room_key_var ~ '_night' %}
+          {% if is_weekday %}
+            {% set helper = 'input_boolean.auto_on_' ~ room_key_var ~ '_night_weekday' %}
+          {% else %}
+            {% set helper = 'input_boolean.auto_on_' ~ room_key_var ~ '_night_weekend' %}
+          {% endif %}
           {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
         {% endif %}
     

@@ -31,30 +31,102 @@ bathroom_timer_enabled:
 
 enable_bathroom_morning:
   name: Bathroom - Timer Morning Enabled
+enable_bathroom_morning_weekday:
+  name: Bathroom - Timer Morning Enabled (Weekday)
+  initial: true
+enable_bathroom_morning_weekend:
+  name: Bathroom - Timer Morning Enabled (Weekend)
+  initial: true
 enable_bathroom_day:
   name: Bathroom - Timer Day Enabled
+enable_bathroom_day_weekday:
+  name: Bathroom - Timer Day Enabled (Weekday)
+  initial: true
+enable_bathroom_day_weekend:
+  name: Bathroom - Timer Day Enabled (Weekend)
+  initial: true
 enable_bathroom_evening:
   name: Bathroom - Timer Evening Enabled
+enable_bathroom_evening_weekday:
+  name: Bathroom - Timer Evening Enabled (Weekday)
+  initial: true
+enable_bathroom_evening_weekend:
+  name: Bathroom - Timer Evening Enabled (Weekend)
+  initial: true
 enable_bathroom_night:
   name: Bathroom - Timer Night Enabled
+enable_bathroom_night_weekday:
+  name: Bathroom - Timer Night Enabled (Weekday)
+  initial: true
+enable_bathroom_night_weekend:
+  name: Bathroom - Timer Night Enabled (Weekend)
+  initial: true
 
 auto_on_bathroom_morning:
   name: Bathroom - Timer Morning Auto-on
+auto_on_bathroom_morning_weekday:
+  name: Bathroom - Timer Morning Auto-on (Weekday)
+  initial: false
+auto_on_bathroom_morning_weekend:
+  name: Bathroom - Timer Morning Auto-on (Weekend)
+  initial: false
 auto_on_bathroom_day:
   name: Bathroom - Timer Day Auto-on
+auto_on_bathroom_day_weekday:
+  name: Bathroom - Timer Day Auto-on (Weekday)
+  initial: false
+auto_on_bathroom_day_weekend:
+  name: Bathroom - Timer Day Auto-on (Weekend)
+  initial: false
 auto_on_bathroom_evening:
   name: Bathroom - Timer Evening Auto-on
+auto_on_bathroom_evening_weekday:
+  name: Bathroom - Timer Evening Auto-on (Weekday)
+  initial: false
+auto_on_bathroom_evening_weekend:
+  name: Bathroom - Timer Evening Auto-on (Weekend)
+  initial: false
 auto_on_bathroom_night:
   name: Bathroom - Timer Night Auto-on
+auto_on_bathroom_night_weekday:
+  name: Bathroom - Timer Night Auto-on (Weekday)
+  initial: false
+auto_on_bathroom_night_weekend:
+  name: Bathroom - Timer Night Auto-on (Weekend)
+  initial: false
 
 motion_activated_bathroom_morning:
   name: Bathroom - Motion Morning Activated
+motion_activated_bathroom_morning_weekday:
+  name: Bathroom - Motion Morning Activated (Weekday)
+  initial: true
+motion_activated_bathroom_morning_weekend:
+  name: Bathroom - Motion Morning Activated (Weekend)
+  initial: true
 motion_activated_bathroom_day:
   name: Bathroom - Motion Day Activated
+motion_activated_bathroom_day_weekday:
+  name: Bathroom - Motion Day Activated (Weekday)
+  initial: true
+motion_activated_bathroom_day_weekend:
+  name: Bathroom - Motion Day Activated (Weekend)
+  initial: true
 motion_activated_bathroom_evening:
   name: Bathroom - Motion Evening Activated
+motion_activated_bathroom_evening_weekday:
+  name: Bathroom - Motion Evening Activated (Weekday)
+  initial: true
+motion_activated_bathroom_evening_weekend:
+  name: Bathroom - Motion Evening Activated (Weekend)
+  initial: true
 motion_activated_bathroom_night:
   name: Bathroom - Motion Night Activated
+motion_activated_bathroom_night_weekday:
+  name: Bathroom - Motion Night Activated (Weekday)
+  initial: true
+motion_activated_bathroom_night_weekend:
+  name: Bathroom - Motion Night Activated (Weekend)
+  initial: true
 
 # Day-of-week helpers for morning slot
 bathroom_morning_sunday:

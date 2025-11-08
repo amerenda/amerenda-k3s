@@ -31,30 +31,102 @@ living_room_timer_enabled:
 
 enable_living_room_morning:
   name: Living Room - Timer Morning Enabled
+enable_living_room_morning_weekday:
+  name: Living Room - Timer Morning Enabled (Weekday)
+  initial: true
+enable_living_room_morning_weekend:
+  name: Living Room - Timer Morning Enabled (Weekend)
+  initial: true
 enable_living_room_day:
   name: Living Room - Timer Day Enabled
+enable_living_room_day_weekday:
+  name: Living Room - Timer Day Enabled (Weekday)
+  initial: true
+enable_living_room_day_weekend:
+  name: Living Room - Timer Day Enabled (Weekend)
+  initial: true
 enable_living_room_evening:
   name: Living Room - Timer Evening Enabled
+enable_living_room_evening_weekday:
+  name: Living Room - Timer Evening Enabled (Weekday)
+  initial: true
+enable_living_room_evening_weekend:
+  name: Living Room - Timer Evening Enabled (Weekend)
+  initial: true
 enable_living_room_night:
   name: Living Room - Timer Night Enabled
+enable_living_room_night_weekday:
+  name: Living Room - Timer Night Enabled (Weekday)
+  initial: true
+enable_living_room_night_weekend:
+  name: Living Room - Timer Night Enabled (Weekend)
+  initial: true
 
 auto_on_living_room_morning:
   name: Living Room - Timer Morning Auto-on
+auto_on_living_room_morning_weekday:
+  name: Living Room - Timer Morning Auto-on (Weekday)
+  initial: false
+auto_on_living_room_morning_weekend:
+  name: Living Room - Timer Morning Auto-on (Weekend)
+  initial: false
 auto_on_living_room_day:
   name: Living Room - Timer Day Auto-on
+auto_on_living_room_day_weekday:
+  name: Living Room - Timer Day Auto-on (Weekday)
+  initial: false
+auto_on_living_room_day_weekend:
+  name: Living Room - Timer Day Auto-on (Weekend)
+  initial: false
 auto_on_living_room_evening:
   name: Living Room - Timer Evening Auto-on
+auto_on_living_room_evening_weekday:
+  name: Living Room - Timer Evening Auto-on (Weekday)
+  initial: false
+auto_on_living_room_evening_weekend:
+  name: Living Room - Timer Evening Auto-on (Weekend)
+  initial: false
 auto_on_living_room_night:
   name: Living Room - Timer Night Auto-on
+auto_on_living_room_night_weekday:
+  name: Living Room - Timer Night Auto-on (Weekday)
+  initial: false
+auto_on_living_room_night_weekend:
+  name: Living Room - Timer Night Auto-on (Weekend)
+  initial: false
 
 motion_activated_living_room_morning:
   name: Living Room - Motion Morning Activated
+motion_activated_living_room_morning_weekday:
+  name: Living Room - Motion Morning Activated (Weekday)
+  initial: true
+motion_activated_living_room_morning_weekend:
+  name: Living Room - Motion Morning Activated (Weekend)
+  initial: true
 motion_activated_living_room_day:
   name: Living Room - Motion Day Activated
+motion_activated_living_room_day_weekday:
+  name: Living Room - Motion Day Activated (Weekday)
+  initial: true
+motion_activated_living_room_day_weekend:
+  name: Living Room - Motion Day Activated (Weekend)
+  initial: true
 motion_activated_living_room_evening:
   name: Living Room - Motion Evening Activated
+motion_activated_living_room_evening_weekday:
+  name: Living Room - Motion Evening Activated (Weekday)
+  initial: true
+motion_activated_living_room_evening_weekend:
+  name: Living Room - Motion Evening Activated (Weekend)
+  initial: true
 motion_activated_living_room_night:
   name: Living Room - Motion Night Activated
+motion_activated_living_room_night_weekday:
+  name: Living Room - Motion Night Activated (Weekday)
+  initial: true
+motion_activated_living_room_night_weekend:
+  name: Living Room - Motion Night Activated (Weekend)
+  initial: true
 
 # Day-of-week helpers for morning slot
 living_room_morning_sunday:

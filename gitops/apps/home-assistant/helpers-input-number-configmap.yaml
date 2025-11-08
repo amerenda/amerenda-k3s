@@ -66,8 +66,36 @@ data:
       step: 1
       unit_of_measurement: "min"
       initial: 15
+    motion_auto_off_bathroom_morning_weekday:
+      name: Bathroom - Motion Morning Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_bathroom_morning_weekend:
+      name: Bathroom - Motion Morning Auto-off Timeout (Weekend)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
     motion_auto_off_bathroom_day:
       name: Bathroom - Motion Day Auto-off Timeout
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_bathroom_day_weekday:
+      name: Bathroom - Motion Day Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_bathroom_day_weekend:
+      name: Bathroom - Motion Day Auto-off Timeout (Weekend)
       min: 0
       max: 240
       step: 1
@@ -80,8 +108,36 @@ data:
       step: 1
       unit_of_measurement: "min"
       initial: 15
+    motion_auto_off_bathroom_evening_weekday:
+      name: Bathroom - Motion Evening Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_bathroom_evening_weekend:
+      name: Bathroom - Motion Evening Auto-off Timeout (Weekend)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
     motion_auto_off_bathroom_night:
       name: Bathroom - Motion Night Auto-off Timeout
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_bathroom_night_weekday:
+      name: Bathroom - Motion Night Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_bathroom_night_weekend:
+      name: Bathroom - Motion Night Auto-off Timeout (Weekend)
       min: 0
       max: 240
       step: 1
@@ -150,8 +206,36 @@ data:
       step: 1
       unit_of_measurement: "min"
       initial: 15
+    motion_auto_off_bedroom_morning_weekday:
+      name: Bedroom - Motion Morning Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_bedroom_morning_weekend:
+      name: Bedroom - Motion Morning Auto-off Timeout (Weekend)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
     motion_auto_off_bedroom_day:
       name: Bedroom - Motion Day Auto-off Timeout
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_bedroom_day_weekday:
+      name: Bedroom - Motion Day Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_bedroom_day_weekend:
+      name: Bedroom - Motion Day Auto-off Timeout (Weekend)
       min: 0
       max: 240
       step: 1
@@ -164,8 +248,36 @@ data:
       step: 1
       unit_of_measurement: "min"
       initial: 15
+    motion_auto_off_bedroom_evening_weekday:
+      name: Bedroom - Motion Evening Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_bedroom_evening_weekend:
+      name: Bedroom - Motion Evening Auto-off Timeout (Weekend)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
     motion_auto_off_bedroom_night:
       name: Bedroom - Motion Night Auto-off Timeout
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_bedroom_night_weekday:
+      name: Bedroom - Motion Night Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_bedroom_night_weekend:
+      name: Bedroom - Motion Night Auto-off Timeout (Weekend)
       min: 0
       max: 240
       step: 1
@@ -234,8 +346,36 @@ data:
       step: 1
       unit_of_measurement: "min"
       initial: 15
+    motion_auto_off_hallway_morning_weekday:
+      name: Hallway - Motion Morning Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_hallway_morning_weekend:
+      name: Hallway - Motion Morning Auto-off Timeout (Weekend)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
     motion_auto_off_hallway_day:
       name: Hallway - Motion Day Auto-off Timeout
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_hallway_day_weekday:
+      name: Hallway - Motion Day Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_hallway_day_weekend:
+      name: Hallway - Motion Day Auto-off Timeout (Weekend)
       min: 0
       max: 240
       step: 1
@@ -248,8 +388,36 @@ data:
       step: 1
       unit_of_measurement: "min"
       initial: 15
+    motion_auto_off_hallway_evening_weekday:
+      name: Hallway - Motion Evening Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_hallway_evening_weekend:
+      name: Hallway - Motion Evening Auto-off Timeout (Weekend)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
     motion_auto_off_hallway_night:
       name: Hallway - Motion Night Auto-off Timeout
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_hallway_night_weekday:
+      name: Hallway - Motion Night Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_hallway_night_weekend:
+      name: Hallway - Motion Night Auto-off Timeout (Weekend)
       min: 0
       max: 240
       step: 1
@@ -318,8 +486,36 @@ data:
       step: 1
       unit_of_measurement: "min"
       initial: 15
+    motion_auto_off_kitchen_morning_weekday:
+      name: Kitchen - Motion Morning Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_kitchen_morning_weekend:
+      name: Kitchen - Motion Morning Auto-off Timeout (Weekend)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
     motion_auto_off_kitchen_day:
       name: Kitchen - Motion Day Auto-off Timeout
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_kitchen_day_weekday:
+      name: Kitchen - Motion Day Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_kitchen_day_weekend:
+      name: Kitchen - Motion Day Auto-off Timeout (Weekend)
       min: 0
       max: 240
       step: 1
@@ -332,8 +528,36 @@ data:
       step: 1
       unit_of_measurement: "min"
       initial: 15
+    motion_auto_off_kitchen_evening_weekday:
+      name: Kitchen - Motion Evening Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_kitchen_evening_weekend:
+      name: Kitchen - Motion Evening Auto-off Timeout (Weekend)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
     motion_auto_off_kitchen_night:
       name: Kitchen - Motion Night Auto-off Timeout
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_kitchen_night_weekday:
+      name: Kitchen - Motion Night Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_kitchen_night_weekend:
+      name: Kitchen - Motion Night Auto-off Timeout (Weekend)
       min: 0
       max: 240
       step: 1
@@ -402,8 +626,36 @@ data:
       step: 1
       unit_of_measurement: "min"
       initial: 15
+    motion_auto_off_living_room_morning_weekday:
+      name: Living Room - Motion Morning Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_living_room_morning_weekend:
+      name: Living Room - Motion Morning Auto-off Timeout (Weekend)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
     motion_auto_off_living_room_day:
       name: Living Room - Motion Day Auto-off Timeout
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_living_room_day_weekday:
+      name: Living Room - Motion Day Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_living_room_day_weekend:
+      name: Living Room - Motion Day Auto-off Timeout (Weekend)
       min: 0
       max: 240
       step: 1
@@ -416,8 +668,36 @@ data:
       step: 1
       unit_of_measurement: "min"
       initial: 15
+    motion_auto_off_living_room_evening_weekday:
+      name: Living Room - Motion Evening Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_living_room_evening_weekend:
+      name: Living Room - Motion Evening Auto-off Timeout (Weekend)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
     motion_auto_off_living_room_night:
       name: Living Room - Motion Night Auto-off Timeout
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_living_room_night_weekday:
+      name: Living Room - Motion Night Auto-off Timeout (Weekday)
+      min: 0
+      max: 240
+      step: 1
+      unit_of_measurement: "min"
+      initial: 15
+    motion_auto_off_living_room_night_weekend:
+      name: Living Room - Motion Night Auto-off Timeout (Weekend)
       min: 0
       max: 240
       step: 1
