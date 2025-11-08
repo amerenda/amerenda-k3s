@@ -821,45 +821,6 @@ data:
                         entities:
                           - entity: input_datetime.bedroom_s1_start
                             name: Morning Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: bedroom
-                              slot: morning
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: bedroom
-                              slot: morning
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.bedroom_morning_sunday
-                          name: Sunday
-                        - entity: input_boolean.bedroom_morning_monday
-                          name: Monday
-                        - entity: input_boolean.bedroom_morning_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.bedroom_morning_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.bedroom_morning_thursday
-                          name: Thursday
-                        - entity: input_boolean.bedroom_morning_friday
-                          name: Friday
-                        - entity: input_boolean.bedroom_morning_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -907,45 +868,6 @@ data:
                         entities:
                           - entity: input_datetime.bedroom_s2_start
                             name: Day Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: bedroom
-                              slot: day
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: bedroom
-                              slot: day
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.bedroom_day_sunday
-                          name: Sunday
-                        - entity: input_boolean.bedroom_day_monday
-                          name: Monday
-                        - entity: input_boolean.bedroom_day_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.bedroom_day_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.bedroom_day_thursday
-                          name: Thursday
-                        - entity: input_boolean.bedroom_day_friday
-                          name: Friday
-                        - entity: input_boolean.bedroom_day_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -993,45 +915,6 @@ data:
                         entities:
                           - entity: input_datetime.bedroom_s3_start
                             name: Evening Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: bedroom
-                              slot: evening
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: bedroom
-                              slot: evening
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.bedroom_evening_sunday
-                          name: Sunday
-                        - entity: input_boolean.bedroom_evening_monday
-                          name: Monday
-                        - entity: input_boolean.bedroom_evening_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.bedroom_evening_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.bedroom_evening_thursday
-                          name: Thursday
-                        - entity: input_boolean.bedroom_evening_friday
-                          name: Friday
-                        - entity: input_boolean.bedroom_evening_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -1079,45 +962,6 @@ data:
                         entities:
                           - entity: input_datetime.bedroom_s4_start
                             name: Night Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: bedroom
-                              slot: night
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: bedroom
-                              slot: night
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.bedroom_night_sunday
-                          name: Sunday
-                        - entity: input_boolean.bedroom_night_monday
-                          name: Monday
-                        - entity: input_boolean.bedroom_night_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.bedroom_night_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.bedroom_night_thursday
-                          name: Thursday
-                        - entity: input_boolean.bedroom_night_friday
-                          name: Friday
-                        - entity: input_boolean.bedroom_night_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -1165,45 +1009,6 @@ data:
                         entities:
                           - entity: input_datetime.bedroom_s1_start
                             name: Morning Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: bedroom
-                              slot: morning
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: bedroom
-                              slot: morning
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.bedroom_morning_sunday
-                          name: Sunday
-                        - entity: input_boolean.bedroom_morning_monday
-                          name: Monday
-                        - entity: input_boolean.bedroom_morning_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.bedroom_morning_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.bedroom_morning_thursday
-                          name: Thursday
-                        - entity: input_boolean.bedroom_morning_friday
-                          name: Friday
-                        - entity: input_boolean.bedroom_morning_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -1251,45 +1056,6 @@ data:
                         entities:
                           - entity: input_datetime.bedroom_s2_start
                             name: Day Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: bedroom
-                              slot: day
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: bedroom
-                              slot: day
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.bedroom_day_sunday
-                          name: Sunday
-                        - entity: input_boolean.bedroom_day_monday
-                          name: Monday
-                        - entity: input_boolean.bedroom_day_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.bedroom_day_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.bedroom_day_thursday
-                          name: Thursday
-                        - entity: input_boolean.bedroom_day_friday
-                          name: Friday
-                        - entity: input_boolean.bedroom_day_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -1337,45 +1103,6 @@ data:
                         entities:
                           - entity: input_datetime.bedroom_s3_start
                             name: Evening Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: bedroom
-                              slot: evening
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: bedroom
-                              slot: evening
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.bedroom_evening_sunday
-                          name: Sunday
-                        - entity: input_boolean.bedroom_evening_monday
-                          name: Monday
-                        - entity: input_boolean.bedroom_evening_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.bedroom_evening_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.bedroom_evening_thursday
-                          name: Thursday
-                        - entity: input_boolean.bedroom_evening_friday
-                          name: Friday
-                        - entity: input_boolean.bedroom_evening_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -1423,45 +1150,6 @@ data:
                         entities:
                           - entity: input_datetime.bedroom_s4_start
                             name: Night Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: bedroom
-                              slot: night
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: bedroom
-                              slot: night
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.bedroom_night_sunday
-                          name: Sunday
-                        - entity: input_boolean.bedroom_night_monday
-                          name: Monday
-                        - entity: input_boolean.bedroom_night_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.bedroom_night_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.bedroom_night_thursday
-                          name: Thursday
-                        - entity: input_boolean.bedroom_night_friday
-                          name: Friday
-                        - entity: input_boolean.bedroom_night_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -1509,45 +1197,6 @@ data:
                         entities:
                           - entity: input_datetime.living_room_s1_start
                             name: Morning Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: living_room
-                              slot: morning
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: living_room
-                              slot: morning
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.living_room_morning_sunday
-                          name: Sunday
-                        - entity: input_boolean.living_room_morning_monday
-                          name: Monday
-                        - entity: input_boolean.living_room_morning_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.living_room_morning_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.living_room_morning_thursday
-                          name: Thursday
-                        - entity: input_boolean.living_room_morning_friday
-                          name: Friday
-                        - entity: input_boolean.living_room_morning_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -1595,45 +1244,6 @@ data:
                         entities:
                           - entity: input_datetime.living_room_s2_start
                             name: Day Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: living_room
-                              slot: day
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: living_room
-                              slot: day
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.living_room_day_sunday
-                          name: Sunday
-                        - entity: input_boolean.living_room_day_monday
-                          name: Monday
-                        - entity: input_boolean.living_room_day_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.living_room_day_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.living_room_day_thursday
-                          name: Thursday
-                        - entity: input_boolean.living_room_day_friday
-                          name: Friday
-                        - entity: input_boolean.living_room_day_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -1681,45 +1291,6 @@ data:
                         entities:
                           - entity: input_datetime.living_room_s3_start
                             name: Evening Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: living_room
-                              slot: evening
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: living_room
-                              slot: evening
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.living_room_evening_sunday
-                          name: Sunday
-                        - entity: input_boolean.living_room_evening_monday
-                          name: Monday
-                        - entity: input_boolean.living_room_evening_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.living_room_evening_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.living_room_evening_thursday
-                          name: Thursday
-                        - entity: input_boolean.living_room_evening_friday
-                          name: Friday
-                        - entity: input_boolean.living_room_evening_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -1767,45 +1338,6 @@ data:
                         entities:
                           - entity: input_datetime.living_room_s4_start
                             name: Night Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: living_room
-                              slot: night
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: living_room
-                              slot: night
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.living_room_night_sunday
-                          name: Sunday
-                        - entity: input_boolean.living_room_night_monday
-                          name: Monday
-                        - entity: input_boolean.living_room_night_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.living_room_night_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.living_room_night_thursday
-                          name: Thursday
-                        - entity: input_boolean.living_room_night_friday
-                          name: Friday
-                        - entity: input_boolean.living_room_night_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -1853,45 +1385,6 @@ data:
                         entities:
                           - entity: input_datetime.living_room_s1_start
                             name: Morning Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: living_room
-                              slot: morning
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: living_room
-                              slot: morning
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.living_room_morning_sunday
-                          name: Sunday
-                        - entity: input_boolean.living_room_morning_monday
-                          name: Monday
-                        - entity: input_boolean.living_room_morning_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.living_room_morning_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.living_room_morning_thursday
-                          name: Thursday
-                        - entity: input_boolean.living_room_morning_friday
-                          name: Friday
-                        - entity: input_boolean.living_room_morning_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -1939,45 +1432,6 @@ data:
                         entities:
                           - entity: input_datetime.living_room_s2_start
                             name: Day Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: living_room
-                              slot: day
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: living_room
-                              slot: day
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.living_room_day_sunday
-                          name: Sunday
-                        - entity: input_boolean.living_room_day_monday
-                          name: Monday
-                        - entity: input_boolean.living_room_day_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.living_room_day_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.living_room_day_thursday
-                          name: Thursday
-                        - entity: input_boolean.living_room_day_friday
-                          name: Friday
-                        - entity: input_boolean.living_room_day_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -2025,45 +1479,6 @@ data:
                         entities:
                           - entity: input_datetime.living_room_s3_start
                             name: Evening Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: living_room
-                              slot: evening
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: living_room
-                              slot: evening
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.living_room_evening_sunday
-                          name: Sunday
-                        - entity: input_boolean.living_room_evening_monday
-                          name: Monday
-                        - entity: input_boolean.living_room_evening_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.living_room_evening_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.living_room_evening_thursday
-                          name: Thursday
-                        - entity: input_boolean.living_room_evening_friday
-                          name: Friday
-                        - entity: input_boolean.living_room_evening_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -2111,45 +1526,6 @@ data:
                         entities:
                           - entity: input_datetime.living_room_s4_start
                             name: Night Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: living_room
-                              slot: night
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: living_room
-                              slot: night
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.living_room_night_sunday
-                          name: Sunday
-                        - entity: input_boolean.living_room_night_monday
-                          name: Monday
-                        - entity: input_boolean.living_room_night_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.living_room_night_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.living_room_night_thursday
-                          name: Thursday
-                        - entity: input_boolean.living_room_night_friday
-                          name: Friday
-                        - entity: input_boolean.living_room_night_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -2197,45 +1573,6 @@ data:
                         entities:
                           - entity: input_datetime.kitchen_s1_start
                             name: Morning Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: kitchen
-                              slot: morning
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: kitchen
-                              slot: morning
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.kitchen_morning_sunday
-                          name: Sunday
-                        - entity: input_boolean.kitchen_morning_monday
-                          name: Monday
-                        - entity: input_boolean.kitchen_morning_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.kitchen_morning_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.kitchen_morning_thursday
-                          name: Thursday
-                        - entity: input_boolean.kitchen_morning_friday
-                          name: Friday
-                        - entity: input_boolean.kitchen_morning_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -2283,45 +1620,6 @@ data:
                         entities:
                           - entity: input_datetime.kitchen_s2_start
                             name: Day Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: kitchen
-                              slot: day
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: kitchen
-                              slot: day
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.kitchen_day_sunday
-                          name: Sunday
-                        - entity: input_boolean.kitchen_day_monday
-                          name: Monday
-                        - entity: input_boolean.kitchen_day_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.kitchen_day_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.kitchen_day_thursday
-                          name: Thursday
-                        - entity: input_boolean.kitchen_day_friday
-                          name: Friday
-                        - entity: input_boolean.kitchen_day_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -2369,45 +1667,6 @@ data:
                         entities:
                           - entity: input_datetime.kitchen_s3_start
                             name: Evening Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: kitchen
-                              slot: evening
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: kitchen
-                              slot: evening
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.kitchen_evening_sunday
-                          name: Sunday
-                        - entity: input_boolean.kitchen_evening_monday
-                          name: Monday
-                        - entity: input_boolean.kitchen_evening_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.kitchen_evening_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.kitchen_evening_thursday
-                          name: Thursday
-                        - entity: input_boolean.kitchen_evening_friday
-                          name: Friday
-                        - entity: input_boolean.kitchen_evening_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -2455,45 +1714,6 @@ data:
                         entities:
                           - entity: input_datetime.kitchen_s4_start
                             name: Night Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: kitchen
-                              slot: night
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: kitchen
-                              slot: night
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.kitchen_night_sunday
-                          name: Sunday
-                        - entity: input_boolean.kitchen_night_monday
-                          name: Monday
-                        - entity: input_boolean.kitchen_night_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.kitchen_night_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.kitchen_night_thursday
-                          name: Thursday
-                        - entity: input_boolean.kitchen_night_friday
-                          name: Friday
-                        - entity: input_boolean.kitchen_night_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -2541,45 +1761,6 @@ data:
                         entities:
                           - entity: input_datetime.kitchen_s1_start
                             name: Morning Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: kitchen
-                              slot: morning
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: kitchen
-                              slot: morning
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.kitchen_morning_sunday
-                          name: Sunday
-                        - entity: input_boolean.kitchen_morning_monday
-                          name: Monday
-                        - entity: input_boolean.kitchen_morning_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.kitchen_morning_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.kitchen_morning_thursday
-                          name: Thursday
-                        - entity: input_boolean.kitchen_morning_friday
-                          name: Friday
-                        - entity: input_boolean.kitchen_morning_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -2627,45 +1808,6 @@ data:
                         entities:
                           - entity: input_datetime.kitchen_s2_start
                             name: Day Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: kitchen
-                              slot: day
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: kitchen
-                              slot: day
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.kitchen_day_sunday
-                          name: Sunday
-                        - entity: input_boolean.kitchen_day_monday
-                          name: Monday
-                        - entity: input_boolean.kitchen_day_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.kitchen_day_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.kitchen_day_thursday
-                          name: Thursday
-                        - entity: input_boolean.kitchen_day_friday
-                          name: Friday
-                        - entity: input_boolean.kitchen_day_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -2713,45 +1855,6 @@ data:
                         entities:
                           - entity: input_datetime.kitchen_s3_start
                             name: Evening Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: kitchen
-                              slot: evening
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: kitchen
-                              slot: evening
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.kitchen_evening_sunday
-                          name: Sunday
-                        - entity: input_boolean.kitchen_evening_monday
-                          name: Monday
-                        - entity: input_boolean.kitchen_evening_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.kitchen_evening_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.kitchen_evening_thursday
-                          name: Thursday
-                        - entity: input_boolean.kitchen_evening_friday
-                          name: Friday
-                        - entity: input_boolean.kitchen_evening_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -2799,45 +1902,6 @@ data:
                         entities:
                           - entity: input_datetime.kitchen_s4_start
                             name: Night Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: kitchen
-                              slot: night
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: kitchen
-                              slot: night
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.kitchen_night_sunday
-                          name: Sunday
-                        - entity: input_boolean.kitchen_night_monday
-                          name: Monday
-                        - entity: input_boolean.kitchen_night_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.kitchen_night_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.kitchen_night_thursday
-                          name: Thursday
-                        - entity: input_boolean.kitchen_night_friday
-                          name: Friday
-                        - entity: input_boolean.kitchen_night_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -2885,45 +1949,6 @@ data:
                         entities:
                           - entity: input_datetime.bathroom_s1_start
                             name: Morning Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: bathroom
-                              slot: morning
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: bathroom
-                              slot: morning
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.bathroom_morning_sunday
-                          name: Sunday
-                        - entity: input_boolean.bathroom_morning_monday
-                          name: Monday
-                        - entity: input_boolean.bathroom_morning_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.bathroom_morning_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.bathroom_morning_thursday
-                          name: Thursday
-                        - entity: input_boolean.bathroom_morning_friday
-                          name: Friday
-                        - entity: input_boolean.bathroom_morning_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -2971,45 +1996,6 @@ data:
                         entities:
                           - entity: input_datetime.bathroom_s2_start
                             name: Day Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: bathroom
-                              slot: day
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: bathroom
-                              slot: day
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.bathroom_day_sunday
-                          name: Sunday
-                        - entity: input_boolean.bathroom_day_monday
-                          name: Monday
-                        - entity: input_boolean.bathroom_day_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.bathroom_day_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.bathroom_day_thursday
-                          name: Thursday
-                        - entity: input_boolean.bathroom_day_friday
-                          name: Friday
-                        - entity: input_boolean.bathroom_day_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -3057,45 +2043,6 @@ data:
                         entities:
                           - entity: input_datetime.bathroom_s3_start
                             name: Evening Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: bathroom
-                              slot: evening
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: bathroom
-                              slot: evening
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.bathroom_evening_sunday
-                          name: Sunday
-                        - entity: input_boolean.bathroom_evening_monday
-                          name: Monday
-                        - entity: input_boolean.bathroom_evening_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.bathroom_evening_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.bathroom_evening_thursday
-                          name: Thursday
-                        - entity: input_boolean.bathroom_evening_friday
-                          name: Friday
-                        - entity: input_boolean.bathroom_evening_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -3143,45 +2090,6 @@ data:
                         entities:
                           - entity: input_datetime.bathroom_s4_start
                             name: Night Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: bathroom
-                              slot: night
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: bathroom
-                              slot: night
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.bathroom_night_sunday
-                          name: Sunday
-                        - entity: input_boolean.bathroom_night_monday
-                          name: Monday
-                        - entity: input_boolean.bathroom_night_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.bathroom_night_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.bathroom_night_thursday
-                          name: Thursday
-                        - entity: input_boolean.bathroom_night_friday
-                          name: Friday
-                        - entity: input_boolean.bathroom_night_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -3229,45 +2137,6 @@ data:
                         entities:
                           - entity: input_datetime.bathroom_s1_start
                             name: Morning Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: bathroom
-                              slot: morning
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: bathroom
-                              slot: morning
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.bathroom_morning_sunday
-                          name: Sunday
-                        - entity: input_boolean.bathroom_morning_monday
-                          name: Monday
-                        - entity: input_boolean.bathroom_morning_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.bathroom_morning_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.bathroom_morning_thursday
-                          name: Thursday
-                        - entity: input_boolean.bathroom_morning_friday
-                          name: Friday
-                        - entity: input_boolean.bathroom_morning_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -3315,45 +2184,6 @@ data:
                         entities:
                           - entity: input_datetime.bathroom_s2_start
                             name: Day Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: bathroom
-                              slot: day
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: bathroom
-                              slot: day
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.bathroom_day_sunday
-                          name: Sunday
-                        - entity: input_boolean.bathroom_day_monday
-                          name: Monday
-                        - entity: input_boolean.bathroom_day_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.bathroom_day_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.bathroom_day_thursday
-                          name: Thursday
-                        - entity: input_boolean.bathroom_day_friday
-                          name: Friday
-                        - entity: input_boolean.bathroom_day_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -3401,45 +2231,6 @@ data:
                         entities:
                           - entity: input_datetime.bathroom_s3_start
                             name: Evening Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: bathroom
-                              slot: evening
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: bathroom
-                              slot: evening
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.bathroom_evening_sunday
-                          name: Sunday
-                        - entity: input_boolean.bathroom_evening_monday
-                          name: Monday
-                        - entity: input_boolean.bathroom_evening_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.bathroom_evening_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.bathroom_evening_thursday
-                          name: Thursday
-                        - entity: input_boolean.bathroom_evening_friday
-                          name: Friday
-                        - entity: input_boolean.bathroom_evening_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -3487,45 +2278,6 @@ data:
                         entities:
                           - entity: input_datetime.bathroom_s4_start
                             name: Night Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: bathroom
-                              slot: night
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: bathroom
-                              slot: night
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.bathroom_night_sunday
-                          name: Sunday
-                        - entity: input_boolean.bathroom_night_monday
-                          name: Monday
-                        - entity: input_boolean.bathroom_night_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.bathroom_night_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.bathroom_night_thursday
-                          name: Thursday
-                        - entity: input_boolean.bathroom_night_friday
-                          name: Friday
-                        - entity: input_boolean.bathroom_night_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -3573,45 +2325,6 @@ data:
                         entities:
                           - entity: input_datetime.hallway_s1_start
                             name: Morning Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: hallway
-                              slot: morning
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: hallway
-                              slot: morning
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.hallway_morning_sunday
-                          name: Sunday
-                        - entity: input_boolean.hallway_morning_monday
-                          name: Monday
-                        - entity: input_boolean.hallway_morning_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.hallway_morning_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.hallway_morning_thursday
-                          name: Thursday
-                        - entity: input_boolean.hallway_morning_friday
-                          name: Friday
-                        - entity: input_boolean.hallway_morning_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -3659,45 +2372,6 @@ data:
                         entities:
                           - entity: input_datetime.hallway_s2_start
                             name: Day Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: hallway
-                              slot: day
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: hallway
-                              slot: day
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.hallway_day_sunday
-                          name: Sunday
-                        - entity: input_boolean.hallway_day_monday
-                          name: Monday
-                        - entity: input_boolean.hallway_day_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.hallway_day_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.hallway_day_thursday
-                          name: Thursday
-                        - entity: input_boolean.hallway_day_friday
-                          name: Friday
-                        - entity: input_boolean.hallway_day_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -3745,45 +2419,6 @@ data:
                         entities:
                           - entity: input_datetime.hallway_s3_start
                             name: Evening Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: hallway
-                              slot: evening
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: hallway
-                              slot: evening
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.hallway_evening_sunday
-                          name: Sunday
-                        - entity: input_boolean.hallway_evening_monday
-                          name: Monday
-                        - entity: input_boolean.hallway_evening_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.hallway_evening_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.hallway_evening_thursday
-                          name: Thursday
-                        - entity: input_boolean.hallway_evening_friday
-                          name: Friday
-                        - entity: input_boolean.hallway_evening_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -3831,45 +2466,6 @@ data:
                         entities:
                           - entity: input_datetime.hallway_s4_start
                             name: Night Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: hallway
-                              slot: night
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: hallway
-                              slot: night
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.hallway_night_sunday
-                          name: Sunday
-                        - entity: input_boolean.hallway_night_monday
-                          name: Monday
-                        - entity: input_boolean.hallway_night_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.hallway_night_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.hallway_night_thursday
-                          name: Thursday
-                        - entity: input_boolean.hallway_night_friday
-                          name: Friday
-                        - entity: input_boolean.hallway_night_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -3917,45 +2513,6 @@ data:
                         entities:
                           - entity: input_datetime.hallway_s1_start
                             name: Morning Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: hallway
-                              slot: morning
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: hallway
-                              slot: morning
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.hallway_morning_sunday
-                          name: Sunday
-                        - entity: input_boolean.hallway_morning_monday
-                          name: Monday
-                        - entity: input_boolean.hallway_morning_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.hallway_morning_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.hallway_morning_thursday
-                          name: Thursday
-                        - entity: input_boolean.hallway_morning_friday
-                          name: Friday
-                        - entity: input_boolean.hallway_morning_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -4003,45 +2560,6 @@ data:
                         entities:
                           - entity: input_datetime.hallway_s2_start
                             name: Day Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: hallway
-                              slot: day
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: hallway
-                              slot: day
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.hallway_day_sunday
-                          name: Sunday
-                        - entity: input_boolean.hallway_day_monday
-                          name: Monday
-                        - entity: input_boolean.hallway_day_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.hallway_day_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.hallway_day_thursday
-                          name: Thursday
-                        - entity: input_boolean.hallway_day_friday
-                          name: Friday
-                        - entity: input_boolean.hallway_day_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -4089,45 +2607,6 @@ data:
                         entities:
                           - entity: input_datetime.hallway_s3_start
                             name: Evening Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: hallway
-                              slot: evening
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: hallway
-                              slot: evening
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.hallway_evening_sunday
-                          name: Sunday
-                        - entity: input_boolean.hallway_evening_monday
-                          name: Monday
-                        - entity: input_boolean.hallway_evening_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.hallway_evening_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.hallway_evening_thursday
-                          name: Thursday
-                        - entity: input_boolean.hallway_evening_friday
-                          name: Friday
-                        - entity: input_boolean.hallway_evening_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
@@ -4175,45 +2654,6 @@ data:
                         entities:
                           - entity: input_datetime.hallway_s4_start
                             name: Night Start Time
-                    - type: horizontal-stack
-                      cards:
-                        - type: button
-                          name: Weekdays
-                          icon: mdi:briefcase
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekdays
-                            service_data:
-                              room: hallway
-                              slot: night
-                          show_state: false
-                        - type: button
-                          name: Weekends
-                          icon: mdi:beach
-                          tap_action:
-                            action: call-service
-                            service: script.toggle_weekends
-                            service_data:
-                              room: hallway
-                              slot: night
-                          show_state: false
-                    - type: entities
-                      title: Days
-                      entities:
-                        - entity: input_boolean.hallway_night_sunday
-                          name: Sunday
-                        - entity: input_boolean.hallway_night_monday
-                          name: Monday
-                        - entity: input_boolean.hallway_night_tuesday
-                          name: Tuesday
-                        - entity: input_boolean.hallway_night_wednesday
-                          name: Wednesday
-                        - entity: input_boolean.hallway_night_thursday
-                          name: Thursday
-                        - entity: input_boolean.hallway_night_friday
-                          name: Friday
-                        - entity: input_boolean.hallway_night_saturday
-                          name: Saturday
                     - type: entities
                       title: Schedule Options
                       entities:
