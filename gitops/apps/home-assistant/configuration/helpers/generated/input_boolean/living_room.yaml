@@ -43,3 +43,95 @@ motion_activated_living_room_evening:
   name: Living Room - Motion Evening Activated
 motion_activated_living_room_night:
   name: Living Room - Motion Night Activated
+
+# Day-of-week helpers for morning slot
+living_room_morning_sunday:
+  name: Living Room - Morning Sunday
+  initial: true
+living_room_morning_monday:
+  name: Living Room - Morning Monday
+  initial: true
+living_room_morning_tuesday:
+  name: Living Room - Morning Tuesday
+  initial: true
+living_room_morning_wednesday:
+  name: Living Room - Morning Wednesday
+  initial: true
+living_room_morning_thursday:
+  name: Living Room - Morning Thursday
+  initial: true
+living_room_morning_friday:
+  name: Living Room - Morning Friday
+  initial: true
+living_room_morning_saturday:
+  name: Living Room - Morning Saturday
+  initial: true
+
+# Day-of-week helpers for day slot
+living_room_day_sunday:
+  name: Living Room - Day Sunday
+  initial: true
+living_room_day_monday:
+  name: Living Room - Day Monday
+  initial: true
+living_room_day_tuesday:
+  name: Living Room - Day Tuesday
+  initial: true
+living_room_day_wednesday:
+  name: Living Room - Day Wednesday
+  initial: true
+living_room_day_thursday:
+  name: Living Room - Day Thursday
+  initial: true
+living_room_day_friday:
+  name: Living Room - Day Friday
+  initial: true
+living_room_day_saturday:
+  name: Living Room - Day Saturday
+  initial: true
+
+# Day-of-week helpers for evening slot
+living_room_evening_sunday:
+  name: Living Room - Evening Sunday
+  initial: true
+living_room_evening_monday:
+  name: Living Room - Evening Monday
+  initial: true
+living_room_evening_tuesday:
+  name: Living Room - Evening Tuesday
+  initial: true
+living_room_evening_wednesday:
+  name: Living Room - Evening Wednesday
+  initial: true
+living_room_evening_thursday:
+  name: Living Room - Evening Thursday
+  initial: true
+living_room_evening_friday:
+  name: Living Room - Evening Friday
+  initial: true
+living_room_evening_saturday:
+  name: Living Room - Evening Saturday
+  initial: true
+
+# Day-of-week helpers for night slot
+living_room_night_sunday:
+  name: Living Room - Night Sunday
+  initial: true
+living_room_night_monday:
+  name: Living Room - Night Monday
+  initial: true
+living_room_night_tuesday:
+  name: Living Room - Night Tuesday
+  initial: true
+living_room_night_wednesday:
+  name: Living Room - Night Wednesday
+  initial: true
+living_room_night_thursday:
+  name: Living Room - Night Thursday
+  initial: true
+living_room_night_friday:
+  name: Living Room - Night Friday
+  initial: true
+living_room_night_saturday:
+  name: Living Room - Night Saturday
+  initial: true

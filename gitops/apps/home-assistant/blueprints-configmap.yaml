@@ -266,6 +266,12 @@ data:
           'night': night_auto_off_mins
         } %}
         {{ map[slot] | int(0) }}
+      
+      # Check if current day is enabled for the current slot
+      current_day: "{{ now().strftime('%A').lower() }}"
+      day_enabled_current: >-
+        {% set day_helper = 'input_boolean.' ~ room_key_var ~ '_' ~ slot ~ '_' ~ current_day %}
+        {{ is_state(day_helper, 'on') if states(day_helper) not in ['unknown', 'unavailable'] else true }}
     
     trigger:
       - platform: "state"
@@ -290,6 +296,8 @@ data:
                 state: "on"
               - condition: "template"
                 value_template: "{{ motion_activated_current | bool }}"
+              - condition: "template"
+                value_template: "{{ day_enabled_current | bool }}"
             sequence:
               - variables:
                   _fb_var: >-
@@ -319,6 +327,8 @@ data:
                 state: "on"
               - condition: "template"
                 value_template: "{{ motion_activated_current | bool }}"
+              - condition: "template"
+                value_template: "{{ day_enabled_current | bool }}"
             sequence:
               - if:
                   - condition: "template"
@@ -619,6 +629,12 @@ data:
         {% elif now_ts >= s2 and now_ts < s3 %}day
         {% elif now_ts >= s3 and now_ts < s4 %}evening
         {% else %}night{% endif %}
+      
+      # Check if current day is enabled for the current slot
+      current_day: "{{ now().strftime('%A').lower() }}"
+      day_enabled_current: >-
+        {% set day_helper = 'input_boolean.' ~ entity_name ~ '_' ~ current_slot ~ '_' ~ current_day %}
+        {{ is_state(day_helper, 'on') if states(day_helper) not in ['unknown', 'unavailable'] else true }}
     
     trigger:
       # Event-based triggers (Philips Hue v2 "hue_event")
@@ -1080,14 +1096,23 @@ data:
         id: "minute_check"
     
     condition:
-      # Only proceed if current time matches one of the slot times AND that slot is enabled
+      # Only proceed if current time matches one of the slot times AND that slot is enabled AND current day is enabled
       - condition: template
         value_template: >-
           {% set now_hm = now().strftime('%H:%M') %}
-          {% set matches_morning = now_hm == s1 and en_morning | bool %}
-          {% set matches_day = now_hm == s2 and en_day | bool %}
-          {% set matches_evening = now_hm == s3 and en_evening | bool %}
-          {% set matches_night = now_hm == s4 and en_night | bool %}
+          {% set current_day = now().strftime('%A').lower() %}
+          {% set day_helper_morning = 'input_boolean.' ~ room_key_var ~ '_morning_' ~ current_day %}
+          {% set day_helper_day = 'input_boolean.' ~ room_key_var ~ '_day_' ~ current_day %}
+          {% set day_helper_evening = 'input_boolean.' ~ room_key_var ~ '_evening_' ~ current_day %}
+          {% set day_helper_night = 'input_boolean.' ~ room_key_var ~ '_night_' ~ current_day %}
+          {% set day_enabled_morning = is_state(day_helper_morning, 'on') if states(day_helper_morning) not in ['unknown', 'unavailable'] else true %}
+          {% set day_enabled_day = is_state(day_helper_day, 'on') if states(day_helper_day) not in ['unknown', 'unavailable'] else true %}
+          {% set day_enabled_evening = is_state(day_helper_evening, 'on') if states(day_helper_evening) not in ['unknown', 'unavailable'] else true %}
+          {% set day_enabled_night = is_state(day_helper_night, 'on') if states(day_helper_night) not in ['unknown', 'unavailable'] else true %}
+          {% set matches_morning = now_hm == s1 and en_morning | bool and day_enabled_morning %}
+          {% set matches_day = now_hm == s2 and en_day | bool and day_enabled_day %}
+          {% set matches_evening = now_hm == s3 and en_evening | bool and day_enabled_evening %}
+          {% set matches_night = now_hm == s4 and en_night | bool and day_enabled_night %}
           {{ matches_morning or matches_day or matches_evening or matches_night }}
     
     action:

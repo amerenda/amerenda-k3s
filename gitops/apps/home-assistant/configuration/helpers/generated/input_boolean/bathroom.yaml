@@ -43,3 +43,95 @@ motion_activated_bathroom_evening:
   name: Bathroom - Motion Evening Activated
 motion_activated_bathroom_night:
   name: Bathroom - Motion Night Activated
+
+# Day-of-week helpers for morning slot
+bathroom_morning_sunday:
+  name: Bathroom - Morning Sunday
+  initial: true
+bathroom_morning_monday:
+  name: Bathroom - Morning Monday
+  initial: true
+bathroom_morning_tuesday:
+  name: Bathroom - Morning Tuesday
+  initial: true
+bathroom_morning_wednesday:
+  name: Bathroom - Morning Wednesday
+  initial: true
+bathroom_morning_thursday:
+  name: Bathroom - Morning Thursday
+  initial: true
+bathroom_morning_friday:
+  name: Bathroom - Morning Friday
+  initial: true
+bathroom_morning_saturday:
+  name: Bathroom - Morning Saturday
+  initial: true
+
+# Day-of-week helpers for day slot
+bathroom_day_sunday:
+  name: Bathroom - Day Sunday
+  initial: true
+bathroom_day_monday:
+  name: Bathroom - Day Monday
+  initial: true
+bathroom_day_tuesday:
+  name: Bathroom - Day Tuesday
+  initial: true
+bathroom_day_wednesday:
+  name: Bathroom - Day Wednesday
+  initial: true
+bathroom_day_thursday:
+  name: Bathroom - Day Thursday
+  initial: true
+bathroom_day_friday:
+  name: Bathroom - Day Friday
+  initial: true
+bathroom_day_saturday:
+  name: Bathroom - Day Saturday
+  initial: true
+
+# Day-of-week helpers for evening slot
+bathroom_evening_sunday:
+  name: Bathroom - Evening Sunday
+  initial: true
+bathroom_evening_monday:
+  name: Bathroom - Evening Monday
+  initial: true
+bathroom_evening_tuesday:
+  name: Bathroom - Evening Tuesday
+  initial: true
+bathroom_evening_wednesday:
+  name: Bathroom - Evening Wednesday
+  initial: true
+bathroom_evening_thursday:
+  name: Bathroom - Evening Thursday
+  initial: true
+bathroom_evening_friday:
+  name: Bathroom - Evening Friday
+  initial: true
+bathroom_evening_saturday:
+  name: Bathroom - Evening Saturday
+  initial: true
+
+# Day-of-week helpers for night slot
+bathroom_night_sunday:
+  name: Bathroom - Night Sunday
+  initial: true
+bathroom_night_monday:
+  name: Bathroom - Night Monday
+  initial: true
+bathroom_night_tuesday:
+  name: Bathroom - Night Tuesday
+  initial: true
+bathroom_night_wednesday:
+  name: Bathroom - Night Wednesday
+  initial: true
+bathroom_night_thursday:
+  name: Bathroom - Night Thursday
+  initial: true
+bathroom_night_friday:
+  name: Bathroom - Night Friday
+  initial: true
+bathroom_night_saturday:
+  name: Bathroom - Night Saturday
+  initial: true

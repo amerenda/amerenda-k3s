@@ -49,6 +49,98 @@ data:
       name: Bathroom - Motion Evening Activated
     motion_activated_bathroom_night:
       name: Bathroom - Motion Night Activated
+    
+    # Day-of-week helpers for morning slot
+    bathroom_morning_sunday:
+      name: Bathroom - Morning Sunday
+      initial: true
+    bathroom_morning_monday:
+      name: Bathroom - Morning Monday
+      initial: true
+    bathroom_morning_tuesday:
+      name: Bathroom - Morning Tuesday
+      initial: true
+    bathroom_morning_wednesday:
+      name: Bathroom - Morning Wednesday
+      initial: true
+    bathroom_morning_thursday:
+      name: Bathroom - Morning Thursday
+      initial: true
+    bathroom_morning_friday:
+      name: Bathroom - Morning Friday
+      initial: true
+    bathroom_morning_saturday:
+      name: Bathroom - Morning Saturday
+      initial: true
+    
+    # Day-of-week helpers for day slot
+    bathroom_day_sunday:
+      name: Bathroom - Day Sunday
+      initial: true
+    bathroom_day_monday:
+      name: Bathroom - Day Monday
+      initial: true
+    bathroom_day_tuesday:
+      name: Bathroom - Day Tuesday
+      initial: true
+    bathroom_day_wednesday:
+      name: Bathroom - Day Wednesday
+      initial: true
+    bathroom_day_thursday:
+      name: Bathroom - Day Thursday
+      initial: true
+    bathroom_day_friday:
+      name: Bathroom - Day Friday
+      initial: true
+    bathroom_day_saturday:
+      name: Bathroom - Day Saturday
+      initial: true
+    
+    # Day-of-week helpers for evening slot
+    bathroom_evening_sunday:
+      name: Bathroom - Evening Sunday
+      initial: true
+    bathroom_evening_monday:
+      name: Bathroom - Evening Monday
+      initial: true
+    bathroom_evening_tuesday:
+      name: Bathroom - Evening Tuesday
+      initial: true
+    bathroom_evening_wednesday:
+      name: Bathroom - Evening Wednesday
+      initial: true
+    bathroom_evening_thursday:
+      name: Bathroom - Evening Thursday
+      initial: true
+    bathroom_evening_friday:
+      name: Bathroom - Evening Friday
+      initial: true
+    bathroom_evening_saturday:
+      name: Bathroom - Evening Saturday
+      initial: true
+    
+    # Day-of-week helpers for night slot
+    bathroom_night_sunday:
+      name: Bathroom - Night Sunday
+      initial: true
+    bathroom_night_monday:
+      name: Bathroom - Night Monday
+      initial: true
+    bathroom_night_tuesday:
+      name: Bathroom - Night Tuesday
+      initial: true
+    bathroom_night_wednesday:
+      name: Bathroom - Night Wednesday
+      initial: true
+    bathroom_night_thursday:
+      name: Bathroom - Night Thursday
+      initial: true
+    bathroom_night_friday:
+      name: Bathroom - Night Friday
+      initial: true
+    bathroom_night_saturday:
+      name: Bathroom - Night Saturday
+      initial: true
   bedroom.yaml: |
     # Template for input_boolean helpers per room
     # Usage:
@@ -95,6 +187,98 @@ data:
       name: Bedroom - Motion Evening Activated
     motion_activated_bedroom_night:
       name: Bedroom - Motion Night Activated
+    
+    # Day-of-week helpers for morning slot
+    bedroom_morning_sunday:
+      name: Bedroom - Morning Sunday
+      initial: true
+    bedroom_morning_monday:
+      name: Bedroom - Morning Monday
+      initial: true
+    bedroom_morning_tuesday:
+      name: Bedroom - Morning Tuesday
+      initial: true
+    bedroom_morning_wednesday:
+      name: Bedroom - Morning Wednesday
+      initial: true
+    bedroom_morning_thursday:
+      name: Bedroom - Morning Thursday
+      initial: true
+    bedroom_morning_friday:
+      name: Bedroom - Morning Friday
+      initial: true
+    bedroom_morning_saturday:
+      name: Bedroom - Morning Saturday
+      initial: true
+    
+    # Day-of-week helpers for day slot
+    bedroom_day_sunday:
+      name: Bedroom - Day Sunday
+      initial: true
+    bedroom_day_monday:
+      name: Bedroom - Day Monday
+      initial: true
+    bedroom_day_tuesday:
+      name: Bedroom - Day Tuesday
+      initial: true
+    bedroom_day_wednesday:
+      name: Bedroom - Day Wednesday
+      initial: true
+    bedroom_day_thursday:
+      name: Bedroom - Day Thursday
+      initial: true
+    bedroom_day_friday:
+      name: Bedroom - Day Friday
+      initial: true
+    bedroom_day_saturday:
+      name: Bedroom - Day Saturday
+      initial: true
+    
+    # Day-of-week helpers for evening slot
+    bedroom_evening_sunday:
+      name: Bedroom - Evening Sunday
+      initial: true
+    bedroom_evening_monday:
+      name: Bedroom - Evening Monday
+      initial: true
+    bedroom_evening_tuesday:
+      name: Bedroom - Evening Tuesday
+      initial: true
+    bedroom_evening_wednesday:
+      name: Bedroom - Evening Wednesday
+      initial: true
+    bedroom_evening_thursday:
+      name: Bedroom - Evening Thursday
+      initial: true
+    bedroom_evening_friday:
+      name: Bedroom - Evening Friday
+      initial: true
+    bedroom_evening_saturday:
+      name: Bedroom - Evening Saturday
+      initial: true
+    
+    # Day-of-week helpers for night slot
+    bedroom_night_sunday:
+      name: Bedroom - Night Sunday
+      initial: true
+    bedroom_night_monday:
+      name: Bedroom - Night Monday
+      initial: true
+    bedroom_night_tuesday:
+      name: Bedroom - Night Tuesday
+      initial: true
+    bedroom_night_wednesday:
+      name: Bedroom - Night Wednesday
+      initial: true
+    bedroom_night_thursday:
+      name: Bedroom - Night Thursday
+      initial: true
+    bedroom_night_friday:
+      name: Bedroom - Night Friday
+      initial: true
+    bedroom_night_saturday:
+      name: Bedroom - Night Saturday
+      initial: true
   hallway.yaml: |
     # Template for input_boolean helpers per room
     # Usage:
@@ -141,6 +325,98 @@ data:
       name: Hallway - Motion Evening Activated
     motion_activated_hallway_night:
       name: Hallway - Motion Night Activated
+    
+    # Day-of-week helpers for morning slot
+    hallway_morning_sunday:
+      name: Hallway - Morning Sunday
+      initial: true
+    hallway_morning_monday:
+      name: Hallway - Morning Monday
+      initial: true
+    hallway_morning_tuesday:
+      name: Hallway - Morning Tuesday
+      initial: true
+    hallway_morning_wednesday:
+      name: Hallway - Morning Wednesday
+      initial: true
+    hallway_morning_thursday:
+      name: Hallway - Morning Thursday
+      initial: true
+    hallway_morning_friday:
+      name: Hallway - Morning Friday
+      initial: true
+    hallway_morning_saturday:
+      name: Hallway - Morning Saturday
+      initial: true
+    
+    # Day-of-week helpers for day slot
+    hallway_day_sunday:
+      name: Hallway - Day Sunday
+      initial: true
+    hallway_day_monday:
+      name: Hallway - Day Monday
+      initial: true
+    hallway_day_tuesday:
+      name: Hallway - Day Tuesday
+      initial: true
+    hallway_day_wednesday:
+      name: Hallway - Day Wednesday
+      initial: true
+    hallway_day_thursday:
+      name: Hallway - Day Thursday
+      initial: true
+    hallway_day_friday:
+      name: Hallway - Day Friday
+      initial: true
+    hallway_day_saturday:
+      name: Hallway - Day Saturday
+      initial: true
+    
+    # Day-of-week helpers for evening slot
+    hallway_evening_sunday:
+      name: Hallway - Evening Sunday
+      initial: true
+    hallway_evening_monday:
+      name: Hallway - Evening Monday
+      initial: true
+    hallway_evening_tuesday:
+      name: Hallway - Evening Tuesday
+      initial: true
+    hallway_evening_wednesday:
+      name: Hallway - Evening Wednesday
+      initial: true
+    hallway_evening_thursday:
+      name: Hallway - Evening Thursday
+      initial: true
+    hallway_evening_friday:
+      name: Hallway - Evening Friday
+      initial: true
+    hallway_evening_saturday:
+      name: Hallway - Evening Saturday
+      initial: true
+    
+    # Day-of-week helpers for night slot
+    hallway_night_sunday:
+      name: Hallway - Night Sunday
+      initial: true
+    hallway_night_monday:
+      name: Hallway - Night Monday
+      initial: true
+    hallway_night_tuesday:
+      name: Hallway - Night Tuesday
+      initial: true
+    hallway_night_wednesday:
+      name: Hallway - Night Wednesday
+      initial: true
+    hallway_night_thursday:
+      name: Hallway - Night Thursday
+      initial: true
+    hallway_night_friday:
+      name: Hallway - Night Friday
+      initial: true
+    hallway_night_saturday:
+      name: Hallway - Night Saturday
+      initial: true
   kitchen.yaml: |
     # Template for input_boolean helpers per room
     # Usage:
@@ -187,6 +463,98 @@ data:
       name: Kitchen - Motion Evening Activated
     motion_activated_kitchen_night:
       name: Kitchen - Motion Night Activated
+    
+    # Day-of-week helpers for morning slot
+    kitchen_morning_sunday:
+      name: Kitchen - Morning Sunday
+      initial: true
+    kitchen_morning_monday:
+      name: Kitchen - Morning Monday
+      initial: true
+    kitchen_morning_tuesday:
+      name: Kitchen - Morning Tuesday
+      initial: true
+    kitchen_morning_wednesday:
+      name: Kitchen - Morning Wednesday
+      initial: true
+    kitchen_morning_thursday:
+      name: Kitchen - Morning Thursday
+      initial: true
+    kitchen_morning_friday:
+      name: Kitchen - Morning Friday
+      initial: true
+    kitchen_morning_saturday:
+      name: Kitchen - Morning Saturday
+      initial: true
+    
+    # Day-of-week helpers for day slot
+    kitchen_day_sunday:
+      name: Kitchen - Day Sunday
+      initial: true
+    kitchen_day_monday:
+      name: Kitchen - Day Monday
+      initial: true
+    kitchen_day_tuesday:
+      name: Kitchen - Day Tuesday
+      initial: true
+    kitchen_day_wednesday:
+      name: Kitchen - Day Wednesday
+      initial: true
+    kitchen_day_thursday:
+      name: Kitchen - Day Thursday
+      initial: true
+    kitchen_day_friday:
+      name: Kitchen - Day Friday
+      initial: true
+    kitchen_day_saturday:
+      name: Kitchen - Day Saturday
+      initial: true
+    
+    # Day-of-week helpers for evening slot
+    kitchen_evening_sunday:
+      name: Kitchen - Evening Sunday
+      initial: true
+    kitchen_evening_monday:
+      name: Kitchen - Evening Monday
+      initial: true
+    kitchen_evening_tuesday:
+      name: Kitchen - Evening Tuesday
+      initial: true
+    kitchen_evening_wednesday:
+      name: Kitchen - Evening Wednesday
+      initial: true
+    kitchen_evening_thursday:
+      name: Kitchen - Evening Thursday
+      initial: true
+    kitchen_evening_friday:
+      name: Kitchen - Evening Friday
+      initial: true
+    kitchen_evening_saturday:
+      name: Kitchen - Evening Saturday
+      initial: true
+    
+    # Day-of-week helpers for night slot
+    kitchen_night_sunday:
+      name: Kitchen - Night Sunday
+      initial: true
+    kitchen_night_monday:
+      name: Kitchen - Night Monday
+      initial: true
+    kitchen_night_tuesday:
+      name: Kitchen - Night Tuesday
+      initial: true
+    kitchen_night_wednesday:
+      name: Kitchen - Night Wednesday
+      initial: true
+    kitchen_night_thursday:
+      name: Kitchen - Night Thursday
+      initial: true
+    kitchen_night_friday:
+      name: Kitchen - Night Friday
+      initial: true
+    kitchen_night_saturday:
+      name: Kitchen - Night Saturday
+      initial: true
   living_room.yaml: |
     # Template for input_boolean helpers per room
     # Usage:
@@ -233,3 +601,95 @@ data:
       name: Living Room - Motion Evening Activated
     motion_activated_living_room_night:
       name: Living Room - Motion Night Activated
+    
+    # Day-of-week helpers for morning slot
+    living_room_morning_sunday:
+      name: Living Room - Morning Sunday
+      initial: true
+    living_room_morning_monday:
+      name: Living Room - Morning Monday
+      initial: true
+    living_room_morning_tuesday:
+      name: Living Room - Morning Tuesday
+      initial: true
+    living_room_morning_wednesday:
+      name: Living Room - Morning Wednesday
+      initial: true
+    living_room_morning_thursday:
+      name: Living Room - Morning Thursday
+      initial: true
+    living_room_morning_friday:
+      name: Living Room - Morning Friday
+      initial: true
+    living_room_morning_saturday:
+      name: Living Room - Morning Saturday
+      initial: true
+    
+    # Day-of-week helpers for day slot
+    living_room_day_sunday:
+      name: Living Room - Day Sunday
+      initial: true
+    living_room_day_monday:
+      name: Living Room - Day Monday
+      initial: true
+    living_room_day_tuesday:
+      name: Living Room - Day Tuesday
+      initial: true
+    living_room_day_wednesday:
+      name: Living Room - Day Wednesday
+      initial: true
+    living_room_day_thursday:
+      name: Living Room - Day Thursday
+      initial: true
+    living_room_day_friday:
+      name: Living Room - Day Friday
+      initial: true
+    living_room_day_saturday:
+      name: Living Room - Day Saturday
+      initial: true
+    
+    # Day-of-week helpers for evening slot
+    living_room_evening_sunday:
+      name: Living Room - Evening Sunday
+      initial: true
+    living_room_evening_monday:
+      name: Living Room - Evening Monday
+      initial: true
+    living_room_evening_tuesday:
+      name: Living Room - Evening Tuesday
+      initial: true
+    living_room_evening_wednesday:
+      name: Living Room - Evening Wednesday
+      initial: true
+    living_room_evening_thursday:
+      name: Living Room - Evening Thursday
+      initial: true
+    living_room_evening_friday:
+      name: Living Room - Evening Friday
+      initial: true
+    living_room_evening_saturday:
+      name: Living Room - Evening Saturday
+      initial: true
+    
+    # Day-of-week helpers for night slot
+    living_room_night_sunday:
+      name: Living Room - Night Sunday
+      initial: true
+    living_room_night_monday:
+      name: Living Room - Night Monday
+      initial: true
+    living_room_night_tuesday:
+      name: Living Room - Night Tuesday
+      initial: true
+    living_room_night_wednesday:
+      name: Living Room - Night Wednesday
+      initial: true
+    living_room_night_thursday:
+      name: Living Room - Night Thursday
+      initial: true
+    living_room_night_friday:
+      name: Living Room - Night Friday
+      initial: true
+    living_room_night_saturday:
+      name: Living Room - Night Saturday
+      initial: true

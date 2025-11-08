@@ -43,3 +43,95 @@ motion_activated_bedroom_evening:
   name: Bedroom - Motion Evening Activated
 motion_activated_bedroom_night:
   name: Bedroom - Motion Night Activated
+
+# Day-of-week helpers for morning slot
+bedroom_morning_sunday:
+  name: Bedroom - Morning Sunday
+  initial: true
+bedroom_morning_monday:
+  name: Bedroom - Morning Monday
+  initial: true
+bedroom_morning_tuesday:
+  name: Bedroom - Morning Tuesday
+  initial: true
+bedroom_morning_wednesday:
+  name: Bedroom - Morning Wednesday
+  initial: true
+bedroom_morning_thursday:
+  name: Bedroom - Morning Thursday
+  initial: true
+bedroom_morning_friday:
+  name: Bedroom - Morning Friday
+  initial: true
+bedroom_morning_saturday:
+  name: Bedroom - Morning Saturday
+  initial: true
+
+# Day-of-week helpers for day slot
+bedroom_day_sunday:
+  name: Bedroom - Day Sunday
+  initial: true
+bedroom_day_monday:
+  name: Bedroom - Day Monday
+  initial: true
+bedroom_day_tuesday:
+  name: Bedroom - Day Tuesday
+  initial: true
+bedroom_day_wednesday:
+  name: Bedroom - Day Wednesday
+  initial: true
+bedroom_day_thursday:
+  name: Bedroom - Day Thursday
+  initial: true
+bedroom_day_friday:
+  name: Bedroom - Day Friday
+  initial: true
+bedroom_day_saturday:
+  name: Bedroom - Day Saturday
+  initial: true
+
+# Day-of-week helpers for evening slot
+bedroom_evening_sunday:
+  name: Bedroom - Evening Sunday
+  initial: true
+bedroom_evening_monday:
+  name: Bedroom - Evening Monday
+  initial: true
+bedroom_evening_tuesday:
+  name: Bedroom - Evening Tuesday
+  initial: true
+bedroom_evening_wednesday:
+  name: Bedroom - Evening Wednesday
+  initial: true
+bedroom_evening_thursday:
+  name: Bedroom - Evening Thursday
+  initial: true
+bedroom_evening_friday:
+  name: Bedroom - Evening Friday
+  initial: true
+bedroom_evening_saturday:
+  name: Bedroom - Evening Saturday
+  initial: true
+
+# Day-of-week helpers for night slot
+bedroom_night_sunday:
+  name: Bedroom - Night Sunday
+  initial: true
+bedroom_night_monday:
+  name: Bedroom - Night Monday
+  initial: true
+bedroom_night_tuesday:
+  name: Bedroom - Night Tuesday
+  initial: true
+bedroom_night_wednesday:
+  name: Bedroom - Night Wednesday
+  initial: true
+bedroom_night_thursday:
+  name: Bedroom - Night Thursday
+  initial: true
+bedroom_night_friday:
+  name: Bedroom - Night Friday
+  initial: true
+bedroom_night_saturday:
+  name: Bedroom - Night Saturday
+  initial: true
