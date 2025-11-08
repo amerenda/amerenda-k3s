@@ -714,21 +714,28 @@ data:
                       ERROR: Next scene '{{ next_scene }}' does not exist. Cannot transition.
             - conditions: "{{ current_scene_exists and next_scene_exists }}"
               sequence:
-                # Get lights from next scene
+                # Get lights from both current and next scenes
                 - variables:
+                    current_scene_attrs: "{{ state_attr(current_scene, 'attributes') }}"
+                    current_scene_states: "{{ current_scene_attrs.states if current_scene_attrs else {} }}"
                     next_scene_attrs: "{{ state_attr(next_scene, 'attributes') }}"
                     next_scene_states: "{{ next_scene_attrs.states if next_scene_attrs else {} }}"
-                    # Get list of light entities from scene
+                    # Get list of light entities from both scenes (union)
                     scene_lights: >-
                       {% set lights = [] %}
+                      {% for entity_id, state_data in current_scene_states.items() %}
+                        {% if entity_id.startswith('light.') and entity_id not in lights %}
+                          {% set _ = lights.append(entity_id) %}
+                        {% endif %}
+                      {% endfor %}
                       {% for entity_id, state_data in next_scene_states.items() %}
-                        {% if entity_id.startswith('light.') %}
+                        {% if entity_id.startswith('light.') and entity_id not in lights %}
                           {% set _ = lights.append(entity_id) %}
                         {% endif %}
                       {% endfor %}
                       {{ lights }}
     
-                # Check if lights are on
+                # Check if lights are on (check all lights from both scenes)
                 - variables:
                     lights_on: >-
                       {% set on_count = 0 %}
