@@ -269,7 +269,7 @@ spec:
   project: application
   sources:
     - repoURL: https://github.com/amerenda/amerenda-k3s.git
-      targetRevision: main
+      targetRevision: feat/schedule 
       path: gitops/apps/home-assistant
   destination:
     server: https://kubernetes.default.svc
