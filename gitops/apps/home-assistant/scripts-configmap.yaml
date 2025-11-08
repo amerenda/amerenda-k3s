@@ -814,16 +814,17 @@ data:
                                       - service: "light.turn_on"
                                         target:
                                           entity_id: "{{ light.entity_id }}"
-                                        data:
-                                          transition: "{{ transition_seconds | int }}"
+                                        data_template: >-
+                                          {% set data = {'transition': transition_seconds | int} %}
                                           {% if light.supports_color_temp and light.target_color_temp is not none %}
-                                          color_temp: "{{ light.target_color_temp }}"
+                                            {% set _ = data.update({'color_temp': light.target_color_temp}) %}
                                           {% endif %}
                                           {% if light.supports_rgb and light.target_rgb_color is not none %}
-                                          rgb_color: "{{ light.target_rgb_color }}"
+                                            {% set _ = data.update({'rgb_color': light.target_rgb_color}) %}
                                           {% elif light.supports_hs and light.target_hs_color is not none %}
-                                          hs_color: "{{ light.target_hs_color }}"
+                                            {% set _ = data.update({'hs_color': light.target_hs_color}) %}
                                           {% endif %}
+                                          {{ data }}
     
                         # Apply brightness transition incrementally
                         - repeat:
