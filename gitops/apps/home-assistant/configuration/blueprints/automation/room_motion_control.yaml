@@ -260,6 +260,12 @@ variables:
       'night': night_auto_off_mins
     } %}
     {{ map[slot] | int(0) }}
+  
+  # Check if current day is enabled for the current slot
+  current_day: "{{ now().strftime('%A').lower() }}"
+  day_enabled_current: >-
+    {% set day_helper = 'input_boolean.' ~ room_key_var ~ '_' ~ slot ~ '_' ~ current_day %}
+    {{ is_state(day_helper, 'on') if states(day_helper) not in ['unknown', 'unavailable'] else true }}
 
 trigger:
   - platform: "state"
@@ -284,6 +290,8 @@ action:
             state: "on"
           - condition: "template"
             value_template: "{{ motion_activated_current | bool }}"
+          - condition: "template"
+            value_template: "{{ day_enabled_current | bool }}"
         sequence:
           - variables:
               _fb_var: >-
@@ -313,6 +321,8 @@ action:
             state: "on"
           - condition: "template"
             value_template: "{{ motion_activated_current | bool }}"
+          - condition: "template"
+            value_template: "{{ day_enabled_current | bool }}"
         sequence:
           - if:
               - condition: "template"

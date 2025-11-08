@@ -62,12 +62,21 @@ views:
               {% set is_manual_override = false %}
             {% endif %}
             
+            {# Check if today is enabled for the current slot #}
+            {% set current_day = now().strftime('%A').lower() %}
+            {% set day_helper = 'input_boolean.' ~ room ~ '_' ~ current_slot ~ '_' ~ current_day %}
+            {% set today_enabled = is_state(day_helper, 'on') if states(day_helper) not in ['unknown', 'unavailable'] else true %}
+            
             ### **{{ current_slot|title }} Scene Active**
             
             {% if is_manual_override %}
               *Manual override active*
             {% else %}
               *Scheduled scene*
+            {% endif %}
+            
+            {% if not today_enabled %}
+              *⚠️ Today ({{ current_day|title }}) is not enabled for this slot*
             {% endif %}
             
             Next transition: **{{ next_transition }}** → {{ next_slot|title }}
@@ -396,12 +405,131 @@ views:
             {% set evening_motion = states('input_boolean.motion_activated_' ~ room ~ '_evening') %}
             {% set night_motion = states('input_boolean.motion_activated_' ~ room ~ '_night') %}
             
-            | Time Slot | Scene | Activation Time | Timer Enabled | Auto-On | Motion Activated |
-            |-----------|-------|----------------|---------------|---------|------------------|
-            | Morning | `{{ morning_scene }}` | {{ s1 }} | {% if morning_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if morning_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if morning_motion == 'on' %}✓{% else %}✗{% endif %} |
-            | Day | `{{ day_scene }}` | {{ s2 }} | {% if day_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if day_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if day_motion == 'on' %}✓{% else %}✗{% endif %} |
-            | Evening | `{{ evening_scene }}` | {{ s3 }} | {% if evening_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if evening_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if evening_motion == 'on' %}✓{% else %}✗{% endif %} |
-            | Night | `{{ night_scene }}` | {{ s4 }} | {% if night_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if night_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if night_motion == 'on' %}✓{% else %}✗{% endif %} |
+            {# Day-of-week helpers for each slot #}
+            {% set morning_days = {
+              'sunday': states('input_boolean.' ~ room ~ '_morning_sunday'),
+              'monday': states('input_boolean.' ~ room ~ '_morning_monday'),
+              'tuesday': states('input_boolean.' ~ room ~ '_morning_tuesday'),
+              'wednesday': states('input_boolean.' ~ room ~ '_morning_wednesday'),
+              'thursday': states('input_boolean.' ~ room ~ '_morning_thursday'),
+              'friday': states('input_boolean.' ~ room ~ '_morning_friday'),
+              'saturday': states('input_boolean.' ~ room ~ '_morning_saturday')
+            } %}
+            {% set day_days = {
+              'sunday': states('input_boolean.' ~ room ~ '_day_sunday'),
+              'monday': states('input_boolean.' ~ room ~ '_day_monday'),
+              'tuesday': states('input_boolean.' ~ room ~ '_day_tuesday'),
+              'wednesday': states('input_boolean.' ~ room ~ '_day_wednesday'),
+              'thursday': states('input_boolean.' ~ room ~ '_day_thursday'),
+              'friday': states('input_boolean.' ~ room ~ '_day_friday'),
+              'saturday': states('input_boolean.' ~ room ~ '_day_saturday')
+            } %}
+            {% set evening_days = {
+              'sunday': states('input_boolean.' ~ room ~ '_evening_sunday'),
+              'monday': states('input_boolean.' ~ room ~ '_evening_monday'),
+              'tuesday': states('input_boolean.' ~ room ~ '_evening_tuesday'),
+              'wednesday': states('input_boolean.' ~ room ~ '_evening_wednesday'),
+              'thursday': states('input_boolean.' ~ room ~ '_evening_thursday'),
+              'friday': states('input_boolean.' ~ room ~ '_evening_friday'),
+              'saturday': states('input_boolean.' ~ room ~ '_evening_saturday')
+            } %}
+            {% set night_days = {
+              'sunday': states('input_boolean.' ~ room ~ '_night_sunday'),
+              'monday': states('input_boolean.' ~ room ~ '_night_monday'),
+              'tuesday': states('input_boolean.' ~ room ~ '_night_tuesday'),
+              'wednesday': states('input_boolean.' ~ room ~ '_night_wednesday'),
+              'thursday': states('input_boolean.' ~ room ~ '_night_thursday'),
+              'friday': states('input_boolean.' ~ room ~ '_night_friday'),
+              'saturday': states('input_boolean.' ~ room ~ '_night_saturday')
+            } %}
+            
+            {# Format days display for each slot #}
+            {% set morning_weekdays_on = morning_days.monday == 'on' and morning_days.tuesday == 'on' and morning_days.wednesday == 'on' and morning_days.thursday == 'on' and morning_days.friday == 'on' %}
+            {% set morning_weekends_on = morning_days.saturday == 'on' and morning_days.sunday == 'on' %}
+            {% if morning_weekdays_on and morning_weekends_on %}
+              {% set morning_days_display = 'All Days' %}
+            {% elif morning_weekdays_on %}
+              {% set morning_days_display = 'Weekdays' %}
+            {% elif morning_weekends_on %}
+              {% set morning_days_display = 'Weekends' %}
+            {% else %}
+              {% set morning_days_display = '' %}
+              {% if morning_days.sunday == 'on' %}{% set morning_days_display = morning_days_display ~ 'S' %}{% endif %}
+              {% if morning_days.monday == 'on' %}{% set morning_days_display = morning_days_display ~ 'M' %}{% endif %}
+              {% if morning_days.tuesday == 'on' %}{% set morning_days_display = morning_days_display ~ 'T' %}{% endif %}
+              {% if morning_days.wednesday == 'on' %}{% set morning_days_display = morning_days_display ~ 'W' %}{% endif %}
+              {% if morning_days.thursday == 'on' %}{% set morning_days_display = morning_days_display ~ 'T' %}{% endif %}
+              {% if morning_days.friday == 'on' %}{% set morning_days_display = morning_days_display ~ 'F' %}{% endif %}
+              {% if morning_days.saturday == 'on' %}{% set morning_days_display = morning_days_display ~ 'S' %}{% endif %}
+              {% if morning_days_display == '' %}{% set morning_days_display = 'None' %}{% endif %}
+            {% endif %}
+            
+            {% set day_weekdays_on = day_days.monday == 'on' and day_days.tuesday == 'on' and day_days.wednesday == 'on' and day_days.thursday == 'on' and day_days.friday == 'on' %}
+            {% set day_weekends_on = day_days.saturday == 'on' and day_days.sunday == 'on' %}
+            {% if day_weekdays_on and day_weekends_on %}
+              {% set day_days_display = 'All Days' %}
+            {% elif day_weekdays_on %}
+              {% set day_days_display = 'Weekdays' %}
+            {% elif day_weekends_on %}
+              {% set day_days_display = 'Weekends' %}
+            {% else %}
+              {% set day_days_display = '' %}
+              {% if day_days.sunday == 'on' %}{% set day_days_display = day_days_display ~ 'S' %}{% endif %}
+              {% if day_days.monday == 'on' %}{% set day_days_display = day_days_display ~ 'M' %}{% endif %}
+              {% if day_days.tuesday == 'on' %}{% set day_days_display = day_days_display ~ 'T' %}{% endif %}
+              {% if day_days.wednesday == 'on' %}{% set day_days_display = day_days_display ~ 'W' %}{% endif %}
+              {% if day_days.thursday == 'on' %}{% set day_days_display = day_days_display ~ 'T' %}{% endif %}
+              {% if day_days.friday == 'on' %}{% set day_days_display = day_days_display ~ 'F' %}{% endif %}
+              {% if day_days.saturday == 'on' %}{% set day_days_display = day_days_display ~ 'S' %}{% endif %}
+              {% if day_days_display == '' %}{% set day_days_display = 'None' %}{% endif %}
+            {% endif %}
+            
+            {% set evening_weekdays_on = evening_days.monday == 'on' and evening_days.tuesday == 'on' and evening_days.wednesday == 'on' and evening_days.thursday == 'on' and evening_days.friday == 'on' %}
+            {% set evening_weekends_on = evening_days.saturday == 'on' and evening_days.sunday == 'on' %}
+            {% if evening_weekdays_on and evening_weekends_on %}
+              {% set evening_days_display = 'All Days' %}
+            {% elif evening_weekdays_on %}
+              {% set evening_days_display = 'Weekdays' %}
+            {% elif evening_weekends_on %}
+              {% set evening_days_display = 'Weekends' %}
+            {% else %}
+              {% set evening_days_display = '' %}
+              {% if evening_days.sunday == 'on' %}{% set evening_days_display = evening_days_display ~ 'S' %}{% endif %}
+              {% if evening_days.monday == 'on' %}{% set evening_days_display = evening_days_display ~ 'M' %}{% endif %}
+              {% if evening_days.tuesday == 'on' %}{% set evening_days_display = evening_days_display ~ 'T' %}{% endif %}
+              {% if evening_days.wednesday == 'on' %}{% set evening_days_display = evening_days_display ~ 'W' %}{% endif %}
+              {% if evening_days.thursday == 'on' %}{% set evening_days_display = evening_days_display ~ 'T' %}{% endif %}
+              {% if evening_days.friday == 'on' %}{% set evening_days_display = evening_days_display ~ 'F' %}{% endif %}
+              {% if evening_days.saturday == 'on' %}{% set evening_days_display = evening_days_display ~ 'S' %}{% endif %}
+              {% if evening_days_display == '' %}{% set evening_days_display = 'None' %}{% endif %}
+            {% endif %}
+            
+            {% set night_weekdays_on = night_days.monday == 'on' and night_days.tuesday == 'on' and night_days.wednesday == 'on' and night_days.thursday == 'on' and night_days.friday == 'on' %}
+            {% set night_weekends_on = night_days.saturday == 'on' and night_days.sunday == 'on' %}
+            {% if night_weekdays_on and night_weekends_on %}
+              {% set night_days_display = 'All Days' %}
+            {% elif night_weekdays_on %}
+              {% set night_days_display = 'Weekdays' %}
+            {% elif night_weekends_on %}
+              {% set night_days_display = 'Weekends' %}
+            {% else %}
+              {% set night_days_display = '' %}
+              {% if night_days.sunday == 'on' %}{% set night_days_display = night_days_display ~ 'S' %}{% endif %}
+              {% if night_days.monday == 'on' %}{% set night_days_display = night_days_display ~ 'M' %}{% endif %}
+              {% if night_days.tuesday == 'on' %}{% set night_days_display = night_days_display ~ 'T' %}{% endif %}
+              {% if night_days.wednesday == 'on' %}{% set night_days_display = night_days_display ~ 'W' %}{% endif %}
+              {% if night_days.thursday == 'on' %}{% set night_days_display = night_days_display ~ 'T' %}{% endif %}
+              {% if night_days.friday == 'on' %}{% set night_days_display = night_days_display ~ 'F' %}{% endif %}
+              {% if night_days.saturday == 'on' %}{% set night_days_display = night_days_display ~ 'S' %}{% endif %}
+              {% if night_days_display == '' %}{% set night_days_display = 'None' %}{% endif %}
+            {% endif %}
+            
+            | Time Slot | Scene | Activation Time | Days | Timer Enabled | Auto-On | Motion Activated |
+            |-----------|-------|----------------|------|---------------|---------|------------------|
+            | Morning | `{{ morning_scene }}` | {{ s1 }} | {{ morning_days_display }} | {% if morning_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if morning_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if morning_motion == 'on' %}✓{% else %}✗{% endif %} |
+            | Day | `{{ day_scene }}` | {{ s2 }} | {{ day_days_display }} | {% if day_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if day_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if day_motion == 'on' %}✓{% else %}✗{% endif %} |
+            | Evening | `{{ evening_scene }}` | {{ s3 }} | {{ evening_days_display }} | {% if evening_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if evening_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if evening_motion == 'on' %}✓{% else %}✗{% endif %} |
+            | Night | `{{ night_scene }}` | {{ s4 }} | {{ night_days_display }} | {% if night_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if night_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if night_motion == 'on' %}✓{% else %}✗{% endif %} |
             
             {% set any_custom = morning_custom == 'on' or day_custom == 'on' or evening_custom == 'on' or night_custom == 'on' %}
             {% if any_custom %}

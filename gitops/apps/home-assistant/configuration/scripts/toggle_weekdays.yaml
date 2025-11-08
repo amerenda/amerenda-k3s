@@ -1,0 +1,55 @@
+toggle_weekdays:
+  alias: "Toggle Weekdays for Room Slot"
+  description: "Toggles all weekdays (Monday-Friday) for a specific room and time slot"
+  mode: "single"
+  fields:
+    room:
+      description: "Room key (e.g., bedroom, living_room)"
+      selector:
+        text: {}
+    slot:
+      description: "Time slot (morning, day, evening, night)"
+      selector:
+        select:
+          options:
+            - morning
+            - day
+            - evening
+            - night
+  sequence:
+    - variables:
+        room: "{{ room }}"
+        slot: "{{ slot }}"
+        monday_helper: "input_boolean.{{ room }}_{{ slot }}_monday"
+        tuesday_helper: "input_boolean.{{ room }}_{{ slot }}_tuesday"
+        wednesday_helper: "input_boolean.{{ room }}_{{ slot }}_wednesday"
+        thursday_helper: "input_boolean.{{ room }}_{{ slot }}_thursday"
+        friday_helper: "input_boolean.{{ room }}_{{ slot }}_friday"
+        # Check current state - if all are on, turn off; otherwise turn on
+        monday_state: "{{ states(monday_helper) }}"
+        tuesday_state: "{{ states(tuesday_helper) }}"
+        wednesday_state: "{{ states(wednesday_helper) }}"
+        thursday_state: "{{ states(thursday_helper) }}"
+        friday_state: "{{ states(friday_helper) }}"
+        all_on: >-
+          {{ monday_state == 'on' and tuesday_state == 'on' and 
+             wednesday_state == 'on' and thursday_state == 'on' and 
+             friday_state == 'on' }}
+        target_state: "{{ 'off' if all_on else 'on' }}"
+    - parallel:
+        - service: "input_boolean.turn_{{ target_state }}"
+          target:
+            entity_id: "{{ monday_helper }}"
+        - service: "input_boolean.turn_{{ target_state }}"
+          target:
+            entity_id: "{{ tuesday_helper }}"
+        - service: "input_boolean.turn_{{ target_state }}"
+          target:
+            entity_id: "{{ wednesday_helper }}"
+        - service: "input_boolean.turn_{{ target_state }}"
+          target:
+            entity_id: "{{ thursday_helper }}"
+        - service: "input_boolean.turn_{{ target_state }}"
+          target:
+            entity_id: "{{ friday_helper }}"
+

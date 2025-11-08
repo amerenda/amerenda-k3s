@@ -285,6 +285,12 @@ variables:
     {% elif now_ts >= s2 and now_ts < s3 %}day
     {% elif now_ts >= s3 and now_ts < s4 %}evening
     {% else %}night{% endif %}
+  
+  # Check if current day is enabled for the current slot
+  current_day: "{{ now().strftime('%A').lower() }}"
+  day_enabled_current: >-
+    {% set day_helper = 'input_boolean.' ~ entity_name ~ '_' ~ current_slot ~ '_' ~ current_day %}
+    {{ is_state(day_helper, 'on') if states(day_helper) not in ['unknown', 'unavailable'] else true }}
 
 trigger:
   # Event-based triggers (Philips Hue v2 "hue_event")
