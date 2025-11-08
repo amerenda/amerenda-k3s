@@ -211,8 +211,9 @@ smooth_transition:
         s4: "{{ as_timestamp(today_at(s4_str)) }}"
 
         # Determine current and next slots
-        # If target_slot is provided, use it as next slot and calculate previous slot
-        # Otherwise, calculate both from time
+        # If target_slot is provided, use it as next slot
+        # For current_slot, check scene_cycle helper first (tracks actual active scene)
+        # Otherwise, calculate from time
         slot_order: ['morning', 'day', 'evening', 'night']
         next_slot: >-
           {% if target_slot is defined and target_slot != '' and target_slot in slot_order %}
@@ -223,15 +224,23 @@ smooth_transition:
             {% elif now_ts >= s3 and now_ts < s4 %}night
             {% else %}morning{% endif %}
           {% endif %}
+        scheduled_slot: >-
+          {% if now_ts >= s1 and now_ts < s2 %}morning
+          {% elif now_ts >= s2 and now_ts < s3 %}day
+          {% elif now_ts >= s3 and now_ts < s4 %}evening
+          {% else %}night{% endif %}
+        scene_cycle_helper: "input_select.{{ room }}_scene_cycle"
+        scene_cycle_val: >-
+          {% set val = states(scene_cycle_helper) %}
+          {{ val if val not in ['unknown', 'unavailable', '', None] and val in slot_order else '' }}
         current_slot: >-
-          {% if target_slot is defined and target_slot != '' and target_slot in slot_order %}
+          {% if scene_cycle_val and scene_cycle_val != '' %}
+            {{ scene_cycle_val }}
+          {% elif target_slot is defined and target_slot != '' and target_slot in slot_order %}
             {% set idx = slot_order.index(target_slot) %}
             {{ slot_order[(idx - 1) % slot_order|length] }}
           {% else %}
-            {% if now_ts >= s1 and now_ts < s2 %}morning
-            {% elif now_ts >= s2 and now_ts < s3 %}day
-            {% elif now_ts >= s3 and now_ts < s4 %}evening
-            {% else %}night{% endif %}
+            {{ scheduled_slot }}
           {% endif %}
 
         # Get scene entity IDs with override support
@@ -263,8 +272,10 @@ smooth_transition:
       data:
         name: "smooth_transition"
         message: >-
-          Starting transition: room={{ room }}, current_scene={{ current_scene }}, 
-          next_scene={{ next_scene }}, transition_minutes={{ transition_minutes | default(15) }}
+          Starting transition: room={{ room }}, current_slot={{ current_slot }}, 
+          current_scene={{ current_scene }}, next_slot={{ next_slot }}, 
+          next_scene={{ next_scene }}, transition_minutes={{ transition_minutes | default(15) }}, 
+          scene_cycle={{ scene_cycle_val if scene_cycle_val else 'none' }}
 
     # Check if scenes exist
     - choose:
