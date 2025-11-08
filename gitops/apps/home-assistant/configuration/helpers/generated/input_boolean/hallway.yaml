@@ -62,34 +62,26 @@ auto_on_hallway_morning:
   name: Hallway - Timer Morning Auto-on
 auto_on_hallway_morning_weekday:
   name: Hallway - Timer Morning Auto-on (Weekday)
-  initial: false
 auto_on_hallway_morning_weekend:
   name: Hallway - Timer Morning Auto-on (Weekend)
-  initial: false
 auto_on_hallway_day:
   name: Hallway - Timer Day Auto-on
 auto_on_hallway_day_weekday:
   name: Hallway - Timer Day Auto-on (Weekday)
-  initial: false
 auto_on_hallway_day_weekend:
   name: Hallway - Timer Day Auto-on (Weekend)
-  initial: false
 auto_on_hallway_evening:
   name: Hallway - Timer Evening Auto-on
 auto_on_hallway_evening_weekday:
   name: Hallway - Timer Evening Auto-on (Weekday)
-  initial: false
 auto_on_hallway_evening_weekend:
   name: Hallway - Timer Evening Auto-on (Weekend)
-  initial: false
 auto_on_hallway_night:
   name: Hallway - Timer Night Auto-on
 auto_on_hallway_night_weekday:
   name: Hallway - Timer Night Auto-on (Weekday)
-  initial: false
 auto_on_hallway_night_weekend:
   name: Hallway - Timer Night Auto-on (Weekend)
-  initial: false
 
 motion_activated_hallway_morning:
   name: Hallway - Motion Morning Activated

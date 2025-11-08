@@ -62,34 +62,26 @@ auto_on_kitchen_morning:
   name: Kitchen - Timer Morning Auto-on
 auto_on_kitchen_morning_weekday:
   name: Kitchen - Timer Morning Auto-on (Weekday)
-  initial: false
 auto_on_kitchen_morning_weekend:
   name: Kitchen - Timer Morning Auto-on (Weekend)
-  initial: false
 auto_on_kitchen_day:
   name: Kitchen - Timer Day Auto-on
 auto_on_kitchen_day_weekday:
   name: Kitchen - Timer Day Auto-on (Weekday)
-  initial: false
 auto_on_kitchen_day_weekend:
   name: Kitchen - Timer Day Auto-on (Weekend)
-  initial: false
 auto_on_kitchen_evening:
   name: Kitchen - Timer Evening Auto-on
 auto_on_kitchen_evening_weekday:
   name: Kitchen - Timer Evening Auto-on (Weekday)
-  initial: false
 auto_on_kitchen_evening_weekend:
   name: Kitchen - Timer Evening Auto-on (Weekend)
-  initial: false
 auto_on_kitchen_night:
   name: Kitchen - Timer Night Auto-on
 auto_on_kitchen_night_weekday:
   name: Kitchen - Timer Night Auto-on (Weekday)
-  initial: false
 auto_on_kitchen_night_weekend:
   name: Kitchen - Timer Night Auto-on (Weekend)
-  initial: false
 
 motion_activated_kitchen_morning:
   name: Kitchen - Motion Morning Activated

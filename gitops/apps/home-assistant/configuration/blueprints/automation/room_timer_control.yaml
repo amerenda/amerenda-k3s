@@ -75,6 +75,12 @@ blueprint:
       default:
       selector: { entity: { domain: "input_boolean" } }
 
+    smooth_transition_enabled:
+      name: "(Optional) Smooth transition enabled (input_boolean)"
+      description: "If enabled, uses smooth_transition script instead of scheduled_light_on"
+      default:
+      selector: { entity: { domain: "input_boolean" } }
+
 mode: "restart"
 max_exceeded: "silent"
 
@@ -95,6 +101,8 @@ variables:
   auto_on_evening_helper_input: !input auto_on_evening_helper
   enable_night_helper_input: !input enable_night_helper
   auto_on_night_helper_input: !input auto_on_night_helper
+
+  smooth_transition_enabled_input: !input smooth_transition_enabled
 
   room_key_var: !input room_key
   target_lights_var: !input target_lights
@@ -408,15 +416,41 @@ action:
         {% elif fired_slot == 'night' %}{{ ao_night | bool }}
         {% else %}false{% endif %}
 
-  # Call the script which handles: turn on lights if off (if auto_on), apply scene to lights that are on
-  - service: "script.scheduled_light_on"
-    data_template:
-      fallback_lights: "{{ _fb_var }}"
-      timer_mode: true
-      auto_on: "{{ slot_auto_on }}"
-      custom_schedule_enabled: "{{ custom_schedule_enabled_input if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none else '' }}"
-      custom_s1_start: "{{ custom_s1_start_input if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none else '' }}"
-      custom_s2_start: "{{ custom_s2_start_input if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none else '' }}"
-      custom_s3_start: "{{ custom_s3_start_input if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none else '' }}"
-      custom_s4_start: "{{ custom_s4_start_input if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none else '' }}"
+      # Check if smooth transition is enabled
+      use_smooth_transition: >-
+        {% if smooth_transition_enabled_input is not none and smooth_transition_enabled_input != '' %}
+          {{ is_state(smooth_transition_enabled_input, 'on') }}
+        {% else %}
+          {% set helper = 'input_boolean.' ~ room_key_var ~ '_smooth_transition' %}
+          {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+        {% endif %}
+
+  # Call either smooth_transition or scheduled_light_on based on toggle
+  - choose:
+      - conditions: "{{ use_smooth_transition | bool }}"
+        sequence:
+          # Call the smooth transition script which gradually transitions from current scene to next scene
+          - service: "script.smooth_transition"
+            data_template:
+              room: "{{ room_key_var }}"
+              target_slot: "{{ fired_slot }}"
+              auto_on: "{{ slot_auto_on }}"
+              custom_schedule_enabled: "{{ custom_schedule_enabled_input if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none else '' }}"
+              custom_s1_start: "{{ custom_s1_start_input if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none else '' }}"
+              custom_s2_start: "{{ custom_s2_start_input if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none else '' }}"
+              custom_s3_start: "{{ custom_s3_start_input if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none else '' }}"
+              custom_s4_start: "{{ custom_s4_start_input if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none else '' }}"
+      - conditions: []
+        sequence:
+          # Call the original scheduled_light_on script
+          - service: "script.scheduled_light_on"
+            data_template:
+              fallback_lights: "{{ _fb_var }}"
+              timer_mode: true
+              auto_on: "{{ slot_auto_on }}"
+              custom_schedule_enabled: "{{ custom_schedule_enabled_input if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none else '' }}"
+              custom_s1_start: "{{ custom_s1_start_input if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none else '' }}"
+              custom_s2_start: "{{ custom_s2_start_input if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none else '' }}"
+              custom_s3_start: "{{ custom_s3_start_input if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none else '' }}"
+              custom_s4_start: "{{ custom_s4_start_input if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none else '' }}"
 

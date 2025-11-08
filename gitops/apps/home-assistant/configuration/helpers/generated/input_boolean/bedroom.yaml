@@ -62,34 +62,26 @@ auto_on_bedroom_morning:
   name: Bedroom - Timer Morning Auto-on
 auto_on_bedroom_morning_weekday:
   name: Bedroom - Timer Morning Auto-on (Weekday)
-  initial: false
 auto_on_bedroom_morning_weekend:
   name: Bedroom - Timer Morning Auto-on (Weekend)
-  initial: false
 auto_on_bedroom_day:
   name: Bedroom - Timer Day Auto-on
 auto_on_bedroom_day_weekday:
   name: Bedroom - Timer Day Auto-on (Weekday)
-  initial: false
 auto_on_bedroom_day_weekend:
   name: Bedroom - Timer Day Auto-on (Weekend)
-  initial: false
 auto_on_bedroom_evening:
   name: Bedroom - Timer Evening Auto-on
 auto_on_bedroom_evening_weekday:
   name: Bedroom - Timer Evening Auto-on (Weekday)
-  initial: false
 auto_on_bedroom_evening_weekend:
   name: Bedroom - Timer Evening Auto-on (Weekend)
-  initial: false
 auto_on_bedroom_night:
   name: Bedroom - Timer Night Auto-on
 auto_on_bedroom_night_weekday:
   name: Bedroom - Timer Night Auto-on (Weekday)
-  initial: false
 auto_on_bedroom_night_weekend:
   name: Bedroom - Timer Night Auto-on (Weekend)
-  initial: false
 
 motion_activated_bedroom_morning:
   name: Bedroom - Motion Morning Activated

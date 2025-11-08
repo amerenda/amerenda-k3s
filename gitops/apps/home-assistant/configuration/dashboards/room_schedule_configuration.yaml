@@ -36,6 +36,11 @@ views:
               type: vertical-stack
               cards:
                 - type: entities
+                  title: Room Settings
+                  entities:
+                    - entity: input_boolean.bedroom_smooth_transition
+                      name: Smooth Transition
+                - type: entities
                   title: Morning Schedule (Weekday)
                   entities:
                     - entity: input_boolean.bedroom_morning_custom_time
@@ -411,6 +416,11 @@ views:
             card:
               type: vertical-stack
               cards:
+                - type: entities
+                  title: Room Settings
+                  entities:
+                    - entity: input_boolean.living_room_smooth_transition
+                      name: Smooth Transition
                 - type: entities
                   title: Morning Schedule (Weekday)
                   entities:
@@ -788,6 +798,11 @@ views:
               type: vertical-stack
               cards:
                 - type: entities
+                  title: Room Settings
+                  entities:
+                    - entity: input_boolean.kitchen_smooth_transition
+                      name: Smooth Transition
+                - type: entities
                   title: Morning Schedule (Weekday)
                   entities:
                     - entity: input_boolean.kitchen_morning_custom_time
@@ -1164,6 +1179,11 @@ views:
               type: vertical-stack
               cards:
                 - type: entities
+                  title: Room Settings
+                  entities:
+                    - entity: input_boolean.bathroom_smooth_transition
+                      name: Smooth Transition
+                - type: entities
                   title: Morning Schedule (Weekday)
                   entities:
                     - entity: input_boolean.bathroom_morning_custom_time
@@ -1539,6 +1559,11 @@ views:
             card:
               type: vertical-stack
               cards:
+                - type: entities
+                  title: Room Settings
+                  entities:
+                    - entity: input_boolean.hallway_smooth_transition
+                      name: Smooth Transition
                 - type: entities
                   title: Morning Schedule (Weekday)
                   entities:

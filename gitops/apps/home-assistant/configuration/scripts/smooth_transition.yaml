@@ -1,0 +1,457 @@
+smooth_transition:
+  alias: "Smooth Transition to Next Scene"
+  description: "Gradually transitions lights from current state to next scheduled scene over a configurable time window"
+  mode: "restart"
+  fields:
+    room:
+      description: "Room key (e.g., bedroom, living_room)"
+      selector:
+        text: {}
+    target_slot:
+      description: "Optional target slot (morning/day/evening/night). If provided, uses this as the next scene. If not provided, calculates from schedule."
+      required: false
+      selector:
+        select:
+          options:
+            - morning
+            - day
+            - evening
+            - night
+    transition_minutes:
+      description: "Transition duration in minutes"
+      required: false
+      default: 15
+      selector:
+        number:
+          min: 1
+          max: 60
+          unit_of_measurement: "min"
+    auto_on:
+      description: "If true, turns on lights if they're off before transitioning"
+      required: false
+      default: false
+      selector:
+        boolean: {}
+    custom_schedule_enabled:
+      description: "Optional custom schedule enabled boolean"
+      required: false
+      selector:
+        entity:
+          domain: input_boolean
+    custom_s1_start:
+      description: "Optional morning start (time-only)"
+      required: false
+      selector:
+        entity:
+          domain: input_datetime
+    custom_s2_start:
+      description: "Optional day start (time-only)"
+      required: false
+      selector:
+        entity:
+          domain: input_datetime
+    custom_s3_start:
+      description: "Optional evening start (time-only)"
+      required: false
+      selector:
+        entity:
+          domain: input_datetime
+    custom_s4_start:
+      description: "Optional night start (time-only)"
+      required: false
+      selector:
+        entity:
+          domain: input_datetime
+  sequence:
+    - variables:
+        default_s1: "06:00:00"
+        default_s2: "09:00:00"
+        default_s3: "17:00:00"
+        default_s4: "22:00:00"
+
+        # Check per-time-window custom times
+        morning_custom: >-
+          {% set helper = 'input_boolean.' ~ room ~ '_morning_custom_time' %}
+          {% set state_val = states(helper) %}
+          {% if state_val not in ['unknown', 'unavailable', None, ''] %}
+            {{ is_state(helper, 'on') }}
+          {% elif custom_schedule_enabled is defined and custom_schedule_enabled != '' %}
+            {{ is_state(custom_schedule_enabled, 'on') }}
+          {% else %}
+            {{ false }}
+          {% endif %}
+        day_custom: >-
+          {% set helper = 'input_boolean.' ~ room ~ '_day_custom_time' %}
+          {% set state_val = states(helper) %}
+          {% if state_val not in ['unknown', 'unavailable', None, ''] %}
+            {{ is_state(helper, 'on') }}
+          {% elif custom_schedule_enabled is defined and custom_schedule_enabled != '' %}
+            {{ is_state(custom_schedule_enabled, 'on') }}
+          {% else %}
+            {{ false }}
+          {% endif %}
+        evening_custom: >-
+          {% set helper = 'input_boolean.' ~ room ~ '_evening_custom_time' %}
+          {% set state_val = states(helper) %}
+          {% if state_val not in ['unknown', 'unavailable', None, ''] %}
+            {{ is_state(helper, 'on') }}
+          {% elif custom_schedule_enabled is defined and custom_schedule_enabled != '' %}
+            {{ is_state(custom_schedule_enabled, 'on') }}
+          {% else %}
+            {{ false }}
+          {% endif %}
+        night_custom: >-
+          {% set helper = 'input_boolean.' ~ room ~ '_night_custom_time' %}
+          {% set state_val = states(helper) %}
+          {% if state_val not in ['unknown', 'unavailable', None, ''] %}
+            {{ is_state(helper, 'on') }}
+          {% elif custom_schedule_enabled is defined and custom_schedule_enabled != '' %}
+            {{ is_state(custom_schedule_enabled, 'on') }}
+          {% else %}
+            {{ false }}
+          {% endif %}
+
+        # Check if separate weekday/weekend times are enabled
+        morning_separate: >-
+          {% set helper = 'input_boolean.' ~ room ~ '_morning_separate_weekday_weekend' %}
+          {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+        day_separate: >-
+          {% set helper = 'input_boolean.' ~ room ~ '_day_separate_weekday_weekend' %}
+          {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+        evening_separate: >-
+          {% set helper = 'input_boolean.' ~ room ~ '_evening_separate_weekday_weekend' %}
+          {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+        night_separate: >-
+          {% set helper = 'input_boolean.' ~ room ~ '_night_separate_weekday_weekend' %}
+          {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+        
+        # Check if today is a weekday (Mon-Fri) or weekend (Sat-Sun)
+        is_weekday: >-
+          {% set day = now().strftime('%A').lower() %}
+          {{ day in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] }}
+
+        # Get schedule times
+        s1_str: >-
+          {% if morning_custom %}
+            {% if morning_separate %}
+              {% if is_weekday %}
+                {% set v = states('input_datetime.' ~ room ~ '_s1_weekday_start') %}
+              {% else %}
+                {% set v = states('input_datetime.' ~ room ~ '_s1_weekend_start') %}
+              {% endif %}
+            {% else %}
+              {% set v = states('input_datetime.' ~ room ~ '_s1_start') %}
+            {% endif %}
+            {% if v in ['unknown','unavailable',''] %}{{ default_s1 }}{% else %}{{ v }}{% endif %}
+          {% elif custom_s1_start is defined and custom_s1_start != '' %}
+            {% set v = states(custom_s1_start) %}
+            {% if v in ['unknown','unavailable',''] %}{{ default_s1 }}{% else %}{{ v }}{% endif %}
+          {% else %}
+            {{ default_s1 }}
+          {% endif %}
+        s2_str: >-
+          {% if day_custom %}
+            {% if day_separate %}
+              {% if is_weekday %}
+                {% set v = states('input_datetime.' ~ room ~ '_s2_weekday_start') %}
+              {% else %}
+                {% set v = states('input_datetime.' ~ room ~ '_s2_weekend_start') %}
+              {% endif %}
+            {% else %}
+              {% set v = states('input_datetime.' ~ room ~ '_s2_start') %}
+            {% endif %}
+            {% if v in ['unknown','unavailable',''] %}{{ default_s2 }}{% else %}{{ v }}{% endif %}
+          {% elif custom_s2_start is defined and custom_s2_start != '' %}
+            {% set v = states(custom_s2_start) %}
+            {% if v in ['unknown','unavailable',''] %}{{ default_s2 }}{% else %}{{ v }}{% endif %}
+          {% else %}
+            {{ default_s2 }}
+          {% endif %}
+        s3_str: >-
+          {% if evening_custom %}
+            {% if evening_separate %}
+              {% if is_weekday %}
+                {% set v = states('input_datetime.' ~ room ~ '_s3_weekday_start') %}
+              {% else %}
+                {% set v = states('input_datetime.' ~ room ~ '_s3_weekend_start') %}
+              {% endif %}
+            {% else %}
+              {% set v = states('input_datetime.' ~ room ~ '_s3_start') %}
+            {% endif %}
+            {% if v in ['unknown','unavailable',''] %}{{ default_s3 }}{% else %}{{ v }}{% endif %}
+          {% elif custom_s3_start is defined and custom_s3_start != '' %}
+            {% set v = states(custom_s3_start) %}
+            {% if v in ['unknown','unavailable',''] %}{{ default_s3 }}{% else %}{{ v }}{% endif %}
+          {% else %}
+            {{ default_s3 }}
+          {% endif %}
+        s4_str: >-
+          {% if night_custom %}
+            {% if night_separate %}
+              {% if is_weekday %}
+                {% set v = states('input_datetime.' ~ room ~ '_s4_weekday_start') %}
+              {% else %}
+                {% set v = states('input_datetime.' ~ room ~ '_s4_weekend_start') %}
+              {% endif %}
+            {% else %}
+              {% set v = states('input_datetime.' ~ room ~ '_s4_start') %}
+            {% endif %}
+            {% if v in ['unknown','unavailable',''] %}{{ default_s4 }}{% else %}{{ v }}{% endif %}
+          {% elif custom_s4_start is defined and custom_s4_start != '' %}
+            {% set v = states(custom_s4_start) %}
+            {% if v in ['unknown','unavailable',''] %}{{ default_s4 }}{% else %}{{ v }}{% endif %}
+          {% else %}
+            {{ default_s4 }}
+          {% endif %}
+
+        now_ts: "{{ as_timestamp(now()) }}"
+        s1: "{{ as_timestamp(today_at(s1_str)) }}"
+        s2: "{{ as_timestamp(today_at(s2_str)) }}"
+        s3: "{{ as_timestamp(today_at(s3_str)) }}"
+        s4: "{{ as_timestamp(today_at(s4_str)) }}"
+
+        # Determine current and next slots
+        # If target_slot is provided, use it as next slot and calculate previous slot
+        # Otherwise, calculate both from time
+        slot_order: ['morning', 'day', 'evening', 'night']
+        next_slot: >-
+          {% if target_slot is defined and target_slot != '' and target_slot in slot_order %}
+            {{ target_slot }}
+          {% else %}
+            {% if now_ts >= s1 and now_ts < s2 %}day
+            {% elif now_ts >= s2 and now_ts < s3 %}evening
+            {% elif now_ts >= s3 and now_ts < s4 %}night
+            {% else %}morning{% endif %}
+          {% endif %}
+        current_slot: >-
+          {% if target_slot is defined and target_slot != '' and target_slot in slot_order %}
+            {% set idx = slot_order.index(target_slot) %}
+            {{ slot_order[(idx - 1) % slot_order|length] }}
+          {% else %}
+            {% if now_ts >= s1 and now_ts < s2 %}morning
+            {% elif now_ts >= s2 and now_ts < s3 %}day
+            {% elif now_ts >= s3 and now_ts < s4 %}evening
+            {% else %}night{% endif %}
+          {% endif %}
+
+        # Get scene entity IDs with override support
+        current_override_select: "input_select.{{ room }}_{{ current_slot }}_scene"
+        current_override_val: >-
+          {% set val = states(current_override_select) %}
+          {{ '' if val in ['unknown','unavailable','', None] else val }}
+        current_scene_entity_id: "scene.{{ room }}_{{ current_slot }}"
+        current_scene: "{{ current_override_val if current_override_val else current_scene_entity_id }}"
+        current_scene_exists: >-
+          {{ current_scene in (states.scene | map(attribute='entity_id') | list) if current_scene else false }}
+
+        next_override_select: "input_select.{{ room }}_{{ next_slot }}_scene"
+        next_override_val: >-
+          {% set val = states(next_override_select) %}
+          {{ '' if val in ['unknown','unavailable','', None] else val }}
+        next_scene_entity_id: "scene.{{ room }}_{{ next_slot }}"
+        next_scene: "{{ next_override_val if next_override_val else next_scene_entity_id }}"
+        next_scene_exists: >-
+          {{ next_scene in (states.scene | map(attribute='entity_id') | list) if next_scene else false }}
+
+        # Transition parameters
+        transition_seconds: "{{ (transition_minutes | default(15) | int) * 60 }}"
+        brightness_step_seconds: 30
+        brightness_steps: "{{ (transition_seconds | int) / brightness_step_seconds | int }}"
+
+    # Debug logging
+    - service: "logbook.log"
+      data:
+        name: "smooth_transition"
+        message: >-
+          Starting transition: room={{ room }}, current_scene={{ current_scene }}, 
+          next_scene={{ next_scene }}, transition_minutes={{ transition_minutes | default(15) }}
+
+    # Check if scenes exist
+    - choose:
+        - conditions: "{{ not current_scene_exists }}"
+          sequence:
+            - service: "logbook.log"
+              data:
+                name: "smooth_transition"
+                message: >-
+                  ERROR: Current scene '{{ current_scene }}' does not exist. Cannot transition.
+        - conditions: "{{ not next_scene_exists }}"
+          sequence:
+            - service: "logbook.log"
+              data:
+                name: "smooth_transition"
+                message: >-
+                  ERROR: Next scene '{{ next_scene }}' does not exist. Cannot transition.
+        - conditions: "{{ current_scene_exists and next_scene_exists }}"
+          sequence:
+            # Get lights from next scene
+            - variables:
+                next_scene_attrs: "{{ state_attr(next_scene, 'attributes') }}"
+                next_scene_states: "{{ next_scene_attrs.states if next_scene_attrs else {} }}"
+                # Get list of light entities from scene
+                scene_lights: >-
+                  {% set lights = [] %}
+                  {% for entity_id, state_data in next_scene_states.items() %}
+                    {% if entity_id.startswith('light.') %}
+                      {% set _ = lights.append(entity_id) %}
+                    {% endif %}
+                  {% endfor %}
+                  {{ lights }}
+
+            # Check if lights are on
+            - variables:
+                lights_on: >-
+                  {% set on_count = 0 %}
+                  {% for light_id in scene_lights %}
+                    {% if is_state(light_id, 'on') %}
+                      {% set on_count = on_count + 1 %}
+                    {% endif %}
+                  {% endfor %}
+                  {{ on_count > 0 }}
+
+            # Handle lights that are off
+            - choose:
+                - conditions: "{{ not lights_on and (auto_on | default(false) | bool) }}"
+                  sequence:
+                    - service: "logbook.log"
+                      data:
+                        name: "smooth_transition"
+                        message: "Lights are off but auto_on=True - turning on lights first"
+                    - service: "light.turn_on"
+                      target:
+                        entity_id: "{{ scene_lights }}"
+                    - delay:
+                        seconds: 2
+                - conditions: "{{ not lights_on and not (auto_on | default(false) | bool) }}"
+                  sequence:
+                    - service: "logbook.log"
+                      data:
+                        name: "smooth_transition"
+                        message: "SKIPPED: Lights are off and auto_on is false. Cannot transition."
+            - choose:
+                - conditions: "{{ lights_on or (auto_on | default(false) | bool) }}"
+                  sequence:
+                    # Read current and target states for each light
+                    - variables:
+                        light_transitions: >-
+                          {% set transitions = [] %}
+                          {% for light_id in scene_lights %}
+                            {% set current_state = states(light_id) %}
+                            {% set light_data = {
+                              'entity_id': light_id,
+                              'current_brightness': state_attr(light_id, 'brightness') | default(0) | int,
+                              'current_color_temp': state_attr(light_id, 'color_temp'),
+                              'current_rgb_color': state_attr(light_id, 'rgb_color'),
+                              'current_hs_color': state_attr(light_id, 'hs_color'),
+                              'target_brightness': 0,
+                              'target_color_temp': None,
+                              'target_rgb_color': None,
+                              'target_hs_color': None,
+                              'supports_color_temp': state_attr(light_id, 'supported_color_modes') | default([]) | select('eq', 'color_temp') | list | count > 0,
+                              'supports_rgb': state_attr(light_id, 'supported_color_modes') | default([]) | select('eq', 'rgb') | list | count > 0,
+                              'supports_hs': state_attr(light_id, 'supported_color_modes') | default([]) | select('eq', 'hs') | list | count > 0
+                            } %}
+                            {% if light_id in next_scene_states %}
+                              {% set target_state = next_scene_states[light_id] %}
+                              {% if target_state is mapping and 'attributes' in target_state %}
+                                {% set target_attrs = target_state.attributes %}
+                                {% set _ = light_data.update({
+                                  'target_brightness': target_attrs.brightness | default(0) | int,
+                                  'target_color_temp': target_attrs.color_temp if 'color_temp' in target_attrs else None,
+                                  'target_rgb_color': target_attrs.rgb_color if 'rgb_color' in target_attrs else None,
+                                  'target_hs_color': target_attrs.hs_color if 'hs_color' in target_attrs else None
+                                }) %}
+                              {% endif %}
+                            {% endif %}
+                            {% set _ = transitions.append(light_data) %}
+                          {% endfor %}
+                          {{ transitions }}
+
+                    # Apply color/color_temp transition (using Home Assistant's built-in transition)
+                    - repeat:
+                        for_each: "{{ light_transitions }}"
+                        sequence:
+                          - variables:
+                              light: "{{ repeat.item }}"
+                              has_color_change: >-
+                                {% set has_ct = light.target_color_temp is not none and light.current_color_temp != light.target_color_temp %}
+                                {% set has_rgb = light.target_rgb_color is not none and light.current_rgb_color != light.target_rgb_color %}
+                                {% set has_hs = light.target_hs_color is not none and light.current_hs_color != light.target_hs_color %}
+                                {{ has_ct or has_rgb or has_hs }}
+                          - choose:
+                              - conditions: "{{ has_color_change }}"
+                                sequence:
+                                  - service: "light.turn_on"
+                                    target:
+                                      entity_id: "{{ light.entity_id }}"
+                                    data:
+                                      transition: "{{ transition_seconds | int }}"
+                                      {% if light.supports_color_temp and light.target_color_temp is not none %}
+                                      color_temp: "{{ light.target_color_temp }}"
+                                      {% endif %}
+                                      {% if light.supports_rgb and light.target_rgb_color is not none %}
+                                      rgb_color: "{{ light.target_rgb_color }}"
+                                      {% elif light.supports_hs and light.target_hs_color is not none %}
+                                      hs_color: "{{ light.target_hs_color }}"
+                                      {% endif %}
+
+                    # Apply brightness transition incrementally
+                    - repeat:
+                        count: "{{ brightness_steps | int }}"
+                        sequence:
+                          - variables:
+                              step: "{{ repeat.index }}"
+                              step_progress: "{{ (step / brightness_steps | int) | float }}"
+                          - repeat:
+                              for_each: "{{ light_transitions }}"
+                              sequence:
+                                - variables:
+                                    light: "{{ repeat.item }}"
+                                    current_br: "{{ light.current_brightness }}"
+                                    target_br: "{{ light.target_brightness }}"
+                                    brightness_delta: "{{ target_br - current_br }}"
+                                    new_brightness: >-
+                                      {% if step == brightness_steps | int %}
+                                        {{ target_br }}
+                                      {% else %}
+                                        {% set calculated = (current_br + (brightness_delta * step_progress)) | int %}
+                                        {{ [0, 255, calculated] | sort | list[1] }}
+                                      {% endif %}
+                                - service: "light.turn_on"
+                                  target:
+                                    entity_id: "{{ light.entity_id }}"
+                                  data:
+                                    brightness: "{{ new_brightness }}"
+                          - delay:
+                              seconds: "{{ brightness_step_seconds }}"
+
+                    # Final step: ensure all lights are at target brightness
+                    - repeat:
+                        for_each: "{{ light_transitions }}"
+                        sequence:
+                          - service: "light.turn_on"
+                            target:
+                              entity_id: "{{ repeat.item.entity_id }}"
+                            data:
+                              brightness: "{{ repeat.item.target_brightness }}"
+
+                    # Update scene cycle helper
+                    - variables:
+                        scene_cycle_helper: "input_select.{{ room }}_scene_cycle"
+                    - if:
+                        - condition: template
+                          value_template: "{{ scene_cycle_helper in (states.input_select | map(attribute='entity_id') | list) }}"
+                      then:
+                        - service: "input_select.select_option"
+                          target:
+                            entity_id: "{{ scene_cycle_helper }}"
+                          data:
+                            option: "{{ next_slot }}"
+
+                    - service: "logbook.log"
+                      data:
+                        name: "smooth_transition"
+                        message: >-
+                          Transition complete: {{ room }} from {{ current_slot }} to {{ next_slot }} 
+                          over {{ transition_minutes | default(15) }} minutes
+
