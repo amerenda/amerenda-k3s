@@ -422,12 +422,24 @@ smooth_transition:
                               {% endif %}
                             {% endif %}
                             
-                            {# Fall back to actual light state if not in current scene or if light is actually on #}
-                            {% if is_state(light_id, 'on') and (current_brightness == 0 or current_color_temp is none) %}
-                              {% set current_brightness = state_attr(light_id, 'brightness') | default(current_brightness) | int %}
-                              {% set current_color_temp = state_attr(light_id, 'color_temp') if current_color_temp is none else current_color_temp %}
-                              {% set current_rgb_color = state_attr(light_id, 'rgb_color') if current_rgb_color is none else current_rgb_color %}
-                              {% set current_hs_color = state_attr(light_id, 'hs_color') if current_hs_color is none else current_hs_color %}
+                            {# Always read from actual light state if light is on (more reliable than scene) #}
+                            {% if is_state(light_id, 'on') %}
+                              {% set actual_brightness = state_attr(light_id, 'brightness') %}
+                              {% set actual_color_temp = state_attr(light_id, 'color_temp') %}
+                              {% set actual_rgb_color = state_attr(light_id, 'rgb_color') %}
+                              {% set actual_hs_color = state_attr(light_id, 'hs_color') %}
+                              {% if actual_brightness is not none %}
+                                {% set current_brightness = actual_brightness | int %}
+                              {% endif %}
+                              {% if actual_color_temp is not none %}
+                                {% set current_color_temp = actual_color_temp %}
+                              {% endif %}
+                              {% if actual_rgb_color is not none %}
+                                {% set current_rgb_color = actual_rgb_color %}
+                              {% endif %}
+                              {% if actual_hs_color is not none %}
+                                {% set current_hs_color = actual_hs_color %}
+                              {% endif %}
                             {% endif %}
                             
                             {% set light_data = {
@@ -457,9 +469,48 @@ smooth_transition:
                                 {% set light_data = light_data | combine(target_updates) %}
                               {% endif %}
                             {% endif %}
+                            {# Always add light to transitions - we'll get target state from actual scene activation if needed #}
                             {% set transitions = transitions + [light_data] %}
                           {% endfor %}
                           {{ transitions }}
+                    
+                    # If scenes don't have states, use scene.turn_on with transition instead
+                    # This handles the case where scenes don't store state information
+                    - choose:
+                        - conditions: "{{ (next_scene_states | length == 0) and (light_transitions | length > 0) }}"
+                          sequence:
+                            - service: "logbook.log"
+                              data:
+                                name: "smooth_transition"
+                                message: "Scenes have no states - using scene.turn_on with transition parameter"
+                            # Use scene.turn_on with transition for smooth transition when scenes don't have states
+                            - service: "scene.turn_on"
+                              target:
+                                entity_id: "{{ next_scene }}"
+                              data:
+                                transition: "{{ transition_seconds | int }}"
+                            # Update scene cycle helper
+                            - variables:
+                                scene_cycle_helper: "input_select.{{ room }}_scene_cycle"
+                            - if:
+                                - condition: template
+                                  value_template: "{{ scene_cycle_helper in (states.input_select | map(attribute='entity_id') | list) }}"
+                              then:
+                                - service: "input_select.select_option"
+                                  target:
+                                    entity_id: "{{ scene_cycle_helper }}"
+                                  data:
+                                    option: "{{ next_slot }}"
+                            - service: "logbook.log"
+                              data:
+                                name: "smooth_transition"
+                                message: >-
+                                  Transition complete: {{ room }} from {{ current_slot }} to {{ next_slot }} 
+                                  over {{ transition_minutes | default(15) }} minutes (using scene.turn_on)
+                            - stop: "Transition complete using scene.turn_on"
+                        - conditions: []
+                          sequence:
+                            # Continue with incremental transition if scenes have states
 
                     # Debug: log transition data
                     - service: "logbook.log"
