@@ -456,12 +456,6 @@ data:
               min: 1
               max: 60
               unit_of_measurement: "min"
-        auto_on:
-          description: "If true, turns on lights if they're off before transitioning"
-          required: false
-          default: false
-          selector:
-            boolean: {}
         custom_schedule_enabled:
           description: "Optional custom schedule enabled boolean"
           required: false
@@ -640,9 +634,8 @@ data:
             s3: "{{ as_timestamp(today_at(s3_str)) }}"
             s4: "{{ as_timestamp(today_at(s4_str)) }}"
     
-            # Determine current and next slots
-            # If target_slot is provided, use it as next slot
-            # For current_slot, check scene_cycle helper first (tracks actual active scene)
+            # Determine target slot
+            # If target_slot is provided, use it as target
             # Otherwise, calculate from time
             slot_order: ['morning', 'day', 'evening', 'night']
             next_slot: >-
@@ -654,35 +647,8 @@ data:
                 {% elif now_ts >= s3 and now_ts < s4 %}night
                 {% else %}morning{% endif %}
               {% endif %}
-            scheduled_slot: >-
-              {% if now_ts >= s1 and now_ts < s2 %}morning
-              {% elif now_ts >= s2 and now_ts < s3 %}day
-              {% elif now_ts >= s3 and now_ts < s4 %}evening
-              {% else %}night{% endif %}
-            scene_cycle_helper: "input_select.{{ room }}_scene_cycle"
-            scene_cycle_val: >-
-              {% set val = states(scene_cycle_helper) %}
-              {{ val if val not in ['unknown', 'unavailable', '', None] and val in slot_order else '' }}
-            current_slot: >-
-              {% if scene_cycle_val and scene_cycle_val != '' %}
-                {{ scene_cycle_val }}
-              {% elif target_slot is defined and target_slot != '' and target_slot in slot_order %}
-                {% set idx = slot_order.index(target_slot) %}
-                {{ slot_order[(idx - 1) % slot_order|length] }}
-              {% else %}
-                {{ scheduled_slot }}
-              {% endif %}
     
-            # Get scene entity IDs with override support
-            current_override_select: "input_select.{{ room }}_{{ current_slot }}_scene"
-            current_override_val: >-
-              {% set val = states(current_override_select) %}
-              {{ '' if val in ['unknown','unavailable','', None] else val }}
-            current_scene_entity_id: "scene.{{ room }}_{{ current_slot }}"
-            current_scene: "{{ current_override_val if current_override_val else current_scene_entity_id }}"
-            current_scene_exists: >-
-              {{ current_scene in (states.scene | map(attribute='entity_id') | list) if current_scene else false }}
-    
+            # Get target scene entity ID with override support
             next_override_select: "input_select.{{ room }}_{{ next_slot }}_scene"
             next_override_val: >-
               {% set val = states(next_override_select) %}
@@ -702,59 +668,35 @@ data:
           data:
             name: "smooth_transition"
             message: >-
-              Starting transition: room={{ room }}, current_slot={{ current_slot }}, 
-              current_scene={{ current_scene }}, next_slot={{ next_slot }}, 
-              next_scene={{ next_scene }}, transition_minutes={{ transition_minutes | default(15) }}, 
-              scene_cycle={{ scene_cycle_val if scene_cycle_val else 'none' }}
+              Starting transition: room={{ room }}, target_slot={{ next_slot }}, 
+              target_scene={{ next_scene }}, transition_minutes={{ transition_minutes | default(15) }}
     
-        # Check if scenes exist
+        # Check if target scene exists
         - choose:
-            - conditions: "{{ not current_scene_exists }}"
-              sequence:
-                - service: "logbook.log"
-                  data:
-                    name: "smooth_transition"
-                    message: >-
-                      ERROR: Current scene '{{ current_scene }}' does not exist. Cannot transition.
             - conditions: "{{ not next_scene_exists }}"
               sequence:
                 - service: "logbook.log"
                   data:
                     name: "smooth_transition"
                     message: >-
-                      ERROR: Next scene '{{ next_scene }}' does not exist. Cannot transition.
-            - conditions: "{{ current_scene_exists and next_scene_exists }}"
+                      ERROR: Target scene '{{ next_scene }}' does not exist. Cannot transition.
+                - stop: "Target scene does not exist"
+            - conditions: []
               sequence:
-                # Get lights from both current and next scenes
+                # Get target scene attributes
                 - variables:
-                    current_scene_attrs: "{{ state_attr(current_scene, 'attributes') }}"
-                    current_scene_states: "{{ current_scene_attrs.states if current_scene_attrs else {} }}"
                     next_scene_attrs: "{{ state_attr(next_scene, 'attributes') }}"
                     next_scene_states: "{{ next_scene_attrs.states if next_scene_attrs else {} }}"
-                    # Debug: log scene structure
-                    scene_debug: >-
-                      current_scene={{ current_scene }}, 
-                      current_attrs_keys={{ current_scene_attrs.keys() | list if current_scene_attrs else 'none' }},
-                      current_states_count={{ current_scene_states | length }},
-                      next_scene={{ next_scene }},
-                      next_attrs_keys={{ next_scene_attrs.keys() | list if next_scene_attrs else 'none' }},
-                      next_states_count={{ next_scene_states | length }}
-                    # Get list of light entities from both scenes (union)
+                    # Get list of light entities from target scene
+                    # Fallback: if no lights found in scene, try to find lights by room name
                     scene_lights: >-
-                      {% set current_lights = [] %}
-                      {% for entity_id in current_scene_states.keys() %}
-                        {% if entity_id.startswith('light.') %}
-                          {% set current_lights = current_lights + [entity_id] %}
-                        {% endif %}
-                      {% endfor %}
-                      {% set next_lights = [] %}
+                      {% set lights = [] %}
                       {% for entity_id in next_scene_states.keys() %}
-                        {% if entity_id.startswith('light.') and entity_id not in current_lights %}
-                          {% set next_lights = next_lights + [entity_id] %}
+                        {% if entity_id.startswith('light.') %}
+                          {% set lights = lights + [entity_id] %}
                         {% endif %}
                       {% endfor %}
-                      {% set lights = current_lights + next_lights %}
-                      {# Fallback: if no lights found in scenes, try to find lights by room name #}
+                      {# Fallback: if no lights found in scene, try to find lights by room name #}
                       {# Uses 'light.{{ room }}' pattern (e.g., 'light.living_room' when room='living_room') #}
                       {% if lights | length == 0 %}
                         {% set all_lights = states.light | map(attribute='entity_id') | list %}
@@ -773,14 +715,12 @@ data:
                       {% endif %}
                       {{ lights }}
     
-                # Debug: log scene structure and lights found
+                # Debug: log lights found
                 - service: "logbook.log"
                   data:
                     name: "smooth_transition"
                     message: >-
-                      Scene debug: {{ scene_debug }}, 
-                      scene_lights={{ scene_lights | length }}, 
-                      lights={{ scene_lights }}
+                      Found {{ scene_lights | length }} lights: {{ scene_lights }}
     
                 # Exit early if no lights found
                 - choose:
@@ -790,37 +730,33 @@ data:
                           data:
                             name: "smooth_transition"
                             message: >-
-                              ERROR: No lights found in scenes {{ current_scene }} or {{ next_scene }}. 
-                              Cannot transition. Please ensure scenes contain light entities.
-                        - stop: "No lights found in scenes"
+                              ERROR: No lights found for scene {{ next_scene }}. 
+                              Cannot transition. Please ensure scene contains light entities.
+                        - stop: "No lights found"
     
-                # Check if lights are on (check all lights from both scenes, including groups)
+                # Check if lights are on (using same logic as room_toggle.yaml)
                 - variables:
-                    lights_on: >-
-                      {% set on_count = 0 %}
-                      {% for light_id in scene_lights %}
-                        {# Check if light/group is directly on #}
-                        {% set light_state = states(light_id) %}
-                        {% if light_state == 'on' %}
-                          {% set on_count = on_count + 1 %}
-                        {% else %}
-                          {# Check if it's a group with members that are on #}
-                          {% set expanded = expand(light_id) %}
-                          {% if expanded | selectattr('state', 'eq', 'on') | list | count > 0 %}
-                            {% set on_count = on_count + 1 %}
-                          {% endif %}
-                        {% endif %}
-                      {% endfor %}
-                      {{ on_count > 0 }}
-                    lights_on_debug: >-
-                      {% set debug_info = [] %}
-                      {% for light_id in scene_lights %}
-                        {% set light_state = states(light_id) %}
-                        {% set expanded = expand(light_id) %}
-                        {% set members_on = expanded | selectattr('state', 'eq', 'on') | list | count %}
-                        {% set debug_info = debug_info + [light_id ~ '=' ~ light_state ~ '(members_on=' ~ members_on ~ ')'] %}
-                      {% endfor %}
-                      {{ debug_info | join(', ') }}
+                    id_list: "{{ scene_lights }}"
+                    # Check group state directly (for Hue groups that don't expand)
+                    group_on: >-
+                      {% if id_list | length == 1 %}
+                        {{ is_state(id_list[0], 'on') }}
+                      {% else %}
+                        {{ false }}
+                      {% endif %}
+                    # Check member entities via expand (for normal groups)
+                    expanded: "{{ expand(id_list) }}"
+                    members_on: "{{ expanded | selectattr('state','eq','on') | list | count > 0 }}"
+                    # Check member entities via state_attr (for Hue groups)
+                    attr_members: >-
+                      {% if id_list | length == 1 %}
+                        {{ state_attr(id_list[0], 'entity_id') | default([]) }}
+                      {% else %}
+                        {{ [] }}
+                      {% endif %}
+                    attr_members_on: "{{ expand(attr_members) | selectattr('state','eq','on') | list | count > 0 }}"
+                    # Any method indicates lights are on
+                    lights_on: "{{ group_on or members_on or attr_members_on }}"
     
                 # Debug: log light state check
                 - service: "logbook.log"
@@ -828,73 +764,48 @@ data:
                     name: "smooth_transition"
                     message: >-
                       Lights on check: lights_on={{ lights_on }}, 
-                      debug={{ lights_on_debug }}
+                      group_on={{ group_on }}, members_on={{ members_on }}, 
+                      attr_members_on={{ attr_members_on }}
     
-                # Handle lights that are off
+                # Exit early if lights are off
                 - choose:
-                    - conditions: "{{ not lights_on and (auto_on | default(false) | bool) }}"
+                    - conditions: "{{ not lights_on }}"
                       sequence:
                         - service: "logbook.log"
                           data:
                             name: "smooth_transition"
-                            message: "Lights are off but auto_on=True - turning on lights first"
-                        # Turn on lights using the current scene to get the right state
-                        - service: "scene.turn_on"
-                          target:
-                            entity_id: "{{ current_scene }}"
-                        - delay:
-                            seconds: 2
-                    - conditions: "{{ not lights_on and not (auto_on | default(false) | bool) }}"
-                      sequence:
-                        - service: "logbook.log"
-                          data:
-                            name: "smooth_transition"
-                            message: "SKIPPED: Lights are off and auto_on is false. Cannot transition."
-                - choose:
-                    - conditions: "{{ lights_on or (auto_on | default(false) | bool) }}"
+                            message: "SKIPPED: Lights are off. Smooth transition only works when lights are on."
+                        - stop: "Lights are off"
+                    - conditions: []
                       sequence:
                         # Read current and target states for each light
-                        # Read current state from current scene if available, otherwise from actual light
+                        # Read current state directly from actual light entities
                         - variables:
                             light_transitions: >-
                               {% set transitions = [] %}
                               {% for light_id in scene_lights %}
-                                {% set current_state = states(light_id) %}
+                                {# Read current state directly from actual light entity #}
                                 {% set current_brightness = 0 %}
                                 {% set current_color_temp = None %}
                                 {% set current_rgb_color = None %}
                                 {% set current_hs_color = None %}
                                 
-                                {# Try to get current state from current scene first #}
-                                {% if light_id in current_scene_states %}
-                                  {% set current_scene_state = current_scene_states[light_id] %}
-                                  {% if current_scene_state is mapping and 'attributes' in current_scene_state %}
-                                    {% set current_scene_attrs = current_scene_state.attributes %}
-                                    {% set current_brightness = current_scene_attrs.brightness | default(0) | int %}
-                                    {% set current_color_temp = current_scene_attrs.color_temp if 'color_temp' in current_scene_attrs else None %}
-                                    {% set current_rgb_color = current_scene_attrs.rgb_color if 'rgb_color' in current_scene_attrs else None %}
-                                    {% set current_hs_color = current_scene_attrs.hs_color if 'hs_color' in current_scene_attrs else None %}
-                                  {% endif %}
+                                {# Read from actual light state (lights are on, so we can read their state) #}
+                                {% set actual_brightness = state_attr(light_id, 'brightness') %}
+                                {% set actual_color_temp = state_attr(light_id, 'color_temp') %}
+                                {% set actual_rgb_color = state_attr(light_id, 'rgb_color') %}
+                                {% set actual_hs_color = state_attr(light_id, 'hs_color') %}
+                                {% if actual_brightness is not none %}
+                                  {% set current_brightness = actual_brightness | int %}
                                 {% endif %}
-                                
-                                {# Always read from actual light state if light is on (more reliable than scene) #}
-                                {% if is_state(light_id, 'on') %}
-                                  {% set actual_brightness = state_attr(light_id, 'brightness') %}
-                                  {% set actual_color_temp = state_attr(light_id, 'color_temp') %}
-                                  {% set actual_rgb_color = state_attr(light_id, 'rgb_color') %}
-                                  {% set actual_hs_color = state_attr(light_id, 'hs_color') %}
-                                  {% if actual_brightness is not none %}
-                                    {% set current_brightness = actual_brightness | int %}
-                                  {% endif %}
-                                  {% if actual_color_temp is not none %}
-                                    {% set current_color_temp = actual_color_temp %}
-                                  {% endif %}
-                                  {% if actual_rgb_color is not none %}
-                                    {% set current_rgb_color = actual_rgb_color %}
-                                  {% endif %}
-                                  {% if actual_hs_color is not none %}
-                                    {% set current_hs_color = actual_hs_color %}
-                                  {% endif %}
+                                {% if actual_color_temp is not none %}
+                                  {% set current_color_temp = actual_color_temp %}
+                                {% endif %}
+                                {% if actual_rgb_color is not none %}
+                                  {% set current_rgb_color = actual_rgb_color %}
+                                {% endif %}
+                                {% if actual_hs_color is not none %}
+                                  {% set current_hs_color = actual_hs_color %}
                                 {% endif %}
                                 
                                 {% set light_data = {
@@ -960,7 +871,7 @@ data:
                                   data:
                                     name: "smooth_transition"
                                     message: >-
-                                      Transition complete: {{ room }} from {{ current_slot }} to {{ next_slot }} 
+                                      Transition complete: {{ room }} to {{ next_slot }} scene 
                                       over {{ transition_minutes | default(15) }} minutes (using scene.turn_on)
                                 - stop: "Transition complete using scene.turn_on"
                             - conditions: []
@@ -1074,7 +985,7 @@ data:
                           data:
                             name: "smooth_transition"
                             message: >-
-                              Transition complete: {{ room }} from {{ current_slot }} to {{ next_slot }} 
+                              Transition complete: {{ room }} to {{ next_slot }} scene 
                               over {{ transition_minutes | default(15) }} minutes
     
   toggle_weekdays.yaml: |
