@@ -794,16 +794,41 @@ data:
                               Cannot transition. Please ensure scenes contain light entities.
                         - stop: "No lights found in scenes"
     
-                # Check if lights are on (check all lights from both scenes)
+                # Check if lights are on (check all lights from both scenes, including groups)
                 - variables:
                     lights_on: >-
                       {% set on_count = 0 %}
                       {% for light_id in scene_lights %}
-                        {% if is_state(light_id, 'on') %}
+                        {# Check if light/group is directly on #}
+                        {% set light_state = states(light_id) %}
+                        {% if light_state == 'on' %}
                           {% set on_count = on_count + 1 %}
+                        {% else %}
+                          {# Check if it's a group with members that are on #}
+                          {% set expanded = expand(light_id) %}
+                          {% if expanded | selectattr('state', 'eq', 'on') | list | count > 0 %}
+                            {% set on_count = on_count + 1 %}
+                          {% endif %}
                         {% endif %}
                       {% endfor %}
                       {{ on_count > 0 }}
+                    lights_on_debug: >-
+                      {% set debug_info = [] %}
+                      {% for light_id in scene_lights %}
+                        {% set light_state = states(light_id) %}
+                        {% set expanded = expand(light_id) %}
+                        {% set members_on = expanded | selectattr('state', 'eq', 'on') | list | count %}
+                        {% set debug_info = debug_info + [light_id ~ '=' ~ light_state ~ '(members_on=' ~ members_on ~ ')'] %}
+                      {% endfor %}
+                      {{ debug_info | join(', ') }}
+    
+                # Debug: log light state check
+                - service: "logbook.log"
+                  data:
+                    name: "smooth_transition"
+                    message: >-
+                      Lights on check: lights_on={{ lights_on }}, 
+                      debug={{ lights_on_debug }}
     
                 # Handle lights that are off
                 - choose:
