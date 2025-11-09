@@ -244,6 +244,14 @@ data:
         - living_room
       initial: bathroom
     
+  schedule_selector.yaml: |
+    schedule_selector:
+      name: Schedule Selector
+      options:
+        - weekday
+        - weekend
+      initial: weekday
+    
   time_window_selector.yaml: |
     time_window_selector:
       name: Time Window Selector

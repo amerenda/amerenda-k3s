@@ -24,6 +24,14 @@ living_room_max_brightness_pct:
   unit_of_measurement: "%"
   initial: 100
 
+living_room_transition_time:
+  name: Living Room Transition Time (min)
+  min: 1
+  max: 120
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+
 living_room_morning_auto_off:
   name: Living Room Morning auto-off (min)
   min: 1
@@ -60,8 +68,36 @@ motion_auto_off_living_room_morning:
   step: 1
   unit_of_measurement: "min"
   initial: 15
+motion_auto_off_living_room_morning_weekday:
+  name: Living Room - Motion Morning Auto-off Timeout (Weekday)
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+motion_auto_off_living_room_morning_weekend:
+  name: Living Room - Motion Morning Auto-off Timeout (Weekend)
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
 motion_auto_off_living_room_day:
   name: Living Room - Motion Day Auto-off Timeout
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+motion_auto_off_living_room_day_weekday:
+  name: Living Room - Motion Day Auto-off Timeout (Weekday)
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+motion_auto_off_living_room_day_weekend:
+  name: Living Room - Motion Day Auto-off Timeout (Weekend)
   min: 0
   max: 240
   step: 1
@@ -74,8 +110,36 @@ motion_auto_off_living_room_evening:
   step: 1
   unit_of_measurement: "min"
   initial: 15
+motion_auto_off_living_room_evening_weekday:
+  name: Living Room - Motion Evening Auto-off Timeout (Weekday)
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+motion_auto_off_living_room_evening_weekend:
+  name: Living Room - Motion Evening Auto-off Timeout (Weekend)
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
 motion_auto_off_living_room_night:
   name: Living Room - Motion Night Auto-off Timeout
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+motion_auto_off_living_room_night_weekday:
+  name: Living Room - Motion Night Auto-off Timeout (Weekday)
+  min: 0
+  max: 240
+  step: 1
+  unit_of_measurement: "min"
+  initial: 15
+motion_auto_off_living_room_night_weekend:
+  name: Living Room - Motion Night Auto-off Timeout (Weekend)
   min: 0
   max: 240
   step: 1

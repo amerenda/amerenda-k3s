@@ -1,0 +1,7 @@
+schedule_selector:
+  name: Schedule Selector
+  options:
+    - weekday
+    - weekend
+  initial: weekday
+

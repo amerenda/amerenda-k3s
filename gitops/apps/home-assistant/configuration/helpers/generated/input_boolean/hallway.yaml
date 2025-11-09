@@ -6,40 +6,207 @@ hallway_custom_schedule:
   name: Hallway - Use custom schedule
 hallway_morning_custom_time:
   name: Hallway - Use custom Morning time
+hallway_morning_separate_weekday_weekend:
+  name: Hallway - Morning separate weekday/weekend times
 hallway_day_custom_time:
   name: Hallway - Use custom Day time
+hallway_day_separate_weekday_weekend:
+  name: Hallway - Day separate weekday/weekend times
 hallway_evening_custom_time:
   name: Hallway - Use custom Evening time
+hallway_evening_separate_weekday_weekend:
+  name: Hallway - Evening separate weekday/weekend times
 hallway_night_custom_time:
   name: Hallway - Use custom Night time
+hallway_night_separate_weekday_weekend:
+  name: Hallway - Night separate weekday/weekend times
 hallway_motion_enabled:
   name: Hallway - Motion Control Enabled
 hallway_timer_enabled:
   name: Hallway - Timer Control Enabled
+hallway_smooth_transition:
+  name: Hallway - Smooth Transition
+  initial: true
 
 enable_hallway_morning:
   name: Hallway - Timer Morning Enabled
+enable_hallway_morning_weekday:
+  name: Hallway - Timer Morning Enabled (Weekday)
+  initial: true
+enable_hallway_morning_weekend:
+  name: Hallway - Timer Morning Enabled (Weekend)
+  initial: true
 enable_hallway_day:
   name: Hallway - Timer Day Enabled
+enable_hallway_day_weekday:
+  name: Hallway - Timer Day Enabled (Weekday)
+  initial: true
+enable_hallway_day_weekend:
+  name: Hallway - Timer Day Enabled (Weekend)
+  initial: true
 enable_hallway_evening:
   name: Hallway - Timer Evening Enabled
+enable_hallway_evening_weekday:
+  name: Hallway - Timer Evening Enabled (Weekday)
+  initial: true
+enable_hallway_evening_weekend:
+  name: Hallway - Timer Evening Enabled (Weekend)
+  initial: true
 enable_hallway_night:
   name: Hallway - Timer Night Enabled
+enable_hallway_night_weekday:
+  name: Hallway - Timer Night Enabled (Weekday)
+  initial: true
+enable_hallway_night_weekend:
+  name: Hallway - Timer Night Enabled (Weekend)
+  initial: true
 
 auto_on_hallway_morning:
   name: Hallway - Timer Morning Auto-on
+auto_on_hallway_morning_weekday:
+  name: Hallway - Timer Morning Auto-on (Weekday)
+auto_on_hallway_morning_weekend:
+  name: Hallway - Timer Morning Auto-on (Weekend)
 auto_on_hallway_day:
   name: Hallway - Timer Day Auto-on
+auto_on_hallway_day_weekday:
+  name: Hallway - Timer Day Auto-on (Weekday)
+auto_on_hallway_day_weekend:
+  name: Hallway - Timer Day Auto-on (Weekend)
 auto_on_hallway_evening:
   name: Hallway - Timer Evening Auto-on
+auto_on_hallway_evening_weekday:
+  name: Hallway - Timer Evening Auto-on (Weekday)
+auto_on_hallway_evening_weekend:
+  name: Hallway - Timer Evening Auto-on (Weekend)
 auto_on_hallway_night:
   name: Hallway - Timer Night Auto-on
+auto_on_hallway_night_weekday:
+  name: Hallway - Timer Night Auto-on (Weekday)
+auto_on_hallway_night_weekend:
+  name: Hallway - Timer Night Auto-on (Weekend)
 
 motion_activated_hallway_morning:
   name: Hallway - Motion Morning Activated
+motion_activated_hallway_morning_weekday:
+  name: Hallway - Motion Morning Activated (Weekday)
+  initial: true
+motion_activated_hallway_morning_weekend:
+  name: Hallway - Motion Morning Activated (Weekend)
+  initial: true
 motion_activated_hallway_day:
   name: Hallway - Motion Day Activated
+motion_activated_hallway_day_weekday:
+  name: Hallway - Motion Day Activated (Weekday)
+  initial: true
+motion_activated_hallway_day_weekend:
+  name: Hallway - Motion Day Activated (Weekend)
+  initial: true
 motion_activated_hallway_evening:
   name: Hallway - Motion Evening Activated
+motion_activated_hallway_evening_weekday:
+  name: Hallway - Motion Evening Activated (Weekday)
+  initial: true
+motion_activated_hallway_evening_weekend:
+  name: Hallway - Motion Evening Activated (Weekend)
+  initial: true
 motion_activated_hallway_night:
   name: Hallway - Motion Night Activated
+motion_activated_hallway_night_weekday:
+  name: Hallway - Motion Night Activated (Weekday)
+  initial: true
+motion_activated_hallway_night_weekend:
+  name: Hallway - Motion Night Activated (Weekend)
+  initial: true
+
+# Day-of-week helpers for morning slot
+hallway_morning_sunday:
+  name: Hallway - Morning Sunday
+  initial: true
+hallway_morning_monday:
+  name: Hallway - Morning Monday
+  initial: true
+hallway_morning_tuesday:
+  name: Hallway - Morning Tuesday
+  initial: true
+hallway_morning_wednesday:
+  name: Hallway - Morning Wednesday
+  initial: true
+hallway_morning_thursday:
+  name: Hallway - Morning Thursday
+  initial: true
+hallway_morning_friday:
+  name: Hallway - Morning Friday
+  initial: true
+hallway_morning_saturday:
+  name: Hallway - Morning Saturday
+  initial: true
+
+# Day-of-week helpers for day slot
+hallway_day_sunday:
+  name: Hallway - Day Sunday
+  initial: true
+hallway_day_monday:
+  name: Hallway - Day Monday
+  initial: true
+hallway_day_tuesday:
+  name: Hallway - Day Tuesday
+  initial: true
+hallway_day_wednesday:
+  name: Hallway - Day Wednesday
+  initial: true
+hallway_day_thursday:
+  name: Hallway - Day Thursday
+  initial: true
+hallway_day_friday:
+  name: Hallway - Day Friday
+  initial: true
+hallway_day_saturday:
+  name: Hallway - Day Saturday
+  initial: true
+
+# Day-of-week helpers for evening slot
+hallway_evening_sunday:
+  name: Hallway - Evening Sunday
+  initial: true
+hallway_evening_monday:
+  name: Hallway - Evening Monday
+  initial: true
+hallway_evening_tuesday:
+  name: Hallway - Evening Tuesday
+  initial: true
+hallway_evening_wednesday:
+  name: Hallway - Evening Wednesday
+  initial: true
+hallway_evening_thursday:
+  name: Hallway - Evening Thursday
+  initial: true
+hallway_evening_friday:
+  name: Hallway - Evening Friday
+  initial: true
+hallway_evening_saturday:
+  name: Hallway - Evening Saturday
+  initial: true
+
+# Day-of-week helpers for night slot
+hallway_night_sunday:
+  name: Hallway - Night Sunday
+  initial: true
+hallway_night_monday:
+  name: Hallway - Night Monday
+  initial: true
+hallway_night_tuesday:
+  name: Hallway - Night Tuesday
+  initial: true
+hallway_night_wednesday:
+  name: Hallway - Night Wednesday
+  initial: true
+hallway_night_thursday:
+  name: Hallway - Night Thursday
+  initial: true
+hallway_night_friday:
+  name: Hallway - Night Friday
+  initial: true
+hallway_night_saturday:
+  name: Hallway - Night Saturday
+  initial: true
