@@ -410,15 +410,26 @@ smooth_transition:
                           {% endfor %}
                           {{ transitions }}
                     
+                    # Debug: log transition data
+                    - service: "logbook.log"
+                      data:
+                        name: "smooth_transition"
+                        message: >-
+                          Transition data: {{ light_transitions | length }} lights, 
+                          scene_states={{ next_scene_states | length }},
+                          first light: {{ light_transitions[0].entity_id if light_transitions | length > 0 else 'none' }},
+                          current_br={{ light_transitions[0].current_brightness if light_transitions | length > 0 else 'N/A' }},
+                          target_br={{ light_transitions[0].target_brightness if light_transitions | length > 0 else 'N/A' }}
+
                     # If scenes don't have states, use scene.turn_on with transition instead
                     # This handles the case where scenes don't store state information
                     - choose:
-                        - conditions: "{{ (next_scene_states | length == 0) and (light_transitions | length > 0) }}"
+                        - conditions: "{{ next_scene_states | length == 0 }}"
                           sequence:
                             - service: "logbook.log"
                               data:
                                 name: "smooth_transition"
-                                message: "Scenes have no states - using scene.turn_on with transition parameter"
+                                message: "Scene has no states - using scene.turn_on with transition parameter"
                             # Use scene.turn_on with transition for smooth transition when scenes don't have states
                             - service: "scene.turn_on"
                               target:
@@ -447,16 +458,6 @@ smooth_transition:
                         - conditions: []
                           sequence:
                             # Continue with incremental transition if scenes have states
-
-                    # Debug: log transition data
-                    - service: "logbook.log"
-                      data:
-                        name: "smooth_transition"
-                        message: >-
-                          Transition data: {{ light_transitions | length }} lights, 
-                          first light: {{ light_transitions[0].entity_id if light_transitions | length > 0 else 'none' }},
-                          current_br={{ light_transitions[0].current_brightness if light_transitions | length > 0 else 'N/A' }},
-                          target_br={{ light_transitions[0].target_brightness if light_transitions | length > 0 else 'N/A' }}
 
                     # Apply color/color_temp transition (using Home Assistant's built-in transition)
                     - repeat:
