@@ -8,6 +8,10 @@ metadata:
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
+    # Use HTTPS for backend connection since UniFi controller uses HTTPS on port 8443
+    traefik.ingress.kubernetes.io/service.serversscheme: https
+    traefik.ingress.kubernetes.io/service.serversport: "8443"
+    # TLS verification is skipped globally via --serversTransport.insecureSkipVerify=true
     external-dns.alpha.kubernetes.io/hostname: unifi.amer.home
     external-dns.alpha.kubernetes.io/ttl: "3600"
     external-dns.alpha.kubernetes.io/manage-record-types: "A"
@@ -27,5 +31,5 @@ spec:
               service:
                 name: unifi-controller
                 port:
-                  number: 8080
+                  number: 8443
 
