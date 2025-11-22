@@ -18,13 +18,14 @@ data:
     ROOT_PASS="${MONGO_INITDB_ROOT_PASSWORD}"
     UNIFI_PASS="${MONGO_INITDB_ROOT_PASSWORD}"
     
-    # Create unifi user and grant permissions
+    # Create unifi user in admin database and grant permissions
     # This runs during MongoDB initialization (before auth is enabled)
     # Use mongo (not mongosh) for MongoDB 4.4.10
+    # User is created in admin database but has roles on unifi and unifi_stat databases
     mongo --quiet <<EOF
-    use unifi
+    use admin
     
-    // Create the unifi user
+    // Create the unifi user in admin database
     db.createUser({
       user: "unifi",
       pwd: "${UNIFI_PASS}",
@@ -33,7 +34,7 @@ data:
         { role: "dbOwner", db: "unifi_stat" }
       ]
     });
-    print("[INFO] Created 'unifi' user with dbOwner on 'unifi' and 'unifi_stat'");
+    print("[INFO] Created 'unifi' user in admin database with dbOwner on 'unifi' and 'unifi_stat'");
     EOF
     
     echo "[INFO] Done setting up 'unifi' user."
