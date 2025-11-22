@@ -81,7 +81,8 @@ sources:
   - ingress
 
 # Policy for DNS record management
-policy: upsert-only
+# sync: Creates, updates, and deletes DNS records to match Kubernetes resources
+policy: sync
 
 # Additional optimization settings
 minEventSyncInterval: 1m
