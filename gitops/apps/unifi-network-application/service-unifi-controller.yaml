@@ -6,7 +6,7 @@ metadata:
   name: unifi-controller
   namespace: unifi-network-application
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: unifi-controller
   ports:
