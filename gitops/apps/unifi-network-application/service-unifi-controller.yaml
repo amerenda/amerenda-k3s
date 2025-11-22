@@ -5,8 +5,12 @@ kind: Service
 metadata:
   name: unifi-controller
   namespace: unifi-network-application
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: unifi.amer.home
+    external-dns.alpha.kubernetes.io/ttl: "3600"
+    external-dns.alpha.kubernetes.io/manage-record-types: "A"
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: unifi-controller
   ports:
