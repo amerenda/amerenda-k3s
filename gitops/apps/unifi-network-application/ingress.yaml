@@ -1,0 +1,31 @@
+---
+# Ingress for UniFi Controller with TLS termination
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: unifi-controller-ingress
+  namespace: unifi-network-application
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    external-dns.alpha.kubernetes.io/hostname: unifi.amer.home
+    external-dns.alpha.kubernetes.io/ttl: "3600"
+    external-dns.alpha.kubernetes.io/manage-record-types: "A"
+spec:
+  ingressClassName: infra-traefik
+  tls:
+    - hosts:
+        - unifi.amer.home
+      secretName: unifi-amer-home-tls
+  rules:
+    - host: unifi.amer.home
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: unifi-controller
+                port:
+                  number: 8080
+
