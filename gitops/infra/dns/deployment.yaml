@@ -20,6 +20,8 @@ spec:
       labels:
         app: bind9
       annotations:
+        # Reloader will automatically detect changes in ConfigMaps/Secrets
+        # with reloader.stakater.com/auto: "true" annotation (bind9-config has this)
         reloader.stakater.com/search: "true"
     spec:
       affinity:
