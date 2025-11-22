@@ -8,8 +8,8 @@ metadata:
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
-    # Ensure forwarded headers are set correctly so UniFi knows original request was HTTPS
-    traefik.ingress.kubernetes.io/headers.customrequestheaders: "X-Forwarded-Proto: https"
+    # Use middleware to set forwarded headers so UniFi knows original request was HTTPS
+    traefik.ingress.kubernetes.io/router.middlewares: unifi-network-application-unifi-forwarded-headers@kubernetescrd
     external-dns.alpha.kubernetes.io/hostname: unifi.amer.home
     external-dns.alpha.kubernetes.io/ttl: "3600"
     external-dns.alpha.kubernetes.io/manage-record-types: "A"
