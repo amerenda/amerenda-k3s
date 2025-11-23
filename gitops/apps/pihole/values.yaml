@@ -36,18 +36,14 @@ dnsmasq:
     - server=/merenda.home.arpa/10.100.20.241
   # Cache configuration
   # Note: localTTL only affects /etc/hosts records, not upstream queries
-  # For upstream queries, we rely on TTL from BIND9 (1 second for local domains)
-  cacheSize: 1000
+  # Setting cacheSize to 0 completely disables DNS caching
+  # This ensures all queries go to upstream (BIND9 for local, Cloudflare for external)
+  # Trade-off: No caching means more upstream queries but always fresh results
+  cacheSize: 0
   negTTL: 0
   localTTL: 0  # Only affects local /etc/hosts records
   # Disable negative caching to force fresh lookups
   noNegcache: true
-  # Disable stale cache serving - prevents serving expired cache entries
-  # This is critical for local domains where we want fresh queries
-  # Setting this to empty string or not setting it uses default (stale cache enabled)
-  # We'll add this via customDnsEntries if supported, otherwise need custom config
-  customDnsEntries:
-    - "no-stale-cache"
 
 # Environment variables
 extraEnvVars:
