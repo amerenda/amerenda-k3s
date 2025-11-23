@@ -260,30 +260,30 @@ smooth_transition:
                 # Get list of light entities from target scene
                 # Fallback: if no lights found in scene, try to find lights by room name
                 scene_lights: >-
-                  {% set lights = [] %}
+                  {% set ns = namespace(lights=[]) %}
                   {% for entity_id in next_scene_states.keys() %}
                     {% if entity_id.startswith('light.') %}
-                      {% set lights = lights + [entity_id] %}
+                      {% set ns.lights = ns.lights + [entity_id] %}
                     {% endif %}
                   {% endfor %}
                   {# Fallback: if no lights found in scene, try to find lights by room name #}
                   {# Uses 'light.{{ room }}' pattern (e.g., 'light.living_room' when room='living_room') #}
-                  {% if lights | length == 0 %}
+                  {% if ns.lights | length == 0 %}
                     {% set all_lights = states.light | map(attribute='entity_id') | list %}
                     {% set room_light = 'light.' ~ room %}
-                    {% set fallback_lights = [] %}
+                    {% set ns.fallback_lights = [] %}
                     {% if room_light in all_lights %}
-                      {% set fallback_lights = [room_light] %}
+                      {% set ns.fallback_lights = [room_light] %}
                     {% endif %}
                     {% for i in range(1, 10) %}
                       {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
                       {% if numbered_light in all_lights %}
-                        {% set fallback_lights = fallback_lights + [numbered_light] %}
+                        {% set ns.fallback_lights = ns.fallback_lights + [numbered_light] %}
                       {% endif %}
                     {% endfor %}
-                    {% set lights = fallback_lights %}
+                    {% set ns.lights = ns.fallback_lights %}
                   {% endif %}
-                  {{ lights }}
+                  {{ ns.lights }}
 
             # Debug: log lights found
             - service: "logbook.log"
@@ -352,7 +352,7 @@ smooth_transition:
                     # Read current state directly from actual light entities
                     - variables:
                         light_transitions: >-
-                          {% set transitions = [] %}
+                          {% set ns = namespace(transitions=[]) %}
                           {% for light_id in scene_lights %}
                             {# Read current state directly from actual light entity #}
                             {% set current_brightness = 0 %}
@@ -406,9 +406,9 @@ smooth_transition:
                               {% endif %}
                             {% endif %}
                             {# Always add light to transitions - we'll get target state from actual scene activation if needed #}
-                            {% set transitions = transitions + [light_data] %}
+                            {% set ns.transitions = ns.transitions + [light_data] %}
                           {% endfor %}
-                          {{ transitions }}
+                          {{ ns.transitions }}
                     
                     # Debug: log transition data
                     - service: "logbook.log"
