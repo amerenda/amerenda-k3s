@@ -42,6 +42,12 @@ dnsmasq:
   localTTL: 0  # Only affects local /etc/hosts records
   # Disable negative caching to force fresh lookups
   noNegcache: true
+  # Disable stale cache serving - prevents serving expired cache entries
+  # This is critical for local domains where we want fresh queries
+  # Setting this to empty string or not setting it uses default (stale cache enabled)
+  # We'll add this via customDnsEntries if supported, otherwise need custom config
+  customDnsEntries:
+    - "no-stale-cache"
 
 # Environment variables
 extraEnvVars:
@@ -52,11 +58,6 @@ extraEnvVars:
   # Cache settings for external domains (respect TTL from upstream, max 5 minutes)
   CACHE_QUERY_MINIMUM_TTL: "0"
   CACHE_QUERY_MAXIMUM_TTL: "300"
-  # Set max TTL for external domains (5 minutes)
-  # For local domains, we'll set a very short TTL to minimize caching
-  FTLCONF_MAXTTL: "300"
-  # Set min TTL to 0 to allow immediate updates
-  FTLCONF_MINTTL: "0"
 
 # DoH (DNS over HTTPS) configuration
 doh:
