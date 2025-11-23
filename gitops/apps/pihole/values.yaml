@@ -44,6 +44,9 @@ dnsmasq:
   localTTL: 0  # Only affects local /etc/hosts records
   # Disable negative caching to force fresh lookups
   noNegcache: true
+  # Override cache-size via custom config (Helm chart cacheSize might not override Pi-hole defaults)
+  customDnsEntries:
+    - "cache-size=0"
 
 # Environment variables
 extraEnvVars:
