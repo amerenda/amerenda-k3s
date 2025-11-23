@@ -114,11 +114,31 @@ spec:
         - "-c"
         - |
           export TS_HOSTNAME="tailscale-${POD_NAME}"
-          # Use per-pod kube state Secret to avoid node key collisions between replicas
-          tailscaled --state=kube:tailscale-${POD_NAME} --statedir=/var/lib/tailscale --tun=userspace-networking &
-          sleep 2
-          tailscale up --authkey="${TS_AUTHKEY}" --hostname="${TS_HOSTNAME}" --advertise-routes=10.100.20.0/24 --accept-dns=true --reset=false
-          wait
+          tailscaled --state=/var/lib/tailscale/tailscaled.state --statedir=/var/lib/tailscale --tun=userspace-networking &
+          PID=$!
+          sleep 5
+          if ! tailscale up --authkey="${TS_AUTHKEY}" --hostname="${TS_HOSTNAME}" --advertise-routes=10.100.20.0/24 --accept-dns=true --reset=false; then
+            echo "tailscale up failed"
+            kill $PID
+            exit 1
+          fi
+          wait $PID
+        livenessProbe:
+          exec:
+            command:
+            - tailscale
+            - status
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          failureThreshold: 3
+        readinessProbe:
+          exec:
+            command:
+            - tailscale
+            - status
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          failureThreshold: 3
         volumeMounts:
         - name: tailscale-state
           mountPath: /var/lib/tailscale
