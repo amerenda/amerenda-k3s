@@ -11,9 +11,11 @@ data:
     """
     Home Assistant Orphaned Entity Cleanup Script
     
-    This script identifies and removes orphaned helper entities from Home Assistant.
+    This script identifies and removes orphaned entities from Home Assistant.
     Orphaned entities are those that are no longer being provided by their integration
     (typically showing "restored: true" in attributes).
+    
+    Supports cleanup of helper entities (input_*) and schedule entities.
     
     Initially runs in dry-run mode for safety.
     """
@@ -27,13 +29,14 @@ data:
     HA_TOKEN = os.getenv('HA_ACCESS_TOKEN')
     DRY_RUN = os.getenv('DRY_RUN', 'true').lower() == 'true'
     
-    # Helper domains to check
-    HELPER_DOMAINS = [
+    # Domains to check for orphaned entities
+    CLEANUP_DOMAINS = [
         'input_boolean',
         'input_datetime',
         'input_number',
         'input_select',
         'input_text',
+        'schedule',
     ]
     
     # API headers
@@ -56,10 +59,10 @@ data:
             log(f'ERROR: Failed to fetch entities: {e}')
             sys.exit(1)
     
-    def is_helper_entity(entity_id):
-        """Check if entity is a helper entity."""
+    def is_cleanup_entity(entity_id):
+        """Check if entity is in a domain that should be checked for cleanup."""
         domain = entity_id.split('.')[0]
-        return domain in HELPER_DOMAINS
+        return domain in CLEANUP_DOMAINS
     
     def is_orphaned(entity):
         """
@@ -111,21 +114,21 @@ data:
         entities = get_entities()
         log(f'Found {len(entities)} total entities')
         
-        # Filter for helper entities
-        helper_entities = [e for e in entities if is_helper_entity(e['entity_id'])]
-        log(f'Found {len(helper_entities)} helper entities')
+        # Filter for entities in cleanup domains
+        cleanup_entities = [e for e in entities if is_cleanup_entity(e['entity_id'])]
+        log(f'Found {len(cleanup_entities)} entities in cleanup domains')
         
         # Identify orphaned entities (those with restored: true)
         orphaned_entities = []
-        for entity in helper_entities:
+        for entity in cleanup_entities:
             if is_orphaned(entity):
                 orphaned_entities.append(entity)
         
         if not orphaned_entities:
-            log('No orphaned helper entities found. All clean!')
+            log('No orphaned entities found. All clean!')
             return
         
-        log(f'Found {len(orphaned_entities)} orphaned helper entities:')
+        log(f'Found {len(orphaned_entities)} orphaned entities:')
         for entity in orphaned_entities:
             entity_id = entity['entity_id']
             restored = entity.get('attributes', {}).get('restored', False)
