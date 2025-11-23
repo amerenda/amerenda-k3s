@@ -1,0 +1,18 @@
+alias: "Alex - Camera Privacy (WiFi Connected)"
+mode: "restart"
+triggers:
+  - trigger: "state"
+    entity_id: "device_tracker.pixel_9_pro_xl_2"
+    to: "home"
+actions:
+  - action: "light.turn_off"
+    target:
+      entity_id:
+        - "light.bedroom_status_led"
+        - "light.living_room_status_led"
+  - action: "switch.turn_on"
+    target:
+      entity_id:
+        - "switch.bedroom_privacy_mode"
+        - "switch.living_room_privacy_mode"
+
