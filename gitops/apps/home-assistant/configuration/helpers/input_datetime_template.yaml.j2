@@ -6,15 +6,47 @@
   name: {{ room|replace('_',' ')|title }} Morning start
   has_time: true
   has_date: false
+{{ room }}_s1_weekday_start:
+  name: {{ room|replace('_',' ')|title }} Morning Weekday start
+  has_time: true
+  has_date: false
+{{ room }}_s1_weekend_start:
+  name: {{ room|replace('_',' ')|title }} Morning Weekend start
+  has_time: true
+  has_date: false
 {{ room }}_s2_start:
   name: {{ room|replace('_',' ')|title }} Day start
+  has_time: true
+  has_date: false
+{{ room }}_s2_weekday_start:
+  name: {{ room|replace('_',' ')|title }} Day Weekday start
+  has_time: true
+  has_date: false
+{{ room }}_s2_weekend_start:
+  name: {{ room|replace('_',' ')|title }} Day Weekend start
   has_time: true
   has_date: false
 {{ room }}_s3_start:
   name: {{ room|replace('_',' ')|title }} Evening start
   has_time: true
   has_date: false
+{{ room }}_s3_weekday_start:
+  name: {{ room|replace('_',' ')|title }} Evening Weekday start
+  has_time: true
+  has_date: false
+{{ room }}_s3_weekend_start:
+  name: {{ room|replace('_',' ')|title }} Evening Weekend start
+  has_time: true
+  has_date: false
 {{ room }}_s4_start:
   name: {{ room|replace('_',' ')|title }} Night start
+  has_time: true
+  has_date: false
+{{ room }}_s4_weekday_start:
+  name: {{ room|replace('_',' ')|title }} Night Weekday start
+  has_time: true
+  has_date: false
+{{ room }}_s4_weekend_start:
+  name: {{ room|replace('_',' ')|title }} Night Weekend start
   has_time: true
   has_date: false

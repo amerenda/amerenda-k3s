@@ -6,40 +6,207 @@ kitchen_custom_schedule:
   name: Kitchen - Use custom schedule
 kitchen_morning_custom_time:
   name: Kitchen - Use custom Morning time
+kitchen_morning_separate_weekday_weekend:
+  name: Kitchen - Morning separate weekday/weekend times
 kitchen_day_custom_time:
   name: Kitchen - Use custom Day time
+kitchen_day_separate_weekday_weekend:
+  name: Kitchen - Day separate weekday/weekend times
 kitchen_evening_custom_time:
   name: Kitchen - Use custom Evening time
+kitchen_evening_separate_weekday_weekend:
+  name: Kitchen - Evening separate weekday/weekend times
 kitchen_night_custom_time:
   name: Kitchen - Use custom Night time
+kitchen_night_separate_weekday_weekend:
+  name: Kitchen - Night separate weekday/weekend times
 kitchen_motion_enabled:
   name: Kitchen - Motion Control Enabled
 kitchen_timer_enabled:
   name: Kitchen - Timer Control Enabled
+kitchen_smooth_transition:
+  name: Kitchen - Smooth Transition
+  initial: true
 
 enable_kitchen_morning:
   name: Kitchen - Timer Morning Enabled
+enable_kitchen_morning_weekday:
+  name: Kitchen - Timer Morning Enabled (Weekday)
+  initial: true
+enable_kitchen_morning_weekend:
+  name: Kitchen - Timer Morning Enabled (Weekend)
+  initial: true
 enable_kitchen_day:
   name: Kitchen - Timer Day Enabled
+enable_kitchen_day_weekday:
+  name: Kitchen - Timer Day Enabled (Weekday)
+  initial: true
+enable_kitchen_day_weekend:
+  name: Kitchen - Timer Day Enabled (Weekend)
+  initial: true
 enable_kitchen_evening:
   name: Kitchen - Timer Evening Enabled
+enable_kitchen_evening_weekday:
+  name: Kitchen - Timer Evening Enabled (Weekday)
+  initial: true
+enable_kitchen_evening_weekend:
+  name: Kitchen - Timer Evening Enabled (Weekend)
+  initial: true
 enable_kitchen_night:
   name: Kitchen - Timer Night Enabled
+enable_kitchen_night_weekday:
+  name: Kitchen - Timer Night Enabled (Weekday)
+  initial: true
+enable_kitchen_night_weekend:
+  name: Kitchen - Timer Night Enabled (Weekend)
+  initial: true
 
 auto_on_kitchen_morning:
   name: Kitchen - Timer Morning Auto-on
+auto_on_kitchen_morning_weekday:
+  name: Kitchen - Timer Morning Auto-on (Weekday)
+auto_on_kitchen_morning_weekend:
+  name: Kitchen - Timer Morning Auto-on (Weekend)
 auto_on_kitchen_day:
   name: Kitchen - Timer Day Auto-on
+auto_on_kitchen_day_weekday:
+  name: Kitchen - Timer Day Auto-on (Weekday)
+auto_on_kitchen_day_weekend:
+  name: Kitchen - Timer Day Auto-on (Weekend)
 auto_on_kitchen_evening:
   name: Kitchen - Timer Evening Auto-on
+auto_on_kitchen_evening_weekday:
+  name: Kitchen - Timer Evening Auto-on (Weekday)
+auto_on_kitchen_evening_weekend:
+  name: Kitchen - Timer Evening Auto-on (Weekend)
 auto_on_kitchen_night:
   name: Kitchen - Timer Night Auto-on
+auto_on_kitchen_night_weekday:
+  name: Kitchen - Timer Night Auto-on (Weekday)
+auto_on_kitchen_night_weekend:
+  name: Kitchen - Timer Night Auto-on (Weekend)
 
 motion_activated_kitchen_morning:
   name: Kitchen - Motion Morning Activated
+motion_activated_kitchen_morning_weekday:
+  name: Kitchen - Motion Morning Activated (Weekday)
+  initial: true
+motion_activated_kitchen_morning_weekend:
+  name: Kitchen - Motion Morning Activated (Weekend)
+  initial: true
 motion_activated_kitchen_day:
   name: Kitchen - Motion Day Activated
+motion_activated_kitchen_day_weekday:
+  name: Kitchen - Motion Day Activated (Weekday)
+  initial: true
+motion_activated_kitchen_day_weekend:
+  name: Kitchen - Motion Day Activated (Weekend)
+  initial: true
 motion_activated_kitchen_evening:
   name: Kitchen - Motion Evening Activated
+motion_activated_kitchen_evening_weekday:
+  name: Kitchen - Motion Evening Activated (Weekday)
+  initial: true
+motion_activated_kitchen_evening_weekend:
+  name: Kitchen - Motion Evening Activated (Weekend)
+  initial: true
 motion_activated_kitchen_night:
   name: Kitchen - Motion Night Activated
+motion_activated_kitchen_night_weekday:
+  name: Kitchen - Motion Night Activated (Weekday)
+  initial: true
+motion_activated_kitchen_night_weekend:
+  name: Kitchen - Motion Night Activated (Weekend)
+  initial: true
+
+# Day-of-week helpers for morning slot
+kitchen_morning_sunday:
+  name: Kitchen - Morning Sunday
+  initial: true
+kitchen_morning_monday:
+  name: Kitchen - Morning Monday
+  initial: true
+kitchen_morning_tuesday:
+  name: Kitchen - Morning Tuesday
+  initial: true
+kitchen_morning_wednesday:
+  name: Kitchen - Morning Wednesday
+  initial: true
+kitchen_morning_thursday:
+  name: Kitchen - Morning Thursday
+  initial: true
+kitchen_morning_friday:
+  name: Kitchen - Morning Friday
+  initial: true
+kitchen_morning_saturday:
+  name: Kitchen - Morning Saturday
+  initial: true
+
+# Day-of-week helpers for day slot
+kitchen_day_sunday:
+  name: Kitchen - Day Sunday
+  initial: true
+kitchen_day_monday:
+  name: Kitchen - Day Monday
+  initial: true
+kitchen_day_tuesday:
+  name: Kitchen - Day Tuesday
+  initial: true
+kitchen_day_wednesday:
+  name: Kitchen - Day Wednesday
+  initial: true
+kitchen_day_thursday:
+  name: Kitchen - Day Thursday
+  initial: true
+kitchen_day_friday:
+  name: Kitchen - Day Friday
+  initial: true
+kitchen_day_saturday:
+  name: Kitchen - Day Saturday
+  initial: true
+
+# Day-of-week helpers for evening slot
+kitchen_evening_sunday:
+  name: Kitchen - Evening Sunday
+  initial: true
+kitchen_evening_monday:
+  name: Kitchen - Evening Monday
+  initial: true
+kitchen_evening_tuesday:
+  name: Kitchen - Evening Tuesday
+  initial: true
+kitchen_evening_wednesday:
+  name: Kitchen - Evening Wednesday
+  initial: true
+kitchen_evening_thursday:
+  name: Kitchen - Evening Thursday
+  initial: true
+kitchen_evening_friday:
+  name: Kitchen - Evening Friday
+  initial: true
+kitchen_evening_saturday:
+  name: Kitchen - Evening Saturday
+  initial: true
+
+# Day-of-week helpers for night slot
+kitchen_night_sunday:
+  name: Kitchen - Night Sunday
+  initial: true
+kitchen_night_monday:
+  name: Kitchen - Night Monday
+  initial: true
+kitchen_night_tuesday:
+  name: Kitchen - Night Tuesday
+  initial: true
+kitchen_night_wednesday:
+  name: Kitchen - Night Wednesday
+  initial: true
+kitchen_night_thursday:
+  name: Kitchen - Night Thursday
+  initial: true
+kitchen_night_friday:
+  name: Kitchen - Night Friday
+  initial: true
+kitchen_night_saturday:
+  name: Kitchen - Night Saturday
+  initial: true
