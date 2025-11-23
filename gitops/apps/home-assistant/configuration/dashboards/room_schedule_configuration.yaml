@@ -7,14 +7,14 @@ views:
         title: Global Schedule Defaults
         show_header_toggle: false
         entities:
-          - entity: input_datetime.global_morning_start
-            name: Morning Start
-          - entity: input_datetime.global_day_start
-            name: Day Start
-          - entity: input_datetime.global_evening_start
-            name: Evening Start
-          - entity: input_datetime.global_night_start
-            name: Night Start
+          - entity: schedule.scenes_morning
+            name: Morning Schedule
+          - entity: schedule.scenes_day
+            name: Day Schedule
+          - entity: schedule.scenes_evening
+            name: Evening Schedule
+          - entity: schedule.scenes_night
+            name: Night Schedule
 
       # Configuration Selectors
       - type: vertical-stack
@@ -60,8 +60,8 @@ views:
                   name: Scene
                 - entity: input_boolean.bedroom_morning_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.bedroom_morning_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.bedroom_morning_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_bedroom_morning
                   name: Motion Auto-Off (min)
 
@@ -93,8 +93,8 @@ views:
                   name: Scene
                 - entity: input_boolean.bedroom_day_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.bedroom_day_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.bedroom_day_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_bedroom_day
                   name: Motion Auto-Off (min)
 
@@ -126,8 +126,8 @@ views:
                   name: Scene
                 - entity: input_boolean.bedroom_evening_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.bedroom_evening_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.bedroom_evening_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_bedroom_evening
                   name: Motion Auto-Off (min)
 
@@ -159,8 +159,8 @@ views:
                   name: Scene
                 - entity: input_boolean.bedroom_night_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.bedroom_night_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.bedroom_night_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_bedroom_night
                   name: Motion Auto-Off (min)
 
@@ -196,8 +196,8 @@ views:
                   name: Scene
                 - entity: input_boolean.bathroom_morning_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.bathroom_morning_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.bathroom_morning_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_bathroom_morning
                   name: Motion Auto-Off (min)
 
@@ -229,8 +229,8 @@ views:
                   name: Scene
                 - entity: input_boolean.bathroom_day_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.bathroom_day_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.bathroom_day_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_bathroom_day
                   name: Motion Auto-Off (min)
 
@@ -262,8 +262,8 @@ views:
                   name: Scene
                 - entity: input_boolean.bathroom_evening_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.bathroom_evening_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.bathroom_evening_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_bathroom_evening
                   name: Motion Auto-Off (min)
 
@@ -295,8 +295,8 @@ views:
                   name: Scene
                 - entity: input_boolean.bathroom_night_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.bathroom_night_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.bathroom_night_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_bathroom_night
                   name: Motion Auto-Off (min)
 
@@ -332,8 +332,8 @@ views:
                   name: Scene
                 - entity: input_boolean.living_room_morning_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.living_room_morning_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.living_room_morning_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_living_room_morning
                   name: Motion Auto-Off (min)
 
@@ -365,8 +365,8 @@ views:
                   name: Scene
                 - entity: input_boolean.living_room_day_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.living_room_day_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.living_room_day_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_living_room_day
                   name: Motion Auto-Off (min)
 
@@ -398,8 +398,8 @@ views:
                   name: Scene
                 - entity: input_boolean.living_room_evening_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.living_room_evening_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.living_room_evening_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_living_room_evening
                   name: Motion Auto-Off (min)
 
@@ -431,8 +431,8 @@ views:
                   name: Scene
                 - entity: input_boolean.living_room_night_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.living_room_night_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.living_room_night_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_living_room_night
                   name: Motion Auto-Off (min)
 
@@ -468,8 +468,8 @@ views:
                   name: Scene
                 - entity: input_boolean.kitchen_morning_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.kitchen_morning_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.kitchen_morning_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_kitchen_morning
                   name: Motion Auto-Off (min)
 
@@ -501,8 +501,8 @@ views:
                   name: Scene
                 - entity: input_boolean.kitchen_day_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.kitchen_day_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.kitchen_day_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_kitchen_day
                   name: Motion Auto-Off (min)
 
@@ -534,8 +534,8 @@ views:
                   name: Scene
                 - entity: input_boolean.kitchen_evening_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.kitchen_evening_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.kitchen_evening_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_kitchen_evening
                   name: Motion Auto-Off (min)
 
@@ -567,8 +567,8 @@ views:
                   name: Scene
                 - entity: input_boolean.kitchen_night_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.kitchen_night_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.kitchen_night_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_kitchen_night
                   name: Motion Auto-Off (min)
 
@@ -604,8 +604,8 @@ views:
                   name: Scene
                 - entity: input_boolean.hallway_morning_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.hallway_morning_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.hallway_morning_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_hallway_morning
                   name: Motion Auto-Off (min)
 
@@ -637,8 +637,8 @@ views:
                   name: Scene
                 - entity: input_boolean.hallway_day_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.hallway_day_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.hallway_day_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_hallway_day
                   name: Motion Auto-Off (min)
 
@@ -670,8 +670,8 @@ views:
                   name: Scene
                 - entity: input_boolean.hallway_evening_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.hallway_evening_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.hallway_evening_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_hallway_evening
                   name: Motion Auto-Off (min)
 
@@ -703,7 +703,7 @@ views:
                   name: Scene
                 - entity: input_boolean.hallway_night_motion_enabled
                   name: Motion Activated
-                - entity: input_boolean.hallway_night_auto_on_enabled
-                  name: Auto-On
+                - entity: input_select.hallway_night_auto_on_mode
+                  name: Auto-On Mode
                 - entity: input_number.motion_auto_off_hallway_night
                   name: Motion Auto-Off (min)

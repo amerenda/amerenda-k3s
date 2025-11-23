@@ -24,38 +24,26 @@
   name: {{ room|replace('_',' ')|title }} - Smooth Transition
   initial: true
 
-# Per-Slot Motion & Auto-On Configuration
+# Per-Slot Motion Configuration
 # Morning
 {{ room }}_morning_motion_enabled:
   name: {{ room|replace('_',' ')|title }} - Morning Motion Enabled
-  initial: false
-{{ room }}_morning_auto_on_enabled:
-  name: {{ room|replace('_',' ')|title }} - Morning Auto-On Enabled
   initial: false
 
 # Day
 {{ room }}_day_motion_enabled:
   name: {{ room|replace('_',' ')|title }} - Day Motion Enabled
   initial: false
-{{ room }}_day_auto_on_enabled:
-  name: {{ room|replace('_',' ')|title }} - Day Auto-On Enabled
-  initial: false
 
 # Evening
 {{ room }}_evening_motion_enabled:
   name: {{ room|replace('_',' ')|title }} - Evening Motion Enabled
-  initial: true
-{{ room }}_evening_auto_on_enabled:
-  name: {{ room|replace('_',' ')|title }} - Evening Auto-On Enabled
   initial: true
 
 # Night
 {{ room }}_night_motion_enabled:
   name: {{ room|replace('_',' ')|title }} - Night Motion Enabled
   initial: true
-{{ room }}_night_auto_on_enabled:
-  name: {{ room|replace('_',' ')|title }} - Night Auto-On Enabled
-  initial: false
 
 # Day-of-week helpers (Keep these for granular day skipping if needed)
 # Morning

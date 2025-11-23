@@ -24,38 +24,26 @@ living_room_smooth_transition:
   name: Living Room - Smooth Transition
   initial: true
 
-# Per-Slot Motion & Auto-On Configuration
+# Per-Slot Motion Configuration
 # Morning
 living_room_morning_motion_enabled:
   name: Living Room - Morning Motion Enabled
-  initial: false
-living_room_morning_auto_on_enabled:
-  name: Living Room - Morning Auto-On Enabled
   initial: false
 
 # Day
 living_room_day_motion_enabled:
   name: Living Room - Day Motion Enabled
   initial: false
-living_room_day_auto_on_enabled:
-  name: Living Room - Day Auto-On Enabled
-  initial: false
 
 # Evening
 living_room_evening_motion_enabled:
   name: Living Room - Evening Motion Enabled
-  initial: true
-living_room_evening_auto_on_enabled:
-  name: Living Room - Evening Auto-On Enabled
   initial: true
 
 # Night
 living_room_night_motion_enabled:
   name: Living Room - Night Motion Enabled
   initial: true
-living_room_night_auto_on_enabled:
-  name: Living Room - Night Auto-On Enabled
-  initial: false
 
 # Day-of-week helpers (Keep these for granular day skipping if needed)
 # Morning

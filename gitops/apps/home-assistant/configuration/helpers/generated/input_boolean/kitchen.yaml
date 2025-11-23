@@ -24,38 +24,26 @@ kitchen_smooth_transition:
   name: Kitchen - Smooth Transition
   initial: true
 
-# Per-Slot Motion & Auto-On Configuration
+# Per-Slot Motion Configuration
 # Morning
 kitchen_morning_motion_enabled:
   name: Kitchen - Morning Motion Enabled
-  initial: false
-kitchen_morning_auto_on_enabled:
-  name: Kitchen - Morning Auto-On Enabled
   initial: false
 
 # Day
 kitchen_day_motion_enabled:
   name: Kitchen - Day Motion Enabled
   initial: false
-kitchen_day_auto_on_enabled:
-  name: Kitchen - Day Auto-On Enabled
-  initial: false
 
 # Evening
 kitchen_evening_motion_enabled:
   name: Kitchen - Evening Motion Enabled
-  initial: true
-kitchen_evening_auto_on_enabled:
-  name: Kitchen - Evening Auto-On Enabled
   initial: true
 
 # Night
 kitchen_night_motion_enabled:
   name: Kitchen - Night Motion Enabled
   initial: true
-kitchen_night_auto_on_enabled:
-  name: Kitchen - Night Auto-On Enabled
-  initial: false
 
 # Day-of-week helpers (Keep these for granular day skipping if needed)
 # Morning

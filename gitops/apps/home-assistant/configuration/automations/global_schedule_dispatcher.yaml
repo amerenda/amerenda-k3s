@@ -1,0 +1,63 @@
+- id: 'global_schedule_dispatcher'
+  alias: 'Global Schedule Dispatcher'
+  description: 'Triggers auto-on events when global schedule slots change state'
+  mode: queued
+  
+  trigger:
+    - platform: state
+      entity_id:
+        - schedule.scenes_morning
+        - schedule.scenes_day
+        - schedule.scenes_evening
+        - schedule.scenes_night
+      to: 'on'
+
+  variables:
+    rooms: ['bedroom', 'bathroom', 'living_room', 'kitchen', 'hallway']
+    # Map entity ID to slot name
+    slot_map:
+      'schedule.scenes_morning': 'morning'
+      'schedule.scenes_day': 'day'
+      'schedule.scenes_evening': 'evening'
+      'schedule.scenes_night': 'night'
+    current_slot: "{{ slot_map.get(trigger.entity_id, 'unknown') }}"
+    is_weekday: "{{ now().strftime('%A').lower() in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] }}"
+
+  action:
+    - service: logbook.log
+      data:
+        name: "Schedule Dispatcher"
+        message: "Schedule {{ trigger.entity_id }} turned ON. Processing Auto-On for slot: {{ current_slot }}"
+
+    - repeat:
+        for_each: "{{ rooms }}"
+        sequence:
+          - variables:
+              room: "{{ repeat.item }}"
+              mode_entity: "input_select.{{ room }}_{{ current_slot }}_auto_on_mode"
+              mode: "{{ states(mode_entity) }}"
+              should_trigger: >-
+                {% if mode == 'Always' %}
+                  {{ true }}
+                {% elif mode == 'Weekdays Only' %}
+                  {{ is_weekday }}
+                {% elif mode == 'Weekends Only' %}
+                  {{ not is_weekday }}
+                {% else %}
+                  {{ false }}
+                {% endif %}
+          
+          - if:
+              - condition: template
+                value_template: "{{ should_trigger }}"
+            then:
+              - service: logbook.log
+                data:
+                  name: "Schedule Dispatcher"
+                  message: "Auto-On triggered for {{ room }} (Mode: {{ mode }})"
+              - service: script.scheduled_light_on
+                data:
+                  fallback_lights: "light.{{ room }}"
+                  auto_on: true
+                  transition: 60
+

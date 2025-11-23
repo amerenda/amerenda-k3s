@@ -48,8 +48,6 @@ blueprint:
       selector: { entity: { domain: "input_datetime" } }
 
     # ---- Per-window controls (helpers optional; defaults provided)
-    # Note: motion_activated helpers replace the old block_* helpers
-    # motion_activated=True means motion WILL activate lights, motion_activated=False means it won't
     morning_motion_activated_helper:
       name: "(Optional) Morning motion activated (input_boolean)"
       default:
@@ -202,11 +200,23 @@ variables:
   s3: "{{ as_timestamp(today_at(s3_str)) }}"
   s4: "{{ as_timestamp(today_at(s4_str)) }}"
 
-  slot: >-
-    {% if now_ts >= s1 and now_ts < s2 %}morning
-    {% elif now_ts >= s2 and now_ts < s3 %}day
-    {% elif now_ts >= s3 and now_ts < s4 %}evening
+  # Global Schedule Entity Logic
+  global_slot: >-
+    {% if is_state('schedule.scenes_night', 'on') %}night
+    {% elif is_state('schedule.scenes_evening', 'on') %}evening
+    {% elif is_state('schedule.scenes_day', 'on') %}day
+    {% elif is_state('schedule.scenes_morning', 'on') %}morning
     {% else %}night{% endif %}
+
+  slot: >-
+    {% if use_custom_schedule %}
+      {% if now_ts >= s1 and now_ts < s2 %}morning
+      {% elif now_ts >= s2 and now_ts < s3 %}day
+      {% elif now_ts >= s3 and now_ts < s4 %}evening
+      {% else %}night{% endif %}
+    {% else %}
+      {{ global_slot }}
+    {% endif %}
 
   # Check motion_activated helpers (per-time-window)
   motion_activated_morning: >-
@@ -227,11 +237,7 @@ variables:
     {% if morning_auto_off_helper %}
       {{ states(morning_auto_off_helper) | int(0) }}
     {% else %}
-      {% if is_weekday %}
-        {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_morning_weekday' %}
-      {% else %}
-        {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_morning_weekend' %}
-      {% endif %}
+      {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_morning' %}
       {% set val = states(helper) %}
       {% if val not in ['unknown', 'unavailable', ''] %}
         {{ val | int(15) }}
@@ -243,11 +249,7 @@ variables:
     {% if day_auto_off_helper %}
       {{ states(day_auto_off_helper) | int(0) }}
     {% else %}
-      {% if is_weekday %}
-        {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_day_weekday' %}
-      {% else %}
-        {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_day_weekend' %}
-      {% endif %}
+      {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_day' %}
       {% set val = states(helper) %}
       {% if val not in ['unknown', 'unavailable', ''] %}
         {{ val | int(15) }}
@@ -259,11 +261,7 @@ variables:
     {% if evening_auto_off_helper %}
       {{ states(evening_auto_off_helper) | int(0) }}
     {% else %}
-      {% if is_weekday %}
-        {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_evening_weekday' %}
-      {% else %}
-        {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_evening_weekend' %}
-      {% endif %}
+      {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_evening' %}
       {% set val = states(helper) %}
       {% if val not in ['unknown', 'unavailable', ''] %}
         {{ val | int(15) }}
@@ -275,11 +273,7 @@ variables:
     {% if night_auto_off_helper %}
       {{ states(night_auto_off_helper) | int(0) }}
     {% else %}
-      {% if is_weekday %}
-        {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_night_weekday' %}
-      {% else %}
-        {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_night_weekend' %}
-      {% endif %}
+      {% set helper = 'input_number.motion_auto_off_' ~ room_key_var ~ '_night' %}
       {% set val = states(helper) %}
       {% if val not in ['unknown', 'unavailable', ''] %}
         {{ val | int(15) }}
@@ -306,10 +300,8 @@ variables:
     {{ map[slot] | int(0) }}
   
   # Check if current day is enabled for the current slot
-  current_day: "{{ now().strftime('%A').lower() }}"
-  day_enabled_current: >-
-    {% set day_helper = 'input_boolean.' ~ room_key_var ~ '_' ~ slot ~ '_' ~ current_day %}
-    {{ is_state(day_helper, 'on') if states(day_helper) not in ['unknown', 'unavailable'] else true }}
+  # Note: Removed legacy weekday/weekend logic here
+  day_enabled_current: "{{ true }}"
 
 trigger:
   - platform: "state"
@@ -334,8 +326,6 @@ action:
             state: "on"
           - condition: "template"
             value_template: "{{ motion_activated_current | bool }}"
-          - condition: "template"
-            value_template: "{{ day_enabled_current | bool }}"
         sequence:
           - variables:
               _fb_var: >-
@@ -361,8 +351,6 @@ action:
             state: "on"
           - condition: "template"
             value_template: "{{ motion_activated_current | bool }}"
-          - condition: "template"
-            value_template: "{{ day_enabled_current | bool }}"
         sequence:
           - if:
               - condition: "template"

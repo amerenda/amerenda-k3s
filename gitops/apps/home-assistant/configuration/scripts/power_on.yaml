@@ -107,11 +107,23 @@ scheduled_light_on:
         s3: "{{ as_timestamp(today_at(s3_str)) }}"
         s4: "{{ as_timestamp(today_at(s4_str)) }}"
 
-        slot: >-
-          {% if now_ts >= s1 and now_ts < s2 %}morning
-          {% elif now_ts >= s2 and now_ts < s3 %}day
-          {% elif now_ts >= s3 and now_ts < s4 %}evening
+        # Global Schedule Entity Logic
+        global_slot: >-
+          {% if is_state('schedule.scenes_night', 'on') %}night
+          {% elif is_state('schedule.scenes_evening', 'on') %}evening
+          {% elif is_state('schedule.scenes_day', 'on') %}day
+          {% elif is_state('schedule.scenes_morning', 'on') %}morning
           {% else %}night{% endif %}
+
+        slot: >-
+          {% if use_custom_schedule %}
+            {% if now_ts >= s1 and now_ts < s2 %}morning
+            {% elif now_ts >= s2 and now_ts < s3 %}day
+            {% elif now_ts >= s3 and now_ts < s4 %}evening
+            {% else %}night{% endif %}
+          {% else %}
+            {{ global_slot }}
+          {% endif %}
 
         _entity_name: "{{ room }}"
         

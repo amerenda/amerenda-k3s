@@ -43,3 +43,44 @@
     - evening
     - night
   initial: morning
+
+# Auto-On Modes
+{{ room }}_morning_auto_on_mode:
+  name: {{ room|replace('_',' ')|title }} Morning Auto-On Mode
+  options:
+    - Disabled
+    - Always
+    - Weekdays Only
+    - Weekends Only
+  initial: Disabled
+  icon: mdi:alarm-light-outline
+
+{{ room }}_day_auto_on_mode:
+  name: {{ room|replace('_',' ')|title }} Day Auto-On Mode
+  options:
+    - Disabled
+    - Always
+    - Weekdays Only
+    - Weekends Only
+  initial: Disabled
+  icon: mdi:alarm-light-outline
+
+{{ room }}_evening_auto_on_mode:
+  name: {{ room|replace('_',' ')|title }} Evening Auto-On Mode
+  options:
+    - Disabled
+    - Always
+    - Weekdays Only
+    - Weekends Only
+  initial: Always
+  icon: mdi:alarm-light-outline
+
+{{ room }}_night_auto_on_mode:
+  name: {{ room|replace('_',' ')|title }} Night Auto-On Mode
+  options:
+    - Disabled
+    - Always
+    - Weekdays Only
+    - Weekends Only
+  initial: Disabled
+  icon: mdi:alarm-light-outline

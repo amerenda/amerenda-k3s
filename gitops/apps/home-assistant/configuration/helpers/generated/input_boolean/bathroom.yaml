@@ -24,38 +24,26 @@ bathroom_smooth_transition:
   name: Bathroom - Smooth Transition
   initial: true
 
-# Per-Slot Motion & Auto-On Configuration
+# Per-Slot Motion Configuration
 # Morning
 bathroom_morning_motion_enabled:
   name: Bathroom - Morning Motion Enabled
-  initial: false
-bathroom_morning_auto_on_enabled:
-  name: Bathroom - Morning Auto-On Enabled
   initial: false
 
 # Day
 bathroom_day_motion_enabled:
   name: Bathroom - Day Motion Enabled
   initial: false
-bathroom_day_auto_on_enabled:
-  name: Bathroom - Day Auto-On Enabled
-  initial: false
 
 # Evening
 bathroom_evening_motion_enabled:
   name: Bathroom - Evening Motion Enabled
-  initial: true
-bathroom_evening_auto_on_enabled:
-  name: Bathroom - Evening Auto-On Enabled
   initial: true
 
 # Night
 bathroom_night_motion_enabled:
   name: Bathroom - Night Motion Enabled
   initial: true
-bathroom_night_auto_on_enabled:
-  name: Bathroom - Night Auto-On Enabled
-  initial: false
 
 # Day-of-week helpers (Keep these for granular day skipping if needed)
 # Morning

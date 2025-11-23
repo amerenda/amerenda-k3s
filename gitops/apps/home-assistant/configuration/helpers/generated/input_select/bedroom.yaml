@@ -43,3 +43,44 @@ bedroom_scene_cycle:
     - evening
     - night
   initial: morning
+
+# Auto-On Modes
+bedroom_morning_auto_on_mode:
+  name: Bedroom Morning Auto-On Mode
+  options:
+    - Disabled
+    - Always
+    - Weekdays Only
+    - Weekends Only
+  initial: Disabled
+  icon: mdi:alarm-light-outline
+
+bedroom_day_auto_on_mode:
+  name: Bedroom Day Auto-On Mode
+  options:
+    - Disabled
+    - Always
+    - Weekdays Only
+    - Weekends Only
+  initial: Disabled
+  icon: mdi:alarm-light-outline
+
+bedroom_evening_auto_on_mode:
+  name: Bedroom Evening Auto-On Mode
+  options:
+    - Disabled
+    - Always
+    - Weekdays Only
+    - Weekends Only
+  initial: Always
+  icon: mdi:alarm-light-outline
+
+bedroom_night_auto_on_mode:
+  name: Bedroom Night Auto-On Mode
+  options:
+    - Disabled
+    - Always
+    - Weekdays Only
+    - Weekends Only
+  initial: Disabled
+  icon: mdi:alarm-light-outline

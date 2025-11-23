@@ -108,6 +108,15 @@ else
 fi
 echo ""
 
+# Generate packages ConfigMap
+if [ -d "$CONFIG_DIR/packages" ]; then
+  generate_configmap "homeassistant-packages" "$CONFIG_DIR/packages" "$OUTPUT_DIR/packages-configmap.yaml" "*.yaml"
+  echo "  ✓ Packages ConfigMap generated"
+else
+  echo "  ⚠ Skipping packages (directory not found)"
+fi
+echo ""
+
 # Generate helpers ConfigMaps (requires Jinja2 generation first)
 if [ -d "$CONFIG_DIR/helpers" ]; then
   echo "Generating helpers (requires jinja2-cli)..."
@@ -158,4 +167,3 @@ echo "ConfigMap generation complete!"
 echo "=========================================="
 echo "All ConfigMaps written to: $OUTPUT_DIR"
 echo ""
-

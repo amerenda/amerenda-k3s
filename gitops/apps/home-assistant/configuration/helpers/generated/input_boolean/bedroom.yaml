@@ -24,38 +24,26 @@ bedroom_smooth_transition:
   name: Bedroom - Smooth Transition
   initial: true
 
-# Per-Slot Motion & Auto-On Configuration
+# Per-Slot Motion Configuration
 # Morning
 bedroom_morning_motion_enabled:
   name: Bedroom - Morning Motion Enabled
-  initial: false
-bedroom_morning_auto_on_enabled:
-  name: Bedroom - Morning Auto-On Enabled
   initial: false
 
 # Day
 bedroom_day_motion_enabled:
   name: Bedroom - Day Motion Enabled
   initial: false
-bedroom_day_auto_on_enabled:
-  name: Bedroom - Day Auto-On Enabled
-  initial: false
 
 # Evening
 bedroom_evening_motion_enabled:
   name: Bedroom - Evening Motion Enabled
-  initial: true
-bedroom_evening_auto_on_enabled:
-  name: Bedroom - Evening Auto-On Enabled
   initial: true
 
 # Night
 bedroom_night_motion_enabled:
   name: Bedroom - Night Motion Enabled
   initial: true
-bedroom_night_auto_on_enabled:
-  name: Bedroom - Night Auto-On Enabled
-  initial: false
 
 # Day-of-week helpers (Keep these for granular day skipping if needed)
 # Morning

@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homeassistant-packages
+data:
+  schedules.yaml: |
+    schedule:
+      scenes_morning:
+        name: "Scenes: Morning"
+        icon: "mdi:weather-sunset-up"
+        monday:
+          - from: "06:30:00"
+            to: "10:30:00"
+        tuesday:
+          - from: "06:30:00"
+            to: "10:30:00"
+        wednesday:
+          - from: "06:30:00"
+            to: "10:30:00"
+        thursday:
+          - from: "06:30:00"
+            to: "10:30:00"
+        friday:
+          - from: "06:30:00"
+            to: "10:30:00"
+        saturday:
+          - from: "06:30:00"
+            to: "10:30:00"
+        sunday:
+          - from: "06:30:00"
+            to: "10:30:00"
+    
+      scenes_day:
+        name: "Scenes: Day"
+        icon: "mdi:weather-sunny"
+        monday:
+          - from: "10:30:00"
+            to: "18:00:00"
+        tuesday:
+          - from: "10:30:00"
+            to: "18:00:00"
+        wednesday:
+          - from: "10:30:00"
+            to: "18:00:00"
+        thursday:
+          - from: "10:30:00"
+            to: "18:00:00"
+        friday:
+          - from: "10:30:00"
+            to: "18:00:00"
+        saturday:
+          - from: "10:30:00"
+            to: "18:00:00"
+        sunday:
+          - from: "10:30:00"
+            to: "18:00:00"
+    
+      scenes_evening:
+        name: "Scenes: Evening"
+        icon: "mdi:weather-sunset-down"
+        monday:
+          - from: "18:00:00"
+            to: "23:00:00"
+        tuesday:
+          - from: "18:00:00"
+            to: "23:00:00"
+        wednesday:
+          - from: "18:00:00"
+            to: "23:00:00"
+        thursday:
+          - from: "18:00:00"
+            to: "23:00:00"
+        friday:
+          - from: "18:00:00"
+            to: "23:00:00"
+        saturday:
+          - from: "18:00:00"
+            to: "23:00:00"
+        sunday:
+          - from: "18:00:00"
+            to: "23:00:00"
+    
+      scenes_night:
+        name: "Scenes: Night"
+        icon: "mdi:weather-night"
+        monday:
+          - from: "23:00:00"
+            to: "06:30:00"
+        tuesday:
+          - from: "23:00:00"
+            to: "06:30:00"
+        wednesday:
+          - from: "23:00:00"
+            to: "06:30:00"
+        thursday:
+          - from: "23:00:00"
+            to: "06:30:00"
+        friday:
+          - from: "23:00:00"
+            to: "06:30:00"
+        saturday:
+          - from: "23:00:00"
+            to: "06:30:00"
+        sunday:
+          - from: "23:00:00"
+            to: "06:30:00"
+    

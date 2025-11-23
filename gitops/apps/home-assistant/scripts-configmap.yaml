@@ -222,11 +222,23 @@ data:
             s3: "{{ as_timestamp(today_at(s3_str)) }}"
             s4: "{{ as_timestamp(today_at(s4_str)) }}"
     
-            slot: >-
-              {% if now_ts >= s1 and now_ts < s2 %}morning
-              {% elif now_ts >= s2 and now_ts < s3 %}day
-              {% elif now_ts >= s3 and now_ts < s4 %}evening
+            # Global Schedule Entity Logic
+            global_slot: >-
+              {% if is_state('schedule.scenes_night', 'on') %}night
+              {% elif is_state('schedule.scenes_evening', 'on') %}evening
+              {% elif is_state('schedule.scenes_day', 'on') %}day
+              {% elif is_state('schedule.scenes_morning', 'on') %}morning
               {% else %}night{% endif %}
+    
+            slot: >-
+              {% if use_custom_schedule %}
+                {% if now_ts >= s1 and now_ts < s2 %}morning
+                {% elif now_ts >= s2 and now_ts < s3 %}day
+                {% elif now_ts >= s3 and now_ts < s4 %}evening
+                {% else %}night{% endif %}
+              {% else %}
+                {{ global_slot }}
+              {% endif %}
     
             _entity_name: "{{ room }}"
             
@@ -536,7 +548,7 @@ data:
               domain: input_datetime
       sequence:
         - variables:
-            # Global Defaults
+            # Global Defaults (Unused for slot calculation now, but kept for custom logic fallback)
             global_s1: "{{ states('input_datetime.global_morning_start') }}"
             global_s2: "{{ states('input_datetime.global_day_start') }}"
             global_s3: "{{ states('input_datetime.global_evening_start') }}"
@@ -547,7 +559,7 @@ data:
               {% set helper = 'input_boolean.' ~ room ~ '_custom_schedule' %}
               {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable', None, ''] else false }}
     
-            # Per-Slot Custom Switches (Only relevant if use_custom_schedule is true)
+            # Per-Slot Custom Switches
             use_custom_s1: >-
               {% set helper = 'input_boolean.' ~ room ~ '_morning_custom_time' %}
               {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
@@ -561,7 +573,7 @@ data:
               {% set helper = 'input_boolean.' ~ room ~ '_night_custom_time' %}
               {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
     
-            # Resolve Times
+            # Resolve Times (For Custom Schedule Only)
             s1_str: >-
               {% if use_custom_schedule and use_custom_s1 %}
                 {% set v = states('input_datetime.' ~ room ~ '_s1_start') %}
@@ -608,18 +620,30 @@ data:
             s3: "{{ as_timestamp(today_at(s3_str)) }}"
             s4: "{{ as_timestamp(today_at(s4_str)) }}"
     
+            # Global Schedule Entity Logic
+            global_slot: >-
+              {% if is_state('schedule.scenes_night', 'on') %}night
+              {% elif is_state('schedule.scenes_evening', 'on') %}evening
+              {% elif is_state('schedule.scenes_day', 'on') %}day
+              {% elif is_state('schedule.scenes_morning', 'on') %}morning
+              {% else %}night{% endif %}
+    
             # Determine target slot
             # If target_slot is provided, use it as target
-            # Otherwise, calculate from time
+            # Otherwise, calculate from time (Custom) or Schedule Entity (Global)
             slot_order: ['morning', 'day', 'evening', 'night']
             next_slot: >-
               {% if target_slot is defined and target_slot != '' and target_slot in slot_order %}
                 {{ target_slot }}
+              {% elif use_custom_schedule %}
+                {# Custom Schedule Logic (Timestamps) #}
+                {% if now_ts >= s1 and now_ts < s2 %}morning
+                {% elif now_ts >= s2 and now_ts < s3 %}day
+                {% elif now_ts >= s3 and now_ts < s4 %}evening
+                {% else %}night{% endif %}
               {% else %}
-                {% if now_ts >= s1 and now_ts < s2 %}day
-                {% elif now_ts >= s2 and now_ts < s3 %}evening
-                {% elif now_ts >= s3 and now_ts < s4 %}night
-                {% else %}morning{% endif %}
+                {# Global Schedule Logic (Visual Schedules) #}
+                {{ global_slot }}
               {% endif %}
     
             # Get target scene entity ID with override support
