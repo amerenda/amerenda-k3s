@@ -44,9 +44,11 @@ dnsmasq:
   localTTL: 0  # Only affects local /etc/hosts records
   # Disable negative caching to force fresh lookups
   noNegcache: true
-  # Override cache-size via custom config (Helm chart cacheSize might not override Pi-hole defaults)
+  # Disable stale cache serving - prevents serving expired cache entries
+  # Note: Can't override cache-size in custom config (dnsmasq doesn't allow repeated keywords)
+  # Instead, we disable stale cache so expired entries aren't served
   customDnsEntries:
-    - "cache-size=0"
+    - "use-stale-cache=0"
 
 # Environment variables
 extraEnvVars:
