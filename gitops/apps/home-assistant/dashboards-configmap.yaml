@@ -716,7 +716,7 @@ data:
               # ------------------------------------------------------
               # BEDROOM CONFIGURATION
               # ------------------------------------------------------
-    
+              
               # Bedroom Morning
               - type: conditional
                 conditions:
@@ -724,30 +724,30 @@ data:
                     state: bedroom
                   - entity: input_select.time_window_selector
                     state: morning
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Bedroom Morning
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.bedroom_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.bedroom_morning_custom_time
                       name: Override Global Time
                     - type: conditional
                       conditions:
-                      - entity: input_boolean.bedroom_morning_custom_time
+                        - entity: input_boolean.bedroom_morning_custom_time
                           state: "on"
                       row:
                         entity: input_datetime.bedroom_s1_start
                         name: Morning Start Time
                     - type: section
-                      - entity: input_select.bedroom_morning_scene
+                    - entity: input_select.bedroom_morning_scene
                       name: Scene
                     - entity: input_boolean.bedroom_morning_motion_enabled
                       name: Motion Activated
                     - entity: input_boolean.bedroom_morning_auto_on_enabled
                       name: Auto-On
-                      - entity: input_number.motion_auto_off_bedroom_morning
+                    - entity: input_number.motion_auto_off_bedroom_morning
                       name: Motion Auto-Off (min)
     
               # Bedroom Day
@@ -757,11 +757,11 @@ data:
                     state: bedroom
                   - entity: input_select.time_window_selector
                     state: day
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Bedroom Day
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.bedroom_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.bedroom_day_custom_time
@@ -790,11 +790,11 @@ data:
                     state: bedroom
                   - entity: input_select.time_window_selector
                     state: evening
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Bedroom Evening
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.bedroom_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.bedroom_evening_custom_time
@@ -823,11 +823,11 @@ data:
                     state: bedroom
                   - entity: input_select.time_window_selector
                     state: night
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Bedroom Night
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.bedroom_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.bedroom_night_custom_time
@@ -860,11 +860,11 @@ data:
                     state: bathroom
                   - entity: input_select.time_window_selector
                     state: morning
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Bathroom Morning
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.bathroom_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.bathroom_morning_custom_time
@@ -893,11 +893,11 @@ data:
                     state: bathroom
                   - entity: input_select.time_window_selector
                     state: day
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Bathroom Day
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.bathroom_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.bathroom_day_custom_time
@@ -926,11 +926,11 @@ data:
                     state: bathroom
                   - entity: input_select.time_window_selector
                     state: evening
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Bathroom Evening
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.bathroom_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.bathroom_evening_custom_time
@@ -959,11 +959,11 @@ data:
                     state: bathroom
                   - entity: input_select.time_window_selector
                     state: night
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Bathroom Night
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.bathroom_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.bathroom_night_custom_time
@@ -996,11 +996,11 @@ data:
                     state: living_room
                   - entity: input_select.time_window_selector
                     state: morning
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Living Room Morning
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.living_room_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.living_room_morning_custom_time
@@ -1029,11 +1029,11 @@ data:
                     state: living_room
                   - entity: input_select.time_window_selector
                     state: day
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Living Room Day
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.living_room_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.living_room_day_custom_time
@@ -1062,11 +1062,11 @@ data:
                     state: living_room
                   - entity: input_select.time_window_selector
                     state: evening
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Living Room Evening
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.living_room_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.living_room_evening_custom_time
@@ -1095,11 +1095,11 @@ data:
                     state: living_room
                   - entity: input_select.time_window_selector
                     state: night
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Living Room Night
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.living_room_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.living_room_night_custom_time
@@ -1132,11 +1132,11 @@ data:
                     state: kitchen
                   - entity: input_select.time_window_selector
                     state: morning
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Kitchen Morning
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.kitchen_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.kitchen_morning_custom_time
@@ -1165,11 +1165,11 @@ data:
                     state: kitchen
                   - entity: input_select.time_window_selector
                     state: day
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Kitchen Day
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.kitchen_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.kitchen_day_custom_time
@@ -1198,11 +1198,11 @@ data:
                     state: kitchen
                   - entity: input_select.time_window_selector
                     state: evening
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Kitchen Evening
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.kitchen_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.kitchen_evening_custom_time
@@ -1231,11 +1231,11 @@ data:
                     state: kitchen
                   - entity: input_select.time_window_selector
                     state: night
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Kitchen Night
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.kitchen_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.kitchen_night_custom_time
@@ -1268,11 +1268,11 @@ data:
                     state: hallway
                   - entity: input_select.time_window_selector
                     state: morning
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Hallway Morning
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.hallway_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.hallway_morning_custom_time
@@ -1301,11 +1301,11 @@ data:
                     state: hallway
                   - entity: input_select.time_window_selector
                     state: day
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Hallway Day
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.hallway_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.hallway_day_custom_time
@@ -1334,11 +1334,11 @@ data:
                     state: hallway
                   - entity: input_select.time_window_selector
                     state: evening
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Hallway Evening
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.hallway_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.hallway_evening_custom_time
@@ -1367,30 +1367,30 @@ data:
                     state: hallway
                   - entity: input_select.time_window_selector
                     state: night
-                  card:
-                    type: entities
+                card:
+                  type: entities
                   title: Hallway Night
                   show_header_toggle: false
-                    entities:
+                  entities:
                     - entity: input_boolean.hallway_custom_schedule
                       name: Use Custom Schedule (Room Master)
                     - entity: input_boolean.hallway_night_custom_time
                       name: Override Global Time
                     - type: conditional
                       conditions:
-                      - entity: input_boolean.hallway_night_custom_time
+                        - entity: input_boolean.hallway_night_custom_time
                           state: "on"
                       row:
                         entity: input_datetime.hallway_s4_start
                         name: Night Start Time
                     - type: section
-                      - entity: input_select.hallway_night_scene
+                    - entity: input_select.hallway_night_scene
                       name: Scene
                     - entity: input_boolean.hallway_night_motion_enabled
                       name: Motion Activated
                     - entity: input_boolean.hallway_night_auto_on_enabled
                       name: Auto-On
-                      - entity: input_number.motion_auto_off_hallway_night
+                    - entity: input_number.motion_auto_off_hallway_night
                       name: Motion Auto-Off (min)
   light_control.yaml: |
     views:
