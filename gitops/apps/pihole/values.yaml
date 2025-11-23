@@ -42,11 +42,6 @@ dnsmasq:
   localTTL: 0  # Only affects local /etc/hosts records
   # Disable negative caching to force fresh lookups
   noNegcache: true
-  # Custom dnsmasq configuration lines
-  # Disable stale cache serving - this prevents serving expired cache entries
-  # This is critical for local domains where we want fresh queries
-  customDnsEntries:
-    - "use-stale-cache=0"
 
 # Environment variables
 extraEnvVars:
