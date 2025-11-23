@@ -2,21 +2,14 @@ views:
   - title: Room Schedule Viewer
     path: room-schedule-viewer
     cards:
+      # Selectors
       - type: vertical-stack
         cards:
-          # Room selector dropdown
           - type: entities
             title: Select Room
             entities:
               - entity: input_select.room_selector
                 name: Room
-          
-          # Schedule selector dropdown
-          - type: entities
-            title: Select Schedule
-            entities:
-              - entity: input_select.schedule_selector
-                name: Schedule
 
       # Active Scene Status Card
       - type: markdown
@@ -24,69 +17,109 @@ views:
         content: |
           {% set room = states('input_select.room_selector') %}
           {% if room and room != 'unknown' and room != 'unavailable' %}
-            {% set morning_custom = states('input_boolean.' ~ room ~ '_morning_custom_time') %}
-            {% set day_custom = states('input_boolean.' ~ room ~ '_day_custom_time') %}
-            {% set evening_custom = states('input_boolean.' ~ room ~ '_evening_custom_time') %}
-            {% set night_custom = states('input_boolean.' ~ room ~ '_night_custom_time') %}
-            {% set s1 = states('input_datetime.' ~ room ~ '_s1_start') if morning_custom == 'on' else '06:00:00' %}
-            {% set s2 = states('input_datetime.' ~ room ~ '_s2_start') if day_custom == 'on' else '09:00:00' %}
-            {% set s3 = states('input_datetime.' ~ room ~ '_s3_start') if evening_custom == 'on' else '17:00:00' %}
-            {% set s4 = states('input_datetime.' ~ room ~ '_s4_start') if night_custom == 'on' else '22:00:00' %}
-            {% set now_ts = as_timestamp(now()) %}
-            {% set s1_ts = as_timestamp(today_at(s1)) %}
-            {% set s2_ts = as_timestamp(today_at(s2)) %}
-            {% set s3_ts = as_timestamp(today_at(s3)) %}
-            {% set s4_ts = as_timestamp(today_at(s4)) %}
-            {% if now_ts >= s1_ts and now_ts < s2_ts %}
-              {% set scheduled_slot = 'morning' %}
-              {% set next_transition = s2[:5] %}
-              {% set next_slot = 'day' %}
-            {% elif now_ts >= s2_ts and now_ts < s3_ts %}
-              {% set scheduled_slot = 'day' %}
-              {% set next_transition = s3[:5] %}
-              {% set next_slot = 'evening' %}
-            {% elif now_ts >= s3_ts and now_ts < s4_ts %}
-              {% set scheduled_slot = 'evening' %}
-              {% set next_transition = s4[:5] %}
-              {% set next_slot = 'night' %}
+            
+            {# --- Resolve Current Slot --- #}
+            {% set use_custom_schedule = is_state('input_boolean.' ~ room ~ '_custom_schedule', 'on') %}
+            
+            {# Global Schedule States #}
+            {% set global_morning = is_state('schedule.scenes_morning', 'on') %}
+            {% set global_day = is_state('schedule.scenes_day', 'on') %}
+            {% set global_evening = is_state('schedule.scenes_evening', 'on') %}
+            {% set global_night = is_state('schedule.scenes_night', 'on') %}
+            
+            {% if use_custom_schedule %}
+               {# Custom Timestamp Logic #}
+               {% set s1 = states('input_datetime.' ~ room ~ '_s1_start') %}
+               {% set s2 = states('input_datetime.' ~ room ~ '_s2_start') %}
+               {% set s3 = states('input_datetime.' ~ room ~ '_s3_start') %}
+               {% set s4 = states('input_datetime.' ~ room ~ '_s4_start') %}
+               
+               {# Fallback defaults if custom time not set #}
+               {% set s1 = s1 if s1 not in ['unknown','unavailable'] else '06:30:00' %}
+               {% set s2 = s2 if s2 not in ['unknown','unavailable'] else '10:30:00' %}
+               {% set s3 = s3 if s3 not in ['unknown','unavailable'] else '18:00:00' %}
+               {% set s4 = s4 if s4 not in ['unknown','unavailable'] else '23:00:00' %}
+
+               {% set now_ts = as_timestamp(now()) %}
+               {% set s1_ts = as_timestamp(today_at(s1)) %}
+               {% set s2_ts = as_timestamp(today_at(s2)) %}
+               {% set s3_ts = as_timestamp(today_at(s3)) %}
+               {% set s4_ts = as_timestamp(today_at(s4)) %}
+               
+               {% if now_ts >= s1_ts and now_ts < s2_ts %}
+                 {% set current_slot = 'morning' %}
+               {% elif now_ts >= s2_ts and now_ts < s3_ts %}
+                 {% set current_slot = 'day' %}
+               {% elif now_ts >= s3_ts and now_ts < s4_ts %}
+                 {% set current_slot = 'evening' %}
+               {% else %}
+                 {% set current_slot = 'night' %}
+               {% endif %}
+               {% set schedule_source = "Custom Room Schedule" %}
             {% else %}
-              {% set scheduled_slot = 'night' %}
-              {% set next_transition = s1[:5] %}
-              {% set next_slot = 'morning' %}
+               {# Global Schedule Entity Logic #}
+               {% if global_night %}{% set current_slot = 'night' %}
+               {% elif global_evening %}{% set current_slot = 'evening' %}
+               {% elif global_day %}{% set current_slot = 'day' %}
+               {% elif global_morning %}{% set current_slot = 'morning' %}
+               {% else %}{% set current_slot = 'night' %}{% endif %}
+               {% set schedule_source = "Global Schedule" %}
             {% endif %}
+
+            {# --- Manual Override Check --- #}
             {% set scene_cycle_helper = 'input_select.' ~ room ~ '_scene_cycle' %}
-            {% set scene_cycle = states(scene_cycle_helper) %}
-            {% if scene_cycle and scene_cycle != 'unknown' and scene_cycle != 'unavailable' and scene_cycle in ['morning', 'day', 'evening', 'night'] %}
-              {% if scene_cycle != scheduled_slot %}
-                {% set current_slot = scene_cycle %}
-                {% set is_manual_override = true %}
+            {% set active_scene_select = states(scene_cycle_helper) %}
+            {% if active_scene_select and active_scene_select in ['morning', 'day', 'evening', 'night'] and active_scene_select != current_slot %}
+               {% set display_slot = active_scene_select %}
+               {% set status_msg = "Manual Override Active" %}
+            {% else %}
+               {% set display_slot = current_slot %}
+               {% set status_msg = "Following Schedule" %}
+            {% endif %}
+
+            ### **{{ display_slot|title }} Scene Active**
+            
+            *{{ status_msg }} ({{ schedule_source }})*
+            
+            ---
+            #### Schedule Configuration (Today)
+            
+            | Slot | Start Time | Auto-On Mode | Motion | Auto-Off |
+            |------|------------|--------------|--------|----------|
+            {% for slot in ['morning', 'day', 'evening', 'night'] %}
+              {# Resolve Start Time #}
+              {% set start_time_display = "N/A" %}
+              {% if use_custom_schedule and is_state('input_boolean.' ~ room ~ '_' ~ slot ~ '_custom_time', 'on') %}
+                 {% set idx = loop.index %}
+                 {% set custom_time = states('input_datetime.' ~ room ~ '_s' ~ idx ~ '_start') %}
+                 {% set start_time_display = custom_time[:5] if custom_time else "Error" %}
               {% else %}
-                {% set current_slot = scheduled_slot %}
-                {% set is_manual_override = false %}
+                 {# Attempt to get from Global Schedule Entity #}
+                 {% set today = now().strftime('%A').lower() %}
+                 {% set sched_entity = 'schedule.scenes_' ~ slot %}
+                 {% set blocks = state_attr(sched_entity, today) %}
+                 {% if blocks and blocks | length > 0 %}
+                    {# Handle multiple blocks (e.g. night split) - show first one #}
+                    {% set start_time_display = blocks[0].from %}
+                 {% else %}
+                    {% set start_time_display = "-" %}
+                 {% endif %}
               {% endif %}
-            {% else %}
-              {% set current_slot = scheduled_slot %}
-              {% set is_manual_override = false %}
-            {% endif %}
-            
-            {# Check if today is enabled for the current slot #}
-            {% set current_day = now().strftime('%A').lower() %}
-            {% set day_helper = 'input_boolean.' ~ room ~ '_' ~ current_slot ~ '_' ~ current_day %}
-            {% set today_enabled = is_state(day_helper, 'on') if states(day_helper) not in ['unknown', 'unavailable'] else true %}
-            
-            ### **{{ current_slot|title }} Scene Active**
-            
-            {% if is_manual_override %}
-              *Manual override active*
-            {% else %}
-              *Scheduled scene*
-            {% endif %}
-            
-            {% if not today_enabled %}
-              *⚠️ Today ({{ current_day|title }}) is not enabled for this slot*
-            {% endif %}
-            
-            Next transition: **{{ next_transition }}** → {{ next_slot|title }}
+              
+              {# Resolve Auto-On Mode #}
+              {% set auto_on_mode = states('input_select.' ~ room ~ '_' ~ slot ~ '_auto_on_mode') %}
+              
+              {# Resolve Motion #}
+              {% set motion_en = states('input_boolean.' ~ room ~ '_' ~ slot ~ '_motion_enabled') %}
+              {% set motion_icon = '✓' if motion_en == 'on' else '✗' %}
+              
+              {# Resolve Auto-Off #}
+              {% set auto_off = states('input_number.motion_auto_off_' ~ room ~ '_' ~ slot) %}
+              {% set auto_off_display = (auto_off | int) ~ "m" if auto_off not in ['unknown','unavailable'] else "-" %}
+              
+              | {{ slot|title }} | {{ start_time_display }} | {{ auto_on_mode }} | {{ motion_icon }} | {{ auto_off_display }} |
+            {% endfor %}
+
           {% else %}
             Please select a room above.
           {% endif %}
@@ -351,118 +384,3 @@ views:
                       helper_entity: input_select.living_room_scene_cycle
                       slot_name: night
                   show_state: false
-
-      # Schedule Display
-      - type: markdown
-        title: Schedule
-        content: |
-          {% set room = states('input_select.room_selector') %}
-          {% set schedule_type = states('input_select.schedule_selector') %}
-          {% if room and room != 'unknown' and room != 'unavailable' and schedule_type and schedule_type != 'unknown' and schedule_type != 'unavailable' %}
-            {% set morning_custom = states('input_boolean.' ~ room ~ '_morning_custom_time') %}
-            {% set day_custom = states('input_boolean.' ~ room ~ '_day_custom_time') %}
-            {% set evening_custom = states('input_boolean.' ~ room ~ '_evening_custom_time') %}
-            {% set night_custom = states('input_boolean.' ~ room ~ '_night_custom_time') %}
-            {% set morning_separate = states('input_boolean.' ~ room ~ '_morning_separate_weekday_weekend') %}
-            {% set day_separate = states('input_boolean.' ~ room ~ '_day_separate_weekday_weekend') %}
-            {% set evening_separate = states('input_boolean.' ~ room ~ '_evening_separate_weekday_weekend') %}
-            {% set night_separate = states('input_boolean.' ~ room ~ '_night_separate_weekday_weekend') %}
-            
-            {# Get start times based on schedule type and separate weekday/weekend settings #}
-            {% if morning_custom == 'on' %}
-              {% if morning_separate == 'on' and schedule_type == 'weekday' %}
-                {% set s1_raw = states('input_datetime.' ~ room ~ '_s1_weekday_start') %}
-              {% elif morning_separate == 'on' and schedule_type == 'weekend' %}
-                {% set s1_raw = states('input_datetime.' ~ room ~ '_s1_weekend_start') %}
-              {% else %}
-                {% set s1_raw = states('input_datetime.' ~ room ~ '_s1_start') %}
-              {% endif %}
-              {% set s1 = s1_raw.split(' ')[-1][:5] if ' ' in s1_raw else (s1_raw[:5] if s1_raw|length >= 5 else '06:00') %}
-            {% else %}
-              {% set s1 = '06:00' %}
-            {% endif %}
-            
-            {% if day_custom == 'on' %}
-              {% if day_separate == 'on' and schedule_type == 'weekday' %}
-                {% set s2_raw = states('input_datetime.' ~ room ~ '_s2_weekday_start') %}
-              {% elif day_separate == 'on' and schedule_type == 'weekend' %}
-                {% set s2_raw = states('input_datetime.' ~ room ~ '_s2_weekend_start') %}
-              {% else %}
-                {% set s2_raw = states('input_datetime.' ~ room ~ '_s2_start') %}
-              {% endif %}
-              {% set s2 = s2_raw.split(' ')[-1][:5] if ' ' in s2_raw else (s2_raw[:5] if s2_raw|length >= 5 else '09:00') %}
-            {% else %}
-              {% set s2 = '09:00' %}
-            {% endif %}
-            
-            {% if evening_custom == 'on' %}
-              {% if evening_separate == 'on' and schedule_type == 'weekday' %}
-                {% set s3_raw = states('input_datetime.' ~ room ~ '_s3_weekday_start') %}
-              {% elif evening_separate == 'on' and schedule_type == 'weekend' %}
-                {% set s3_raw = states('input_datetime.' ~ room ~ '_s3_weekend_start') %}
-              {% else %}
-                {% set s3_raw = states('input_datetime.' ~ room ~ '_s3_start') %}
-              {% endif %}
-              {% set s3 = s3_raw.split(' ')[-1][:5] if ' ' in s3_raw else (s3_raw[:5] if s3_raw|length >= 5 else '17:00') %}
-            {% else %}
-              {% set s3 = '17:00' %}
-            {% endif %}
-            
-            {% if night_custom == 'on' %}
-              {% if night_separate == 'on' and schedule_type == 'weekday' %}
-                {% set s4_raw = states('input_datetime.' ~ room ~ '_s4_weekday_start') %}
-              {% elif night_separate == 'on' and schedule_type == 'weekend' %}
-                {% set s4_raw = states('input_datetime.' ~ room ~ '_s4_weekend_start') %}
-              {% else %}
-                {% set s4_raw = states('input_datetime.' ~ room ~ '_s4_start') %}
-              {% endif %}
-              {% set s4 = s4_raw.split(' ')[-1][:5] if ' ' in s4_raw else (s4_raw[:5] if s4_raw|length >= 5 else '22:00') %}
-            {% else %}
-              {% set s4 = '22:00' %}
-            {% endif %}
-            
-            {% set morning_override = states('input_select.' ~ room ~ '_morning_scene') %}
-            {% set day_override = states('input_select.' ~ room ~ '_day_scene') %}
-            {% set evening_override = states('input_select.' ~ room ~ '_evening_scene') %}
-            {% set night_override = states('input_select.' ~ room ~ '_night_scene') %}
-            
-            {% set morning_scene = morning_override if morning_override not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_morning' %}
-            {% set day_scene = day_override if day_override not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_day' %}
-            {% set evening_scene = evening_override if evening_override not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_evening' %}
-            {% set night_scene = night_override if night_override not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_night' %}
-            
-            {# Get weekday/weekend specific settings #}
-            {% set morning_enabled = states('input_boolean.enable_' ~ room ~ '_morning_' ~ schedule_type) %}
-            {% set day_enabled = states('input_boolean.enable_' ~ room ~ '_day_' ~ schedule_type) %}
-            {% set evening_enabled = states('input_boolean.enable_' ~ room ~ '_evening_' ~ schedule_type) %}
-            {% set night_enabled = states('input_boolean.enable_' ~ room ~ '_night_' ~ schedule_type) %}
-            
-            {% set morning_auto_on = states('input_boolean.auto_on_' ~ room ~ '_morning_' ~ schedule_type) %}
-            {% set day_auto_on = states('input_boolean.auto_on_' ~ room ~ '_day_' ~ schedule_type) %}
-            {% set evening_auto_on = states('input_boolean.auto_on_' ~ room ~ '_evening_' ~ schedule_type) %}
-            {% set night_auto_on = states('input_boolean.auto_on_' ~ room ~ '_night_' ~ schedule_type) %}
-            
-            {% set morning_motion = states('input_boolean.motion_activated_' ~ room ~ '_morning_' ~ schedule_type) %}
-            {% set day_motion = states('input_boolean.motion_activated_' ~ room ~ '_day_' ~ schedule_type) %}
-            {% set evening_motion = states('input_boolean.motion_activated_' ~ room ~ '_evening_' ~ schedule_type) %}
-            {% set night_motion = states('input_boolean.motion_activated_' ~ room ~ '_night_' ~ schedule_type) %}
-            
-            {% set smooth_transition = states('input_boolean.' ~ room ~ '_smooth_transition') %}
-            
-            | Time Slot | Scene | Activation Time | Timer Enabled | Auto-On | Motion Activated | Smooth Transition |
-            |-----------|-------|----------------|---------------|---------|------------------|-------------------|
-            | Morning | `morning` | {{ s1 }} | {% if morning_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if morning_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if morning_motion == 'on' %}✓{% else %}✗{% endif %} | {% if smooth_transition == 'on' %}✓{% else %}✗{% endif %} |
-            | Day | `day` | {{ s2 }} | {% if day_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if day_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if day_motion == 'on' %}✓{% else %}✗{% endif %} | {% if smooth_transition == 'on' %}✓{% else %}✗{% endif %} |
-            | Evening | `evening` | {{ s3 }} | {% if evening_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if evening_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if evening_motion == 'on' %}✓{% else %}✗{% endif %} | {% if smooth_transition == 'on' %}✓{% else %}✗{% endif %} |
-            | Night | `night` | {{ s4 }} | {% if night_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if night_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if night_motion == 'on' %}✓{% else %}✗{% endif %} | {% if smooth_transition == 'on' %}✓{% else %}✗{% endif %} |
-            
-            {% set any_custom = morning_custom == 'on' or day_custom == 'on' or evening_custom == 'on' or night_custom == 'on' %}
-            {% if any_custom %}
-              *Custom schedule enabled*
-            {% else %}
-              *Default schedule (06:00, 09:00, 17:00, 22:00)*
-            {% endif %}
-          {% else %}
-            Please select a room and schedule type above.
-          {% endif %}
-
