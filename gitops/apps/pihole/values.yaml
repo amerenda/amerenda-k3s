@@ -44,11 +44,6 @@ dnsmasq:
   localTTL: 0  # Only affects local /etc/hosts records
   # Disable negative caching to force fresh lookups
   noNegcache: true
-  # Disable stale cache serving - prevents serving expired cache entries
-  # Note: Can't override cache-size in custom config (dnsmasq doesn't allow repeated keywords)
-  # Instead, we disable stale cache so expired entries aren't served
-  customDnsEntries:
-    - "use-stale-cache=0"
 
 # Environment variables
 extraEnvVars:
@@ -56,6 +51,8 @@ extraEnvVars:
   TZ: "America/New_York"
   FTLCONF_LOCAL_IPV4: "10.100.20.240"
   PIHOLE_DNS_: "1.1.1.1;1.0.0.1;8.8.8.8;8.8.4.4"
+  # Disable DNS caching completely via FTL configuration
+  FTLCONF_dns_cache_size: "0"
   # Cache settings for external domains (respect TTL from upstream, max 5 minutes)
   CACHE_QUERY_MINIMUM_TTL: "0"
   CACHE_QUERY_MAXIMUM_TTL: "300"
