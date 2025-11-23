@@ -34,11 +34,13 @@ dnsmasq:
   upstreamServers:
     - server=/amer.home/10.100.20.241
     - server=/merenda.home.arpa/10.100.20.241
-  # Reduce cache time for better DNS updates
-  # Keep small cache for external domains, but localTTL: 0 disables caching for local domains
+  # Cache configuration
+  # Note: localTTL only affects /etc/hosts records, not upstream queries
+  # For upstream queries, we rely on TTL from BIND9 (300 seconds)
+  # To disable caching for local domains, we set max-ttl very low via FTL config
   cacheSize: 1000
   negTTL: 0
-  localTTL: 0  # Disable caching for local domains (amer.home, merenda.home.arpa)
+  localTTL: 0  # Only affects local /etc/hosts records
   # Disable negative caching to force fresh lookups
   noNegcache: true
 
@@ -48,9 +50,14 @@ extraEnvVars:
   TZ: "America/New_York"
   FTLCONF_LOCAL_IPV4: "10.100.20.240"
   PIHOLE_DNS_: "1.1.1.1;1.0.0.1;8.8.8.8;8.8.4.4"
-  # Force DNS cache refresh - respect TTL from upstream
+  # Cache settings for external domains (respect TTL from upstream, max 5 minutes)
   CACHE_QUERY_MINIMUM_TTL: "0"
   CACHE_QUERY_MAXIMUM_TTL: "300"
+  # Set max TTL for external domains (5 minutes)
+  # For local domains, we'll set a very short TTL to minimize caching
+  FTLCONF_MAXTTL: "300"
+  # Set min TTL to 0 to allow immediate updates
+  FTLCONF_MINTTL: "0"
 
 # DoH (DNS over HTTPS) configuration
 doh:

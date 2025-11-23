@@ -7,7 +7,7 @@ metadata:
   namespace: unifi-network-application
   annotations:
     external-dns.alpha.kubernetes.io/hostname: unifi.amer.home
-    external-dns.alpha.kubernetes.io/ttl: "300"
+    external-dns.alpha.kubernetes.io/ttl: "1"
     external-dns.alpha.kubernetes.io/manage-record-types: "A"
 spec:
   type: LoadBalancer

@@ -8,7 +8,7 @@ dashboard:
     type: LoadBalancer
     annotations:
       external-dns.alpha.kubernetes.io/hostname: traefik.amer.home
-      external-dns.alpha.kubernetes.io/ttl: "3600"
+      external-dns.alpha.kubernetes.io/ttl: "1"
 
 # Replica count for high availability
 replicaCount: 1

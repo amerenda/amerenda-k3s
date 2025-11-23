@@ -72,4 +72,4 @@ service:
     type: LoadBalancer
     annotations:
       external-dns.alpha.kubernetes.io/hostname: longhorn.amer.home
-      external-dns.alpha.kubernetes.io/ttl: "300"
+      external-dns.alpha.kubernetes.io/ttl: "1"
