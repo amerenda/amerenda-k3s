@@ -457,22 +457,13 @@ action:
             data:
               target_lights: >-
                 {{ target_lights_input.entity_id if target_lights_input.entity_id is defined else target_lights_input }}
-              custom_schedule_enabled: "{{ custom_schedule_enabled }}"
-              custom_s1_start: "{{ custom_s1_start }}"
-              custom_s2_start: "{{ custom_s2_start }}"
-              custom_s3_start: "{{ custom_s3_start }}"
-              custom_s4_start: "{{ custom_s4_start }}"
-
-      # --- scheduled_on/default_scene -> directly call scheduled_light_on with schedule overrides
+              # Scripts now handle schedule lookup internally via helpers
+              
+      # --- scheduled_on/default_scene -> directly call scheduled_light_on
       - conditions: "{{ action_key == 'scheduled_on' or action_key == 'default_scene' }}"
         sequence:
           - service: "script.scheduled_light_on"
             data:
-              custom_schedule_enabled: "{{ custom_schedule_enabled_input }}"
-              custom_s1_start: "{{ custom_s1_start_input }}"
-              custom_s2_start: "{{ custom_s2_start_input }}"
-              custom_s3_start: "{{ custom_s3_start_input }}"
-              custom_s4_start: "{{ custom_s4_start_input }}"
               fallback_lights: >-
                 {{ target_lights_input.entity_id if target_lights_input.entity_id is defined else target_lights_input }}
 

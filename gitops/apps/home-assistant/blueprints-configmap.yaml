@@ -136,93 +136,70 @@ data:
       room_key_var: !input room_key
       target_lights_var: !input target_lights
     
-      default_s1: "06:00:00"
-      default_s2: "09:00:00"
-      default_s3: "17:00:00"
-      default_s4: "22:00:00"
+      # Global Defaults
+      global_s1: "{{ states('input_datetime.global_morning_start') }}"
+      global_s2: "{{ states('input_datetime.global_day_start') }}"
+      global_s3: "{{ states('input_datetime.global_evening_start') }}"
+      global_s4: "{{ states('input_datetime.global_night_start') }}"
     
-      use_custom: >-
-        {{ custom_schedule_enabled_input is not none and
-           custom_schedule_enabled_input != '' and
-           is_state(custom_schedule_enabled_input, 'on') }}
-      
-      # Check if separate weekday/weekend times are enabled
-      morning_separate: >-
-        {% set helper = 'input_boolean.' ~ room_key_var ~ '_morning_separate_weekday_weekend' %}
-        {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
-      day_separate: >-
-        {% set helper = 'input_boolean.' ~ room_key_var ~ '_day_separate_weekday_weekend' %}
-        {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
-      evening_separate: >-
-        {% set helper = 'input_boolean.' ~ room_key_var ~ '_evening_separate_weekday_weekend' %}
-        {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
-      night_separate: >-
-        {% set helper = 'input_boolean.' ~ room_key_var ~ '_night_separate_weekday_weekend' %}
-        {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
-      # Check if today is a weekday (Mon-Fri) or weekend (Sat-Sun)
-      is_weekday: >-
-        {% set day = now().strftime('%A').lower() %}
-        {{ day in ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] }}
+      # Master Custom Switch
+      use_custom_schedule: >-
+        {% set helper = 'input_boolean.' ~ room_key_var ~ '_custom_schedule' %}
+        {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable', None, ''] else false }}
     
+      # Per-Slot Custom Switches
+      use_custom_s1: >-
+        {% set helper = 'input_boolean.' ~ room_key_var ~ '_morning_custom_time' %}
+        {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+      use_custom_s2: >-
+        {% set helper = 'input_boolean.' ~ room_key_var ~ '_day_custom_time' %}
+        {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+      use_custom_s3: >-
+        {% set helper = 'input_boolean.' ~ room_key_var ~ '_evening_custom_time' %}
+        {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+      use_custom_s4: >-
+        {% set helper = 'input_boolean.' ~ room_key_var ~ '_night_custom_time' %}
+        {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+    
+      # Resolve Times
       s1_str: >-
-        {% if use_custom %}
-          {% if morning_separate %}
-            {% if is_weekday %}
-              {% set v = states('input_datetime.' ~ room_key_var ~ '_s1_weekday_start') %}
-            {% else %}
-              {% set v = states('input_datetime.' ~ room_key_var ~ '_s1_weekend_start') %}
-            {% endif %}
-          {% else %}
-            {% set v = states(custom_s1_start_input) %}
-          {% endif %}
-          {% if v in ['unknown','unavailable',''] %}{{ default_s1 }}{% else %}{{ v }}{% endif %}
+        {% if use_custom_schedule and use_custom_s1 %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s1_start') %}
+          {{ v if v not in ['unknown', 'unavailable', '', None] else global_s1 }}
+        {% elif custom_s1_start_input is defined and custom_s1_start_input != '' %}
+           {{ states(custom_s1_start_input) }}
         {% else %}
-          {{ default_s1 }}
+           {{ global_s1 }}
         {% endif %}
+    
       s2_str: >-
-        {% if use_custom %}
-          {% if day_separate %}
-            {% if is_weekday %}
-              {% set v = states('input_datetime.' ~ room_key_var ~ '_s2_weekday_start') %}
-            {% else %}
-              {% set v = states('input_datetime.' ~ room_key_var ~ '_s2_weekend_start') %}
-            {% endif %}
-          {% else %}
-            {% set v = states(custom_s2_start_input) %}
-          {% endif %}
-          {% if v in ['unknown','unavailable',''] %}{{ default_s2 }}{% else %}{{ v }}{% endif %}
+        {% if use_custom_schedule and use_custom_s2 %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s2_start') %}
+          {{ v if v not in ['unknown', 'unavailable', '', None] else global_s2 }}
+        {% elif custom_s2_start_input is defined and custom_s2_start_input != '' %}
+           {{ states(custom_s2_start_input) }}
         {% else %}
-          {{ default_s2 }}
+           {{ global_s2 }}
         {% endif %}
+    
       s3_str: >-
-        {% if use_custom %}
-          {% if evening_separate %}
-            {% if is_weekday %}
-              {% set v = states('input_datetime.' ~ room_key_var ~ '_s3_weekday_start') %}
-            {% else %}
-              {% set v = states('input_datetime.' ~ room_key_var ~ '_s3_weekend_start') %}
-            {% endif %}
-          {% else %}
-            {% set v = states(custom_s3_start_input) %}
-          {% endif %}
-          {% if v in ['unknown','unavailable',''] %}{{ default_s3 }}{% else %}{{ v }}{% endif %}
+        {% if use_custom_schedule and use_custom_s3 %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s3_start') %}
+          {{ v if v not in ['unknown', 'unavailable', '', None] else global_s3 }}
+        {% elif custom_s3_start_input is defined and custom_s3_start_input != '' %}
+           {{ states(custom_s3_start_input) }}
         {% else %}
-          {{ default_s3 }}
+           {{ global_s3 }}
         {% endif %}
+    
       s4_str: >-
-        {% if use_custom %}
-          {% if night_separate %}
-            {% if is_weekday %}
-              {% set v = states('input_datetime.' ~ room_key_var ~ '_s4_weekday_start') %}
-            {% else %}
-              {% set v = states('input_datetime.' ~ room_key_var ~ '_s4_weekend_start') %}
-            {% endif %}
-          {% else %}
-            {% set v = states(custom_s4_start_input) %}
-          {% endif %}
-          {% if v in ['unknown','unavailable',''] %}{{ default_s4 }}{% else %}{{ v }}{% endif %}
+        {% if use_custom_schedule and use_custom_s4 %}
+          {% set v = states('input_datetime.' ~ room_key_var ~ '_s4_start') %}
+          {{ v if v not in ['unknown', 'unavailable', '', None] else global_s4 }}
+        {% elif custom_s4_start_input is defined and custom_s4_start_input != '' %}
+           {{ states(custom_s4_start_input) }}
         {% else %}
-          {{ default_s4 }}
+           {{ global_s4 }}
         {% endif %}
     
       now_ts: "{{ as_timestamp(now()) }}"
@@ -237,51 +214,20 @@ data:
         {% elif now_ts >= s3 and now_ts < s4 %}evening
         {% else %}night{% endif %}
     
-      # Check motion_activated helpers (per-time-window), fallback to blueprint inputs, then default to True
+      # Check motion_activated helpers (per-time-window)
       motion_activated_morning: >-
-        {% if morning_motion_activated_helper_input %}
-          {{ is_state(morning_motion_activated_helper_input, 'on') }}
-        {% else %}
-          {% if is_weekday %}
-            {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_morning_weekday' %}
-          {% else %}
-            {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_morning_weekend' %}
-          {% endif %}
-          {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else true }}
-        {% endif %}
+        {% set helper = 'input_boolean.' ~ room_key_var ~ '_morning_motion_enabled' %}
+        {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
       motion_activated_day: >-
-        {% if day_motion_activated_helper_input %}
-          {{ is_state(day_motion_activated_helper_input, 'on') }}
-        {% else %}
-          {% if is_weekday %}
-            {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_day_weekday' %}
-          {% else %}
-            {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_day_weekend' %}
-          {% endif %}
-          {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else true }}
-        {% endif %}
+        {% set helper = 'input_boolean.' ~ room_key_var ~ '_day_motion_enabled' %}
+        {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
       motion_activated_evening: >-
-        {% if evening_motion_activated_helper_input %}
-          {{ is_state(evening_motion_activated_helper_input, 'on') }}
-        {% else %}
-          {% if is_weekday %}
-            {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_evening_weekday' %}
-          {% else %}
-            {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_evening_weekend' %}
-          {% endif %}
-          {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else true }}
-        {% endif %}
+        {% set helper = 'input_boolean.' ~ room_key_var ~ '_evening_motion_enabled' %}
+        {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
       motion_activated_night: >-
-        {% if night_motion_activated_helper_input %}
-          {{ is_state(night_motion_activated_helper_input, 'on') }}
-        {% else %}
-          {% if is_weekday %}
-            {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_night_weekday' %}
-          {% else %}
-            {% set helper = 'input_boolean.motion_activated_' ~ room_key_var ~ '_night_weekend' %}
-          {% endif %}
-          {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else true }}
-        {% endif %}
+        {% set helper = 'input_boolean.' ~ room_key_var ~ '_night_motion_enabled' %}
+        {{ is_state(helper, 'on') if states(helper) not in ['unknown', 'unavailable'] else false }}
+    
     
       morning_auto_off_mins: >-
         {% if morning_auto_off_helper %}
@@ -411,11 +357,7 @@ data:
                   fallback_lights: "{{ _fb_var }}"
                   timer_mode: false
                   auto_on: true
-                  custom_schedule_enabled: "{{ custom_schedule_enabled_input if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none else '' }}"
-                  custom_s1_start: "{{ custom_s1_start_input if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none else '' }}"
-                  custom_s2_start: "{{ custom_s2_start_input if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none else '' }}"
-                  custom_s3_start: "{{ custom_s3_start_input if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none else '' }}"
-                  custom_s4_start: "{{ custom_s4_start_input if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none else '' }}"
+                  # Scripts now handle schedule lookup internally via helpers
     
           - conditions:
               - condition: "trigger"
@@ -899,22 +841,13 @@ data:
                 data:
                   target_lights: >-
                     {{ target_lights_input.entity_id if target_lights_input.entity_id is defined else target_lights_input }}
-                  custom_schedule_enabled: "{{ custom_schedule_enabled }}"
-                  custom_s1_start: "{{ custom_s1_start }}"
-                  custom_s2_start: "{{ custom_s2_start }}"
-                  custom_s3_start: "{{ custom_s3_start }}"
-                  custom_s4_start: "{{ custom_s4_start }}"
-    
-          # --- scheduled_on/default_scene -> directly call scheduled_light_on with schedule overrides
+                  # Scripts now handle schedule lookup internally via helpers
+                  
+          # --- scheduled_on/default_scene -> directly call scheduled_light_on
           - conditions: "{{ action_key == 'scheduled_on' or action_key == 'default_scene' }}"
             sequence:
               - service: "script.scheduled_light_on"
                 data:
-                  custom_schedule_enabled: "{{ custom_schedule_enabled_input }}"
-                  custom_s1_start: "{{ custom_s1_start_input }}"
-                  custom_s2_start: "{{ custom_s2_start_input }}"
-                  custom_s3_start: "{{ custom_s3_start_input }}"
-                  custom_s4_start: "{{ custom_s4_start_input }}"
                   fallback_lights: >-
                     {{ target_lights_input.entity_id if target_lights_input.entity_id is defined else target_lights_input }}
     

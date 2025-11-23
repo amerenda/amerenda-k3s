@@ -4,122 +4,61 @@
 
 bedroom_custom_schedule:
   name: Bedroom - Use custom schedule
+
+# Custom Time Toggles (Per Slot)
 bedroom_morning_custom_time:
   name: Bedroom - Use custom Morning time
-bedroom_morning_separate_weekday_weekend:
-  name: Bedroom - Morning separate weekday/weekend times
 bedroom_day_custom_time:
   name: Bedroom - Use custom Day time
-bedroom_day_separate_weekday_weekend:
-  name: Bedroom - Day separate weekday/weekend times
 bedroom_evening_custom_time:
   name: Bedroom - Use custom Evening time
-bedroom_evening_separate_weekday_weekend:
-  name: Bedroom - Evening separate weekday/weekend times
 bedroom_night_custom_time:
   name: Bedroom - Use custom Night time
-bedroom_night_separate_weekday_weekend:
-  name: Bedroom - Night separate weekday/weekend times
+
+# Master Feature Toggles
 bedroom_motion_enabled:
-  name: Bedroom - Motion Control Enabled
+  name: Bedroom - Motion Control Master Switch
 bedroom_timer_enabled:
-  name: Bedroom - Timer Control Enabled
+  name: Bedroom - Timer Control Master Switch
 bedroom_smooth_transition:
   name: Bedroom - Smooth Transition
   initial: true
 
-enable_bedroom_morning:
-  name: Bedroom - Timer Morning Enabled
-enable_bedroom_morning_weekday:
-  name: Bedroom - Timer Morning Enabled (Weekday)
+# Per-Slot Motion & Auto-On Configuration
+# Morning
+bedroom_morning_motion_enabled:
+  name: Bedroom - Morning Motion Enabled
+  initial: false
+bedroom_morning_auto_on_enabled:
+  name: Bedroom - Morning Auto-On Enabled
+  initial: false
+
+# Day
+bedroom_day_motion_enabled:
+  name: Bedroom - Day Motion Enabled
+  initial: false
+bedroom_day_auto_on_enabled:
+  name: Bedroom - Day Auto-On Enabled
+  initial: false
+
+# Evening
+bedroom_evening_motion_enabled:
+  name: Bedroom - Evening Motion Enabled
   initial: true
-enable_bedroom_morning_weekend:
-  name: Bedroom - Timer Morning Enabled (Weekend)
-  initial: true
-enable_bedroom_day:
-  name: Bedroom - Timer Day Enabled
-enable_bedroom_day_weekday:
-  name: Bedroom - Timer Day Enabled (Weekday)
-  initial: true
-enable_bedroom_day_weekend:
-  name: Bedroom - Timer Day Enabled (Weekend)
-  initial: true
-enable_bedroom_evening:
-  name: Bedroom - Timer Evening Enabled
-enable_bedroom_evening_weekday:
-  name: Bedroom - Timer Evening Enabled (Weekday)
-  initial: true
-enable_bedroom_evening_weekend:
-  name: Bedroom - Timer Evening Enabled (Weekend)
-  initial: true
-enable_bedroom_night:
-  name: Bedroom - Timer Night Enabled
-enable_bedroom_night_weekday:
-  name: Bedroom - Timer Night Enabled (Weekday)
-  initial: true
-enable_bedroom_night_weekend:
-  name: Bedroom - Timer Night Enabled (Weekend)
+bedroom_evening_auto_on_enabled:
+  name: Bedroom - Evening Auto-On Enabled
   initial: true
 
-auto_on_bedroom_morning:
-  name: Bedroom - Timer Morning Auto-on
-auto_on_bedroom_morning_weekday:
-  name: Bedroom - Timer Morning Auto-on (Weekday)
-auto_on_bedroom_morning_weekend:
-  name: Bedroom - Timer Morning Auto-on (Weekend)
-auto_on_bedroom_day:
-  name: Bedroom - Timer Day Auto-on
-auto_on_bedroom_day_weekday:
-  name: Bedroom - Timer Day Auto-on (Weekday)
-auto_on_bedroom_day_weekend:
-  name: Bedroom - Timer Day Auto-on (Weekend)
-auto_on_bedroom_evening:
-  name: Bedroom - Timer Evening Auto-on
-auto_on_bedroom_evening_weekday:
-  name: Bedroom - Timer Evening Auto-on (Weekday)
-auto_on_bedroom_evening_weekend:
-  name: Bedroom - Timer Evening Auto-on (Weekend)
-auto_on_bedroom_night:
-  name: Bedroom - Timer Night Auto-on
-auto_on_bedroom_night_weekday:
-  name: Bedroom - Timer Night Auto-on (Weekday)
-auto_on_bedroom_night_weekend:
-  name: Bedroom - Timer Night Auto-on (Weekend)
+# Night
+bedroom_night_motion_enabled:
+  name: Bedroom - Night Motion Enabled
+  initial: true
+bedroom_night_auto_on_enabled:
+  name: Bedroom - Night Auto-On Enabled
+  initial: false
 
-motion_activated_bedroom_morning:
-  name: Bedroom - Motion Morning Activated
-motion_activated_bedroom_morning_weekday:
-  name: Bedroom - Motion Morning Activated (Weekday)
-  initial: true
-motion_activated_bedroom_morning_weekend:
-  name: Bedroom - Motion Morning Activated (Weekend)
-  initial: true
-motion_activated_bedroom_day:
-  name: Bedroom - Motion Day Activated
-motion_activated_bedroom_day_weekday:
-  name: Bedroom - Motion Day Activated (Weekday)
-  initial: true
-motion_activated_bedroom_day_weekend:
-  name: Bedroom - Motion Day Activated (Weekend)
-  initial: true
-motion_activated_bedroom_evening:
-  name: Bedroom - Motion Evening Activated
-motion_activated_bedroom_evening_weekday:
-  name: Bedroom - Motion Evening Activated (Weekday)
-  initial: true
-motion_activated_bedroom_evening_weekend:
-  name: Bedroom - Motion Evening Activated (Weekend)
-  initial: true
-motion_activated_bedroom_night:
-  name: Bedroom - Motion Night Activated
-motion_activated_bedroom_night_weekday:
-  name: Bedroom - Motion Night Activated (Weekday)
-  initial: true
-motion_activated_bedroom_night_weekend:
-  name: Bedroom - Motion Night Activated (Weekend)
-  initial: true
-
-# Day-of-week helpers for morning slot
+# Day-of-week helpers (Keep these for granular day skipping if needed)
+# Morning
 bedroom_morning_sunday:
   name: Bedroom - Morning Sunday
   initial: true
@@ -142,7 +81,7 @@ bedroom_morning_saturday:
   name: Bedroom - Morning Saturday
   initial: true
 
-# Day-of-week helpers for day slot
+# Day
 bedroom_day_sunday:
   name: Bedroom - Day Sunday
   initial: true
@@ -165,7 +104,7 @@ bedroom_day_saturday:
   name: Bedroom - Day Saturday
   initial: true
 
-# Day-of-week helpers for evening slot
+# Evening
 bedroom_evening_sunday:
   name: Bedroom - Evening Sunday
   initial: true
@@ -188,7 +127,7 @@ bedroom_evening_saturday:
   name: Bedroom - Evening Saturday
   initial: true
 
-# Day-of-week helpers for night slot
+# Night
 bedroom_night_sunday:
   name: Bedroom - Night Sunday
   initial: true

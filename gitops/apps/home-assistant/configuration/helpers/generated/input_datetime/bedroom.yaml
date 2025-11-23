@@ -2,51 +2,23 @@
 # Usage:
 #   jinja2 input_datetime_template.yaml.j2 -D room=bedroom > input_datetime/bedroom.yaml
 
+# Custom Room Schedule Times (Used when bedroom_custom_schedule is ON)
 bedroom_s1_start:
   name: Bedroom Morning start
   has_time: true
   has_date: false
-bedroom_s1_weekday_start:
-  name: Bedroom Morning Weekday start
-  has_time: true
-  has_date: false
-bedroom_s1_weekend_start:
-  name: Bedroom Morning Weekend start
-  has_time: true
-  has_date: false
+
 bedroom_s2_start:
   name: Bedroom Day start
   has_time: true
   has_date: false
-bedroom_s2_weekday_start:
-  name: Bedroom Day Weekday start
-  has_time: true
-  has_date: false
-bedroom_s2_weekend_start:
-  name: Bedroom Day Weekend start
-  has_time: true
-  has_date: false
+
 bedroom_s3_start:
   name: Bedroom Evening start
   has_time: true
   has_date: false
-bedroom_s3_weekday_start:
-  name: Bedroom Evening Weekday start
-  has_time: true
-  has_date: false
-bedroom_s3_weekend_start:
-  name: Bedroom Evening Weekend start
-  has_time: true
-  has_date: false
+
 bedroom_s4_start:
   name: Bedroom Night start
-  has_time: true
-  has_date: false
-bedroom_s4_weekday_start:
-  name: Bedroom Night Weekday start
-  has_time: true
-  has_date: false
-bedroom_s4_weekend_start:
-  name: Bedroom Night Weekend start
   has_time: true
   has_date: false

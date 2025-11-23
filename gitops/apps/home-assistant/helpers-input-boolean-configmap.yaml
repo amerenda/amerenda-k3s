@@ -10,122 +10,61 @@ data:
     
     bathroom_custom_schedule:
       name: Bathroom - Use custom schedule
+    
+    # Custom Time Toggles (Per Slot)
     bathroom_morning_custom_time:
       name: Bathroom - Use custom Morning time
-    bathroom_morning_separate_weekday_weekend:
-      name: Bathroom - Morning separate weekday/weekend times
     bathroom_day_custom_time:
       name: Bathroom - Use custom Day time
-    bathroom_day_separate_weekday_weekend:
-      name: Bathroom - Day separate weekday/weekend times
     bathroom_evening_custom_time:
       name: Bathroom - Use custom Evening time
-    bathroom_evening_separate_weekday_weekend:
-      name: Bathroom - Evening separate weekday/weekend times
     bathroom_night_custom_time:
       name: Bathroom - Use custom Night time
-    bathroom_night_separate_weekday_weekend:
-      name: Bathroom - Night separate weekday/weekend times
+    
+    # Master Feature Toggles
     bathroom_motion_enabled:
-      name: Bathroom - Motion Control Enabled
+      name: Bathroom - Motion Control Master Switch
     bathroom_timer_enabled:
-      name: Bathroom - Timer Control Enabled
+      name: Bathroom - Timer Control Master Switch
     bathroom_smooth_transition:
       name: Bathroom - Smooth Transition
       initial: true
     
-    enable_bathroom_morning:
-      name: Bathroom - Timer Morning Enabled
-    enable_bathroom_morning_weekday:
-      name: Bathroom - Timer Morning Enabled (Weekday)
+    # Per-Slot Motion & Auto-On Configuration
+    # Morning
+    bathroom_morning_motion_enabled:
+      name: Bathroom - Morning Motion Enabled
+      initial: false
+    bathroom_morning_auto_on_enabled:
+      name: Bathroom - Morning Auto-On Enabled
+      initial: false
+    
+    # Day
+    bathroom_day_motion_enabled:
+      name: Bathroom - Day Motion Enabled
+      initial: false
+    bathroom_day_auto_on_enabled:
+      name: Bathroom - Day Auto-On Enabled
+      initial: false
+    
+    # Evening
+    bathroom_evening_motion_enabled:
+      name: Bathroom - Evening Motion Enabled
       initial: true
-    enable_bathroom_morning_weekend:
-      name: Bathroom - Timer Morning Enabled (Weekend)
-      initial: true
-    enable_bathroom_day:
-      name: Bathroom - Timer Day Enabled
-    enable_bathroom_day_weekday:
-      name: Bathroom - Timer Day Enabled (Weekday)
-      initial: true
-    enable_bathroom_day_weekend:
-      name: Bathroom - Timer Day Enabled (Weekend)
-      initial: true
-    enable_bathroom_evening:
-      name: Bathroom - Timer Evening Enabled
-    enable_bathroom_evening_weekday:
-      name: Bathroom - Timer Evening Enabled (Weekday)
-      initial: true
-    enable_bathroom_evening_weekend:
-      name: Bathroom - Timer Evening Enabled (Weekend)
-      initial: true
-    enable_bathroom_night:
-      name: Bathroom - Timer Night Enabled
-    enable_bathroom_night_weekday:
-      name: Bathroom - Timer Night Enabled (Weekday)
-      initial: true
-    enable_bathroom_night_weekend:
-      name: Bathroom - Timer Night Enabled (Weekend)
+    bathroom_evening_auto_on_enabled:
+      name: Bathroom - Evening Auto-On Enabled
       initial: true
     
-    auto_on_bathroom_morning:
-      name: Bathroom - Timer Morning Auto-on
-    auto_on_bathroom_morning_weekday:
-      name: Bathroom - Timer Morning Auto-on (Weekday)
-    auto_on_bathroom_morning_weekend:
-      name: Bathroom - Timer Morning Auto-on (Weekend)
-    auto_on_bathroom_day:
-      name: Bathroom - Timer Day Auto-on
-    auto_on_bathroom_day_weekday:
-      name: Bathroom - Timer Day Auto-on (Weekday)
-    auto_on_bathroom_day_weekend:
-      name: Bathroom - Timer Day Auto-on (Weekend)
-    auto_on_bathroom_evening:
-      name: Bathroom - Timer Evening Auto-on
-    auto_on_bathroom_evening_weekday:
-      name: Bathroom - Timer Evening Auto-on (Weekday)
-    auto_on_bathroom_evening_weekend:
-      name: Bathroom - Timer Evening Auto-on (Weekend)
-    auto_on_bathroom_night:
-      name: Bathroom - Timer Night Auto-on
-    auto_on_bathroom_night_weekday:
-      name: Bathroom - Timer Night Auto-on (Weekday)
-    auto_on_bathroom_night_weekend:
-      name: Bathroom - Timer Night Auto-on (Weekend)
+    # Night
+    bathroom_night_motion_enabled:
+      name: Bathroom - Night Motion Enabled
+      initial: true
+    bathroom_night_auto_on_enabled:
+      name: Bathroom - Night Auto-On Enabled
+      initial: false
     
-    motion_activated_bathroom_morning:
-      name: Bathroom - Motion Morning Activated
-    motion_activated_bathroom_morning_weekday:
-      name: Bathroom - Motion Morning Activated (Weekday)
-      initial: true
-    motion_activated_bathroom_morning_weekend:
-      name: Bathroom - Motion Morning Activated (Weekend)
-      initial: true
-    motion_activated_bathroom_day:
-      name: Bathroom - Motion Day Activated
-    motion_activated_bathroom_day_weekday:
-      name: Bathroom - Motion Day Activated (Weekday)
-      initial: true
-    motion_activated_bathroom_day_weekend:
-      name: Bathroom - Motion Day Activated (Weekend)
-      initial: true
-    motion_activated_bathroom_evening:
-      name: Bathroom - Motion Evening Activated
-    motion_activated_bathroom_evening_weekday:
-      name: Bathroom - Motion Evening Activated (Weekday)
-      initial: true
-    motion_activated_bathroom_evening_weekend:
-      name: Bathroom - Motion Evening Activated (Weekend)
-      initial: true
-    motion_activated_bathroom_night:
-      name: Bathroom - Motion Night Activated
-    motion_activated_bathroom_night_weekday:
-      name: Bathroom - Motion Night Activated (Weekday)
-      initial: true
-    motion_activated_bathroom_night_weekend:
-      name: Bathroom - Motion Night Activated (Weekend)
-      initial: true
-    
-    # Day-of-week helpers for morning slot
+    # Day-of-week helpers (Keep these for granular day skipping if needed)
+    # Morning
     bathroom_morning_sunday:
       name: Bathroom - Morning Sunday
       initial: true
@@ -148,7 +87,7 @@ data:
       name: Bathroom - Morning Saturday
       initial: true
     
-    # Day-of-week helpers for day slot
+    # Day
     bathroom_day_sunday:
       name: Bathroom - Day Sunday
       initial: true
@@ -171,7 +110,7 @@ data:
       name: Bathroom - Day Saturday
       initial: true
     
-    # Day-of-week helpers for evening slot
+    # Evening
     bathroom_evening_sunday:
       name: Bathroom - Evening Sunday
       initial: true
@@ -194,7 +133,7 @@ data:
       name: Bathroom - Evening Saturday
       initial: true
     
-    # Day-of-week helpers for night slot
+    # Night
     bathroom_night_sunday:
       name: Bathroom - Night Sunday
       initial: true
@@ -223,122 +162,61 @@ data:
     
     bedroom_custom_schedule:
       name: Bedroom - Use custom schedule
+    
+    # Custom Time Toggles (Per Slot)
     bedroom_morning_custom_time:
       name: Bedroom - Use custom Morning time
-    bedroom_morning_separate_weekday_weekend:
-      name: Bedroom - Morning separate weekday/weekend times
     bedroom_day_custom_time:
       name: Bedroom - Use custom Day time
-    bedroom_day_separate_weekday_weekend:
-      name: Bedroom - Day separate weekday/weekend times
     bedroom_evening_custom_time:
       name: Bedroom - Use custom Evening time
-    bedroom_evening_separate_weekday_weekend:
-      name: Bedroom - Evening separate weekday/weekend times
     bedroom_night_custom_time:
       name: Bedroom - Use custom Night time
-    bedroom_night_separate_weekday_weekend:
-      name: Bedroom - Night separate weekday/weekend times
+    
+    # Master Feature Toggles
     bedroom_motion_enabled:
-      name: Bedroom - Motion Control Enabled
+      name: Bedroom - Motion Control Master Switch
     bedroom_timer_enabled:
-      name: Bedroom - Timer Control Enabled
+      name: Bedroom - Timer Control Master Switch
     bedroom_smooth_transition:
       name: Bedroom - Smooth Transition
       initial: true
     
-    enable_bedroom_morning:
-      name: Bedroom - Timer Morning Enabled
-    enable_bedroom_morning_weekday:
-      name: Bedroom - Timer Morning Enabled (Weekday)
+    # Per-Slot Motion & Auto-On Configuration
+    # Morning
+    bedroom_morning_motion_enabled:
+      name: Bedroom - Morning Motion Enabled
+      initial: false
+    bedroom_morning_auto_on_enabled:
+      name: Bedroom - Morning Auto-On Enabled
+      initial: false
+    
+    # Day
+    bedroom_day_motion_enabled:
+      name: Bedroom - Day Motion Enabled
+      initial: false
+    bedroom_day_auto_on_enabled:
+      name: Bedroom - Day Auto-On Enabled
+      initial: false
+    
+    # Evening
+    bedroom_evening_motion_enabled:
+      name: Bedroom - Evening Motion Enabled
       initial: true
-    enable_bedroom_morning_weekend:
-      name: Bedroom - Timer Morning Enabled (Weekend)
-      initial: true
-    enable_bedroom_day:
-      name: Bedroom - Timer Day Enabled
-    enable_bedroom_day_weekday:
-      name: Bedroom - Timer Day Enabled (Weekday)
-      initial: true
-    enable_bedroom_day_weekend:
-      name: Bedroom - Timer Day Enabled (Weekend)
-      initial: true
-    enable_bedroom_evening:
-      name: Bedroom - Timer Evening Enabled
-    enable_bedroom_evening_weekday:
-      name: Bedroom - Timer Evening Enabled (Weekday)
-      initial: true
-    enable_bedroom_evening_weekend:
-      name: Bedroom - Timer Evening Enabled (Weekend)
-      initial: true
-    enable_bedroom_night:
-      name: Bedroom - Timer Night Enabled
-    enable_bedroom_night_weekday:
-      name: Bedroom - Timer Night Enabled (Weekday)
-      initial: true
-    enable_bedroom_night_weekend:
-      name: Bedroom - Timer Night Enabled (Weekend)
+    bedroom_evening_auto_on_enabled:
+      name: Bedroom - Evening Auto-On Enabled
       initial: true
     
-    auto_on_bedroom_morning:
-      name: Bedroom - Timer Morning Auto-on
-    auto_on_bedroom_morning_weekday:
-      name: Bedroom - Timer Morning Auto-on (Weekday)
-    auto_on_bedroom_morning_weekend:
-      name: Bedroom - Timer Morning Auto-on (Weekend)
-    auto_on_bedroom_day:
-      name: Bedroom - Timer Day Auto-on
-    auto_on_bedroom_day_weekday:
-      name: Bedroom - Timer Day Auto-on (Weekday)
-    auto_on_bedroom_day_weekend:
-      name: Bedroom - Timer Day Auto-on (Weekend)
-    auto_on_bedroom_evening:
-      name: Bedroom - Timer Evening Auto-on
-    auto_on_bedroom_evening_weekday:
-      name: Bedroom - Timer Evening Auto-on (Weekday)
-    auto_on_bedroom_evening_weekend:
-      name: Bedroom - Timer Evening Auto-on (Weekend)
-    auto_on_bedroom_night:
-      name: Bedroom - Timer Night Auto-on
-    auto_on_bedroom_night_weekday:
-      name: Bedroom - Timer Night Auto-on (Weekday)
-    auto_on_bedroom_night_weekend:
-      name: Bedroom - Timer Night Auto-on (Weekend)
+    # Night
+    bedroom_night_motion_enabled:
+      name: Bedroom - Night Motion Enabled
+      initial: true
+    bedroom_night_auto_on_enabled:
+      name: Bedroom - Night Auto-On Enabled
+      initial: false
     
-    motion_activated_bedroom_morning:
-      name: Bedroom - Motion Morning Activated
-    motion_activated_bedroom_morning_weekday:
-      name: Bedroom - Motion Morning Activated (Weekday)
-      initial: true
-    motion_activated_bedroom_morning_weekend:
-      name: Bedroom - Motion Morning Activated (Weekend)
-      initial: true
-    motion_activated_bedroom_day:
-      name: Bedroom - Motion Day Activated
-    motion_activated_bedroom_day_weekday:
-      name: Bedroom - Motion Day Activated (Weekday)
-      initial: true
-    motion_activated_bedroom_day_weekend:
-      name: Bedroom - Motion Day Activated (Weekend)
-      initial: true
-    motion_activated_bedroom_evening:
-      name: Bedroom - Motion Evening Activated
-    motion_activated_bedroom_evening_weekday:
-      name: Bedroom - Motion Evening Activated (Weekday)
-      initial: true
-    motion_activated_bedroom_evening_weekend:
-      name: Bedroom - Motion Evening Activated (Weekend)
-      initial: true
-    motion_activated_bedroom_night:
-      name: Bedroom - Motion Night Activated
-    motion_activated_bedroom_night_weekday:
-      name: Bedroom - Motion Night Activated (Weekday)
-      initial: true
-    motion_activated_bedroom_night_weekend:
-      name: Bedroom - Motion Night Activated (Weekend)
-      initial: true
-    
-    # Day-of-week helpers for morning slot
+    # Day-of-week helpers (Keep these for granular day skipping if needed)
+    # Morning
     bedroom_morning_sunday:
       name: Bedroom - Morning Sunday
       initial: true
@@ -361,7 +239,7 @@ data:
       name: Bedroom - Morning Saturday
       initial: true
     
-    # Day-of-week helpers for day slot
+    # Day
     bedroom_day_sunday:
       name: Bedroom - Day Sunday
       initial: true
@@ -384,7 +262,7 @@ data:
       name: Bedroom - Day Saturday
       initial: true
     
-    # Day-of-week helpers for evening slot
+    # Evening
     bedroom_evening_sunday:
       name: Bedroom - Evening Sunday
       initial: true
@@ -407,7 +285,7 @@ data:
       name: Bedroom - Evening Saturday
       initial: true
     
-    # Day-of-week helpers for night slot
+    # Night
     bedroom_night_sunday:
       name: Bedroom - Night Sunday
       initial: true
@@ -436,122 +314,61 @@ data:
     
     hallway_custom_schedule:
       name: Hallway - Use custom schedule
+    
+    # Custom Time Toggles (Per Slot)
     hallway_morning_custom_time:
       name: Hallway - Use custom Morning time
-    hallway_morning_separate_weekday_weekend:
-      name: Hallway - Morning separate weekday/weekend times
     hallway_day_custom_time:
       name: Hallway - Use custom Day time
-    hallway_day_separate_weekday_weekend:
-      name: Hallway - Day separate weekday/weekend times
     hallway_evening_custom_time:
       name: Hallway - Use custom Evening time
-    hallway_evening_separate_weekday_weekend:
-      name: Hallway - Evening separate weekday/weekend times
     hallway_night_custom_time:
       name: Hallway - Use custom Night time
-    hallway_night_separate_weekday_weekend:
-      name: Hallway - Night separate weekday/weekend times
+    
+    # Master Feature Toggles
     hallway_motion_enabled:
-      name: Hallway - Motion Control Enabled
+      name: Hallway - Motion Control Master Switch
     hallway_timer_enabled:
-      name: Hallway - Timer Control Enabled
+      name: Hallway - Timer Control Master Switch
     hallway_smooth_transition:
       name: Hallway - Smooth Transition
       initial: true
     
-    enable_hallway_morning:
-      name: Hallway - Timer Morning Enabled
-    enable_hallway_morning_weekday:
-      name: Hallway - Timer Morning Enabled (Weekday)
+    # Per-Slot Motion & Auto-On Configuration
+    # Morning
+    hallway_morning_motion_enabled:
+      name: Hallway - Morning Motion Enabled
+      initial: false
+    hallway_morning_auto_on_enabled:
+      name: Hallway - Morning Auto-On Enabled
+      initial: false
+    
+    # Day
+    hallway_day_motion_enabled:
+      name: Hallway - Day Motion Enabled
+      initial: false
+    hallway_day_auto_on_enabled:
+      name: Hallway - Day Auto-On Enabled
+      initial: false
+    
+    # Evening
+    hallway_evening_motion_enabled:
+      name: Hallway - Evening Motion Enabled
       initial: true
-    enable_hallway_morning_weekend:
-      name: Hallway - Timer Morning Enabled (Weekend)
-      initial: true
-    enable_hallway_day:
-      name: Hallway - Timer Day Enabled
-    enable_hallway_day_weekday:
-      name: Hallway - Timer Day Enabled (Weekday)
-      initial: true
-    enable_hallway_day_weekend:
-      name: Hallway - Timer Day Enabled (Weekend)
-      initial: true
-    enable_hallway_evening:
-      name: Hallway - Timer Evening Enabled
-    enable_hallway_evening_weekday:
-      name: Hallway - Timer Evening Enabled (Weekday)
-      initial: true
-    enable_hallway_evening_weekend:
-      name: Hallway - Timer Evening Enabled (Weekend)
-      initial: true
-    enable_hallway_night:
-      name: Hallway - Timer Night Enabled
-    enable_hallway_night_weekday:
-      name: Hallway - Timer Night Enabled (Weekday)
-      initial: true
-    enable_hallway_night_weekend:
-      name: Hallway - Timer Night Enabled (Weekend)
+    hallway_evening_auto_on_enabled:
+      name: Hallway - Evening Auto-On Enabled
       initial: true
     
-    auto_on_hallway_morning:
-      name: Hallway - Timer Morning Auto-on
-    auto_on_hallway_morning_weekday:
-      name: Hallway - Timer Morning Auto-on (Weekday)
-    auto_on_hallway_morning_weekend:
-      name: Hallway - Timer Morning Auto-on (Weekend)
-    auto_on_hallway_day:
-      name: Hallway - Timer Day Auto-on
-    auto_on_hallway_day_weekday:
-      name: Hallway - Timer Day Auto-on (Weekday)
-    auto_on_hallway_day_weekend:
-      name: Hallway - Timer Day Auto-on (Weekend)
-    auto_on_hallway_evening:
-      name: Hallway - Timer Evening Auto-on
-    auto_on_hallway_evening_weekday:
-      name: Hallway - Timer Evening Auto-on (Weekday)
-    auto_on_hallway_evening_weekend:
-      name: Hallway - Timer Evening Auto-on (Weekend)
-    auto_on_hallway_night:
-      name: Hallway - Timer Night Auto-on
-    auto_on_hallway_night_weekday:
-      name: Hallway - Timer Night Auto-on (Weekday)
-    auto_on_hallway_night_weekend:
-      name: Hallway - Timer Night Auto-on (Weekend)
+    # Night
+    hallway_night_motion_enabled:
+      name: Hallway - Night Motion Enabled
+      initial: true
+    hallway_night_auto_on_enabled:
+      name: Hallway - Night Auto-On Enabled
+      initial: false
     
-    motion_activated_hallway_morning:
-      name: Hallway - Motion Morning Activated
-    motion_activated_hallway_morning_weekday:
-      name: Hallway - Motion Morning Activated (Weekday)
-      initial: true
-    motion_activated_hallway_morning_weekend:
-      name: Hallway - Motion Morning Activated (Weekend)
-      initial: true
-    motion_activated_hallway_day:
-      name: Hallway - Motion Day Activated
-    motion_activated_hallway_day_weekday:
-      name: Hallway - Motion Day Activated (Weekday)
-      initial: true
-    motion_activated_hallway_day_weekend:
-      name: Hallway - Motion Day Activated (Weekend)
-      initial: true
-    motion_activated_hallway_evening:
-      name: Hallway - Motion Evening Activated
-    motion_activated_hallway_evening_weekday:
-      name: Hallway - Motion Evening Activated (Weekday)
-      initial: true
-    motion_activated_hallway_evening_weekend:
-      name: Hallway - Motion Evening Activated (Weekend)
-      initial: true
-    motion_activated_hallway_night:
-      name: Hallway - Motion Night Activated
-    motion_activated_hallway_night_weekday:
-      name: Hallway - Motion Night Activated (Weekday)
-      initial: true
-    motion_activated_hallway_night_weekend:
-      name: Hallway - Motion Night Activated (Weekend)
-      initial: true
-    
-    # Day-of-week helpers for morning slot
+    # Day-of-week helpers (Keep these for granular day skipping if needed)
+    # Morning
     hallway_morning_sunday:
       name: Hallway - Morning Sunday
       initial: true
@@ -574,7 +391,7 @@ data:
       name: Hallway - Morning Saturday
       initial: true
     
-    # Day-of-week helpers for day slot
+    # Day
     hallway_day_sunday:
       name: Hallway - Day Sunday
       initial: true
@@ -597,7 +414,7 @@ data:
       name: Hallway - Day Saturday
       initial: true
     
-    # Day-of-week helpers for evening slot
+    # Evening
     hallway_evening_sunday:
       name: Hallway - Evening Sunday
       initial: true
@@ -620,7 +437,7 @@ data:
       name: Hallway - Evening Saturday
       initial: true
     
-    # Day-of-week helpers for night slot
+    # Night
     hallway_night_sunday:
       name: Hallway - Night Sunday
       initial: true
@@ -649,122 +466,61 @@ data:
     
     kitchen_custom_schedule:
       name: Kitchen - Use custom schedule
+    
+    # Custom Time Toggles (Per Slot)
     kitchen_morning_custom_time:
       name: Kitchen - Use custom Morning time
-    kitchen_morning_separate_weekday_weekend:
-      name: Kitchen - Morning separate weekday/weekend times
     kitchen_day_custom_time:
       name: Kitchen - Use custom Day time
-    kitchen_day_separate_weekday_weekend:
-      name: Kitchen - Day separate weekday/weekend times
     kitchen_evening_custom_time:
       name: Kitchen - Use custom Evening time
-    kitchen_evening_separate_weekday_weekend:
-      name: Kitchen - Evening separate weekday/weekend times
     kitchen_night_custom_time:
       name: Kitchen - Use custom Night time
-    kitchen_night_separate_weekday_weekend:
-      name: Kitchen - Night separate weekday/weekend times
+    
+    # Master Feature Toggles
     kitchen_motion_enabled:
-      name: Kitchen - Motion Control Enabled
+      name: Kitchen - Motion Control Master Switch
     kitchen_timer_enabled:
-      name: Kitchen - Timer Control Enabled
+      name: Kitchen - Timer Control Master Switch
     kitchen_smooth_transition:
       name: Kitchen - Smooth Transition
       initial: true
     
-    enable_kitchen_morning:
-      name: Kitchen - Timer Morning Enabled
-    enable_kitchen_morning_weekday:
-      name: Kitchen - Timer Morning Enabled (Weekday)
+    # Per-Slot Motion & Auto-On Configuration
+    # Morning
+    kitchen_morning_motion_enabled:
+      name: Kitchen - Morning Motion Enabled
+      initial: false
+    kitchen_morning_auto_on_enabled:
+      name: Kitchen - Morning Auto-On Enabled
+      initial: false
+    
+    # Day
+    kitchen_day_motion_enabled:
+      name: Kitchen - Day Motion Enabled
+      initial: false
+    kitchen_day_auto_on_enabled:
+      name: Kitchen - Day Auto-On Enabled
+      initial: false
+    
+    # Evening
+    kitchen_evening_motion_enabled:
+      name: Kitchen - Evening Motion Enabled
       initial: true
-    enable_kitchen_morning_weekend:
-      name: Kitchen - Timer Morning Enabled (Weekend)
-      initial: true
-    enable_kitchen_day:
-      name: Kitchen - Timer Day Enabled
-    enable_kitchen_day_weekday:
-      name: Kitchen - Timer Day Enabled (Weekday)
-      initial: true
-    enable_kitchen_day_weekend:
-      name: Kitchen - Timer Day Enabled (Weekend)
-      initial: true
-    enable_kitchen_evening:
-      name: Kitchen - Timer Evening Enabled
-    enable_kitchen_evening_weekday:
-      name: Kitchen - Timer Evening Enabled (Weekday)
-      initial: true
-    enable_kitchen_evening_weekend:
-      name: Kitchen - Timer Evening Enabled (Weekend)
-      initial: true
-    enable_kitchen_night:
-      name: Kitchen - Timer Night Enabled
-    enable_kitchen_night_weekday:
-      name: Kitchen - Timer Night Enabled (Weekday)
-      initial: true
-    enable_kitchen_night_weekend:
-      name: Kitchen - Timer Night Enabled (Weekend)
+    kitchen_evening_auto_on_enabled:
+      name: Kitchen - Evening Auto-On Enabled
       initial: true
     
-    auto_on_kitchen_morning:
-      name: Kitchen - Timer Morning Auto-on
-    auto_on_kitchen_morning_weekday:
-      name: Kitchen - Timer Morning Auto-on (Weekday)
-    auto_on_kitchen_morning_weekend:
-      name: Kitchen - Timer Morning Auto-on (Weekend)
-    auto_on_kitchen_day:
-      name: Kitchen - Timer Day Auto-on
-    auto_on_kitchen_day_weekday:
-      name: Kitchen - Timer Day Auto-on (Weekday)
-    auto_on_kitchen_day_weekend:
-      name: Kitchen - Timer Day Auto-on (Weekend)
-    auto_on_kitchen_evening:
-      name: Kitchen - Timer Evening Auto-on
-    auto_on_kitchen_evening_weekday:
-      name: Kitchen - Timer Evening Auto-on (Weekday)
-    auto_on_kitchen_evening_weekend:
-      name: Kitchen - Timer Evening Auto-on (Weekend)
-    auto_on_kitchen_night:
-      name: Kitchen - Timer Night Auto-on
-    auto_on_kitchen_night_weekday:
-      name: Kitchen - Timer Night Auto-on (Weekday)
-    auto_on_kitchen_night_weekend:
-      name: Kitchen - Timer Night Auto-on (Weekend)
+    # Night
+    kitchen_night_motion_enabled:
+      name: Kitchen - Night Motion Enabled
+      initial: true
+    kitchen_night_auto_on_enabled:
+      name: Kitchen - Night Auto-On Enabled
+      initial: false
     
-    motion_activated_kitchen_morning:
-      name: Kitchen - Motion Morning Activated
-    motion_activated_kitchen_morning_weekday:
-      name: Kitchen - Motion Morning Activated (Weekday)
-      initial: true
-    motion_activated_kitchen_morning_weekend:
-      name: Kitchen - Motion Morning Activated (Weekend)
-      initial: true
-    motion_activated_kitchen_day:
-      name: Kitchen - Motion Day Activated
-    motion_activated_kitchen_day_weekday:
-      name: Kitchen - Motion Day Activated (Weekday)
-      initial: true
-    motion_activated_kitchen_day_weekend:
-      name: Kitchen - Motion Day Activated (Weekend)
-      initial: true
-    motion_activated_kitchen_evening:
-      name: Kitchen - Motion Evening Activated
-    motion_activated_kitchen_evening_weekday:
-      name: Kitchen - Motion Evening Activated (Weekday)
-      initial: true
-    motion_activated_kitchen_evening_weekend:
-      name: Kitchen - Motion Evening Activated (Weekend)
-      initial: true
-    motion_activated_kitchen_night:
-      name: Kitchen - Motion Night Activated
-    motion_activated_kitchen_night_weekday:
-      name: Kitchen - Motion Night Activated (Weekday)
-      initial: true
-    motion_activated_kitchen_night_weekend:
-      name: Kitchen - Motion Night Activated (Weekend)
-      initial: true
-    
-    # Day-of-week helpers for morning slot
+    # Day-of-week helpers (Keep these for granular day skipping if needed)
+    # Morning
     kitchen_morning_sunday:
       name: Kitchen - Morning Sunday
       initial: true
@@ -787,7 +543,7 @@ data:
       name: Kitchen - Morning Saturday
       initial: true
     
-    # Day-of-week helpers for day slot
+    # Day
     kitchen_day_sunday:
       name: Kitchen - Day Sunday
       initial: true
@@ -810,7 +566,7 @@ data:
       name: Kitchen - Day Saturday
       initial: true
     
-    # Day-of-week helpers for evening slot
+    # Evening
     kitchen_evening_sunday:
       name: Kitchen - Evening Sunday
       initial: true
@@ -833,7 +589,7 @@ data:
       name: Kitchen - Evening Saturday
       initial: true
     
-    # Day-of-week helpers for night slot
+    # Night
     kitchen_night_sunday:
       name: Kitchen - Night Sunday
       initial: true
@@ -862,122 +618,61 @@ data:
     
     living_room_custom_schedule:
       name: Living Room - Use custom schedule
+    
+    # Custom Time Toggles (Per Slot)
     living_room_morning_custom_time:
       name: Living Room - Use custom Morning time
-    living_room_morning_separate_weekday_weekend:
-      name: Living Room - Morning separate weekday/weekend times
     living_room_day_custom_time:
       name: Living Room - Use custom Day time
-    living_room_day_separate_weekday_weekend:
-      name: Living Room - Day separate weekday/weekend times
     living_room_evening_custom_time:
       name: Living Room - Use custom Evening time
-    living_room_evening_separate_weekday_weekend:
-      name: Living Room - Evening separate weekday/weekend times
     living_room_night_custom_time:
       name: Living Room - Use custom Night time
-    living_room_night_separate_weekday_weekend:
-      name: Living Room - Night separate weekday/weekend times
+    
+    # Master Feature Toggles
     living_room_motion_enabled:
-      name: Living Room - Motion Control Enabled
+      name: Living Room - Motion Control Master Switch
     living_room_timer_enabled:
-      name: Living Room - Timer Control Enabled
+      name: Living Room - Timer Control Master Switch
     living_room_smooth_transition:
       name: Living Room - Smooth Transition
       initial: true
     
-    enable_living_room_morning:
-      name: Living Room - Timer Morning Enabled
-    enable_living_room_morning_weekday:
-      name: Living Room - Timer Morning Enabled (Weekday)
+    # Per-Slot Motion & Auto-On Configuration
+    # Morning
+    living_room_morning_motion_enabled:
+      name: Living Room - Morning Motion Enabled
+      initial: false
+    living_room_morning_auto_on_enabled:
+      name: Living Room - Morning Auto-On Enabled
+      initial: false
+    
+    # Day
+    living_room_day_motion_enabled:
+      name: Living Room - Day Motion Enabled
+      initial: false
+    living_room_day_auto_on_enabled:
+      name: Living Room - Day Auto-On Enabled
+      initial: false
+    
+    # Evening
+    living_room_evening_motion_enabled:
+      name: Living Room - Evening Motion Enabled
       initial: true
-    enable_living_room_morning_weekend:
-      name: Living Room - Timer Morning Enabled (Weekend)
-      initial: true
-    enable_living_room_day:
-      name: Living Room - Timer Day Enabled
-    enable_living_room_day_weekday:
-      name: Living Room - Timer Day Enabled (Weekday)
-      initial: true
-    enable_living_room_day_weekend:
-      name: Living Room - Timer Day Enabled (Weekend)
-      initial: true
-    enable_living_room_evening:
-      name: Living Room - Timer Evening Enabled
-    enable_living_room_evening_weekday:
-      name: Living Room - Timer Evening Enabled (Weekday)
-      initial: true
-    enable_living_room_evening_weekend:
-      name: Living Room - Timer Evening Enabled (Weekend)
-      initial: true
-    enable_living_room_night:
-      name: Living Room - Timer Night Enabled
-    enable_living_room_night_weekday:
-      name: Living Room - Timer Night Enabled (Weekday)
-      initial: true
-    enable_living_room_night_weekend:
-      name: Living Room - Timer Night Enabled (Weekend)
+    living_room_evening_auto_on_enabled:
+      name: Living Room - Evening Auto-On Enabled
       initial: true
     
-    auto_on_living_room_morning:
-      name: Living Room - Timer Morning Auto-on
-    auto_on_living_room_morning_weekday:
-      name: Living Room - Timer Morning Auto-on (Weekday)
-    auto_on_living_room_morning_weekend:
-      name: Living Room - Timer Morning Auto-on (Weekend)
-    auto_on_living_room_day:
-      name: Living Room - Timer Day Auto-on
-    auto_on_living_room_day_weekday:
-      name: Living Room - Timer Day Auto-on (Weekday)
-    auto_on_living_room_day_weekend:
-      name: Living Room - Timer Day Auto-on (Weekend)
-    auto_on_living_room_evening:
-      name: Living Room - Timer Evening Auto-on
-    auto_on_living_room_evening_weekday:
-      name: Living Room - Timer Evening Auto-on (Weekday)
-    auto_on_living_room_evening_weekend:
-      name: Living Room - Timer Evening Auto-on (Weekend)
-    auto_on_living_room_night:
-      name: Living Room - Timer Night Auto-on
-    auto_on_living_room_night_weekday:
-      name: Living Room - Timer Night Auto-on (Weekday)
-    auto_on_living_room_night_weekend:
-      name: Living Room - Timer Night Auto-on (Weekend)
+    # Night
+    living_room_night_motion_enabled:
+      name: Living Room - Night Motion Enabled
+      initial: true
+    living_room_night_auto_on_enabled:
+      name: Living Room - Night Auto-On Enabled
+      initial: false
     
-    motion_activated_living_room_morning:
-      name: Living Room - Motion Morning Activated
-    motion_activated_living_room_morning_weekday:
-      name: Living Room - Motion Morning Activated (Weekday)
-      initial: true
-    motion_activated_living_room_morning_weekend:
-      name: Living Room - Motion Morning Activated (Weekend)
-      initial: true
-    motion_activated_living_room_day:
-      name: Living Room - Motion Day Activated
-    motion_activated_living_room_day_weekday:
-      name: Living Room - Motion Day Activated (Weekday)
-      initial: true
-    motion_activated_living_room_day_weekend:
-      name: Living Room - Motion Day Activated (Weekend)
-      initial: true
-    motion_activated_living_room_evening:
-      name: Living Room - Motion Evening Activated
-    motion_activated_living_room_evening_weekday:
-      name: Living Room - Motion Evening Activated (Weekday)
-      initial: true
-    motion_activated_living_room_evening_weekend:
-      name: Living Room - Motion Evening Activated (Weekend)
-      initial: true
-    motion_activated_living_room_night:
-      name: Living Room - Motion Night Activated
-    motion_activated_living_room_night_weekday:
-      name: Living Room - Motion Night Activated (Weekday)
-      initial: true
-    motion_activated_living_room_night_weekend:
-      name: Living Room - Motion Night Activated (Weekend)
-      initial: true
-    
-    # Day-of-week helpers for morning slot
+    # Day-of-week helpers (Keep these for granular day skipping if needed)
+    # Morning
     living_room_morning_sunday:
       name: Living Room - Morning Sunday
       initial: true
@@ -1000,7 +695,7 @@ data:
       name: Living Room - Morning Saturday
       initial: true
     
-    # Day-of-week helpers for day slot
+    # Day
     living_room_day_sunday:
       name: Living Room - Day Sunday
       initial: true
@@ -1023,7 +718,7 @@ data:
       name: Living Room - Day Saturday
       initial: true
     
-    # Day-of-week helpers for evening slot
+    # Evening
     living_room_evening_sunday:
       name: Living Room - Evening Sunday
       initial: true
@@ -1046,7 +741,7 @@ data:
       name: Living Room - Evening Saturday
       initial: true
     
-    # Day-of-week helpers for night slot
+    # Night
     living_room_night_sunday:
       name: Living Room - Night Sunday
       initial: true

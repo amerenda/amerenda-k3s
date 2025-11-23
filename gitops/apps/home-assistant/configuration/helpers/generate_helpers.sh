@@ -33,6 +33,34 @@ for room in "${rooms[@]}"; do
   jinja2 "$SCRIPT_DIR/input_number_template.yaml.j2" -D room="$room" > "$OUTPUT_DIR/input_number/${room}.yaml"
 done
 
+# Generate Global Schedule Helpers (One-off)
+echo "Generating Global Schedule helpers..."
+cat > "$OUTPUT_DIR/input_datetime/global_schedule.yaml" << EOF
+global_morning_start:
+  name: Global Morning Start
+  has_time: true
+  has_date: false
+  initial: "06:30:00"
+
+global_day_start:
+  name: Global Day Start
+  has_time: true
+  has_date: false
+  initial: "10:30:00"
+
+global_evening_start:
+  name: Global Evening Start
+  has_time: true
+  has_date: false
+  initial: "18:00:00"
+
+global_night_start:
+  name: Global Night Start
+  has_time: true
+  has_date: false
+  initial: "23:00:00"
+EOF
+
 # Copy all global input_text helpers
 cp "$SCRIPT_DIR/input_text"/*.yaml "$OUTPUT_DIR/input_text/"
 
