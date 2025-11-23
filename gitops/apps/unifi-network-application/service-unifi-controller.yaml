@@ -10,6 +10,7 @@ metadata:
     external-dns.alpha.kubernetes.io/ttl: "1"
     external-dns.alpha.kubernetes.io/manage-record-types: "A"
 spec:
+  loadBalancerIP: 10.100.20.204
   type: LoadBalancer
   selector:
     app: unifi-controller
