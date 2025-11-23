@@ -2,2053 +2,708 @@ views:
   - title: Room Schedule Configuration
     path: room-schedule-configuration
     cards:
+      # Global Schedule Section
+      - type: entities
+        title: Global Schedule Defaults
+        show_header_toggle: false
+        entities:
+          - entity: input_datetime.global_morning_start
+            name: Morning Start
+          - entity: input_datetime.global_day_start
+            name: Day Start
+          - entity: input_datetime.global_evening_start
+            name: Evening Start
+          - entity: input_datetime.global_night_start
+            name: Night Start
+
+      # Configuration Selectors
       - type: vertical-stack
         cards:
-          # Selectors
           - type: entities
-            title: Select Room
+            title: Select Room & Slot
+            show_header_toggle: false
             entities:
               - entity: input_select.room_selector
                 name: Room
-          
-          - type: entities
-            title: Select Schedule
-            entities:
-              - entity: input_select.schedule_selector
-                name: Schedule
-          
-          - type: entities
-            title: Select Time Slot
-            entities:
               - entity: input_select.time_window_selector
                 name: Time Slot
 
-          # Bedroom Weekday Morning Configuration
+          # ------------------------------------------------------
+          # BEDROOM CONFIGURATION
+          # ------------------------------------------------------
+
+          # Bedroom Morning
           - type: conditional
             conditions:
               - entity: input_select.room_selector
                 state: bedroom
-              - entity: input_select.schedule_selector
-                state: weekday
               - entity: input_select.time_window_selector
                 state: morning
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Morning Schedule (Weekday)
-                  entities:
-                    - entity: input_boolean.bedroom_morning_custom_time
-                    - entity: input_boolean.bedroom_morning_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
+              card:
+                type: entities
+              title: Bedroom Morning
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.bedroom_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.bedroom_morning_custom_time
+                  name: Override Global Time
                 - type: conditional
                   conditions:
-                    - entity: input_boolean.bedroom_morning_separate_weekday_weekend
+                  - entity: input_boolean.bedroom_morning_custom_time
                       state: "on"
-                  card:
-                    type: entities
-                    title: Morning Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.bedroom_s1_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bedroom_morning_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Morning Start Time
-                    entities:
-                      - entity: input_datetime.bedroom_s1_start
-                        name: Morning Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.bedroom_morning_scene
-                    - entity: input_boolean.enable_bedroom_morning_weekday
-                    - entity: input_boolean.auto_on_bedroom_morning_weekday
-                    - entity: input_boolean.motion_activated_bedroom_morning_weekday
-                    - entity: input_number.motion_auto_off_bedroom_morning_weekday
-                    - entity: input_boolean.bedroom_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.bedroom_transition_time
-                      name: Transition Time
+                  row:
+                    entity: input_datetime.bedroom_s1_start
+                    name: Morning Start Time
+                - type: section
+                  - entity: input_select.bedroom_morning_scene
+                  name: Scene
+                - entity: input_boolean.bedroom_morning_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.bedroom_morning_auto_on_enabled
+                  name: Auto-On
+                  - entity: input_number.motion_auto_off_bedroom_morning
+                  name: Motion Auto-Off (min)
 
-          # Bedroom Weekday Day Configuration
+          # Bedroom Day
           - type: conditional
             conditions:
               - entity: input_select.room_selector
                 state: bedroom
-              - entity: input_select.schedule_selector
-                state: weekday
               - entity: input_select.time_window_selector
                 state: day
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Day Schedule (Weekday)
-                  entities:
+              card:
+                type: entities
+              title: Bedroom Day
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.bedroom_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.bedroom_day_custom_time
+                  name: Override Global Time
+                - type: conditional
+                  conditions:
                     - entity: input_boolean.bedroom_day_custom_time
-                    - entity: input_boolean.bedroom_day_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bedroom_day_separate_weekday_weekend
                       state: "on"
-                  card:
-                    type: entities
-                    title: Day Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.bedroom_s2_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bedroom_day_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Day Start Time
-                    entities:
-                      - entity: input_datetime.bedroom_s2_start
-                        name: Day Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.bedroom_day_scene
-                    - entity: input_boolean.enable_bedroom_day_weekday
-                    - entity: input_boolean.auto_on_bedroom_day_weekday
-                    - entity: input_boolean.motion_activated_bedroom_day_weekday
-                    - entity: input_number.motion_auto_off_bedroom_day_weekday
-                    - entity: input_boolean.bedroom_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.bedroom_transition_time
-                      name: Transition Time
+                  row:
+                    entity: input_datetime.bedroom_s2_start
+                    name: Day Start Time
+                - type: section
+                - entity: input_select.bedroom_day_scene
+                  name: Scene
+                - entity: input_boolean.bedroom_day_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.bedroom_day_auto_on_enabled
+                  name: Auto-On
+                - entity: input_number.motion_auto_off_bedroom_day
+                  name: Motion Auto-Off (min)
 
-          # Bedroom Weekday Evening Configuration
+          # Bedroom Evening
           - type: conditional
             conditions:
               - entity: input_select.room_selector
                 state: bedroom
-              - entity: input_select.schedule_selector
-                state: weekday
               - entity: input_select.time_window_selector
                 state: evening
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Evening Schedule (Weekday)
-                  entities:
+              card:
+                type: entities
+              title: Bedroom Evening
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.bedroom_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.bedroom_evening_custom_time
+                  name: Override Global Time
+                - type: conditional
+                  conditions:
                     - entity: input_boolean.bedroom_evening_custom_time
-                    - entity: input_boolean.bedroom_evening_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bedroom_evening_separate_weekday_weekend
                       state: "on"
-                  card:
-                    type: entities
-                    title: Evening Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.bedroom_s3_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bedroom_evening_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Evening Start Time
-                    entities:
-                      - entity: input_datetime.bedroom_s3_start
-                        name: Evening Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.bedroom_evening_scene
-                    - entity: input_boolean.enable_bedroom_evening_weekday
-                    - entity: input_boolean.auto_on_bedroom_evening_weekday
-                    - entity: input_boolean.motion_activated_bedroom_evening_weekday
-                    - entity: input_number.motion_auto_off_bedroom_evening_weekday
-                    - entity: input_boolean.bedroom_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.bedroom_transition_time
-                      name: Transition Time
+                  row:
+                    entity: input_datetime.bedroom_s3_start
+                    name: Evening Start Time
+                - type: section
+                - entity: input_select.bedroom_evening_scene
+                  name: Scene
+                - entity: input_boolean.bedroom_evening_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.bedroom_evening_auto_on_enabled
+                  name: Auto-On
+                - entity: input_number.motion_auto_off_bedroom_evening
+                  name: Motion Auto-Off (min)
 
-          # Bedroom Weekday Night Configuration
+          # Bedroom Night
           - type: conditional
             conditions:
               - entity: input_select.room_selector
                 state: bedroom
-              - entity: input_select.schedule_selector
-                state: weekday
               - entity: input_select.time_window_selector
                 state: night
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Night Schedule (Weekday)
-                  entities:
+              card:
+                type: entities
+              title: Bedroom Night
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.bedroom_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.bedroom_night_custom_time
+                  name: Override Global Time
+                - type: conditional
+                  conditions:
                     - entity: input_boolean.bedroom_night_custom_time
-                    - entity: input_boolean.bedroom_night_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bedroom_night_separate_weekday_weekend
                       state: "on"
-                  card:
-                    type: entities
-                    title: Night Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.bedroom_s4_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bedroom_night_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Night Start Time
-                    entities:
-                      - entity: input_datetime.bedroom_s4_start
-                        name: Night Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.bedroom_night_scene
-                    - entity: input_boolean.enable_bedroom_night_weekday
-                    - entity: input_boolean.auto_on_bedroom_night_weekday
-                    - entity: input_boolean.motion_activated_bedroom_night_weekday
-                    - entity: input_number.motion_auto_off_bedroom_night_weekday
-                    - entity: input_boolean.bedroom_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.bedroom_transition_time
-                      name: Transition Time
+                  row:
+                    entity: input_datetime.bedroom_s4_start
+                    name: Night Start Time
+                - type: section
+                - entity: input_select.bedroom_night_scene
+                  name: Scene
+                - entity: input_boolean.bedroom_night_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.bedroom_night_auto_on_enabled
+                  name: Auto-On
+                - entity: input_number.motion_auto_off_bedroom_night
+                  name: Motion Auto-Off (min)
 
-          # Bedroom Weekend Morning Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: bedroom
-              - entity: input_select.schedule_selector
-                state: weekend
-              - entity: input_select.time_window_selector
-                state: morning
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Morning Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.bedroom_morning_custom_time
-                    - entity: input_boolean.bedroom_morning_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bedroom_morning_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Morning Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.bedroom_s1_weekend_start
-                        name: Weekend Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bedroom_morning_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Morning Start Time
-                    entities:
-                      - entity: input_datetime.bedroom_s1_start
-                        name: Morning Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.bedroom_morning_scene
-                    - entity: input_boolean.enable_bedroom_morning_weekend
-                    - entity: input_boolean.auto_on_bedroom_morning_weekend
-                    - entity: input_boolean.motion_activated_bedroom_morning_weekend
-                    - entity: input_number.motion_auto_off_bedroom_morning_weekend
-                    - entity: input_boolean.bedroom_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.bedroom_transition_time
-                      name: Transition Time
+          # ------------------------------------------------------
+          # BATHROOM CONFIGURATION
+          # ------------------------------------------------------
 
-          # Bedroom Weekend Day Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: bedroom
-              - entity: input_select.schedule_selector
-                state: weekend
-              - entity: input_select.time_window_selector
-                state: day
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Day Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.bedroom_day_custom_time
-                    - entity: input_boolean.bedroom_day_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bedroom_day_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Day Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.bedroom_s2_weekend_start
-                        name: Weekend Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bedroom_day_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Day Start Time
-                    entities:
-                      - entity: input_datetime.bedroom_s2_start
-                        name: Day Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.bedroom_day_scene
-                    - entity: input_boolean.enable_bedroom_day_weekend
-                    - entity: input_boolean.auto_on_bedroom_day_weekend
-                    - entity: input_boolean.motion_activated_bedroom_day_weekend
-                    - entity: input_number.motion_auto_off_bedroom_day_weekend
-                    - entity: input_boolean.bedroom_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.bedroom_transition_time
-                      name: Transition Time
-
-          # Bedroom Weekend Evening Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: bedroom
-              - entity: input_select.schedule_selector
-                state: weekend
-              - entity: input_select.time_window_selector
-                state: evening
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Evening Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.bedroom_evening_custom_time
-                    - entity: input_boolean.bedroom_evening_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bedroom_evening_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Evening Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.bedroom_s3_weekend_start
-                        name: Weekend Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bedroom_evening_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Evening Start Time
-                    entities:
-                      - entity: input_datetime.bedroom_s3_start
-                        name: Evening Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.bedroom_evening_scene
-                    - entity: input_boolean.enable_bedroom_evening_weekend
-                    - entity: input_boolean.auto_on_bedroom_evening_weekend
-                    - entity: input_boolean.motion_activated_bedroom_evening_weekend
-                    - entity: input_number.motion_auto_off_bedroom_evening_weekend
-                    - entity: input_boolean.bedroom_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.bedroom_transition_time
-                      name: Transition Time
-
-          # Bedroom Weekend Night Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: bedroom
-              - entity: input_select.schedule_selector
-                state: weekend
-              - entity: input_select.time_window_selector
-                state: night
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Night Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.bedroom_night_custom_time
-                    - entity: input_boolean.bedroom_night_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bedroom_night_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Night Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.bedroom_s4_weekend_start
-                        name: Weekend Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bedroom_night_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Night Start Time
-                    entities:
-                      - entity: input_datetime.bedroom_s4_start
-                        name: Night Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.bedroom_night_scene
-                    - entity: input_boolean.enable_bedroom_night_weekend
-                    - entity: input_boolean.auto_on_bedroom_night_weekend
-                    - entity: input_boolean.motion_activated_bedroom_night_weekend
-                    - entity: input_number.motion_auto_off_bedroom_night_weekend
-                    - entity: input_boolean.bedroom_smooth_transition
-                      name: Smooth Transition
-
-          # Living Room Weekday Morning Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: living_room
-              - entity: input_select.schedule_selector
-                state: weekday
-              - entity: input_select.time_window_selector
-                state: morning
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Morning Schedule (Weekday)
-                  entities:
-                    - entity: input_boolean.living_room_morning_custom_time
-                    - entity: input_boolean.living_room_morning_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.living_room_morning_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Morning Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.living_room_s1_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.living_room_morning_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Morning Start Time
-                    entities:
-                      - entity: input_datetime.living_room_s1_start
-                        name: Morning Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.living_room_morning_scene
-                    - entity: input_boolean.enable_living_room_morning_weekday
-                    - entity: input_boolean.auto_on_living_room_morning_weekday
-                    - entity: input_boolean.motion_activated_living_room_morning_weekday
-                    - entity: input_number.motion_auto_off_living_room_morning_weekday
-                    - entity: input_boolean.living_room_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.living_room_transition_time
-                      name: Transition Time
-
-          # Living Room Weekday Day Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: living_room
-              - entity: input_select.schedule_selector
-                state: weekday
-              - entity: input_select.time_window_selector
-                state: day
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Day Schedule (Weekday)
-                  entities:
-                    - entity: input_boolean.living_room_day_custom_time
-                    - entity: input_boolean.living_room_day_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.living_room_day_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Day Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.living_room_s2_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.living_room_day_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Day Start Time
-                    entities:
-                      - entity: input_datetime.living_room_s2_start
-                        name: Day Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.living_room_day_scene
-                    - entity: input_boolean.enable_living_room_day_weekday
-                    - entity: input_boolean.auto_on_living_room_day_weekday
-                    - entity: input_boolean.motion_activated_living_room_day_weekday
-                    - entity: input_number.motion_auto_off_living_room_day_weekday
-                    - entity: input_boolean.living_room_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.living_room_transition_time
-                      name: Transition Time
-
-          # Living Room Weekday Evening Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: living_room
-              - entity: input_select.schedule_selector
-                state: weekday
-              - entity: input_select.time_window_selector
-                state: evening
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Evening Schedule (Weekday)
-                  entities:
-                    - entity: input_boolean.living_room_evening_custom_time
-                    - entity: input_boolean.living_room_evening_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.living_room_evening_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Evening Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.living_room_s3_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.living_room_evening_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Evening Start Time
-                    entities:
-                      - entity: input_datetime.living_room_s3_start
-                        name: Evening Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.living_room_evening_scene
-                    - entity: input_boolean.enable_living_room_evening_weekday
-                    - entity: input_boolean.auto_on_living_room_evening_weekday
-                    - entity: input_boolean.motion_activated_living_room_evening_weekday
-                    - entity: input_number.motion_auto_off_living_room_evening_weekday
-                    - entity: input_boolean.living_room_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.living_room_transition_time
-                      name: Transition Time
-
-          # Living Room Weekday Night Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: living_room
-              - entity: input_select.schedule_selector
-                state: weekday
-              - entity: input_select.time_window_selector
-                state: night
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Night Schedule (Weekday)
-                  entities:
-                    - entity: input_boolean.living_room_night_custom_time
-                    - entity: input_boolean.living_room_night_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.living_room_night_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Night Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.living_room_s4_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.living_room_night_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Night Start Time
-                    entities:
-                      - entity: input_datetime.living_room_s4_start
-                        name: Night Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.living_room_night_scene
-                    - entity: input_boolean.enable_living_room_night_weekday
-                    - entity: input_boolean.auto_on_living_room_night_weekday
-                    - entity: input_boolean.motion_activated_living_room_night_weekday
-                    - entity: input_number.motion_auto_off_living_room_night_weekday
-                    - entity: input_boolean.living_room_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.living_room_transition_time
-                      name: Transition Time
-
-          # Living Room Weekend Morning Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: living_room
-              - entity: input_select.schedule_selector
-                state: weekend
-              - entity: input_select.time_window_selector
-                state: morning
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Morning Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.living_room_morning_custom_time
-                    - entity: input_boolean.living_room_morning_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.living_room_morning_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Morning Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.living_room_s1_weekend_start
-                        name: Weekend Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.living_room_morning_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Morning Start Time
-                    entities:
-                      - entity: input_datetime.living_room_s1_start
-                        name: Morning Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.living_room_morning_scene
-                    - entity: input_boolean.enable_living_room_morning_weekend
-                    - entity: input_boolean.auto_on_living_room_morning_weekend
-                    - entity: input_boolean.motion_activated_living_room_morning_weekend
-                    - entity: input_number.motion_auto_off_living_room_morning_weekend
-                    - entity: input_boolean.living_room_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.living_room_transition_time
-                      name: Transition Time
-
-          # Living Room Weekend Day Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: living_room
-              - entity: input_select.schedule_selector
-                state: weekend
-              - entity: input_select.time_window_selector
-                state: day
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Day Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.living_room_day_custom_time
-                    - entity: input_boolean.living_room_day_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.living_room_day_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Day Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.living_room_s2_weekend_start
-                        name: Weekend Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.living_room_day_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Day Start Time
-                    entities:
-                      - entity: input_datetime.living_room_s2_start
-                        name: Day Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.living_room_day_scene
-                    - entity: input_boolean.enable_living_room_day_weekend
-                    - entity: input_boolean.auto_on_living_room_day_weekend
-                    - entity: input_boolean.motion_activated_living_room_day_weekend
-                    - entity: input_number.motion_auto_off_living_room_day_weekend
-                    - entity: input_boolean.living_room_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.living_room_transition_time
-                      name: Transition Time
-
-          # Living Room Weekend Evening Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: living_room
-              - entity: input_select.schedule_selector
-                state: weekend
-              - entity: input_select.time_window_selector
-                state: evening
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Evening Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.living_room_evening_custom_time
-                    - entity: input_boolean.living_room_evening_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.living_room_evening_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Evening Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.living_room_s3_weekend_start
-                        name: Weekend Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.living_room_evening_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Evening Start Time
-                    entities:
-                      - entity: input_datetime.living_room_s3_start
-                        name: Evening Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.living_room_evening_scene
-                    - entity: input_boolean.enable_living_room_evening_weekend
-                    - entity: input_boolean.auto_on_living_room_evening_weekend
-                    - entity: input_boolean.motion_activated_living_room_evening_weekend
-                    - entity: input_number.motion_auto_off_living_room_evening_weekend
-                    - entity: input_boolean.living_room_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.living_room_transition_time
-                      name: Transition Time
-
-          # Living Room Weekend Night Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: living_room
-              - entity: input_select.schedule_selector
-                state: weekend
-              - entity: input_select.time_window_selector
-                state: night
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Night Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.living_room_night_custom_time
-                    - entity: input_boolean.living_room_night_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.living_room_night_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Night Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.living_room_s4_weekend_start
-                        name: Weekend Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.living_room_night_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Night Start Time
-                    entities:
-                      - entity: input_datetime.living_room_s4_start
-                        name: Night Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.living_room_night_scene
-                    - entity: input_boolean.enable_living_room_night_weekend
-                    - entity: input_boolean.auto_on_living_room_night_weekend
-                    - entity: input_boolean.motion_activated_living_room_night_weekend
-                    - entity: input_number.motion_auto_off_living_room_night_weekend
-                    - entity: input_boolean.living_room_smooth_transition
-                      name: Smooth Transition
-
-          # Kitchen Weekday Morning Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: kitchen
-              - entity: input_select.schedule_selector
-                state: weekday
-              - entity: input_select.time_window_selector
-                state: morning
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Morning Schedule (Weekday)
-                  entities:
-                    - entity: input_boolean.kitchen_morning_custom_time
-                    - entity: input_boolean.kitchen_morning_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.kitchen_morning_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Morning Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.kitchen_s1_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.kitchen_morning_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Morning Start Time
-                    entities:
-                      - entity: input_datetime.kitchen_s1_start
-                        name: Morning Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.kitchen_morning_scene
-                    - entity: input_boolean.enable_kitchen_morning_weekday
-                    - entity: input_boolean.auto_on_kitchen_morning_weekday
-                    - entity: input_boolean.motion_activated_kitchen_morning_weekday
-                    - entity: input_number.motion_auto_off_kitchen_morning_weekday
-                    - entity: input_boolean.kitchen_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.kitchen_transition_time
-                      name: Transition Time
-
-          # Kitchen Weekday Day Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: kitchen
-              - entity: input_select.schedule_selector
-                state: weekday
-              - entity: input_select.time_window_selector
-                state: day
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Day Schedule (Weekday)
-                  entities:
-                    - entity: input_boolean.kitchen_day_custom_time
-                    - entity: input_boolean.kitchen_day_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.kitchen_day_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Day Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.kitchen_s2_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.kitchen_day_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Day Start Time
-                    entities:
-                      - entity: input_datetime.kitchen_s2_start
-                        name: Day Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.kitchen_day_scene
-                    - entity: input_boolean.enable_kitchen_day_weekday
-                    - entity: input_boolean.auto_on_kitchen_day_weekday
-                    - entity: input_boolean.motion_activated_kitchen_day_weekday
-                    - entity: input_number.motion_auto_off_kitchen_day_weekday
-                    - entity: input_boolean.kitchen_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.kitchen_transition_time
-                      name: Transition Time
-
-          # Kitchen Weekday Evening Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: kitchen
-              - entity: input_select.schedule_selector
-                state: weekday
-              - entity: input_select.time_window_selector
-                state: evening
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Evening Schedule (Weekday)
-                  entities:
-                    - entity: input_boolean.kitchen_evening_custom_time
-                    - entity: input_boolean.kitchen_evening_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.kitchen_evening_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Evening Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.kitchen_s3_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.kitchen_evening_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Evening Start Time
-                    entities:
-                      - entity: input_datetime.kitchen_s3_start
-                        name: Evening Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.kitchen_evening_scene
-                    - entity: input_boolean.enable_kitchen_evening_weekday
-                    - entity: input_boolean.auto_on_kitchen_evening_weekday
-                    - entity: input_boolean.motion_activated_kitchen_evening_weekday
-                    - entity: input_number.motion_auto_off_kitchen_evening_weekday
-                    - entity: input_boolean.kitchen_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.kitchen_transition_time
-                      name: Transition Time
-
-          # Kitchen Weekday Night Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: kitchen
-              - entity: input_select.schedule_selector
-                state: weekday
-              - entity: input_select.time_window_selector
-                state: night
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Night Schedule (Weekday)
-                  entities:
-                    - entity: input_boolean.kitchen_night_custom_time
-                    - entity: input_boolean.kitchen_night_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.kitchen_night_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Night Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.kitchen_s4_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.kitchen_night_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Night Start Time
-                    entities:
-                      - entity: input_datetime.kitchen_s4_start
-                        name: Night Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.kitchen_night_scene
-                    - entity: input_boolean.enable_kitchen_night_weekday
-                    - entity: input_boolean.auto_on_kitchen_night_weekday
-                    - entity: input_boolean.motion_activated_kitchen_night_weekday
-                    - entity: input_number.motion_auto_off_kitchen_night_weekday
-                    - entity: input_boolean.kitchen_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.kitchen_transition_time
-                      name: Transition Time
-
-          # Kitchen Weekend Morning Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: kitchen
-              - entity: input_select.schedule_selector
-                state: weekend
-              - entity: input_select.time_window_selector
-                state: morning
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Morning Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.kitchen_morning_custom_time
-                    - entity: input_boolean.kitchen_morning_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.kitchen_morning_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Morning Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.kitchen_s1_weekend_start
-                        name: Weekend Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.kitchen_morning_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Morning Start Time
-                    entities:
-                      - entity: input_datetime.kitchen_s1_start
-                        name: Morning Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.kitchen_morning_scene
-                    - entity: input_boolean.enable_kitchen_morning_weekend
-                    - entity: input_boolean.auto_on_kitchen_morning_weekend
-                    - entity: input_boolean.motion_activated_kitchen_morning_weekend
-                    - entity: input_number.motion_auto_off_kitchen_morning_weekend
-                    - entity: input_boolean.kitchen_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.kitchen_transition_time
-                      name: Transition Time
-
-          # Kitchen Weekend Day Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: kitchen
-              - entity: input_select.schedule_selector
-                state: weekend
-              - entity: input_select.time_window_selector
-                state: day
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Day Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.kitchen_day_custom_time
-                    - entity: input_boolean.kitchen_day_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.kitchen_day_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Day Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.kitchen_s2_weekend_start
-                        name: Weekend Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.kitchen_day_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Day Start Time
-                    entities:
-                      - entity: input_datetime.kitchen_s2_start
-                        name: Day Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.kitchen_day_scene
-                    - entity: input_boolean.enable_kitchen_day_weekend
-                    - entity: input_boolean.auto_on_kitchen_day_weekend
-                    - entity: input_boolean.motion_activated_kitchen_day_weekend
-                    - entity: input_number.motion_auto_off_kitchen_day_weekend
-                    - entity: input_boolean.kitchen_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.kitchen_transition_time
-                      name: Transition Time
-
-          # Kitchen Weekend Evening Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: kitchen
-              - entity: input_select.schedule_selector
-                state: weekend
-              - entity: input_select.time_window_selector
-                state: evening
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Evening Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.kitchen_evening_custom_time
-                    - entity: input_boolean.kitchen_evening_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.kitchen_evening_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Evening Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.kitchen_s3_weekend_start
-                        name: Weekend Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.kitchen_evening_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Evening Start Time
-                    entities:
-                      - entity: input_datetime.kitchen_s3_start
-                        name: Evening Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.kitchen_evening_scene
-                    - entity: input_boolean.enable_kitchen_evening_weekend
-                    - entity: input_boolean.auto_on_kitchen_evening_weekend
-                    - entity: input_boolean.motion_activated_kitchen_evening_weekend
-                    - entity: input_number.motion_auto_off_kitchen_evening_weekend
-                    - entity: input_boolean.kitchen_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.kitchen_transition_time
-                      name: Transition Time
-
-          # Kitchen Weekend Night Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: kitchen
-              - entity: input_select.schedule_selector
-                state: weekend
-              - entity: input_select.time_window_selector
-                state: night
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Night Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.kitchen_night_custom_time
-                    - entity: input_boolean.kitchen_night_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.kitchen_night_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Night Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.kitchen_s4_weekend_start
-                        name: Weekend Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.kitchen_night_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Night Start Time
-                    entities:
-                      - entity: input_datetime.kitchen_s4_start
-                        name: Night Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.kitchen_night_scene
-                    - entity: input_boolean.enable_kitchen_night_weekend
-                    - entity: input_boolean.auto_on_kitchen_night_weekend
-                    - entity: input_boolean.motion_activated_kitchen_night_weekend
-                    - entity: input_number.motion_auto_off_kitchen_night_weekend
-                    - entity: input_boolean.kitchen_smooth_transition
-                      name: Smooth Transition
-
-          # Bathroom Weekday Morning Configuration
+          # Bathroom Morning
           - type: conditional
             conditions:
               - entity: input_select.room_selector
                 state: bathroom
-              - entity: input_select.schedule_selector
-                state: weekday
               - entity: input_select.time_window_selector
                 state: morning
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Morning Schedule (Weekday)
-                  entities:
+              card:
+                type: entities
+              title: Bathroom Morning
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.bathroom_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.bathroom_morning_custom_time
+                  name: Override Global Time
+                - type: conditional
+                  conditions:
                     - entity: input_boolean.bathroom_morning_custom_time
-                    - entity: input_boolean.bathroom_morning_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bathroom_morning_separate_weekday_weekend
                       state: "on"
-                  card:
-                    type: entities
-                    title: Morning Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.bathroom_s1_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bathroom_morning_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Morning Start Time
-                    entities:
-                      - entity: input_datetime.bathroom_s1_start
-                        name: Morning Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.bathroom_morning_scene
-                    - entity: input_boolean.enable_bathroom_morning_weekday
-                    - entity: input_boolean.auto_on_bathroom_morning_weekday
-                    - entity: input_boolean.motion_activated_bathroom_morning_weekday
-                    - entity: input_number.motion_auto_off_bathroom_morning_weekday
-                    - entity: input_boolean.bathroom_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.bathroom_transition_time
-                      name: Transition Time
+                  row:
+                    entity: input_datetime.bathroom_s1_start
+                    name: Morning Start Time
+                - type: section
+                - entity: input_select.bathroom_morning_scene
+                  name: Scene
+                - entity: input_boolean.bathroom_morning_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.bathroom_morning_auto_on_enabled
+                  name: Auto-On
+                - entity: input_number.motion_auto_off_bathroom_morning
+                  name: Motion Auto-Off (min)
 
-          # Bathroom Weekday Day Configuration
+          # Bathroom Day
           - type: conditional
             conditions:
               - entity: input_select.room_selector
                 state: bathroom
-              - entity: input_select.schedule_selector
-                state: weekday
               - entity: input_select.time_window_selector
                 state: day
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Day Schedule (Weekday)
-                  entities:
+              card:
+                type: entities
+              title: Bathroom Day
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.bathroom_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.bathroom_day_custom_time
+                  name: Override Global Time
+                - type: conditional
+                  conditions:
                     - entity: input_boolean.bathroom_day_custom_time
-                    - entity: input_boolean.bathroom_day_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bathroom_day_separate_weekday_weekend
                       state: "on"
-                  card:
-                    type: entities
-                    title: Day Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.bathroom_s2_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bathroom_day_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Day Start Time
-                    entities:
-                      - entity: input_datetime.bathroom_s2_start
-                        name: Day Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.bathroom_day_scene
-                    - entity: input_boolean.enable_bathroom_day_weekday
-                    - entity: input_boolean.auto_on_bathroom_day_weekday
-                    - entity: input_boolean.motion_activated_bathroom_day_weekday
-                    - entity: input_number.motion_auto_off_bathroom_day_weekday
-                    - entity: input_boolean.bathroom_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.bathroom_transition_time
-                      name: Transition Time
+                  row:
+                    entity: input_datetime.bathroom_s2_start
+                    name: Day Start Time
+                - type: section
+                - entity: input_select.bathroom_day_scene
+                  name: Scene
+                - entity: input_boolean.bathroom_day_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.bathroom_day_auto_on_enabled
+                  name: Auto-On
+                - entity: input_number.motion_auto_off_bathroom_day
+                  name: Motion Auto-Off (min)
 
-          # Bathroom Weekday Evening Configuration
+          # Bathroom Evening
           - type: conditional
             conditions:
               - entity: input_select.room_selector
                 state: bathroom
-              - entity: input_select.schedule_selector
-                state: weekday
               - entity: input_select.time_window_selector
                 state: evening
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Evening Schedule (Weekday)
-                  entities:
+              card:
+                type: entities
+              title: Bathroom Evening
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.bathroom_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.bathroom_evening_custom_time
+                  name: Override Global Time
+                - type: conditional
+                  conditions:
                     - entity: input_boolean.bathroom_evening_custom_time
-                    - entity: input_boolean.bathroom_evening_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bathroom_evening_separate_weekday_weekend
                       state: "on"
-                  card:
-                    type: entities
-                    title: Evening Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.bathroom_s3_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bathroom_evening_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Evening Start Time
-                    entities:
-                      - entity: input_datetime.bathroom_s3_start
-                        name: Evening Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.bathroom_evening_scene
-                    - entity: input_boolean.enable_bathroom_evening_weekday
-                    - entity: input_boolean.auto_on_bathroom_evening_weekday
-                    - entity: input_boolean.motion_activated_bathroom_evening_weekday
-                    - entity: input_number.motion_auto_off_bathroom_evening_weekday
-                    - entity: input_boolean.bathroom_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.bathroom_transition_time
-                      name: Transition Time
+                  row:
+                    entity: input_datetime.bathroom_s3_start
+                    name: Evening Start Time
+                - type: section
+                - entity: input_select.bathroom_evening_scene
+                  name: Scene
+                - entity: input_boolean.bathroom_evening_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.bathroom_evening_auto_on_enabled
+                  name: Auto-On
+                - entity: input_number.motion_auto_off_bathroom_evening
+                  name: Motion Auto-Off (min)
 
-          # Bathroom Weekday Night Configuration
+          # Bathroom Night
           - type: conditional
             conditions:
               - entity: input_select.room_selector
                 state: bathroom
-              - entity: input_select.schedule_selector
-                state: weekday
               - entity: input_select.time_window_selector
                 state: night
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Night Schedule (Weekday)
-                  entities:
+              card:
+                type: entities
+              title: Bathroom Night
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.bathroom_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.bathroom_night_custom_time
+                  name: Override Global Time
+                - type: conditional
+                  conditions:
                     - entity: input_boolean.bathroom_night_custom_time
-                    - entity: input_boolean.bathroom_night_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bathroom_night_separate_weekday_weekend
                       state: "on"
-                  card:
-                    type: entities
-                    title: Night Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.bathroom_s4_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bathroom_night_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Night Start Time
-                    entities:
-                      - entity: input_datetime.bathroom_s4_start
-                        name: Night Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.bathroom_night_scene
-                    - entity: input_boolean.enable_bathroom_night_weekday
-                    - entity: input_boolean.auto_on_bathroom_night_weekday
-                    - entity: input_boolean.motion_activated_bathroom_night_weekday
-                    - entity: input_number.motion_auto_off_bathroom_night_weekday
-                    - entity: input_boolean.bathroom_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.bathroom_transition_time
-                      name: Transition Time
+                  row:
+                    entity: input_datetime.bathroom_s4_start
+                    name: Night Start Time
+                - type: section
+                - entity: input_select.bathroom_night_scene
+                  name: Scene
+                - entity: input_boolean.bathroom_night_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.bathroom_night_auto_on_enabled
+                  name: Auto-On
+                - entity: input_number.motion_auto_off_bathroom_night
+                  name: Motion Auto-Off (min)
 
-          # Bathroom Weekend Morning Configuration
+          # ------------------------------------------------------
+          # LIVING ROOM CONFIGURATION
+          # ------------------------------------------------------
+
+          # Living Room Morning
           - type: conditional
             conditions:
               - entity: input_select.room_selector
-                state: bathroom
-              - entity: input_select.schedule_selector
-                state: weekend
+                state: living_room
               - entity: input_select.time_window_selector
                 state: morning
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Morning Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.bathroom_morning_custom_time
-                    - entity: input_boolean.bathroom_morning_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
+              card:
+                type: entities
+              title: Living Room Morning
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.living_room_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.living_room_morning_custom_time
+                  name: Override Global Time
                 - type: conditional
                   conditions:
-                    - entity: input_boolean.bathroom_morning_separate_weekday_weekend
+                    - entity: input_boolean.living_room_morning_custom_time
                       state: "on"
-                  card:
-                    type: entities
-                    title: Morning Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.bathroom_s1_weekend_start
-                        name: Weekend Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bathroom_morning_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Morning Start Time
-                    entities:
-                      - entity: input_datetime.bathroom_s1_start
-                        name: Morning Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.bathroom_morning_scene
-                    - entity: input_boolean.enable_bathroom_morning_weekend
-                    - entity: input_boolean.auto_on_bathroom_morning_weekend
-                    - entity: input_boolean.motion_activated_bathroom_morning_weekend
-                    - entity: input_number.motion_auto_off_bathroom_morning_weekend
-                    - entity: input_boolean.bathroom_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.bathroom_transition_time
-                      name: Transition Time
+                  row:
+                    entity: input_datetime.living_room_s1_start
+                    name: Morning Start Time
+                - type: section
+                - entity: input_select.living_room_morning_scene
+                  name: Scene
+                - entity: input_boolean.living_room_morning_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.living_room_morning_auto_on_enabled
+                  name: Auto-On
+                - entity: input_number.motion_auto_off_living_room_morning
+                  name: Motion Auto-Off (min)
 
-          # Bathroom Weekend Day Configuration
+          # Living Room Day
           - type: conditional
             conditions:
               - entity: input_select.room_selector
-                state: bathroom
-              - entity: input_select.schedule_selector
-                state: weekend
+                state: living_room
               - entity: input_select.time_window_selector
                 state: day
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Day Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.bathroom_day_custom_time
-                    - entity: input_boolean.bathroom_day_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
+              card:
+                type: entities
+              title: Living Room Day
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.living_room_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.living_room_day_custom_time
+                  name: Override Global Time
                 - type: conditional
                   conditions:
-                    - entity: input_boolean.bathroom_day_separate_weekday_weekend
+                    - entity: input_boolean.living_room_day_custom_time
                       state: "on"
-                  card:
-                    type: entities
-                    title: Day Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.bathroom_s2_weekend_start
-                        name: Weekend Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bathroom_day_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Day Start Time
-                    entities:
-                      - entity: input_datetime.bathroom_s2_start
-                        name: Day Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.bathroom_day_scene
-                    - entity: input_boolean.enable_bathroom_day_weekend
-                    - entity: input_boolean.auto_on_bathroom_day_weekend
-                    - entity: input_boolean.motion_activated_bathroom_day_weekend
-                    - entity: input_number.motion_auto_off_bathroom_day_weekend
-                    - entity: input_boolean.bathroom_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.bathroom_transition_time
-                      name: Transition Time
+                  row:
+                    entity: input_datetime.living_room_s2_start
+                    name: Day Start Time
+                - type: section
+                - entity: input_select.living_room_day_scene
+                  name: Scene
+                - entity: input_boolean.living_room_day_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.living_room_day_auto_on_enabled
+                  name: Auto-On
+                - entity: input_number.motion_auto_off_living_room_day
+                  name: Motion Auto-Off (min)
 
-          # Bathroom Weekend Evening Configuration
+          # Living Room Evening
           - type: conditional
             conditions:
               - entity: input_select.room_selector
-                state: bathroom
-              - entity: input_select.schedule_selector
-                state: weekend
+                state: living_room
               - entity: input_select.time_window_selector
                 state: evening
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Evening Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.bathroom_evening_custom_time
-                    - entity: input_boolean.bathroom_evening_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
+              card:
+                type: entities
+              title: Living Room Evening
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.living_room_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.living_room_evening_custom_time
+                  name: Override Global Time
                 - type: conditional
                   conditions:
-                    - entity: input_boolean.bathroom_evening_separate_weekday_weekend
+                    - entity: input_boolean.living_room_evening_custom_time
                       state: "on"
-                  card:
-                    type: entities
-                    title: Evening Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.bathroom_s3_weekend_start
-                        name: Weekend Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.bathroom_evening_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Evening Start Time
-                    entities:
-                      - entity: input_datetime.bathroom_s3_start
-                        name: Evening Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.bathroom_evening_scene
-                    - entity: input_boolean.enable_bathroom_evening_weekend
-                    - entity: input_boolean.auto_on_bathroom_evening_weekend
-                    - entity: input_boolean.motion_activated_bathroom_evening_weekend
-                    - entity: input_number.motion_auto_off_bathroom_evening_weekend
-                    - entity: input_boolean.bathroom_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.bathroom_transition_time
-                      name: Transition Time
+                  row:
+                    entity: input_datetime.living_room_s3_start
+                    name: Evening Start Time
+                - type: section
+                - entity: input_select.living_room_evening_scene
+                  name: Scene
+                - entity: input_boolean.living_room_evening_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.living_room_evening_auto_on_enabled
+                  name: Auto-On
+                - entity: input_number.motion_auto_off_living_room_evening
+                  name: Motion Auto-Off (min)
 
-          # Bathroom Weekend Night Configuration
+          # Living Room Night
           - type: conditional
             conditions:
               - entity: input_select.room_selector
-                state: bathroom
-              - entity: input_select.schedule_selector
-                state: weekend
+                state: living_room
               - entity: input_select.time_window_selector
                 state: night
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Night Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.bathroom_night_custom_time
-                    - entity: input_boolean.bathroom_night_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
+              card:
+                type: entities
+              title: Living Room Night
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.living_room_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.living_room_night_custom_time
+                  name: Override Global Time
                 - type: conditional
                   conditions:
-                    - entity: input_boolean.bathroom_night_separate_weekday_weekend
+                    - entity: input_boolean.living_room_night_custom_time
                       state: "on"
-                  card:
-                    type: entities
-                    title: Night Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.bathroom_s4_weekend_start
-                        name: Weekend Start Time
+                  row:
+                    entity: input_datetime.living_room_s4_start
+                    name: Night Start Time
+                - type: section
+                - entity: input_select.living_room_night_scene
+                  name: Scene
+                - entity: input_boolean.living_room_night_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.living_room_night_auto_on_enabled
+                  name: Auto-On
+                - entity: input_number.motion_auto_off_living_room_night
+                  name: Motion Auto-Off (min)
+
+          # ------------------------------------------------------
+          # KITCHEN CONFIGURATION
+          # ------------------------------------------------------
+
+          # Kitchen Morning
+          - type: conditional
+            conditions:
+              - entity: input_select.room_selector
+                state: kitchen
+              - entity: input_select.time_window_selector
+                state: morning
+              card:
+                type: entities
+              title: Kitchen Morning
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.kitchen_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.kitchen_morning_custom_time
+                  name: Override Global Time
                 - type: conditional
                   conditions:
-                    - entity: input_boolean.bathroom_night_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Night Start Time
-                    entities:
-                      - entity: input_datetime.bathroom_s4_start
-                        name: Night Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.bathroom_night_scene
-                    - entity: input_boolean.enable_bathroom_night_weekend
-                    - entity: input_boolean.auto_on_bathroom_night_weekend
-                    - entity: input_boolean.motion_activated_bathroom_night_weekend
-                    - entity: input_number.motion_auto_off_bathroom_night_weekend
-                    - entity: input_boolean.bathroom_smooth_transition
-                      name: Smooth Transition
+                    - entity: input_boolean.kitchen_morning_custom_time
+                      state: "on"
+                  row:
+                    entity: input_datetime.kitchen_s1_start
+                    name: Morning Start Time
+                - type: section
+                - entity: input_select.kitchen_morning_scene
+                  name: Scene
+                - entity: input_boolean.kitchen_morning_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.kitchen_morning_auto_on_enabled
+                  name: Auto-On
+                - entity: input_number.motion_auto_off_kitchen_morning
+                  name: Motion Auto-Off (min)
 
-          # Hallway Weekday Morning Configuration
+          # Kitchen Day
+          - type: conditional
+            conditions:
+              - entity: input_select.room_selector
+                state: kitchen
+              - entity: input_select.time_window_selector
+                state: day
+              card:
+                type: entities
+              title: Kitchen Day
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.kitchen_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.kitchen_day_custom_time
+                  name: Override Global Time
+                - type: conditional
+                  conditions:
+                    - entity: input_boolean.kitchen_day_custom_time
+                      state: "on"
+                  row:
+                    entity: input_datetime.kitchen_s2_start
+                    name: Day Start Time
+                - type: section
+                - entity: input_select.kitchen_day_scene
+                  name: Scene
+                - entity: input_boolean.kitchen_day_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.kitchen_day_auto_on_enabled
+                  name: Auto-On
+                - entity: input_number.motion_auto_off_kitchen_day
+                  name: Motion Auto-Off (min)
+
+          # Kitchen Evening
+          - type: conditional
+            conditions:
+              - entity: input_select.room_selector
+                state: kitchen
+              - entity: input_select.time_window_selector
+                state: evening
+              card:
+                type: entities
+              title: Kitchen Evening
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.kitchen_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.kitchen_evening_custom_time
+                  name: Override Global Time
+                - type: conditional
+                  conditions:
+                    - entity: input_boolean.kitchen_evening_custom_time
+                      state: "on"
+                  row:
+                    entity: input_datetime.kitchen_s3_start
+                    name: Evening Start Time
+                - type: section
+                - entity: input_select.kitchen_evening_scene
+                  name: Scene
+                - entity: input_boolean.kitchen_evening_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.kitchen_evening_auto_on_enabled
+                  name: Auto-On
+                - entity: input_number.motion_auto_off_kitchen_evening
+                  name: Motion Auto-Off (min)
+
+          # Kitchen Night
+          - type: conditional
+            conditions:
+              - entity: input_select.room_selector
+                state: kitchen
+              - entity: input_select.time_window_selector
+                state: night
+              card:
+                type: entities
+              title: Kitchen Night
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.kitchen_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.kitchen_night_custom_time
+                  name: Override Global Time
+                - type: conditional
+                  conditions:
+                    - entity: input_boolean.kitchen_night_custom_time
+                      state: "on"
+                  row:
+                    entity: input_datetime.kitchen_s4_start
+                    name: Night Start Time
+                - type: section
+                - entity: input_select.kitchen_night_scene
+                  name: Scene
+                - entity: input_boolean.kitchen_night_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.kitchen_night_auto_on_enabled
+                  name: Auto-On
+                - entity: input_number.motion_auto_off_kitchen_night
+                  name: Motion Auto-Off (min)
+
+          # ------------------------------------------------------
+          # HALLWAY CONFIGURATION
+          # ------------------------------------------------------
+
+          # Hallway Morning
           - type: conditional
             conditions:
               - entity: input_select.room_selector
                 state: hallway
-              - entity: input_select.schedule_selector
-                state: weekday
               - entity: input_select.time_window_selector
                 state: morning
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Morning Schedule (Weekday)
-                  entities:
+              card:
+                type: entities
+              title: Hallway Morning
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.hallway_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.hallway_morning_custom_time
+                  name: Override Global Time
+                - type: conditional
+                  conditions:
                     - entity: input_boolean.hallway_morning_custom_time
-                    - entity: input_boolean.hallway_morning_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.hallway_morning_separate_weekday_weekend
                       state: "on"
-                  card:
-                    type: entities
-                    title: Morning Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.hallway_s1_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.hallway_morning_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Morning Start Time
-                    entities:
-                      - entity: input_datetime.hallway_s1_start
-                        name: Morning Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.hallway_morning_scene
-                    - entity: input_boolean.enable_hallway_morning_weekday
-                    - entity: input_boolean.auto_on_hallway_morning_weekday
-                    - entity: input_boolean.motion_activated_hallway_morning_weekday
-                    - entity: input_number.motion_auto_off_hallway_morning_weekday
-                    - entity: input_boolean.hallway_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.hallway_transition_time
-                      name: Transition Time
+                  row:
+                    entity: input_datetime.hallway_s1_start
+                    name: Morning Start Time
+                - type: section
+                - entity: input_select.hallway_morning_scene
+                  name: Scene
+                - entity: input_boolean.hallway_morning_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.hallway_morning_auto_on_enabled
+                  name: Auto-On
+                - entity: input_number.motion_auto_off_hallway_morning
+                  name: Motion Auto-Off (min)
 
-          # Hallway Weekday Day Configuration
+          # Hallway Day
           - type: conditional
             conditions:
               - entity: input_select.room_selector
                 state: hallway
-              - entity: input_select.schedule_selector
-                state: weekday
               - entity: input_select.time_window_selector
                 state: day
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Day Schedule (Weekday)
-                  entities:
+              card:
+                type: entities
+              title: Hallway Day
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.hallway_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.hallway_day_custom_time
+                  name: Override Global Time
+                - type: conditional
+                  conditions:
                     - entity: input_boolean.hallway_day_custom_time
-                    - entity: input_boolean.hallway_day_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.hallway_day_separate_weekday_weekend
                       state: "on"
-                  card:
-                    type: entities
-                    title: Day Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.hallway_s2_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.hallway_day_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Day Start Time
-                    entities:
-                      - entity: input_datetime.hallway_s2_start
-                        name: Day Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.hallway_day_scene
-                    - entity: input_boolean.enable_hallway_day_weekday
-                    - entity: input_boolean.auto_on_hallway_day_weekday
-                    - entity: input_boolean.motion_activated_hallway_day_weekday
-                    - entity: input_number.motion_auto_off_hallway_day_weekday
-                    - entity: input_boolean.hallway_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.hallway_transition_time
-                      name: Transition Time
+                  row:
+                    entity: input_datetime.hallway_s2_start
+                    name: Day Start Time
+                - type: section
+                - entity: input_select.hallway_day_scene
+                  name: Scene
+                - entity: input_boolean.hallway_day_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.hallway_day_auto_on_enabled
+                  name: Auto-On
+                - entity: input_number.motion_auto_off_hallway_day
+                  name: Motion Auto-Off (min)
 
-          # Hallway Weekday Evening Configuration
+          # Hallway Evening
           - type: conditional
             conditions:
               - entity: input_select.room_selector
                 state: hallway
-              - entity: input_select.schedule_selector
-                state: weekday
               - entity: input_select.time_window_selector
                 state: evening
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Evening Schedule (Weekday)
-                  entities:
+              card:
+                type: entities
+              title: Hallway Evening
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.hallway_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.hallway_evening_custom_time
+                  name: Override Global Time
+                - type: conditional
+                  conditions:
                     - entity: input_boolean.hallway_evening_custom_time
-                    - entity: input_boolean.hallway_evening_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.hallway_evening_separate_weekday_weekend
                       state: "on"
-                  card:
-                    type: entities
-                    title: Evening Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.hallway_s3_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.hallway_evening_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Evening Start Time
-                    entities:
-                      - entity: input_datetime.hallway_s3_start
-                        name: Evening Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.hallway_evening_scene
-                    - entity: input_boolean.enable_hallway_evening_weekday
-                    - entity: input_boolean.auto_on_hallway_evening_weekday
-                    - entity: input_boolean.motion_activated_hallway_evening_weekday
-                    - entity: input_number.motion_auto_off_hallway_evening_weekday
-                    - entity: input_boolean.hallway_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.hallway_transition_time
-                      name: Transition Time
+                  row:
+                    entity: input_datetime.hallway_s3_start
+                    name: Evening Start Time
+                - type: section
+                - entity: input_select.hallway_evening_scene
+                  name: Scene
+                - entity: input_boolean.hallway_evening_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.hallway_evening_auto_on_enabled
+                  name: Auto-On
+                - entity: input_number.motion_auto_off_hallway_evening
+                  name: Motion Auto-Off (min)
 
-          # Hallway Weekday Night Configuration
+          # Hallway Night
           - type: conditional
             conditions:
               - entity: input_select.room_selector
                 state: hallway
-              - entity: input_select.schedule_selector
-                state: weekday
               - entity: input_select.time_window_selector
                 state: night
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Night Schedule (Weekday)
-                  entities:
-                    - entity: input_boolean.hallway_night_custom_time
-                    - entity: input_boolean.hallway_night_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
+              card:
+                type: entities
+              title: Hallway Night
+              show_header_toggle: false
+                entities:
+                - entity: input_boolean.hallway_custom_schedule
+                  name: Use Custom Schedule (Room Master)
+                - entity: input_boolean.hallway_night_custom_time
+                  name: Override Global Time
                 - type: conditional
                   conditions:
-                    - entity: input_boolean.hallway_night_separate_weekday_weekend
+                  - entity: input_boolean.hallway_night_custom_time
                       state: "on"
-                  card:
-                    type: entities
-                    title: Night Start Time (Weekday)
-                    entities:
-                      - entity: input_datetime.hallway_s4_weekday_start
-                        name: Weekday Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.hallway_night_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Night Start Time
-                    entities:
-                      - entity: input_datetime.hallway_s4_start
-                        name: Night Start Time
-                - type: entities
-                  title: Schedule Options (Weekday)
-                  entities:
-                    - entity: input_select.hallway_night_scene
-                    - entity: input_boolean.enable_hallway_night_weekday
-                    - entity: input_boolean.auto_on_hallway_night_weekday
-                    - entity: input_boolean.motion_activated_hallway_night_weekday
-                    - entity: input_number.motion_auto_off_hallway_night_weekday
-                    - entity: input_boolean.hallway_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.hallway_transition_time
-                      name: Transition Time
-
-          # Hallway Weekend Morning Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: hallway
-              - entity: input_select.schedule_selector
-                state: weekend
-              - entity: input_select.time_window_selector
-                state: morning
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Morning Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.hallway_morning_custom_time
-                    - entity: input_boolean.hallway_morning_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.hallway_morning_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Morning Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.hallway_s1_weekend_start
-                        name: Weekend Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.hallway_morning_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Morning Start Time
-                    entities:
-                      - entity: input_datetime.hallway_s1_start
-                        name: Morning Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.hallway_morning_scene
-                    - entity: input_boolean.enable_hallway_morning_weekend
-                    - entity: input_boolean.auto_on_hallway_morning_weekend
-                    - entity: input_boolean.motion_activated_hallway_morning_weekend
-                    - entity: input_number.motion_auto_off_hallway_morning_weekend
-                    - entity: input_boolean.hallway_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.hallway_transition_time
-                      name: Transition Time
-
-          # Hallway Weekend Day Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: hallway
-              - entity: input_select.schedule_selector
-                state: weekend
-              - entity: input_select.time_window_selector
-                state: day
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Day Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.hallway_day_custom_time
-                    - entity: input_boolean.hallway_day_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.hallway_day_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Day Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.hallway_s2_weekend_start
-                        name: Weekend Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.hallway_day_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Day Start Time
-                    entities:
-                      - entity: input_datetime.hallway_s2_start
-                        name: Day Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.hallway_day_scene
-                    - entity: input_boolean.enable_hallway_day_weekend
-                    - entity: input_boolean.auto_on_hallway_day_weekend
-                    - entity: input_boolean.motion_activated_hallway_day_weekend
-                    - entity: input_number.motion_auto_off_hallway_day_weekend
-                    - entity: input_boolean.hallway_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.hallway_transition_time
-                      name: Transition Time
-
-          # Hallway Weekend Evening Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: hallway
-              - entity: input_select.schedule_selector
-                state: weekend
-              - entity: input_select.time_window_selector
-                state: evening
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Evening Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.hallway_evening_custom_time
-                    - entity: input_boolean.hallway_evening_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.hallway_evening_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Evening Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.hallway_s3_weekend_start
-                        name: Weekend Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.hallway_evening_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Evening Start Time
-                    entities:
-                      - entity: input_datetime.hallway_s3_start
-                        name: Evening Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.hallway_evening_scene
-                    - entity: input_boolean.enable_hallway_evening_weekend
-                    - entity: input_boolean.auto_on_hallway_evening_weekend
-                    - entity: input_boolean.motion_activated_hallway_evening_weekend
-                    - entity: input_number.motion_auto_off_hallway_evening_weekend
-                    - entity: input_boolean.hallway_smooth_transition
-                      name: Smooth Transition
-                    - entity: input_number.hallway_transition_time
-                      name: Transition Time
-
-          # Hallway Weekend Night Configuration
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: hallway
-              - entity: input_select.schedule_selector
-                state: weekend
-              - entity: input_select.time_window_selector
-                state: night
-            card:
-              type: vertical-stack
-              cards:
-                - type: entities
-                  title: Night Schedule (Weekend)
-                  entities:
-                    - entity: input_boolean.hallway_night_custom_time
-                    - entity: input_boolean.hallway_night_separate_weekday_weekend
-                      name: Separate Weekday/Weekend Times
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.hallway_night_separate_weekday_weekend
-                      state: "on"
-                  card:
-                    type: entities
-                    title: Night Start Time (Weekend)
-                    entities:
-                      - entity: input_datetime.hallway_s4_weekend_start
-                        name: Weekend Start Time
-                - type: conditional
-                  conditions:
-                    - entity: input_boolean.hallway_night_separate_weekday_weekend
-                      state: "off"
-                  card:
-                    type: entities
-                    title: Night Start Time
-                    entities:
-                      - entity: input_datetime.hallway_s4_start
-                        name: Night Start Time
-                - type: entities
-                  title: Schedule Options (Weekend)
-                  entities:
-                    - entity: input_select.hallway_night_scene
-                    - entity: input_boolean.enable_hallway_night_weekend
-                    - entity: input_boolean.auto_on_hallway_night_weekend
-                    - entity: input_boolean.motion_activated_hallway_night_weekend
-                    - entity: input_number.motion_auto_off_hallway_night_weekend
-                    - entity: input_boolean.hallway_smooth_transition
-                      name: Smooth Transition
+                  row:
+                    entity: input_datetime.hallway_s4_start
+                    name: Night Start Time
+                - type: section
+                  - entity: input_select.hallway_night_scene
+                  name: Scene
+                - entity: input_boolean.hallway_night_motion_enabled
+                  name: Motion Activated
+                - entity: input_boolean.hallway_night_auto_on_enabled
+                  name: Auto-On
+                  - entity: input_number.motion_auto_off_hallway_night
+                  name: Motion Auto-Off (min)
