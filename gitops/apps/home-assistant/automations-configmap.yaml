@@ -41,24 +41,6 @@ data:
           entity_id:
             - "switch.bedroom_privacy_mode"
             - "switch.living_room_privacy_mode"
-  alex_camera_privacy_wifi_home.yaml: |
-    alias: "Alex - Camera Privacy (WiFi Connected)"
-    mode: "restart"
-    triggers:
-      - trigger: "state"
-        entity_id: "device_tracker.pixel_9_pro_xl_2"
-        to: "home"
-    actions:
-      - action: "light.turn_off"
-        target:
-          entity_id:
-            - "light.bedroom_status_led"
-            - "light.living_room_status_led"
-      - action: "switch.turn_on"
-        target:
-          entity_id:
-            - "switch.bedroom_privacy_mode"
-            - "switch.living_room_privacy_mode"
   alex_cleanup_old_photos.yaml: |
     alias: "Alex - Cleanup Old Photos (30+ days)"
     mode: "single"
@@ -167,3 +149,39 @@ data:
             tag: "pet-{{ slug }}"
             importance: "low"
             sticky: true
+  guest_camera_privacy_wifi_away.yaml: |
+    alias: "Guest - Camera Privacy (WiFi Disconnected)"
+    mode: "restart"
+    triggers:
+      - trigger: "state"
+        entity_id: "device_tracker.brayan_iphone"
+        from: "home"
+    actions:
+      - action: "light.turn_on"
+        target:
+          entity_id:
+            - "light.bedroom_status_led"
+            - "light.living_room_status_led"
+      - action: "switch.turn_off"
+        target:
+          entity_id:
+            - "switch.bedroom_privacy_mode"
+            - "switch.living_room_privacy_mode"
+  guest_camera_privacy_wifi_home.yaml: |
+    alias: "Guest - Camera Privacy Home (WiFi Connected)"
+    mode: "restart"
+    triggers:
+      - trigger: "state"
+        entity_id: "device_tracker.brayan_iphone"
+        to: "home"
+    actions:
+      - action: "light.turn_off"
+        target:
+          entity_id:
+            - "light.bedroom_status_led"
+            - "light.living_room_status_led"
+      - action: "switch.turn_on"
+        target:
+          entity_id:
+            - "switch.bedroom_privacy_mode"
+            - "switch.living_room_privacy_mode"
