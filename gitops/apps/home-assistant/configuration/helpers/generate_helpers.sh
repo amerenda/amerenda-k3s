@@ -36,6 +36,11 @@ done
 # Copy all global input_text helpers
 cp "$SCRIPT_DIR/input_text"/*.yaml "$OUTPUT_DIR/input_text/"
 
+# Copy all global input_datetime helpers
+if [ -d "$SCRIPT_DIR/input_datetime" ]; then
+  cp "$SCRIPT_DIR/input_datetime"/*.yaml "$OUTPUT_DIR/input_datetime/"
+fi
+
 echo "All helper files generated in: $OUTPUT_DIR"
 echo "Directory structure:"
 echo "  input_boolean/ - Boolean switches and toggles"

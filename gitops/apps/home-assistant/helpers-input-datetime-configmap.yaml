@@ -45,6 +45,35 @@ data:
       name: Bedroom Night start
       has_time: true
       has_date: false
+  global_schedule.yaml: |
+    global_morning_start:
+      name: Global Morning Start
+      has_date: false
+      has_time: true
+      initial: "06:00:00"
+      icon: mdi:weather-sunset-up
+    
+    global_day_start:
+      name: Global Day Start
+      has_date: false
+      has_time: true
+      initial: "09:00:00"
+      icon: mdi:weather-sunny
+    
+    global_evening_start:
+      name: Global Evening Start
+      has_date: false
+      has_time: true
+      initial: "17:00:00"
+      icon: mdi:weather-sunset-down
+    
+    global_night_start:
+      name: Global Night Start
+      has_date: false
+      has_time: true
+      initial: "22:00:00"
+      icon: mdi:weather-night
+    
   hallway.yaml: |
     # Template for input_datetime helpers per room
     # Usage:
