@@ -164,6 +164,7 @@ spec:
               automation: !include automations.yaml
               automation manual: !include_dir_list automations
               scene: !include scenes.yaml
+              group: !include groups.yaml
 
               # Scripts managed as separate files under /config/scripts/*.yaml (dict merge)
               script: !include_dir_merge_named scripts
@@ -343,6 +344,10 @@ spec:
             - name: scripts
               mountPath: /config/scripts
               readOnly: true
+            - name: groups
+              mountPath: /config/groups.yaml
+              subPath: groups.yaml
+              readOnly: true
           lifecycle:
             preStop:
               exec:
@@ -378,3 +383,6 @@ spec:
         - name: scripts
           configMap:
             name: homeassistant-scripts
+        - name: groups
+          configMap:
+            name: homeassistant-groups

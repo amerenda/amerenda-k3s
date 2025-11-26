@@ -3,6 +3,1342 @@ kind: ConfigMap
 metadata:
   name: homeassistant-dashboards
 data:
+  room_schedule_configuration.yaml: |
+    views:
+      - title: Room Schedule Configuration
+        path: room-schedule-configuration
+        cards:
+          # Global Schedule Section
+          - type: entities
+            title: Global Schedule Defaults
+            show_header_toggle: false
+            entities:
+              - entity: input_datetime.global_morning_start
+                name: Morning Start
+              - entity: input_datetime.global_day_start
+                name: Day Start
+              - entity: input_datetime.global_evening_start
+                name: Evening Start
+              - entity: input_datetime.global_night_start
+                name: Night Start
+    
+          # Configuration Selectors
+          - type: vertical-stack
+            cards:
+              - type: entities
+                title: Select Room & Slot
+                show_header_toggle: false
+                entities:
+                  - entity: input_select.room_selector
+                    name: Room
+                  - entity: input_select.time_window_selector
+                    name: Time Slot
+    
+              # ------------------------------------------------------
+              # BEDROOM CONFIGURATION
+              # ------------------------------------------------------
+              
+              # Bedroom Morning
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: bedroom
+                  - entity: input_select.time_window_selector
+                    state: morning
+                card:
+                  type: entities
+                  title: Bedroom Morning
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.bedroom_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.bedroom_morning_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.bedroom_morning_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.bedroom_s1_start
+                        name: Morning Start Time
+                    - type: section
+                    - entity: input_select.bedroom_morning_scene
+                      name: Scene
+                    - entity: input_boolean.bedroom_morning_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.bedroom_morning_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_bedroom_morning
+                      name: Motion Auto-Off (min)
+    
+              # Bedroom Day
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: bedroom
+                  - entity: input_select.time_window_selector
+                    state: day
+                card:
+                  type: entities
+                  title: Bedroom Day
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.bedroom_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.bedroom_day_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.bedroom_day_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.bedroom_s2_start
+                        name: Day Start Time
+                    - type: section
+                    - entity: input_select.bedroom_day_scene
+                      name: Scene
+                    - entity: input_boolean.bedroom_day_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.bedroom_day_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_bedroom_day
+                      name: Motion Auto-Off (min)
+    
+              # Bedroom Evening
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: bedroom
+                  - entity: input_select.time_window_selector
+                    state: evening
+                card:
+                  type: entities
+                  title: Bedroom Evening
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.bedroom_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.bedroom_evening_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.bedroom_evening_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.bedroom_s3_start
+                        name: Evening Start Time
+                    - type: section
+                    - entity: input_select.bedroom_evening_scene
+                      name: Scene
+                    - entity: input_boolean.bedroom_evening_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.bedroom_evening_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_bedroom_evening
+                      name: Motion Auto-Off (min)
+    
+              # Bedroom Night
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: bedroom
+                  - entity: input_select.time_window_selector
+                    state: night
+                card:
+                  type: entities
+                  title: Bedroom Night
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.bedroom_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.bedroom_night_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.bedroom_night_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.bedroom_s4_start
+                        name: Night Start Time
+                    - type: section
+                    - entity: input_select.bedroom_night_scene
+                      name: Scene
+                    - entity: input_boolean.bedroom_night_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.bedroom_night_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_bedroom_night
+                      name: Motion Auto-Off (min)
+    
+              # ------------------------------------------------------
+              # BATHROOM CONFIGURATION
+              # ------------------------------------------------------
+    
+              # Bathroom Morning
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: bathroom
+                  - entity: input_select.time_window_selector
+                    state: morning
+                card:
+                  type: entities
+                  title: Bathroom Morning
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.bathroom_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.bathroom_morning_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.bathroom_morning_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.bathroom_s1_start
+                        name: Morning Start Time
+                    - type: section
+                    - entity: input_select.bathroom_morning_scene
+                      name: Scene
+                    - entity: input_boolean.bathroom_morning_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.bathroom_morning_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_bathroom_morning
+                      name: Motion Auto-Off (min)
+    
+              # Bathroom Day
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: bathroom
+                  - entity: input_select.time_window_selector
+                    state: day
+                card:
+                  type: entities
+                  title: Bathroom Day
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.bathroom_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.bathroom_day_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.bathroom_day_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.bathroom_s2_start
+                        name: Day Start Time
+                    - type: section
+                    - entity: input_select.bathroom_day_scene
+                      name: Scene
+                    - entity: input_boolean.bathroom_day_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.bathroom_day_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_bathroom_day
+                      name: Motion Auto-Off (min)
+    
+              # Bathroom Evening
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: bathroom
+                  - entity: input_select.time_window_selector
+                    state: evening
+                card:
+                  type: entities
+                  title: Bathroom Evening
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.bathroom_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.bathroom_evening_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.bathroom_evening_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.bathroom_s3_start
+                        name: Evening Start Time
+                    - type: section
+                    - entity: input_select.bathroom_evening_scene
+                      name: Scene
+                    - entity: input_boolean.bathroom_evening_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.bathroom_evening_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_bathroom_evening
+                      name: Motion Auto-Off (min)
+    
+              # Bathroom Night
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: bathroom
+                  - entity: input_select.time_window_selector
+                    state: night
+                card:
+                  type: entities
+                  title: Bathroom Night
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.bathroom_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.bathroom_night_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.bathroom_night_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.bathroom_s4_start
+                        name: Night Start Time
+                    - type: section
+                    - entity: input_select.bathroom_night_scene
+                      name: Scene
+                    - entity: input_boolean.bathroom_night_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.bathroom_night_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_bathroom_night
+                      name: Motion Auto-Off (min)
+    
+              # ------------------------------------------------------
+              # LIVING ROOM CONFIGURATION
+              # ------------------------------------------------------
+    
+              # Living Room Morning
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: living_room
+                  - entity: input_select.time_window_selector
+                    state: morning
+                card:
+                  type: entities
+                  title: Living Room Morning
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.living_room_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.living_room_morning_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.living_room_morning_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.living_room_s1_start
+                        name: Morning Start Time
+                    - type: section
+                    - entity: input_select.living_room_morning_scene
+                      name: Scene
+                    - entity: input_boolean.living_room_morning_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.living_room_morning_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_living_room_morning
+                      name: Motion Auto-Off (min)
+    
+              # Living Room Day
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: living_room
+                  - entity: input_select.time_window_selector
+                    state: day
+                card:
+                  type: entities
+                  title: Living Room Day
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.living_room_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.living_room_day_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.living_room_day_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.living_room_s2_start
+                        name: Day Start Time
+                    - type: section
+                    - entity: input_select.living_room_day_scene
+                      name: Scene
+                    - entity: input_boolean.living_room_day_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.living_room_day_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_living_room_day
+                      name: Motion Auto-Off (min)
+    
+              # Living Room Evening
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: living_room
+                  - entity: input_select.time_window_selector
+                    state: evening
+                card:
+                  type: entities
+                  title: Living Room Evening
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.living_room_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.living_room_evening_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.living_room_evening_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.living_room_s3_start
+                        name: Evening Start Time
+                    - type: section
+                    - entity: input_select.living_room_evening_scene
+                      name: Scene
+                    - entity: input_boolean.living_room_evening_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.living_room_evening_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_living_room_evening
+                      name: Motion Auto-Off (min)
+    
+              # Living Room Night
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: living_room
+                  - entity: input_select.time_window_selector
+                    state: night
+                card:
+                  type: entities
+                  title: Living Room Night
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.living_room_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.living_room_night_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.living_room_night_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.living_room_s4_start
+                        name: Night Start Time
+                    - type: section
+                    - entity: input_select.living_room_night_scene
+                      name: Scene
+                    - entity: input_boolean.living_room_night_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.living_room_night_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_living_room_night
+                      name: Motion Auto-Off (min)
+    
+              # ------------------------------------------------------
+              # KITCHEN CONFIGURATION
+              # ------------------------------------------------------
+    
+              # Kitchen Morning
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: kitchen
+                  - entity: input_select.time_window_selector
+                    state: morning
+                card:
+                  type: entities
+                  title: Kitchen Morning
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.kitchen_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.kitchen_morning_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.kitchen_morning_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.kitchen_s1_start
+                        name: Morning Start Time
+                    - type: section
+                    - entity: input_select.kitchen_morning_scene
+                      name: Scene
+                    - entity: input_boolean.kitchen_morning_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.kitchen_morning_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_kitchen_morning
+                      name: Motion Auto-Off (min)
+    
+              # Kitchen Day
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: kitchen
+                  - entity: input_select.time_window_selector
+                    state: day
+                card:
+                  type: entities
+                  title: Kitchen Day
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.kitchen_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.kitchen_day_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.kitchen_day_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.kitchen_s2_start
+                        name: Day Start Time
+                    - type: section
+                    - entity: input_select.kitchen_day_scene
+                      name: Scene
+                    - entity: input_boolean.kitchen_day_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.kitchen_day_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_kitchen_day
+                      name: Motion Auto-Off (min)
+    
+              # Kitchen Evening
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: kitchen
+                  - entity: input_select.time_window_selector
+                    state: evening
+                card:
+                  type: entities
+                  title: Kitchen Evening
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.kitchen_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.kitchen_evening_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.kitchen_evening_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.kitchen_s3_start
+                        name: Evening Start Time
+                    - type: section
+                    - entity: input_select.kitchen_evening_scene
+                      name: Scene
+                    - entity: input_boolean.kitchen_evening_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.kitchen_evening_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_kitchen_evening
+                      name: Motion Auto-Off (min)
+    
+              # Kitchen Night
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: kitchen
+                  - entity: input_select.time_window_selector
+                    state: night
+                card:
+                  type: entities
+                  title: Kitchen Night
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.kitchen_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.kitchen_night_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.kitchen_night_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.kitchen_s4_start
+                        name: Night Start Time
+                    - type: section
+                    - entity: input_select.kitchen_night_scene
+                      name: Scene
+                    - entity: input_boolean.kitchen_night_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.kitchen_night_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_kitchen_night
+                      name: Motion Auto-Off (min)
+    
+              # ------------------------------------------------------
+              # HALLWAY CONFIGURATION
+              # ------------------------------------------------------
+    
+              # Hallway Morning
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: hallway
+                  - entity: input_select.time_window_selector
+                    state: morning
+                card:
+                  type: entities
+                  title: Hallway Morning
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.hallway_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.hallway_morning_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.hallway_morning_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.hallway_s1_start
+                        name: Morning Start Time
+                    - type: section
+                    - entity: input_select.hallway_morning_scene
+                      name: Scene
+                    - entity: input_boolean.hallway_morning_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.hallway_morning_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_hallway_morning
+                      name: Motion Auto-Off (min)
+    
+              # Hallway Day
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: hallway
+                  - entity: input_select.time_window_selector
+                    state: day
+                card:
+                  type: entities
+                  title: Hallway Day
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.hallway_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.hallway_day_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.hallway_day_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.hallway_s2_start
+                        name: Day Start Time
+                    - type: section
+                    - entity: input_select.hallway_day_scene
+                      name: Scene
+                    - entity: input_boolean.hallway_day_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.hallway_day_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_hallway_day
+                      name: Motion Auto-Off (min)
+    
+              # Hallway Evening
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: hallway
+                  - entity: input_select.time_window_selector
+                    state: evening
+                card:
+                  type: entities
+                  title: Hallway Evening
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.hallway_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.hallway_evening_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.hallway_evening_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.hallway_s3_start
+                        name: Evening Start Time
+                    - type: section
+                    - entity: input_select.hallway_evening_scene
+                      name: Scene
+                    - entity: input_boolean.hallway_evening_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.hallway_evening_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_hallway_evening
+                      name: Motion Auto-Off (min)
+    
+              # Hallway Night
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: hallway
+                  - entity: input_select.time_window_selector
+                    state: night
+                card:
+                  type: entities
+                  title: Hallway Night
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.hallway_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.hallway_night_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.hallway_night_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.hallway_s4_start
+                        name: Night Start Time
+                    - type: section
+                    - entity: input_select.hallway_night_scene
+                      name: Scene
+                    - entity: input_boolean.hallway_night_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.hallway_night_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_hallway_night
+                      name: Motion Auto-Off (min)
+  dean.yaml: |
+    strategy:
+      type: custom:mushroom-strategy
+      options:
+        # Hide unavailable entities and specific entity configurations
+        card_options:
+          # Camera cards - hide when privacy mode is enabled
+          camera.bedroom_fluent:
+            hidden: "{{ is_state('switch.bedroom_privacy_mode', 'on') }}"
+          camera.living_room_fluent:
+            hidden: "{{ is_state('switch.living_room_privacy_mode', 'on') }}"
+          # Hide individual lights that duplicate single-member groups
+          light.fixture:
+            hidden: true
+          light.bathroom_1:
+            hidden: true
+          light.hallway_1:
+            hidden: true
+          # Hide PTZ and guard buttons, sirens, and motion/animal sensors for bedroom and living room when unavailable
+          # Bedroom entities
+          button.bedroom_guard_go_to:
+            hidden: "{{ is_state('button.bedroom_guard_go_to', 'unavailable') }}"
+          button.bedroom_ptz_down:
+            hidden: "{{ is_state('button.bedroom_ptz_down', 'unavailable') }}"
+          button.bedroom_ptz_left:
+            hidden: "{{ is_state('button.bedroom_ptz_left', 'unavailable') }}"
+          button.bedroom_ptz_right:
+            hidden: "{{ is_state('button.bedroom_ptz_right', 'unavailable') }}"
+          button.bedroom_ptz_up:
+            hidden: "{{ is_state('button.bedroom_ptz_up', 'unavailable') }}"
+          button.bedroom_ptz_stop:
+            hidden: "{{ is_state('button.bedroom_ptz_stop', 'unavailable') }}"
+          siren.bedroom_siren:
+            hidden: "{{ is_state('siren.bedroom_siren', 'unavailable') }}"
+          binary_sensor.bedroom_animal:
+            hidden: "{{ is_state('binary_sensor.bedroom_animal', 'unavailable') }}"
+          binary_sensor.bedroom_motion:
+            hidden: "{{ is_state('binary_sensor.bedroom_motion', 'unavailable') }}"
+          binary_sensor.bedroom_baby_crying:
+            hidden: "{{ is_state('binary_sensor.bedroom_baby_crying', 'unavailable') }}"
+          # Living room entities
+          button.living_room_guard_go_to:
+            hidden: "{{ is_state('button.living_room_guard_go_to', 'unavailable') }}"
+          button.living_room_ptz_down:
+            hidden: "{{ is_state('button.living_room_ptz_down', 'unavailable') }}"
+          button.living_room_ptz_left:
+            hidden: "{{ is_state('button.living_room_ptz_left', 'unavailable') }}"
+          button.living_room_ptz_right:
+            hidden: "{{ is_state('button.living_room_ptz_right', 'unavailable') }}"
+          button.living_room_ptz_up:
+            hidden: "{{ is_state('button.living_room_ptz_up', 'unavailable') }}"
+          button.living_room_ptz_stop:
+            hidden: "{{ is_state('button.living_room_ptz_stop', 'unavailable') }}"
+          siren.living_room_siren:
+            hidden: "{{ is_state('siren.living_room_siren', 'unavailable') }}"
+          binary_sensor.living_room_animal:
+            hidden: "{{ is_state('binary_sensor.living_room_animal', 'unavailable') }}"
+          binary_sensor.living_room_motion:
+            hidden: "{{ is_state('binary_sensor.living_room_motion', 'unavailable') }}"
+          binary_sensor.living_room_baby_crying:
+            hidden: "{{ is_state('binary_sensor.living_room_baby_crying', 'unavailable') }}"
+    
+        # Hide unavailable entities using card_options templates
+        # Note: mushroom-strategy doesn't support domain-level filtering by state
+        # We need to add specific entities here as they're discovered
+        # Alternatively, entities can be hidden individually in card_options above
+    
+        # Quick access cards (between greeting and area cards)
+        quick_access_cards:
+          - type: custom:mushroom-title-card
+            title: Quick Access
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: weather.home
+                state: available
+            card:
+              type: custom:mushroom-weather-card
+              entity: weather.home
+              show_temperature: true
+              show_conditions: true
+              primary_info: state
+              secondary_info: temperature
+          # System Status - commented out as it requires System Health integration
+          # - type: entities
+          #   title: System Status
+          #   entities:
+          #     - entity: sensor.home_assistant_version
+          #       name: Home Assistant
+          #       secondary_info: state
+          #     - entity: binary_sensor.ha_system_health
+          #       name: System Health
+          #       secondary_info: state
+    
+        # Custom chips on home view
+        chips:
+          extra_chips:
+              # System Health chip - commented out as it requires System Health integration
+              # - type: entity
+              #   entity: binary_sensor.ha_system_health
+              #   icon: mdi:heart-pulse
+              #   icon_color: |
+              #     {% if is_state('binary_sensor.ha_system_health', 'on') %}
+              #       green
+              #     {% else %}
+              #       red
+              #     {% endif %}
+              #   content_info: none
+              #   tap_action:
+              #     action: navigate
+              #     navigation_path: /config/info
+            - type: entity
+              entity: sun.sun
+              icon: mdi:weather-sunset
+              content_info: elevation
+              tap_action:
+                action: navigate
+                navigation_path: /config/energy
+            - type: conditional
+              conditions:
+                - condition: state
+                  entity: alarm_control_panel.home_alarm
+                  state: available
+              chip:
+                type: entity
+                entity: alarm_control_panel.home_alarm
+                icon: mdi:shield-home
+                icon_color: |
+                  {% if is_state('alarm_control_panel.home_alarm', 'armed_away') %}
+                    red
+                  {% elif is_state('alarm_control_panel.home_alarm', 'armed_home') %}
+                    orange
+                  {% else %}
+                    green
+                  {% endif %}
+                content_info: none
+                tap_action:
+                  action: toggle
+    
+        # Extra cards (below area cards)
+        extra_cards:
+          - type: custom:mushroom-title-card
+            title: Home Scene Control
+          # Scene Control Card - Toggle home lights and activate scenes for all rooms
+          - type: grid
+            square: true
+            columns: 3
+            cards:
+              # Toggle home lights button - icon only
+              - type: button
+                entity: light.home
+                show_name: false
+                icon: mdi:lightbulb
+                tap_action:
+                  action: toggle
+                show_state: false
+              # Morning scene button - icon only
+              - type: button
+                show_name: false
+                icon: mdi:weather-sunset-up
+                tap_action:
+                  action: call-service
+                  service: script.activate_all_room_scenes
+                  service_data:
+                    slot: morning
+              # Day scene button - icon only
+              - type: button
+                show_name: false
+                icon: mdi:weather-sunny
+                tap_action:
+                  action: call-service
+                  service: script.activate_all_room_scenes
+                  service_data:
+                    slot: day
+              # Evening scene button - icon only
+              - type: button
+                show_name: false
+                icon: mdi:weather-sunset-down
+                tap_action:
+                  action: call-service
+                  service: script.activate_all_room_scenes
+                  service_data:
+                    slot: evening
+              # Night scene button - icon only
+              - type: button
+                show_name: false
+                icon: mdi:weather-night
+                tap_action:
+                  action: call-service
+                  service: script.activate_all_room_scenes
+                  service_data:
+                    slot: night
+              # Movie scene button - icon only
+              - type: button
+                show_name: false
+                icon: mdi:movie-open
+                tap_action:
+                  action: call-service
+                  service: scene.turn_on
+                  target:
+                    entity_id: scene.home_movie
+    
+        # View customizations
+        views:
+          # Customize default view
+          default:
+            title: Home
+            icon: mdi:home
+            path: home
+    
+  room_schedule_viewer.yaml: |
+    views:
+      - title: Room Schedule Viewer
+        path: room-schedule-viewer
+        cards:
+          - type: vertical-stack
+            cards:
+              # Room selector dropdown
+              - type: entities
+                title: Select Room
+                entities:
+                  - entity: input_select.room_selector
+                    name: Room
+    
+          # Active Scene Status Card
+          - type: markdown
+            title: Current Status
+            content: |
+              {% set room = states('input_select.room_selector') %}
+              {% if room and room != 'unknown' and room != 'unavailable' %}
+                {% set morning_custom = states('input_boolean.' ~ room ~ '_morning_custom_time') %}
+                {% set day_custom = states('input_boolean.' ~ room ~ '_day_custom_time') %}
+                {% set evening_custom = states('input_boolean.' ~ room ~ '_evening_custom_time') %}
+                {% set night_custom = states('input_boolean.' ~ room ~ '_night_custom_time') %}
+                {% set s1 = states('input_datetime.' ~ room ~ '_s1_start') if morning_custom == 'on' else '06:00:00' %}
+                {% set s2 = states('input_datetime.' ~ room ~ '_s2_start') if day_custom == 'on' else '09:00:00' %}
+                {% set s3 = states('input_datetime.' ~ room ~ '_s3_start') if evening_custom == 'on' else '17:00:00' %}
+                {% set s4 = states('input_datetime.' ~ room ~ '_s4_start') if night_custom == 'on' else '22:00:00' %}
+                {% set now_ts = as_timestamp(now()) %}
+                {% set s1_ts = as_timestamp(today_at(s1)) %}
+                {% set s2_ts = as_timestamp(today_at(s2)) %}
+                {% set s3_ts = as_timestamp(today_at(s3)) %}
+                {% set s4_ts = as_timestamp(today_at(s4)) %}
+                {% if now_ts >= s1_ts and now_ts < s2_ts %}
+                  {% set scheduled_slot = 'morning' %}
+                  {% set next_transition = s2[:5] %}
+                  {% set next_slot = 'day' %}
+                {% elif now_ts >= s2_ts and now_ts < s3_ts %}
+                  {% set scheduled_slot = 'day' %}
+                  {% set next_transition = s3[:5] %}
+                  {% set next_slot = 'evening' %}
+                {% elif now_ts >= s3_ts and now_ts < s4_ts %}
+                  {% set scheduled_slot = 'evening' %}
+                  {% set next_transition = s4[:5] %}
+                  {% set next_slot = 'night' %}
+                {% else %}
+                  {% set scheduled_slot = 'night' %}
+                  {% set next_transition = s1[:5] %}
+                  {% set next_slot = 'morning' %}
+                {% endif %}
+                {% set scene_cycle_helper = 'input_select.' ~ room ~ '_scene_cycle' %}
+                {% set scene_cycle = states(scene_cycle_helper) %}
+                {% if scene_cycle and scene_cycle != 'unknown' and scene_cycle != 'unavailable' and scene_cycle in ['morning', 'day', 'evening', 'night'] %}
+                  {% if scene_cycle != scheduled_slot %}
+                    {% set current_slot = scene_cycle %}
+                    {% set is_manual_override = true %}
+                  {% else %}
+                    {% set current_slot = scheduled_slot %}
+                    {% set is_manual_override = false %}
+                  {% endif %}
+                {% else %}
+                  {% set current_slot = scheduled_slot %}
+                  {% set is_manual_override = false %}
+                {% endif %}
+                
+                ### **{{ current_slot|title }} Scene Active**
+                
+                {% if is_manual_override %}
+                  *Manual override active*
+                {% else %}
+                  *Scheduled scene*
+                {% endif %}
+                
+                Next transition: **{{ next_transition }}** → {{ next_slot|title }}
+              {% else %}
+                Please select a room above.
+              {% endif %}
+    
+          # Manual Scene Control Buttons - Conditional cards per room
+          - type: conditional
+            conditions:
+              - entity: input_select.room_selector
+                state: bathroom
+            card:
+              type: horizontal-stack
+              cards:
+                    - type: button
+                      name: Morning
+                      icon: mdi:weather-sunset-up
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.bathroom_morning
+                          helper_entity: input_select.bathroom_scene_cycle
+                          slot_name: morning
+                      show_state: false
+                    - type: button
+                      name: Day
+                      icon: mdi:weather-sunny
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.bathroom_day
+                          helper_entity: input_select.bathroom_scene_cycle
+                          slot_name: day
+                      show_state: false
+                    - type: button
+                      name: Evening
+                      icon: mdi:weather-sunset-down
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.bathroom_evening
+                          helper_entity: input_select.bathroom_scene_cycle
+                          slot_name: evening
+                      show_state: false
+                    - type: button
+                      name: Night
+                      icon: mdi:weather-night
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.bathroom_night
+                          helper_entity: input_select.bathroom_scene_cycle
+                          slot_name: night
+                      show_state: false
+    
+          - type: conditional
+            conditions:
+              - entity: input_select.room_selector
+                state: bedroom
+            card:
+              type: horizontal-stack
+              cards:
+                    - type: button
+                      name: Morning
+                      icon: mdi:weather-sunset-up
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.bedroom_morning
+                          helper_entity: input_select.bedroom_scene_cycle
+                          slot_name: morning
+                      show_state: false
+                    - type: button
+                      name: Day
+                      icon: mdi:weather-sunny
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.bedroom_day
+                          helper_entity: input_select.bedroom_scene_cycle
+                          slot_name: day
+                      show_state: false
+                    - type: button
+                      name: Evening
+                      icon: mdi:weather-sunset-down
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.bedroom_evening
+                          helper_entity: input_select.bedroom_scene_cycle
+                          slot_name: evening
+                      show_state: false
+                    - type: button
+                      name: Night
+                      icon: mdi:weather-night
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.bedroom_night
+                          helper_entity: input_select.bedroom_scene_cycle
+                          slot_name: night
+                      show_state: false
+    
+          - type: conditional
+            conditions:
+              - entity: input_select.room_selector
+                state: hallway
+            card:
+              type: horizontal-stack
+              cards:
+                    - type: button
+                      name: Morning
+                      icon: mdi:weather-sunset-up
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.hallway_morning
+                          helper_entity: input_select.hallway_scene_cycle
+                          slot_name: morning
+                      show_state: false
+                    - type: button
+                      name: Day
+                      icon: mdi:weather-sunny
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.hallway_day
+                          helper_entity: input_select.hallway_scene_cycle
+                          slot_name: day
+                      show_state: false
+                    - type: button
+                      name: Evening
+                      icon: mdi:weather-sunset-down
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.hallway_evening
+                          helper_entity: input_select.hallway_scene_cycle
+                          slot_name: evening
+                      show_state: false
+                    - type: button
+                      name: Night
+                      icon: mdi:weather-night
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.hallway_night
+                          helper_entity: input_select.hallway_scene_cycle
+                          slot_name: night
+                      show_state: false
+    
+          - type: conditional
+            conditions:
+              - entity: input_select.room_selector
+                state: kitchen
+            card:
+              type: horizontal-stack
+              cards:
+                    - type: button
+                      name: Morning
+                      icon: mdi:weather-sunset-up
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.kitchen_morning
+                          helper_entity: input_select.kitchen_scene_cycle
+                          slot_name: morning
+                      show_state: false
+                    - type: button
+                      name: Day
+                      icon: mdi:weather-sunny
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.kitchen_day
+                          helper_entity: input_select.kitchen_scene_cycle
+                          slot_name: day
+                      show_state: false
+                    - type: button
+                      name: Evening
+                      icon: mdi:weather-sunset-down
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.kitchen_evening
+                          helper_entity: input_select.kitchen_scene_cycle
+                          slot_name: evening
+                      show_state: false
+                    - type: button
+                      name: Night
+                      icon: mdi:weather-night
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.kitchen_night
+                          helper_entity: input_select.kitchen_scene_cycle
+                          slot_name: night
+                      show_state: false
+    
+          - type: conditional
+            conditions:
+              - entity: input_select.room_selector
+                state: living_room
+            card:
+              type: horizontal-stack
+              cards:
+                    - type: button
+                      name: Morning
+                      icon: mdi:weather-sunset-up
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.living_room_morning
+                          helper_entity: input_select.living_room_scene_cycle
+                          slot_name: morning
+                      show_state: false
+                    - type: button
+                      name: Day
+                      icon: mdi:weather-sunny
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.living_room_day
+                          helper_entity: input_select.living_room_scene_cycle
+                          slot_name: day
+                      show_state: false
+                    - type: button
+                      name: Evening
+                      icon: mdi:weather-sunset-down
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.living_room_evening
+                          helper_entity: input_select.living_room_scene_cycle
+                          slot_name: evening
+                      show_state: false
+                    - type: button
+                      name: Night
+                      icon: mdi:weather-night
+                      tap_action:
+                        action: call-service
+                        service: script.activate_scene_with_helper
+                        service_data:
+                          scene_entity: scene.living_room_night
+                          helper_entity: input_select.living_room_scene_cycle
+                          slot_name: night
+                      show_state: false
+    
+          # Schedule Display
+          - type: markdown
+            title: Schedule
+            content: |
+              {% set room = states('input_select.room_selector') %}
+              {% if room and room != 'unknown' and room != 'unavailable' %}
+                {% set morning_custom = states('input_boolean.' ~ room ~ '_morning_custom_time') %}
+                {% set day_custom = states('input_boolean.' ~ room ~ '_day_custom_time') %}
+                {% set evening_custom = states('input_boolean.' ~ room ~ '_evening_custom_time') %}
+                {% set night_custom = states('input_boolean.' ~ room ~ '_night_custom_time') %}
+                {% if morning_custom == 'on' %}
+                  {% set s1_raw = states('input_datetime.' ~ room ~ '_s1_start') %}
+                  {% set s1 = s1_raw.split(' ')[-1][:5] if ' ' in s1_raw else (s1_raw[:5] if s1_raw|length >= 5 else '06:00') %}
+                {% else %}
+                  {% set s1 = '06:00' %}
+                {% endif %}
+                {% if day_custom == 'on' %}
+                  {% set s2_raw = states('input_datetime.' ~ room ~ '_s2_start') %}
+                  {% set s2 = s2_raw.split(' ')[-1][:5] if ' ' in s2_raw else (s2_raw[:5] if s2_raw|length >= 5 else '09:00') %}
+                {% else %}
+                  {% set s2 = '09:00' %}
+                {% endif %}
+                {% if evening_custom == 'on' %}
+                  {% set s3_raw = states('input_datetime.' ~ room ~ '_s3_start') %}
+                  {% set s3 = s3_raw.split(' ')[-1][:5] if ' ' in s3_raw else (s3_raw[:5] if s3_raw|length >= 5 else '17:00') %}
+                {% else %}
+                  {% set s3 = '17:00' %}
+                {% endif %}
+                {% if night_custom == 'on' %}
+                  {% set s4_raw = states('input_datetime.' ~ room ~ '_s4_start') %}
+                  {% set s4 = s4_raw.split(' ')[-1][:5] if ' ' in s4_raw else (s4_raw[:5] if s4_raw|length >= 5 else '22:00') %}
+                {% else %}
+                  {% set s4 = '22:00' %}
+                {% endif %}
+                
+                {% set morning_override = states('input_select.' ~ room ~ '_morning_scene') %}
+                {% set day_override = states('input_select.' ~ room ~ '_day_scene') %}
+                {% set evening_override = states('input_select.' ~ room ~ '_evening_scene') %}
+                {% set night_override = states('input_select.' ~ room ~ '_night_scene') %}
+                
+                {% set morning_scene = morning_override if morning_override not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_morning' %}
+                {% set day_scene = day_override if day_override not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_day' %}
+                {% set evening_scene = evening_override if evening_override not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_evening' %}
+                {% set night_scene = night_override if night_override not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_night' %}
+                
+                {% set morning_enabled = states('input_boolean.enable_' ~ room ~ '_morning') %}
+                {% set day_enabled = states('input_boolean.enable_' ~ room ~ '_day') %}
+                {% set evening_enabled = states('input_boolean.enable_' ~ room ~ '_evening') %}
+                {% set night_enabled = states('input_boolean.enable_' ~ room ~ '_night') %}
+                
+                {% set morning_auto_on = states('input_boolean.auto_on_' ~ room ~ '_morning') %}
+                {% set day_auto_on = states('input_boolean.auto_on_' ~ room ~ '_day') %}
+                {% set evening_auto_on = states('input_boolean.auto_on_' ~ room ~ '_evening') %}
+                {% set night_auto_on = states('input_boolean.auto_on_' ~ room ~ '_night') %}
+                
+                {% set morning_motion = states('input_boolean.motion_activated_' ~ room ~ '_morning') %}
+                {% set day_motion = states('input_boolean.motion_activated_' ~ room ~ '_day') %}
+                {% set evening_motion = states('input_boolean.motion_activated_' ~ room ~ '_evening') %}
+                {% set night_motion = states('input_boolean.motion_activated_' ~ room ~ '_night') %}
+                
+                | Time Slot | Scene | Activation Time | Timer Enabled | Auto-On | Motion Activated |
+                |-----------|-------|----------------|---------------|---------|------------------|
+                | Morning | `{{ morning_scene }}` | {{ s1 }} | {% if morning_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if morning_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if morning_motion == 'on' %}✓{% else %}✗{% endif %} |
+                | Day | `{{ day_scene }}` | {{ s2 }} | {% if day_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if day_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if day_motion == 'on' %}✓{% else %}✗{% endif %} |
+                | Evening | `{{ evening_scene }}` | {{ s3 }} | {% if evening_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if evening_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if evening_motion == 'on' %}✓{% else %}✗{% endif %} |
+                | Night | `{{ night_scene }}` | {{ s4 }} | {% if night_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if night_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if night_motion == 'on' %}✓{% else %}✗{% endif %} |
+                
+                {% set any_custom = morning_custom == 'on' or day_custom == 'on' or evening_custom == 'on' or night_custom == 'on' %}
+                {% if any_custom %}
+                  *Custom schedule enabled*
+                {% else %}
+                  *Default schedule (06:00, 09:00, 17:00, 22:00)*
+                {% endif %}
+              {% else %}
+                Please select a room above.
+              {% endif %}
+    
   light_control.yaml: |
     views:
       - title: Light Control
@@ -723,1339 +2059,3 @@ data:
                             {% else %}
                               []
                             {% endif %}
-  dean.yaml: |
-    strategy:
-      type: custom:mushroom-strategy
-      options:
-        # Hide unavailable entities and specific entity configurations
-        card_options:
-          # Camera cards - hide when privacy mode is enabled
-          camera.bedroom_fluent:
-            hidden: "{{ is_state('switch.bedroom_privacy_mode', 'on') }}"
-          camera.living_room_fluent:
-            hidden: "{{ is_state('switch.living_room_privacy_mode', 'on') }}"
-          # Hide individual lights that duplicate single-member groups
-          light.fixture:
-            hidden: true
-          light.bathroom_1:
-            hidden: true
-          light.hallway_1:
-            hidden: true
-          # Hide PTZ and guard buttons, sirens, and motion/animal sensors for bedroom and living room when unavailable
-          # Bedroom entities
-          button.bedroom_guard_go_to:
-            hidden: "{{ is_state('button.bedroom_guard_go_to', 'unavailable') }}"
-          button.bedroom_ptz_down:
-            hidden: "{{ is_state('button.bedroom_ptz_down', 'unavailable') }}"
-          button.bedroom_ptz_left:
-            hidden: "{{ is_state('button.bedroom_ptz_left', 'unavailable') }}"
-          button.bedroom_ptz_right:
-            hidden: "{{ is_state('button.bedroom_ptz_right', 'unavailable') }}"
-          button.bedroom_ptz_up:
-            hidden: "{{ is_state('button.bedroom_ptz_up', 'unavailable') }}"
-          button.bedroom_ptz_stop:
-            hidden: "{{ is_state('button.bedroom_ptz_stop', 'unavailable') }}"
-          siren.bedroom_siren:
-            hidden: "{{ is_state('siren.bedroom_siren', 'unavailable') }}"
-          binary_sensor.bedroom_animal:
-            hidden: "{{ is_state('binary_sensor.bedroom_animal', 'unavailable') }}"
-          binary_sensor.bedroom_motion:
-            hidden: "{{ is_state('binary_sensor.bedroom_motion', 'unavailable') }}"
-          binary_sensor.bedroom_baby_crying:
-            hidden: "{{ is_state('binary_sensor.bedroom_baby_crying', 'unavailable') }}"
-          # Living room entities
-          button.living_room_guard_go_to:
-            hidden: "{{ is_state('button.living_room_guard_go_to', 'unavailable') }}"
-          button.living_room_ptz_down:
-            hidden: "{{ is_state('button.living_room_ptz_down', 'unavailable') }}"
-          button.living_room_ptz_left:
-            hidden: "{{ is_state('button.living_room_ptz_left', 'unavailable') }}"
-          button.living_room_ptz_right:
-            hidden: "{{ is_state('button.living_room_ptz_right', 'unavailable') }}"
-          button.living_room_ptz_up:
-            hidden: "{{ is_state('button.living_room_ptz_up', 'unavailable') }}"
-          button.living_room_ptz_stop:
-            hidden: "{{ is_state('button.living_room_ptz_stop', 'unavailable') }}"
-          siren.living_room_siren:
-            hidden: "{{ is_state('siren.living_room_siren', 'unavailable') }}"
-          binary_sensor.living_room_animal:
-            hidden: "{{ is_state('binary_sensor.living_room_animal', 'unavailable') }}"
-          binary_sensor.living_room_motion:
-            hidden: "{{ is_state('binary_sensor.living_room_motion', 'unavailable') }}"
-          binary_sensor.living_room_baby_crying:
-            hidden: "{{ is_state('binary_sensor.living_room_baby_crying', 'unavailable') }}"
-    
-        # Hide unavailable entities using card_options templates
-        # Note: mushroom-strategy doesn't support domain-level filtering by state
-        # We need to add specific entities here as they're discovered
-        # Alternatively, entities can be hidden individually in card_options above
-    
-        # Quick access cards (between greeting and area cards)
-        quick_access_cards:
-          - type: custom:mushroom-title-card
-            title: Quick Access
-          - type: conditional
-            conditions:
-              - condition: state
-                entity: weather.home
-                state: available
-            card:
-              type: custom:mushroom-weather-card
-              entity: weather.home
-              show_temperature: true
-              show_conditions: true
-              primary_info: state
-              secondary_info: temperature
-          # System Status - commented out as it requires System Health integration
-          # - type: entities
-          #   title: System Status
-          #   entities:
-          #     - entity: sensor.home_assistant_version
-          #       name: Home Assistant
-          #       secondary_info: state
-          #     - entity: binary_sensor.ha_system_health
-          #       name: System Health
-          #       secondary_info: state
-    
-        # Custom chips on home view
-        chips:
-          extra_chips:
-              # System Health chip - commented out as it requires System Health integration
-              # - type: entity
-              #   entity: binary_sensor.ha_system_health
-              #   icon: mdi:heart-pulse
-              #   icon_color: |
-              #     {% if is_state('binary_sensor.ha_system_health', 'on') %}
-              #       green
-              #     {% else %}
-              #       red
-              #     {% endif %}
-              #   content_info: none
-              #   tap_action:
-              #     action: navigate
-              #     navigation_path: /config/info
-            - type: entity
-              entity: sun.sun
-              icon: mdi:weather-sunset
-              content_info: elevation
-              tap_action:
-                action: navigate
-                navigation_path: /config/energy
-            - type: conditional
-              conditions:
-                - condition: state
-                  entity: alarm_control_panel.home_alarm
-                  state: available
-              chip:
-                type: entity
-                entity: alarm_control_panel.home_alarm
-                icon: mdi:shield-home
-                icon_color: |
-                  {% if is_state('alarm_control_panel.home_alarm', 'armed_away') %}
-                    red
-                  {% elif is_state('alarm_control_panel.home_alarm', 'armed_home') %}
-                    orange
-                  {% else %}
-                    green
-                  {% endif %}
-                content_info: none
-                tap_action:
-                  action: toggle
-    
-        # Extra cards (below area cards)
-        extra_cards:
-          - type: custom:mushroom-title-card
-            title: Home Scene Control
-          # Scene Control Card - Toggle home lights and activate scenes for all rooms
-          - type: grid
-            square: true
-            columns: 3
-            cards:
-              # Toggle home lights button - icon only
-              - type: button
-                entity: light.home
-                show_name: false
-                icon: mdi:lightbulb
-                tap_action:
-                  action: toggle
-                show_state: false
-              # Morning scene button - icon only
-              - type: button
-                show_name: false
-                icon: mdi:weather-sunset-up
-                tap_action:
-                  action: call-service
-                  service: script.activate_all_room_scenes
-                  service_data:
-                    slot: morning
-              # Day scene button - icon only
-              - type: button
-                show_name: false
-                icon: mdi:weather-sunny
-                tap_action:
-                  action: call-service
-                  service: script.activate_all_room_scenes
-                  service_data:
-                    slot: day
-              # Evening scene button - icon only
-              - type: button
-                show_name: false
-                icon: mdi:weather-sunset-down
-                tap_action:
-                  action: call-service
-                  service: script.activate_all_room_scenes
-                  service_data:
-                    slot: evening
-              # Night scene button - icon only
-              - type: button
-                show_name: false
-                icon: mdi:weather-night
-                tap_action:
-                  action: call-service
-                  service: script.activate_all_room_scenes
-                  service_data:
-                    slot: night
-              # Movie scene button - icon only
-              - type: button
-                show_name: false
-                icon: mdi:movie-open
-                tap_action:
-                  action: call-service
-                  service: scene.turn_on
-                  target:
-                    entity_id: scene.home_movie
-    
-        # View customizations
-        views:
-          # Customize default view
-          default:
-            title: Home
-            icon: mdi:home
-            path: home
-    
-  room_schedule_viewer.yaml: |
-    views:
-      - title: Room Schedule Viewer
-        path: room-schedule-viewer
-        cards:
-          - type: vertical-stack
-            cards:
-              # Room selector dropdown
-              - type: entities
-                title: Select Room
-                entities:
-                  - entity: input_select.room_selector
-                    name: Room
-    
-          # Active Scene Status Card
-          - type: markdown
-            title: Current Status
-            content: |
-              {% set room = states('input_select.room_selector') %}
-              {% if room and room != 'unknown' and room != 'unavailable' %}
-                {% set morning_custom = states('input_boolean.' ~ room ~ '_morning_custom_time') %}
-                {% set day_custom = states('input_boolean.' ~ room ~ '_day_custom_time') %}
-                {% set evening_custom = states('input_boolean.' ~ room ~ '_evening_custom_time') %}
-                {% set night_custom = states('input_boolean.' ~ room ~ '_night_custom_time') %}
-                {% set s1 = states('input_datetime.' ~ room ~ '_s1_start') if morning_custom == 'on' else '06:00:00' %}
-                {% set s2 = states('input_datetime.' ~ room ~ '_s2_start') if day_custom == 'on' else '09:00:00' %}
-                {% set s3 = states('input_datetime.' ~ room ~ '_s3_start') if evening_custom == 'on' else '17:00:00' %}
-                {% set s4 = states('input_datetime.' ~ room ~ '_s4_start') if night_custom == 'on' else '22:00:00' %}
-                {% set now_ts = as_timestamp(now()) %}
-                {% set s1_ts = as_timestamp(today_at(s1)) %}
-                {% set s2_ts = as_timestamp(today_at(s2)) %}
-                {% set s3_ts = as_timestamp(today_at(s3)) %}
-                {% set s4_ts = as_timestamp(today_at(s4)) %}
-                {% if now_ts >= s1_ts and now_ts < s2_ts %}
-                  {% set scheduled_slot = 'morning' %}
-                  {% set next_transition = s2[:5] %}
-                  {% set next_slot = 'day' %}
-                {% elif now_ts >= s2_ts and now_ts < s3_ts %}
-                  {% set scheduled_slot = 'day' %}
-                  {% set next_transition = s3[:5] %}
-                  {% set next_slot = 'evening' %}
-                {% elif now_ts >= s3_ts and now_ts < s4_ts %}
-                  {% set scheduled_slot = 'evening' %}
-                  {% set next_transition = s4[:5] %}
-                  {% set next_slot = 'night' %}
-                {% else %}
-                  {% set scheduled_slot = 'night' %}
-                  {% set next_transition = s1[:5] %}
-                  {% set next_slot = 'morning' %}
-                {% endif %}
-                {% set scene_cycle_helper = 'input_select.' ~ room ~ '_scene_cycle' %}
-                {% set scene_cycle = states(scene_cycle_helper) %}
-                {% if scene_cycle and scene_cycle != 'unknown' and scene_cycle != 'unavailable' and scene_cycle in ['morning', 'day', 'evening', 'night'] %}
-                  {% if scene_cycle != scheduled_slot %}
-                    {% set current_slot = scene_cycle %}
-                    {% set is_manual_override = true %}
-                  {% else %}
-                    {% set current_slot = scheduled_slot %}
-                    {% set is_manual_override = false %}
-                  {% endif %}
-                {% else %}
-                  {% set current_slot = scheduled_slot %}
-                  {% set is_manual_override = false %}
-                {% endif %}
-                
-                ### **{{ current_slot|title }} Scene Active**
-                
-                {% if is_manual_override %}
-                  *Manual override active*
-                {% else %}
-                  *Scheduled scene*
-                {% endif %}
-                
-                Next transition: **{{ next_transition }}** → {{ next_slot|title }}
-              {% else %}
-                Please select a room above.
-              {% endif %}
-    
-          # Manual Scene Control Buttons - Conditional cards per room
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: bathroom
-            card:
-              type: horizontal-stack
-              cards:
-                    - type: button
-                      name: Morning
-                      icon: mdi:weather-sunset-up
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.bathroom_morning
-                          helper_entity: input_select.bathroom_scene_cycle
-                          slot_name: morning
-                      show_state: false
-                    - type: button
-                      name: Day
-                      icon: mdi:weather-sunny
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.bathroom_day
-                          helper_entity: input_select.bathroom_scene_cycle
-                          slot_name: day
-                      show_state: false
-                    - type: button
-                      name: Evening
-                      icon: mdi:weather-sunset-down
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.bathroom_evening
-                          helper_entity: input_select.bathroom_scene_cycle
-                          slot_name: evening
-                      show_state: false
-                    - type: button
-                      name: Night
-                      icon: mdi:weather-night
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.bathroom_night
-                          helper_entity: input_select.bathroom_scene_cycle
-                          slot_name: night
-                      show_state: false
-    
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: bedroom
-            card:
-              type: horizontal-stack
-              cards:
-                    - type: button
-                      name: Morning
-                      icon: mdi:weather-sunset-up
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.bedroom_morning
-                          helper_entity: input_select.bedroom_scene_cycle
-                          slot_name: morning
-                      show_state: false
-                    - type: button
-                      name: Day
-                      icon: mdi:weather-sunny
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.bedroom_day
-                          helper_entity: input_select.bedroom_scene_cycle
-                          slot_name: day
-                      show_state: false
-                    - type: button
-                      name: Evening
-                      icon: mdi:weather-sunset-down
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.bedroom_evening
-                          helper_entity: input_select.bedroom_scene_cycle
-                          slot_name: evening
-                      show_state: false
-                    - type: button
-                      name: Night
-                      icon: mdi:weather-night
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.bedroom_night
-                          helper_entity: input_select.bedroom_scene_cycle
-                          slot_name: night
-                      show_state: false
-    
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: hallway
-            card:
-              type: horizontal-stack
-              cards:
-                    - type: button
-                      name: Morning
-                      icon: mdi:weather-sunset-up
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.hallway_morning
-                          helper_entity: input_select.hallway_scene_cycle
-                          slot_name: morning
-                      show_state: false
-                    - type: button
-                      name: Day
-                      icon: mdi:weather-sunny
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.hallway_day
-                          helper_entity: input_select.hallway_scene_cycle
-                          slot_name: day
-                      show_state: false
-                    - type: button
-                      name: Evening
-                      icon: mdi:weather-sunset-down
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.hallway_evening
-                          helper_entity: input_select.hallway_scene_cycle
-                          slot_name: evening
-                      show_state: false
-                    - type: button
-                      name: Night
-                      icon: mdi:weather-night
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.hallway_night
-                          helper_entity: input_select.hallway_scene_cycle
-                          slot_name: night
-                      show_state: false
-    
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: kitchen
-            card:
-              type: horizontal-stack
-              cards:
-                    - type: button
-                      name: Morning
-                      icon: mdi:weather-sunset-up
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.kitchen_morning
-                          helper_entity: input_select.kitchen_scene_cycle
-                          slot_name: morning
-                      show_state: false
-                    - type: button
-                      name: Day
-                      icon: mdi:weather-sunny
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.kitchen_day
-                          helper_entity: input_select.kitchen_scene_cycle
-                          slot_name: day
-                      show_state: false
-                    - type: button
-                      name: Evening
-                      icon: mdi:weather-sunset-down
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.kitchen_evening
-                          helper_entity: input_select.kitchen_scene_cycle
-                          slot_name: evening
-                      show_state: false
-                    - type: button
-                      name: Night
-                      icon: mdi:weather-night
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.kitchen_night
-                          helper_entity: input_select.kitchen_scene_cycle
-                          slot_name: night
-                      show_state: false
-    
-          - type: conditional
-            conditions:
-              - entity: input_select.room_selector
-                state: living_room
-            card:
-              type: horizontal-stack
-              cards:
-                    - type: button
-                      name: Morning
-                      icon: mdi:weather-sunset-up
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.living_room_morning
-                          helper_entity: input_select.living_room_scene_cycle
-                          slot_name: morning
-                      show_state: false
-                    - type: button
-                      name: Day
-                      icon: mdi:weather-sunny
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.living_room_day
-                          helper_entity: input_select.living_room_scene_cycle
-                          slot_name: day
-                      show_state: false
-                    - type: button
-                      name: Evening
-                      icon: mdi:weather-sunset-down
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.living_room_evening
-                          helper_entity: input_select.living_room_scene_cycle
-                          slot_name: evening
-                      show_state: false
-                    - type: button
-                      name: Night
-                      icon: mdi:weather-night
-                      tap_action:
-                        action: call-service
-                        service: script.activate_scene_with_helper
-                        service_data:
-                          scene_entity: scene.living_room_night
-                          helper_entity: input_select.living_room_scene_cycle
-                          slot_name: night
-                      show_state: false
-    
-          # Schedule Display
-          - type: markdown
-            title: Schedule
-            content: |
-              {% set room = states('input_select.room_selector') %}
-              {% if room and room != 'unknown' and room != 'unavailable' %}
-                {% set morning_custom = states('input_boolean.' ~ room ~ '_morning_custom_time') %}
-                {% set day_custom = states('input_boolean.' ~ room ~ '_day_custom_time') %}
-                {% set evening_custom = states('input_boolean.' ~ room ~ '_evening_custom_time') %}
-                {% set night_custom = states('input_boolean.' ~ room ~ '_night_custom_time') %}
-                {% if morning_custom == 'on' %}
-                  {% set s1_raw = states('input_datetime.' ~ room ~ '_s1_start') %}
-                  {% set s1 = s1_raw.split(' ')[-1][:5] if ' ' in s1_raw else (s1_raw[:5] if s1_raw|length >= 5 else '06:00') %}
-                {% else %}
-                  {% set s1 = '06:00' %}
-                {% endif %}
-                {% if day_custom == 'on' %}
-                  {% set s2_raw = states('input_datetime.' ~ room ~ '_s2_start') %}
-                  {% set s2 = s2_raw.split(' ')[-1][:5] if ' ' in s2_raw else (s2_raw[:5] if s2_raw|length >= 5 else '09:00') %}
-                {% else %}
-                  {% set s2 = '09:00' %}
-                {% endif %}
-                {% if evening_custom == 'on' %}
-                  {% set s3_raw = states('input_datetime.' ~ room ~ '_s3_start') %}
-                  {% set s3 = s3_raw.split(' ')[-1][:5] if ' ' in s3_raw else (s3_raw[:5] if s3_raw|length >= 5 else '17:00') %}
-                {% else %}
-                  {% set s3 = '17:00' %}
-                {% endif %}
-                {% if night_custom == 'on' %}
-                  {% set s4_raw = states('input_datetime.' ~ room ~ '_s4_start') %}
-                  {% set s4 = s4_raw.split(' ')[-1][:5] if ' ' in s4_raw else (s4_raw[:5] if s4_raw|length >= 5 else '22:00') %}
-                {% else %}
-                  {% set s4 = '22:00' %}
-                {% endif %}
-                
-                {% set morning_override = states('input_select.' ~ room ~ '_morning_scene') %}
-                {% set day_override = states('input_select.' ~ room ~ '_day_scene') %}
-                {% set evening_override = states('input_select.' ~ room ~ '_evening_scene') %}
-                {% set night_override = states('input_select.' ~ room ~ '_night_scene') %}
-                
-                {% set morning_scene = morning_override if morning_override not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_morning' %}
-                {% set day_scene = day_override if day_override not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_day' %}
-                {% set evening_scene = evening_override if evening_override not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_evening' %}
-                {% set night_scene = night_override if night_override not in ['unknown', 'unavailable', ''] else 'scene.' ~ room ~ '_night' %}
-                
-                {% set morning_enabled = states('input_boolean.enable_' ~ room ~ '_morning') %}
-                {% set day_enabled = states('input_boolean.enable_' ~ room ~ '_day') %}
-                {% set evening_enabled = states('input_boolean.enable_' ~ room ~ '_evening') %}
-                {% set night_enabled = states('input_boolean.enable_' ~ room ~ '_night') %}
-                
-                {% set morning_auto_on = states('input_boolean.auto_on_' ~ room ~ '_morning') %}
-                {% set day_auto_on = states('input_boolean.auto_on_' ~ room ~ '_day') %}
-                {% set evening_auto_on = states('input_boolean.auto_on_' ~ room ~ '_evening') %}
-                {% set night_auto_on = states('input_boolean.auto_on_' ~ room ~ '_night') %}
-                
-                {% set morning_motion = states('input_boolean.motion_activated_' ~ room ~ '_morning') %}
-                {% set day_motion = states('input_boolean.motion_activated_' ~ room ~ '_day') %}
-                {% set evening_motion = states('input_boolean.motion_activated_' ~ room ~ '_evening') %}
-                {% set night_motion = states('input_boolean.motion_activated_' ~ room ~ '_night') %}
-                
-                | Time Slot | Scene | Activation Time | Timer Enabled | Auto-On | Motion Activated |
-                |-----------|-------|----------------|---------------|---------|------------------|
-                | Morning | `{{ morning_scene }}` | {{ s1 }} | {% if morning_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if morning_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if morning_motion == 'on' %}✓{% else %}✗{% endif %} |
-                | Day | `{{ day_scene }}` | {{ s2 }} | {% if day_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if day_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if day_motion == 'on' %}✓{% else %}✗{% endif %} |
-                | Evening | `{{ evening_scene }}` | {{ s3 }} | {% if evening_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if evening_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if evening_motion == 'on' %}✓{% else %}✗{% endif %} |
-                | Night | `{{ night_scene }}` | {{ s4 }} | {% if night_enabled == 'on' %}✓{% else %}✗{% endif %} | {% if night_auto_on == 'on' %}✓{% else %}✗{% endif %} | {% if night_motion == 'on' %}✓{% else %}✗{% endif %} |
-                
-                {% set any_custom = morning_custom == 'on' or day_custom == 'on' or evening_custom == 'on' or night_custom == 'on' %}
-                {% if any_custom %}
-                  *Custom schedule enabled*
-                {% else %}
-                  *Default schedule (06:00, 09:00, 17:00, 22:00)*
-                {% endif %}
-              {% else %}
-                Please select a room above.
-              {% endif %}
-    
-  room_schedule_configuration.yaml: |
-    views:
-      - title: Room Schedule Configuration
-        path: room-schedule-configuration
-        cards:
-          # Global Schedule Section
-          - type: entities
-            title: Global Schedule Defaults
-            show_header_toggle: false
-            entities:
-              - entity: input_datetime.global_morning_start
-                name: Morning Start
-              - entity: input_datetime.global_day_start
-                name: Day Start
-              - entity: input_datetime.global_evening_start
-                name: Evening Start
-              - entity: input_datetime.global_night_start
-                name: Night Start
-    
-          # Configuration Selectors
-          - type: vertical-stack
-            cards:
-              - type: entities
-                title: Select Room & Slot
-                show_header_toggle: false
-                entities:
-                  - entity: input_select.room_selector
-                    name: Room
-                  - entity: input_select.time_window_selector
-                    name: Time Slot
-    
-              # ------------------------------------------------------
-              # BEDROOM CONFIGURATION
-              # ------------------------------------------------------
-              
-              # Bedroom Morning
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: bedroom
-                  - entity: input_select.time_window_selector
-                    state: morning
-                card:
-                  type: entities
-                  title: Bedroom Morning
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.bedroom_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.bedroom_morning_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.bedroom_morning_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.bedroom_s1_start
-                        name: Morning Start Time
-                    - type: section
-                    - entity: input_select.bedroom_morning_scene
-                      name: Scene
-                    - entity: input_boolean.bedroom_morning_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.bedroom_morning_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_bedroom_morning
-                      name: Motion Auto-Off (min)
-    
-              # Bedroom Day
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: bedroom
-                  - entity: input_select.time_window_selector
-                    state: day
-                card:
-                  type: entities
-                  title: Bedroom Day
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.bedroom_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.bedroom_day_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.bedroom_day_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.bedroom_s2_start
-                        name: Day Start Time
-                    - type: section
-                    - entity: input_select.bedroom_day_scene
-                      name: Scene
-                    - entity: input_boolean.bedroom_day_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.bedroom_day_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_bedroom_day
-                      name: Motion Auto-Off (min)
-    
-              # Bedroom Evening
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: bedroom
-                  - entity: input_select.time_window_selector
-                    state: evening
-                card:
-                  type: entities
-                  title: Bedroom Evening
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.bedroom_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.bedroom_evening_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.bedroom_evening_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.bedroom_s3_start
-                        name: Evening Start Time
-                    - type: section
-                    - entity: input_select.bedroom_evening_scene
-                      name: Scene
-                    - entity: input_boolean.bedroom_evening_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.bedroom_evening_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_bedroom_evening
-                      name: Motion Auto-Off (min)
-    
-              # Bedroom Night
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: bedroom
-                  - entity: input_select.time_window_selector
-                    state: night
-                card:
-                  type: entities
-                  title: Bedroom Night
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.bedroom_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.bedroom_night_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.bedroom_night_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.bedroom_s4_start
-                        name: Night Start Time
-                    - type: section
-                    - entity: input_select.bedroom_night_scene
-                      name: Scene
-                    - entity: input_boolean.bedroom_night_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.bedroom_night_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_bedroom_night
-                      name: Motion Auto-Off (min)
-    
-              # ------------------------------------------------------
-              # BATHROOM CONFIGURATION
-              # ------------------------------------------------------
-    
-              # Bathroom Morning
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: bathroom
-                  - entity: input_select.time_window_selector
-                    state: morning
-                card:
-                  type: entities
-                  title: Bathroom Morning
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.bathroom_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.bathroom_morning_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.bathroom_morning_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.bathroom_s1_start
-                        name: Morning Start Time
-                    - type: section
-                    - entity: input_select.bathroom_morning_scene
-                      name: Scene
-                    - entity: input_boolean.bathroom_morning_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.bathroom_morning_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_bathroom_morning
-                      name: Motion Auto-Off (min)
-    
-              # Bathroom Day
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: bathroom
-                  - entity: input_select.time_window_selector
-                    state: day
-                card:
-                  type: entities
-                  title: Bathroom Day
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.bathroom_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.bathroom_day_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.bathroom_day_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.bathroom_s2_start
-                        name: Day Start Time
-                    - type: section
-                    - entity: input_select.bathroom_day_scene
-                      name: Scene
-                    - entity: input_boolean.bathroom_day_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.bathroom_day_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_bathroom_day
-                      name: Motion Auto-Off (min)
-    
-              # Bathroom Evening
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: bathroom
-                  - entity: input_select.time_window_selector
-                    state: evening
-                card:
-                  type: entities
-                  title: Bathroom Evening
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.bathroom_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.bathroom_evening_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.bathroom_evening_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.bathroom_s3_start
-                        name: Evening Start Time
-                    - type: section
-                    - entity: input_select.bathroom_evening_scene
-                      name: Scene
-                    - entity: input_boolean.bathroom_evening_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.bathroom_evening_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_bathroom_evening
-                      name: Motion Auto-Off (min)
-    
-              # Bathroom Night
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: bathroom
-                  - entity: input_select.time_window_selector
-                    state: night
-                card:
-                  type: entities
-                  title: Bathroom Night
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.bathroom_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.bathroom_night_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.bathroom_night_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.bathroom_s4_start
-                        name: Night Start Time
-                    - type: section
-                    - entity: input_select.bathroom_night_scene
-                      name: Scene
-                    - entity: input_boolean.bathroom_night_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.bathroom_night_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_bathroom_night
-                      name: Motion Auto-Off (min)
-    
-              # ------------------------------------------------------
-              # LIVING ROOM CONFIGURATION
-              # ------------------------------------------------------
-    
-              # Living Room Morning
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: living_room
-                  - entity: input_select.time_window_selector
-                    state: morning
-                card:
-                  type: entities
-                  title: Living Room Morning
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.living_room_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.living_room_morning_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.living_room_morning_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.living_room_s1_start
-                        name: Morning Start Time
-                    - type: section
-                    - entity: input_select.living_room_morning_scene
-                      name: Scene
-                    - entity: input_boolean.living_room_morning_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.living_room_morning_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_living_room_morning
-                      name: Motion Auto-Off (min)
-    
-              # Living Room Day
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: living_room
-                  - entity: input_select.time_window_selector
-                    state: day
-                card:
-                  type: entities
-                  title: Living Room Day
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.living_room_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.living_room_day_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.living_room_day_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.living_room_s2_start
-                        name: Day Start Time
-                    - type: section
-                    - entity: input_select.living_room_day_scene
-                      name: Scene
-                    - entity: input_boolean.living_room_day_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.living_room_day_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_living_room_day
-                      name: Motion Auto-Off (min)
-    
-              # Living Room Evening
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: living_room
-                  - entity: input_select.time_window_selector
-                    state: evening
-                card:
-                  type: entities
-                  title: Living Room Evening
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.living_room_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.living_room_evening_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.living_room_evening_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.living_room_s3_start
-                        name: Evening Start Time
-                    - type: section
-                    - entity: input_select.living_room_evening_scene
-                      name: Scene
-                    - entity: input_boolean.living_room_evening_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.living_room_evening_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_living_room_evening
-                      name: Motion Auto-Off (min)
-    
-              # Living Room Night
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: living_room
-                  - entity: input_select.time_window_selector
-                    state: night
-                card:
-                  type: entities
-                  title: Living Room Night
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.living_room_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.living_room_night_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.living_room_night_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.living_room_s4_start
-                        name: Night Start Time
-                    - type: section
-                    - entity: input_select.living_room_night_scene
-                      name: Scene
-                    - entity: input_boolean.living_room_night_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.living_room_night_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_living_room_night
-                      name: Motion Auto-Off (min)
-    
-              # ------------------------------------------------------
-              # KITCHEN CONFIGURATION
-              # ------------------------------------------------------
-    
-              # Kitchen Morning
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: kitchen
-                  - entity: input_select.time_window_selector
-                    state: morning
-                card:
-                  type: entities
-                  title: Kitchen Morning
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.kitchen_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.kitchen_morning_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.kitchen_morning_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.kitchen_s1_start
-                        name: Morning Start Time
-                    - type: section
-                    - entity: input_select.kitchen_morning_scene
-                      name: Scene
-                    - entity: input_boolean.kitchen_morning_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.kitchen_morning_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_kitchen_morning
-                      name: Motion Auto-Off (min)
-    
-              # Kitchen Day
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: kitchen
-                  - entity: input_select.time_window_selector
-                    state: day
-                card:
-                  type: entities
-                  title: Kitchen Day
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.kitchen_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.kitchen_day_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.kitchen_day_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.kitchen_s2_start
-                        name: Day Start Time
-                    - type: section
-                    - entity: input_select.kitchen_day_scene
-                      name: Scene
-                    - entity: input_boolean.kitchen_day_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.kitchen_day_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_kitchen_day
-                      name: Motion Auto-Off (min)
-    
-              # Kitchen Evening
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: kitchen
-                  - entity: input_select.time_window_selector
-                    state: evening
-                card:
-                  type: entities
-                  title: Kitchen Evening
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.kitchen_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.kitchen_evening_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.kitchen_evening_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.kitchen_s3_start
-                        name: Evening Start Time
-                    - type: section
-                    - entity: input_select.kitchen_evening_scene
-                      name: Scene
-                    - entity: input_boolean.kitchen_evening_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.kitchen_evening_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_kitchen_evening
-                      name: Motion Auto-Off (min)
-    
-              # Kitchen Night
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: kitchen
-                  - entity: input_select.time_window_selector
-                    state: night
-                card:
-                  type: entities
-                  title: Kitchen Night
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.kitchen_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.kitchen_night_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.kitchen_night_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.kitchen_s4_start
-                        name: Night Start Time
-                    - type: section
-                    - entity: input_select.kitchen_night_scene
-                      name: Scene
-                    - entity: input_boolean.kitchen_night_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.kitchen_night_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_kitchen_night
-                      name: Motion Auto-Off (min)
-    
-              # ------------------------------------------------------
-              # HALLWAY CONFIGURATION
-              # ------------------------------------------------------
-    
-              # Hallway Morning
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: hallway
-                  - entity: input_select.time_window_selector
-                    state: morning
-                card:
-                  type: entities
-                  title: Hallway Morning
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.hallway_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.hallway_morning_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.hallway_morning_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.hallway_s1_start
-                        name: Morning Start Time
-                    - type: section
-                    - entity: input_select.hallway_morning_scene
-                      name: Scene
-                    - entity: input_boolean.hallway_morning_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.hallway_morning_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_hallway_morning
-                      name: Motion Auto-Off (min)
-    
-              # Hallway Day
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: hallway
-                  - entity: input_select.time_window_selector
-                    state: day
-                card:
-                  type: entities
-                  title: Hallway Day
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.hallway_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.hallway_day_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.hallway_day_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.hallway_s2_start
-                        name: Day Start Time
-                    - type: section
-                    - entity: input_select.hallway_day_scene
-                      name: Scene
-                    - entity: input_boolean.hallway_day_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.hallway_day_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_hallway_day
-                      name: Motion Auto-Off (min)
-    
-              # Hallway Evening
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: hallway
-                  - entity: input_select.time_window_selector
-                    state: evening
-                card:
-                  type: entities
-                  title: Hallway Evening
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.hallway_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.hallway_evening_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.hallway_evening_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.hallway_s3_start
-                        name: Evening Start Time
-                    - type: section
-                    - entity: input_select.hallway_evening_scene
-                      name: Scene
-                    - entity: input_boolean.hallway_evening_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.hallway_evening_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_hallway_evening
-                      name: Motion Auto-Off (min)
-    
-              # Hallway Night
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: hallway
-                  - entity: input_select.time_window_selector
-                    state: night
-                card:
-                  type: entities
-                  title: Hallway Night
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.hallway_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.hallway_night_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.hallway_night_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.hallway_s4_start
-                        name: Night Start Time
-                    - type: section
-                    - entity: input_select.hallway_night_scene
-                      name: Scene
-                    - entity: input_boolean.hallway_night_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.hallway_night_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_hallway_night
-                      name: Motion Auto-Off (min)
