@@ -138,9 +138,10 @@ spec:
               set -e
               CONFIG_DIR="/config"
         
-              # Directories
               mkdir -p "${CONFIG_DIR}/themes"
-              mkdir -p "${CONFIG_DIR}/www/pets" "${CONFIG_DIR}/www/intruders"
+              mkdir -p "${CONFIG_DIR}/www/pets"
+              mkdir -p "${CONFIG_DIR}/www/intruders"
+              mkdir -p "${CONFIG_DIR}/www/calendar_cache"
               mkdir -p "${CONFIG_DIR}/scripts"                     # dir-based scripts
               mkdir -p "${CONFIG_DIR}/automations"                 # optional manual files (not auto-included)
               mkdir -p "${CONFIG_DIR}/scenes"                      # optional manual files (not auto-included)
@@ -212,7 +213,15 @@ spec:
                   - 10.100.20.0/24
                   - 10.43.0.0/16
                   - 10.42.0.0/16
-        
+
+              # Calendar Configuration (Local Cache)
+              calendar:
+                - platform: ics_calendar
+                  calendars:
+                    - name: "Work"
+                      url: "http://localhost:8123/local/calendar_cache/local_calendar.work.ics"
+                      include_resource: true
+
               # Media sources - expose local media folders to Media dashboard
               media_source: {}
         
@@ -220,7 +229,7 @@ spec:
               shell_command:
                 cleanup_old_photos: 'find /config/www/pets -name "*.jpg" -mtime +30 -delete && find /config/www/intruders -name "*.jpg" -mtime +30 -delete'
               EOF
-        
+
               # Seed UI files if missing/empty (correct types!)
               # scripts.yaml is a DICT; scenes/automations are LISTS
               if [ ! -f "${CONFIG_DIR}/scripts.yaml" ] || [ ! -s "${CONFIG_DIR}/scripts.yaml" ]; then
@@ -232,15 +241,16 @@ spec:
               if [ ! -f "${CONFIG_DIR}/automations.yaml" ] || [ ! -s "${CONFIG_DIR}/automations.yaml" ]; then
                 echo "[]" > "${CONFIG_DIR}/automations.yaml"
               fi
-        
+
               # Perms
               chmod 755 "${CONFIG_DIR}/www/pets" "${CONFIG_DIR}/www/intruders"
-        
+
               echo "Default configuration and directories created"
 
           volumeMounts:
             - name: config
               mountPath: /config
+
         - name: validate-config
           image: ghcr.io/home-assistant/home-assistant:stable
           imagePullPolicy: IfNotPresent
