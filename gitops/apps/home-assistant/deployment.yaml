@@ -199,7 +199,7 @@ spec:
                     icon: mdi:calendar-edit
                     show_in_sidebar: true
                     filename: dashboards/views/room_schedule_configuration.yaml
-                  subway:
+                  subway-dashboard:
                     mode: yaml
                     title: Subway
                     icon: mdi:subway-variant
