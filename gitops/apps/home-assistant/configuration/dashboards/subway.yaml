@@ -11,30 +11,20 @@ views:
               title: Atlantic Av-Barclays Ctr
               show_header_toggle: false
             filter:
-              include:
-                - domain: sensor
-                  attributes:
-                    friendly_name: "/Atlantic Av|Barclays/"
-                    headsign: "/Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St/"
-                  options:
-                    name: "Northbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
-                    secondary_info: last-updated
-                - domain: sensor
-                  attributes:
-                    friendly_name: "/Atlantic Av|Barclays/"
-                    headsign: "/Brooklyn|Coney Island|Brighton|Bay Ridge|Utica|New Lots|Flatbush|Far Rockaway|Stillwell|Church|Kings Hwy|Whitehall|95 St/"
-                  options:
-                    name: "Southbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
-                    secondary_info: last-updated
-                - domain: sensor
-                  attributes:
-                    friendly_name: "/Atlantic Av|Barclays/"
-                  options:
-                    name: "Other: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
-                    secondary_info: last-updated
-              exclude:
-                - state: "unavailable"
-                - state: "unknown"
+              template: |
+                {% for state in states.sensor -%}
+                  {%- if state.attributes.friendly_name is defined and 'Atlantic Av' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
+                    {%- set route = state.attributes.route_id | default('?') -%}
+                    {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                    {{
+                      {
+                        'entity': state.entity_id,
+                        'name': route ~ " -> " ~ headsign,
+                        'secondary_info': 'last-updated'
+                      } 
+                    }},
+                  {%- endif -%}
+                {%- endfor %}
             sort:
               method: attribute
               attribute: route_id
@@ -46,24 +36,20 @@ views:
               title: Bergen St
               show_header_toggle: false
             filter:
-              include:
-                - domain: sensor
-                  attributes:
-                    friendly_name: "/Bergen St/"
-                    headsign: "/Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Court Sq/"
-                  options:
-                    name: "Northbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
-                    secondary_info: last-updated
-                - domain: sensor
-                  attributes:
-                    friendly_name: "/Bergen St/"
-                    headsign: "/Brooklyn|Coney Island|Brighton|Bay Ridge|Utica|New Lots|Flatbush|Far Rockaway|Stillwell|Church|Kings Hwy|Whitehall|95 St|Church/"
-                  options:
-                    name: "Southbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
-                    secondary_info: last-updated
-              exclude:
-                - state: "unavailable"
-                - state: "unknown"
+              template: |
+                {% for state in states.sensor -%}
+                  {%- if state.attributes.friendly_name is defined and 'Bergen St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
+                    {%- set route = state.attributes.route_id | default('?') -%}
+                    {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                    {{
+                      {
+                        'entity': state.entity_id,
+                        'name': route ~ " -> " ~ headsign,
+                        'secondary_info': 'last-updated'
+                      } 
+                    }},
+                  {%- endif -%}
+                {%- endfor %}
             sort:
               method: attribute
               attribute: route_id
@@ -75,24 +61,20 @@ views:
               title: Fulton St
               show_header_toggle: false
             filter:
-              include:
-                - domain: sensor
-                  attributes:
-                    friendly_name: "/Fulton St/"
-                    headsign: "/Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Court Sq/"
-                  options:
-                    name: "Northbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
-                    secondary_info: last-updated
-                - domain: sensor
-                  attributes:
-                    friendly_name: "/Fulton St/"
-                    headsign: "/Brooklyn|Coney Island|Brighton|Bay Ridge|Utica|New Lots|Flatbush|Far Rockaway|Stillwell|Church|Kings Hwy|Whitehall|95 St|Church/"
-                  options:
-                    name: "Southbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
-                    secondary_info: last-updated
-              exclude:
-                - state: "unavailable"
-                - state: "unknown"
+              template: |
+                {% for state in states.sensor -%}
+                  {%- if state.attributes.friendly_name is defined and 'Fulton St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
+                    {%- set route = state.attributes.route_id | default('?') -%}
+                    {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                    {{
+                      {
+                        'entity': state.entity_id,
+                        'name': route ~ " -> " ~ headsign,
+                        'secondary_info': 'last-updated'
+                      } 
+                    }},
+                  {%- endif -%}
+                {%- endfor %}
             sort:
               method: attribute
               attribute: route_id
@@ -104,24 +86,20 @@ views:
               title: Lafayette Av
               show_header_toggle: false
             filter:
-              include:
-                - domain: sensor
-                  attributes:
-                    friendly_name: "/Lafayette Av/"
-                    headsign: "/Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St/"
-                  options:
-                    name: "Northbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
-                    secondary_info: last-updated
-                - domain: sensor
-                  attributes:
-                    friendly_name: "/Lafayette Av/"
-                    headsign: "/Brooklyn|Coney Island|Brighton|Bay Ridge|Utica|New Lots|Flatbush|Far Rockaway|Stillwell|Church|Kings Hwy|Whitehall|95 St|Euclid/"
-                  options:
-                    name: "Southbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
-                    secondary_info: last-updated
-              exclude:
-                - state: "unavailable"
-                - state: "unknown"
+              template: |
+                {% for state in states.sensor -%}
+                  {%- if state.attributes.friendly_name is defined and 'Lafayette Av' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
+                    {%- set route = state.attributes.route_id | default('?') -%}
+                    {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                    {{
+                      {
+                        'entity': state.entity_id,
+                        'name': route ~ " -> " ~ headsign,
+                        'secondary_info': 'last-updated'
+                      } 
+                    }},
+                  {%- endif -%}
+                {%- endfor %}
             sort:
               method: attribute
               attribute: route_id
@@ -133,24 +111,20 @@ views:
               title: 57 St-7 Av
               show_header_toggle: false
             filter:
-              include:
-                - domain: sensor
-                  attributes:
-                    friendly_name: "/57 St/"
-                    headsign: "/Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St/"
-                  options:
-                    name: "Northbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
-                    secondary_info: last-updated
-                - domain: sensor
-                  attributes:
-                    friendly_name: "/57 St/"
-                    headsign: "/Brooklyn|Coney Island|Brighton|Bay Ridge|Utica|New Lots|Flatbush|Far Rockaway|Stillwell|Church|Kings Hwy|Whitehall|95 St/"
-                  options:
-                    name: "Southbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
-                    secondary_info: last-updated
-              exclude:
-                - state: "unavailable"
-                - state: "unknown"
+              template: |
+                {% for state in states.sensor -%}
+                  {%- if state.attributes.friendly_name is defined and '57 St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
+                    {%- set route = state.attributes.route_id | default('?') -%}
+                    {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                    {{
+                      {
+                        'entity': state.entity_id,
+                        'name': route ~ " -> " ~ headsign,
+                        'secondary_info': 'last-updated'
+                      } 
+                    }},
+                  {%- endif -%}
+                {%- endfor %}
             sort:
               method: attribute
               attribute: route_id
@@ -161,20 +135,16 @@ views:
       - type: custom:auto-entities
         card:
           type: entities
-          title: Morning Commute (Atlantic Av Northbound)
+          title: Morning Commute (All Atlantic Av Trains)
           show_header_toggle: false
         filter:
           include:
             - domain: sensor
               attributes:
-                # Regex friendly_name for Atlantic Av
                 friendly_name: "/Atlantic Av|Barclays/"
-                # Only N, Q, D lines
                 route_id: ["N", "Q", "D"]
-                # Northbound destinations
-                headsign: "/Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St/"
               options:
-                secondary_info: "[[ attribute.headsign ]]"
+                 secondary_info: last-updated
           exclude:
             - state: "unavailable"
             - state: "unknown"
@@ -188,20 +158,16 @@ views:
       - type: custom:auto-entities
         card:
           type: entities
-          title: Evening Commute (57 St Southbound)
+          title: Evening Commute (All 57 St Trains)
           show_header_toggle: false
         filter:
           include:
             - domain: sensor
               attributes:
-                # Regex friendly_name for 57 St
                 friendly_name: "/57 St/"
-                # Only N, Q, R, W lines
                 route_id: ["N", "Q", "R", "W"]
-                # Southbound destinations
-                headsign: "/Brooklyn|Coney Island|Brighton|Bay Ridge|Utica|New Lots|Flatbush|Far Rockaway|Stillwell|Church|Kings Hwy|Whitehall|95 St/"
               options:
-                secondary_info: "[[ attribute.headsign ]]"
+                 secondary_info: last-updated
           exclude:
             - state: "unavailable"
             - state: "unknown"
@@ -220,7 +186,7 @@ views:
           type: custom:auto-entities
           card:
             type: entities
-            title: To Work (Atlantic Av -> Manhattan)
+            title: To Work (All Atlantic Av Trains)
             icon: mdi:briefcase
             show_header_toggle: false
           filter:
@@ -229,9 +195,8 @@ views:
                 attributes:
                   friendly_name: "/Atlantic Av|Barclays/"
                   route_id: ["N", "Q", "D"]
-                  headsign: "/Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St/"
                 options:
-                  secondary_info: "[[ attribute.headsign ]]"
+                   secondary_info: last-updated
             exclude:
               - state: "unavailable"
               - state: "unknown"
@@ -247,7 +212,7 @@ views:
           type: custom:auto-entities
           card:
             type: entities
-            title: To Home (57 St -> Brooklyn)
+            title: To Home (All 57 St Trains)
             icon: mdi:home
             show_header_toggle: false
           filter:
@@ -256,9 +221,8 @@ views:
                 attributes:
                   friendly_name: "/57 St/"
                   route_id: ["N", "Q", "R", "W"]
-                  headsign: "/Brooklyn|Coney Island|Brighton|Bay Ridge|Utica|New Lots|Flatbush|Far Rockaway|Stillwell|Church|Kings Hwy|Whitehall|95 St/"
                 options:
-                  secondary_info: "[[ attribute.headsign ]]"
+                   secondary_info: last-updated
             exclude:
               - state: "unavailable"
               - state: "unknown"
