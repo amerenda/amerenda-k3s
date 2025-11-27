@@ -11,8 +11,7 @@ views:
               show_header_toggle: false
             filter:
               include:
-                - attributes:
-                    friendly_name: "Atlantic Av*"
+                - entity_id: "sensor.*atlantic_av*"
                   options:
                     secondary_info: last-updated
               exclude:
@@ -21,7 +20,7 @@ views:
             sort:
               method: attribute
               attribute: route_id
-              
+
           - type: custom:auto-entities
             card:
               type: entities
@@ -29,8 +28,7 @@ views:
               show_header_toggle: false
             filter:
               include:
-                - attributes:
-                    friendly_name: "Bergen St*"
+                - entity_id: "sensor.*bergen_st*"
                   options:
                     secondary_info: last-updated
               exclude:
@@ -47,8 +45,7 @@ views:
               show_header_toggle: false
             filter:
               include:
-                - attributes:
-                    friendly_name: "Fulton St*"
+                - entity_id: "sensor.*fulton_st*"
                   options:
                     secondary_info: last-updated
               exclude:
@@ -65,8 +62,7 @@ views:
               show_header_toggle: false
             filter:
               include:
-                - attributes:
-                    friendly_name: "Lafayette Av*"
+                - entity_id: "sensor.*lafayette_av*"
                   options:
                     secondary_info: last-updated
               exclude:
@@ -83,8 +79,7 @@ views:
               show_header_toggle: false
             filter:
               include:
-                - attributes:
-                    friendly_name: "57 St*"
+                - entity_id: "sensor.*57_st*"
                   options:
                     secondary_info: last-updated
               exclude:
@@ -104,13 +99,10 @@ views:
           show_header_toggle: false
         filter:
           include:
-            # Atlantic Av - Northbound (N/Q/D)
-            # Logic: Match station AND route AND typically Northbound destinations
             - domain: sensor
+              entity_id: "*atlantic_av*"
               attributes:
-                friendly_name: "Atlantic Av*"
                 route_id: ["N", "Q", "D"]
-                # Common Northbound/Manhattan/Queens/Bronx terminals
                 headsign: ["Astoria*", "96 St*", "Manhattan*", "Midtown*", "205 St*", "Bedford*", "168 St*", "Jamaica*", "57 St*", "Forest Hills*", "Ditmars*"]
               options:
                 secondary_info: "[[ attribute.headsign ]]"
@@ -130,19 +122,17 @@ views:
           title: Evening Commute (Southbound)
           show_header_toggle: false
         filter:
-          include:
-            # 57 St - Southbound (N/Q/R/W)
-            - domain: sensor
-              attributes:
-                friendly_name: "57 St*"
-                route_id: ["N", "Q", "R", "W"]
-                # Common Southbound/Brooklyn terminals
-                headsign: ["Coney Island*", "Brighton Beach*", "Sea Beach*", "Bay Ridge*", "Whitehall*", "95 St*", "Stillwell*", "Church*", "Kings Hwy*"]
-              options:
-                secondary_info: "[[ attribute.headsign ]]"
-          exclude:
-            - state: "unavailable"
-            - state: "unknown"
+          template: |
+            [
+              {% for state in states.sensor -%}
+                {%- if '57_st' in state.entity_id and state.attributes.route_id in ['N', 'Q', 'R', 'W'] and state.state not in ['unavailable', 'unknown'] -%}
+                  {
+                    "entity": "{{ state.entity_id }}",
+                    "secondary_info": "{{ state.attributes.headsign }}"
+                  },
+                {%- endif -%}
+              {%- endfor %}
+            ]
         sort:
           method: state
           numeric: true
@@ -150,7 +140,6 @@ views:
   - title: Dynamic
     icon: mdi:map-marker-radius
     cards:
-      # Show Morning Commute if NOT at Work (e.g. Home or Away)
       - type: conditional
         conditions:
           - entity: device_tracker.pixel_9_pro_xl
@@ -164,18 +153,19 @@ views:
             show_header_toggle: false
           filter:
             include:
-              - domain: sensor
+              - entity_id: "sensor.*atlantic_av*"
                 attributes:
-                  friendly_name: "Atlantic Av*"
                   route_id: ["N", "Q", "D"]
                   headsign: ["Astoria*", "96 St*", "Manhattan*", "Midtown*", "205 St*", "Bedford*", "168 St*", "Jamaica*", "57 St*", "Forest Hills*", "Ditmars*"]
                 options:
                   secondary_info: "[[ attribute.headsign ]]"
-            sort:
-              method: state
-              numeric: true
+            exclude:
+              - state: "unavailable"
+              - state: "unknown"
+          sort:
+            method: state
+            numeric: true
 
-      # Show Evening Commute if AT Work
       - type: conditional
         conditions:
           - entity: device_tracker.pixel_9_pro_xl
@@ -189,14 +179,15 @@ views:
             show_header_toggle: false
           filter:
             include:
-              - domain: sensor
+              - entity_id: "sensor.*57_st*"
                 attributes:
-                  friendly_name: "57 St*"
                   route_id: ["N", "Q", "R", "W"]
                   headsign: ["Coney Island*", "Brighton Beach*", "Sea Beach*", "Bay Ridge*", "Whitehall*", "95 St*", "Stillwell*", "Church*", "Kings Hwy*"]
                 options:
                   secondary_info: "[[ attribute.headsign ]]"
-            sort:
-              method: state
-              numeric: true
-
+            exclude:
+              - state: "unavailable"
+              - state: "unknown"
+          sort:
+            method: state
+            numeric: true
