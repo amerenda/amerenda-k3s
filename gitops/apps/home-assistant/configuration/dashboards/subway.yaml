@@ -12,18 +12,33 @@ views:
               show_header_toggle: false
             filter:
               template: |
-                [
-                  {% for state in states.sensor -%}
-                    {%- if state.attributes.friendly_name is defined and ('Atlantic Av' in state.attributes.friendly_name or 'Barclays' in state.attributes.friendly_name) and state.state not in ['unavailable', 'unknown'] -%}
-                      {%- set route = state.attributes.route_id | default('?') -%}
-                      {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                      {%- set dir = 'North' if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') else 'South' -%}
-                      {
-                        "entity": "{{ state.entity_id }}",
-                        "name": "{{ dir }}: {{ route }} to {{ headsign }}",
-                        "secondary_info": "last-updated"
-                      },
+                {% set ns = namespace(north=[], south=[]) %}
+                {% for state in states.sensor -%}
+                  {%- if state.attributes.friendly_name is defined and ('Atlantic Av' in state.attributes.friendly_name or 'Barclays' in state.attributes.friendly_name) and state.state not in ['unavailable', 'unknown'] -%}
+                    {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                    {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
+                      {%- set ns.north = ns.north + [state] -%}
+                    {%- else -%}
+                      {%- set ns.south = ns.south + [state] -%}
                     {%- endif -%}
+                  {%- endif -%}
+                {%- endfor %}
+                [
+                  { "type": "section", "label": "Northbound" },
+                  {% for state in ns.north -%}
+                    {
+                      "entity": "{{ state.entity_id }}",
+                      "name": "{{ state.attributes.route_id }} to {{ state.attributes.headsign }}",
+                      "secondary_info": "last-updated"
+                    },
+                  {%- endfor %}
+                  { "type": "section", "label": "Southbound" },
+                  {% for state in ns.south -%}
+                    {
+                      "entity": "{{ state.entity_id }}",
+                      "name": "{{ state.attributes.route_id }} to {{ state.attributes.headsign }}",
+                      "secondary_info": "last-updated"
+                    },
                   {%- endfor %}
                 ]
             sort:
@@ -37,18 +52,33 @@ views:
               show_header_toggle: false
             filter:
               template: |
-                [
-                  {% for state in states.sensor -%}
-                    {%- if state.attributes.friendly_name is defined and 'Bergen St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
-                      {%- set route = state.attributes.route_id | default('?') -%}
-                      {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                      {%- set dir = 'North' if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Court Sq') else 'South' -%}
-                      {
-                        "entity": "{{ state.entity_id }}",
-                        "name": "{{ dir }}: {{ route }} to {{ headsign }}",
-                        "secondary_info": "last-updated"
-                      },
+                {% set ns = namespace(north=[], south=[]) %}
+                {% for state in states.sensor -%}
+                  {%- if state.attributes.friendly_name is defined and 'Bergen St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
+                    {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                    {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Court Sq') -%}
+                      {%- set ns.north = ns.north + [state] -%}
+                    {%- else -%}
+                      {%- set ns.south = ns.south + [state] -%}
                     {%- endif -%}
+                  {%- endif -%}
+                {%- endfor %}
+                [
+                  { "type": "section", "label": "Northbound" },
+                  {% for state in ns.north -%}
+                    {
+                      "entity": "{{ state.entity_id }}",
+                      "name": "{{ state.attributes.route_id }} to {{ state.attributes.headsign }}",
+                      "secondary_info": "last-updated"
+                    },
+                  {%- endfor %}
+                  { "type": "section", "label": "Southbound" },
+                  {% for state in ns.south -%}
+                    {
+                      "entity": "{{ state.entity_id }}",
+                      "name": "{{ state.attributes.route_id }} to {{ state.attributes.headsign }}",
+                      "secondary_info": "last-updated"
+                    },
                   {%- endfor %}
                 ]
             sort:
@@ -62,18 +92,33 @@ views:
               show_header_toggle: false
             filter:
               template: |
-                [
-                  {% for state in states.sensor -%}
-                    {%- if state.attributes.friendly_name is defined and 'Fulton St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
-                      {%- set route = state.attributes.route_id | default('?') -%}
-                      {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                      {%- set dir = 'North' if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Court Sq') else 'South' -%}
-                      {
-                        "entity": "{{ state.entity_id }}",
-                        "name": "{{ dir }}: {{ route }} to {{ headsign }}",
-                        "secondary_info": "last-updated"
-                      },
+                {% set ns = namespace(north=[], south=[]) %}
+                {% for state in states.sensor -%}
+                  {%- if state.attributes.friendly_name is defined and 'Fulton St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
+                    {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                    {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Court Sq') -%}
+                      {%- set ns.north = ns.north + [state] -%}
+                    {%- else -%}
+                      {%- set ns.south = ns.south + [state] -%}
                     {%- endif -%}
+                  {%- endif -%}
+                {%- endfor %}
+                [
+                  { "type": "section", "label": "Northbound" },
+                  {% for state in ns.north -%}
+                    {
+                      "entity": "{{ state.entity_id }}",
+                      "name": "{{ state.attributes.route_id }} to {{ state.attributes.headsign }}",
+                      "secondary_info": "last-updated"
+                    },
+                  {%- endfor %}
+                  { "type": "section", "label": "Southbound" },
+                  {% for state in ns.south -%}
+                    {
+                      "entity": "{{ state.entity_id }}",
+                      "name": "{{ state.attributes.route_id }} to {{ state.attributes.headsign }}",
+                      "secondary_info": "last-updated"
+                    },
                   {%- endfor %}
                 ]
             sort:
@@ -87,18 +132,33 @@ views:
               show_header_toggle: false
             filter:
               template: |
-                [
-                  {% for state in states.sensor -%}
-                    {%- if state.attributes.friendly_name is defined and 'Lafayette Av' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
-                      {%- set route = state.attributes.route_id | default('?') -%}
-                      {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                      {%- set dir = 'North' if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') else 'South' -%}
-                      {
-                        "entity": "{{ state.entity_id }}",
-                        "name": "{{ dir }}: {{ route }} to {{ headsign }}",
-                        "secondary_info": "last-updated"
-                      },
+                {% set ns = namespace(north=[], south=[]) %}
+                {% for state in states.sensor -%}
+                  {%- if state.attributes.friendly_name is defined and 'Lafayette Av' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
+                    {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                    {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
+                      {%- set ns.north = ns.north + [state] -%}
+                    {%- else -%}
+                      {%- set ns.south = ns.south + [state] -%}
                     {%- endif -%}
+                  {%- endif -%}
+                {%- endfor %}
+                [
+                  { "type": "section", "label": "Northbound" },
+                  {% for state in ns.north -%}
+                    {
+                      "entity": "{{ state.entity_id }}",
+                      "name": "{{ state.attributes.route_id }} to {{ state.attributes.headsign }}",
+                      "secondary_info": "last-updated"
+                    },
+                  {%- endfor %}
+                  { "type": "section", "label": "Southbound" },
+                  {% for state in ns.south -%}
+                    {
+                      "entity": "{{ state.entity_id }}",
+                      "name": "{{ state.attributes.route_id }} to {{ state.attributes.headsign }}",
+                      "secondary_info": "last-updated"
+                    },
                   {%- endfor %}
                 ]
             sort:
@@ -112,18 +172,33 @@ views:
               show_header_toggle: false
             filter:
               template: |
-                [
-                  {% for state in states.sensor -%}
-                    {%- if state.attributes.friendly_name is defined and '57 St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
-                      {%- set route = state.attributes.route_id | default('?') -%}
-                      {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                      {%- set dir = 'North' if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') else 'South' -%}
-                      {
-                        "entity": "{{ state.entity_id }}",
-                        "name": "{{ dir }}: {{ route }} to {{ headsign }}",
-                        "secondary_info": "last-updated"
-                      },
+                {% set ns = namespace(north=[], south=[]) %}
+                {% for state in states.sensor -%}
+                  {%- if state.attributes.friendly_name is defined and '57 St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
+                    {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                    {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
+                      {%- set ns.north = ns.north + [state] -%}
+                    {%- else -%}
+                      {%- set ns.south = ns.south + [state] -%}
                     {%- endif -%}
+                  {%- endif -%}
+                {%- endfor %}
+                [
+                  { "type": "section", "label": "Northbound" },
+                  {% for state in ns.north -%}
+                    {
+                      "entity": "{{ state.entity_id }}",
+                      "name": "{{ state.attributes.route_id }} to {{ state.attributes.headsign }}",
+                      "secondary_info": "last-updated"
+                    },
+                  {%- endfor %}
+                  { "type": "section", "label": "Southbound" },
+                  {% for state in ns.south -%}
+                    {
+                      "entity": "{{ state.entity_id }}",
+                      "name": "{{ state.attributes.route_id }} to {{ state.attributes.headsign }}",
+                      "secondary_info": "last-updated"
+                    },
                   {%- endfor %}
                 ]
             sort:
