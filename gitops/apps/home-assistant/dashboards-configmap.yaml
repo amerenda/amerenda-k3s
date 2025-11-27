@@ -3,716 +3,726 @@ kind: ConfigMap
 metadata:
   name: homeassistant-dashboards
 data:
-  room_schedule_configuration.yaml: |
+  light_control.yaml: |
     views:
-      - title: Room Schedule Configuration
-        path: room-schedule-configuration
+      - title: Light Control
+        path: light-control
         cards:
-          # Global Schedule Section
-          - type: entities
-            title: Global Schedule Defaults
-            show_header_toggle: false
-            entities:
-              - entity: input_datetime.global_morning_start
-                name: Morning Start
-              - entity: input_datetime.global_day_start
-                name: Day Start
-              - entity: input_datetime.global_evening_start
-                name: Evening Start
-              - entity: input_datetime.global_night_start
-                name: Night Start
-    
-          # Configuration Selectors
           - type: vertical-stack
             cards:
+              # Room selector
               - type: entities
-                title: Select Room & Slot
-                show_header_toggle: false
+                title: Select Room
                 entities:
                   - entity: input_select.room_selector
                     name: Room
-                  - entity: input_select.time_window_selector
-                    name: Time Slot
     
-              # ------------------------------------------------------
-              # BEDROOM CONFIGURATION
-              # ------------------------------------------------------
-              
-              # Bedroom Morning
+              # Dynamic Room Info
+              - type: markdown
+                title: Room Lighting Control
+                content: |
+                  {% set room = states('input_select.room_selector') %}
+                  {% if room and room != 'unknown' and room != 'unavailable' %}
+                    ### {{ room|replace('_',' ')|title }} Lighting
+                    
+                    Use the controls below to:
+                    - Turn all room lights on/off
+                    - Adjust individual lights
+                    - Create a scene from current light states
+                  {% else %}
+                    Please select a room above.
+                  {% endif %}
+    
+              # Room Group Control Buttons - dynamically discover lights per room
+              - type: entities
+                title: Room Controls
+                entities:
+                  - type: button
+                    name: >
+                      {% set room = states('input_select.room_selector') %}
+                      {% if room and room != 'unknown' and room != 'unavailable' %}
+                        All {{ room | replace('_', ' ') | title }} Lights On
+                      {% else %}
+                        All Lights On
+                      {% endif %}
+                    icon: mdi:lightbulb-group
+                    tap_action:
+                      action: call-service
+                      service: light.turn_on
+                      service_data:
+                        entity_id: >
+                          {% set room = states('input_select.room_selector') %}
+                          {% if room and room != 'unknown' and room != 'unavailable' %}
+                            {% set room_key = room %}
+                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                            {% set room_lights = [] %}
+                            {% if room_key == 'hallway' %}
+                              {% for light_id in ['light.hallway', 'light.entrance_lights'] %}
+                                {% if light_id in all_lights %}
+                                  {% set _ = room_lights.append(light_id) %}
+                                {% endif %}
+                              {% endfor %}
+                            {% else %}
+                              {% set main_light = 'light.' ~ room_key %}
+                              {% set numbered_lights = [] %}
+                              {% for i in range(1, 10) %}
+                                {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
+                                {% if numbered_light in all_lights %}
+                                  {% set _ = numbered_lights.append(numbered_light) %}
+                                {% endif %}
+                              {% endfor %}
+                              {% if numbered_lights | length == 1 and main_light in all_lights %}
+                                {% set _ = room_lights.append(numbered_lights[0]) %}
+                              {% elif numbered_lights | length > 1 %}
+                                {% for light_id in numbered_lights %}
+                                  {% set _ = room_lights.append(light_id) %}
+                                {% endfor %}
+                              {% elif main_light in all_lights %}
+                                {% set _ = room_lights.append(main_light) %}
+                              {% else %}
+                                {% for light_id in numbered_lights %}
+                                  {% set _ = room_lights.append(light_id) %}
+                                {% endfor %}
+                              {% endif %}
+                            {% endif %}
+                            {{ room_lights }}
+                          {% else %}
+                            []
+                          {% endif %}
+                  - type: button
+                    name: >
+                      {% set room = states('input_select.room_selector') %}
+                      {% if room and room != 'unknown' and room != 'unavailable' %}
+                        All {{ room | replace('_', ' ') | title }} Lights Off
+                      {% else %}
+                        All Lights Off
+                      {% endif %}
+                    icon: mdi:lightbulb-group-off
+                    tap_action:
+                      action: call-service
+                      service: light.turn_off
+                      service_data:
+                        entity_id: >
+                          {% set room = states('input_select.room_selector') %}
+                          {% if room and room != 'unknown' and room != 'unavailable' %}
+                            {% set room_key = room %}
+                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                            {% set room_lights = [] %}
+                            {% if room_key == 'hallway' %}
+                              {% for light_id in ['light.hallway', 'light.entrance_lights'] %}
+                                {% if light_id in all_lights %}
+                                  {% set _ = room_lights.append(light_id) %}
+                                {% endif %}
+                              {% endfor %}
+                            {% else %}
+                              {% set main_light = 'light.' ~ room_key %}
+                              {% set numbered_lights = [] %}
+                              {% for i in range(1, 10) %}
+                                {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
+                                {% if numbered_light in all_lights %}
+                                  {% set _ = numbered_lights.append(numbered_light) %}
+                                {% endif %}
+                              {% endfor %}
+                              {% if numbered_lights | length == 1 and main_light in all_lights %}
+                                {% set _ = room_lights.append(numbered_lights[0]) %}
+                              {% elif numbered_lights | length > 1 %}
+                                {% for light_id in numbered_lights %}
+                                  {% set _ = room_lights.append(light_id) %}
+                                {% endfor %}
+                              {% elif main_light in all_lights %}
+                                {% set _ = room_lights.append(main_light) %}
+                              {% else %}
+                                {% for light_id in numbered_lights %}
+                                  {% set _ = room_lights.append(light_id) %}
+                                {% endfor %}
+                              {% endif %}
+                            {% endif %}
+                            {{ room_lights }}
+                          {% else %}
+                            []
+                          {% endif %}
+    
+              # Individual Lights - dynamically discovered based on selected room
               - type: conditional
                 conditions:
                   - entity: input_select.room_selector
-                    state: bedroom
-                  - entity: input_select.time_window_selector
-                    state: morning
+                    state_not: unknown
                 card:
-                  type: entities
-                  title: Bedroom Morning
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.bedroom_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.bedroom_morning_custom_time
-                      name: Override Global Time
+                  type: grid
+                  square: false
+                  columns: 2
+                  cards:
+                    # Show individual light if room group contains only one light (e.g., light.living_room with only light.fixture)
+                    # Check if the group entity has entity_id attribute (which contains members) with only one member
                     - type: conditional
                       conditions:
-                        - entity: input_boolean.bedroom_morning_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.bedroom_s1_start
-                        name: Morning Start Time
-                    - type: section
-                    - entity: input_select.bedroom_morning_scene
-                      name: Scene
-                    - entity: input_boolean.bedroom_morning_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.bedroom_morning_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_bedroom_morning
-                      name: Motion Auto-Off (min)
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' %}
+                              {% set room_key = room %}
+                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                              {% set main_light = 'light.' ~ room_key %}
+                              {% if room_key == 'hallway' %}
+                                {{ false }}
+                              {% elif main_light in all_lights %}
+                                {% set main_light_attr = state_attr(main_light, 'entity_id') | default([]) %}
+                                {% if main_light_attr is iterable and main_light_attr is not string %}
+                                  {# Check if it's a list/array with exactly one item #}
+                                  {{ main_light_attr | list | length == 1 }}
+                                {% else %}
+                                  {{ false }}
+                                {% endif %}
+                              {% else %}
+                                {{ false }}
+                              {% endif %}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                      card:
+                        type: light
+                        entity: >
+                          {% set room = states('input_select.room_selector') %}
+                          {% if room and room != 'unknown' and room != 'unavailable' %}
+                            {% set room_key = room %}
+                            {% set main_light = 'light.' ~ room_key %}
+                            {% set main_light_attr = state_attr(main_light, 'entity_id') | default([]) %}
+                            {% if main_light_attr is iterable and main_light_attr is not string %}
+                              {% set attr_list = main_light_attr | list %}
+                              {{ attr_list[0] if attr_list | length == 1 else main_light }}
+                            {% else %}
+                              {{ main_light }}
+                            {% endif %}
+                          {% else %}
+                            light.bedroom
+                          {% endif %}
+                        name: >
+                          {% set room = states('input_select.room_selector') %}
+                          {{ room | replace('_', ' ') | title }}
+                    # Smart logic: if only one numbered light exists with main, show numbered only
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' %}
+                              {% set room_key = room %}
+                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                              {% set main_light = 'light.' ~ room_key %}
+                              {% if room_key == 'hallway' %}
+                                {{ false }}
+                              {% else %}
+                                {% set main_light_entities = state_attr(main_light, 'entity_id') | default([]) %}
+                                {% set numbered_lights = [] %}
+                                {% for i in range(1, 10) %}
+                                  {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
+                                  {% if numbered_light in all_lights %}
+                                    {% set _ = numbered_lights.append(numbered_light) %}
+                                  {% endif %}
+                                {% endfor %}
+                                {{ numbered_lights | length == 1 and main_light in all_lights and (main_light_entities | length != 1) }}
+                              {% endif %}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                      card:
+                        type: light
+                        entity: >
+                          {% set room = states('input_select.room_selector') %}
+                          {% set room_key = room %}
+                          {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                          {% set numbered_lights = [] %}
+                          {% for i in range(1, 10) %}
+                            {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
+                            {% if numbered_light in all_lights %}
+                              {% set _ = numbered_lights.append(numbered_light) %}
+                            {% endif %}
+                          {% endfor %}
+                          {{ numbered_lights[0] if numbered_lights | length == 1 else 'light.' ~ room_key }}
+                        name: >
+                          {% set room = states('input_select.room_selector') %}
+                          {{ room | replace('_', ' ') | title }}
+                    # Show main light if it exists, has multiple entities (not a single-member group), and (no numbered or multiple numbered)
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' %}
+                              {% set room_key = room %}
+                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                              {% if room_key == 'hallway' %}
+                                {{ false }}
+                              {% else %}
+                                {% set main_light = 'light.' ~ room_key %}
+                                {% if main_light in all_lights %}
+                                  {# Check if main_light is a group with only one member #}
+                                  {% set main_light_entities = state_attr(main_light, 'entity_id') | default([]) %}
+                                  {% if main_light_entities is iterable and main_light_entities is not string %}
+                                    {% set entity_list = main_light_entities | list %}
+                                    {% if entity_list | length == 1 %}
+                                      {{ false }}  {# Hide group if it only contains one light #}
+                                    {% else %}
+                                      {% set numbered_lights = [] %}
+                                      {% for i in range(1, 10) %}
+                                        {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
+                                        {% if numbered_light in all_lights %}
+                                          {% set _ = numbered_lights.append(numbered_light) %}
+                                        {% endif %}
+                                      {% endfor %}
+                                      {{ numbered_lights | length == 0 or numbered_lights | length > 1 }}
+                                    {% endif %}
+                                  {% else %}
+                                    {# Not a group or can't determine members, show the group normally #}
+                                    {% set numbered_lights = [] %}
+                                    {% for i in range(1, 10) %}
+                                      {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
+                                      {% if numbered_light in all_lights %}
+                                        {% set _ = numbered_lights.append(numbered_light) %}
+                                      {% endif %}
+                                    {% endfor %}
+                                    {{ numbered_lights | length == 0 or numbered_lights | length > 1 }}
+                                  {% endif %}
+                                {% else %}
+                                  {{ false }}
+                                {% endif %}
+                              {% endif %}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                      card:
+                        type: light
+                        entity: >
+                          {% set room = states('input_select.room_selector') %}
+                          {% if room and room != 'unknown' and room != 'unavailable' %}
+                            light.{{ room }}
+                          {% else %}
+                            light.bedroom
+                          {% endif %}
+                        name: >
+                          {% set room = states('input_select.room_selector') %}
+                          {{ room | replace('_', ' ') | title }}
+                    # Show numbered lights if they exist (for multiple numbered lights case)
+                    # Dynamically check numbered lights 1-9 based on selected room
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
+                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                              {% set numbered_lights = [] %}
+                              {% for i in range(1, 10) %}
+                                {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
+                                {% if numbered_light in all_lights %}
+                                  {% set _ = numbered_lights.append(numbered_light) %}
+                                {% endif %}
+                              {% endfor %}
+                              {{ numbered_lights | length > 1 }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
+                              {{ states('light.' ~ room ~ '_1') != 'unavailable' }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                      card:
+                        type: light
+                        entity: >
+                          {% set room = states('input_select.room_selector') %}
+                          light.{{ room }}_1
+                        name: >
+                          {% set room = states('input_select.room_selector') %}
+                          {{ room | replace('_', ' ') | title }} Light 1
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
+                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                              {% set numbered_lights = [] %}
+                              {% for i in range(1, 10) %}
+                                {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
+                                {% if numbered_light in all_lights %}
+                                  {% set _ = numbered_lights.append(numbered_light) %}
+                                {% endif %}
+                              {% endfor %}
+                              {{ numbered_lights | length > 1 }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
+                              {{ states('light.' ~ room ~ '_2') != 'unavailable' }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                      card:
+                        type: light
+                        entity: >
+                          {% set room = states('input_select.room_selector') %}
+                          light.{{ room }}_2
+                        name: >
+                          {% set room = states('input_select.room_selector') %}
+                          {{ room | replace('_', ' ') | title }} Light 2
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
+                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                              {% set numbered_lights = [] %}
+                              {% for i in range(1, 10) %}
+                                {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
+                                {% if numbered_light in all_lights %}
+                                  {% set _ = numbered_lights.append(numbered_light) %}
+                                {% endif %}
+                              {% endfor %}
+                              {{ numbered_lights | length > 1 }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
+                              {{ states('light.' ~ room ~ '_3') != 'unavailable' }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                      card:
+                        type: light
+                        entity: >
+                          {% set room = states('input_select.room_selector') %}
+                          light.{{ room }}_3
+                        name: >
+                          {% set room = states('input_select.room_selector') %}
+                          {{ room | replace('_', ' ') | title }} Light 3
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
+                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                              {% set numbered_lights = [] %}
+                              {% for i in range(1, 10) %}
+                                {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
+                                {% if numbered_light in all_lights %}
+                                  {% set _ = numbered_lights.append(numbered_light) %}
+                                {% endif %}
+                              {% endfor %}
+                              {{ numbered_lights | length > 1 }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
+                              {{ states('light.' ~ room ~ '_4') != 'unavailable' }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                      card:
+                        type: light
+                        entity: >
+                          {% set room = states('input_select.room_selector') %}
+                          light.{{ room }}_4
+                        name: >
+                          {% set room = states('input_select.room_selector') %}
+                          {{ room | replace('_', ' ') | title }} Light 4
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
+                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                              {% set numbered_lights = [] %}
+                              {% for i in range(1, 10) %}
+                                {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
+                                {% if numbered_light in all_lights %}
+                                  {% set _ = numbered_lights.append(numbered_light) %}
+                                {% endif %}
+                              {% endfor %}
+                              {{ numbered_lights | length > 1 }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
+                              {{ states('light.' ~ room ~ '_5') != 'unavailable' }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                      card:
+                        type: light
+                        entity: >
+                          {% set room = states('input_select.room_selector') %}
+                          light.{{ room }}_5
+                        name: >
+                          {% set room = states('input_select.room_selector') %}
+                          {{ room | replace('_', ' ') | title }} Light 5
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
+                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                              {% set numbered_lights = [] %}
+                              {% for i in range(1, 10) %}
+                                {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
+                                {% if numbered_light in all_lights %}
+                                  {% set _ = numbered_lights.append(numbered_light) %}
+                                {% endif %}
+                              {% endfor %}
+                              {{ numbered_lights | length > 1 }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
+                              {{ states('light.' ~ room ~ '_6') != 'unavailable' }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                      card:
+                        type: light
+                        entity: >
+                          {% set room = states('input_select.room_selector') %}
+                          light.{{ room }}_6
+                        name: >
+                          {% set room = states('input_select.room_selector') %}
+                          {{ room | replace('_', ' ') | title }} Light 6
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
+                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                              {% set numbered_lights = [] %}
+                              {% for i in range(1, 10) %}
+                                {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
+                                {% if numbered_light in all_lights %}
+                                  {% set _ = numbered_lights.append(numbered_light) %}
+                                {% endif %}
+                              {% endfor %}
+                              {{ numbered_lights | length > 1 }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
+                              {{ states('light.' ~ room ~ '_7') != 'unavailable' }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                      card:
+                        type: light
+                        entity: >
+                          {% set room = states('input_select.room_selector') %}
+                          light.{{ room }}_7
+                        name: >
+                          {% set room = states('input_select.room_selector') %}
+                          {{ room | replace('_', ' ') | title }} Light 7
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
+                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                              {% set numbered_lights = [] %}
+                              {% for i in range(1, 10) %}
+                                {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
+                                {% if numbered_light in all_lights %}
+                                  {% set _ = numbered_lights.append(numbered_light) %}
+                                {% endif %}
+                              {% endfor %}
+                              {{ numbered_lights | length > 1 }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
+                              {{ states('light.' ~ room ~ '_8') != 'unavailable' }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                      card:
+                        type: light
+                        entity: >
+                          {% set room = states('input_select.room_selector') %}
+                          light.{{ room }}_8
+                        name: >
+                          {% set room = states('input_select.room_selector') %}
+                          {{ room | replace('_', ' ') | title }} Light 8
+                    - type: conditional
+                      conditions:
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
+                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                              {% set numbered_lights = [] %}
+                              {% for i in range(1, 10) %}
+                                {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
+                                {% if numbered_light in all_lights %}
+                                  {% set _ = numbered_lights.append(numbered_light) %}
+                                {% endif %}
+                              {% endfor %}
+                              {{ numbered_lights | length > 1 }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                        - condition: template
+                          value_template: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
+                              {{ states('light.' ~ room ~ '_9') != 'unavailable' }}
+                            {% else %}
+                              {{ false }}
+                            {% endif %}
+                      card:
+                        type: light
+                        entity: >
+                          {% set room = states('input_select.room_selector') %}
+                          light.{{ room }}_9
+                        name: >
+                          {% set room = states('input_select.room_selector') %}
+                          {{ room | replace('_', ' ') | title }} Light 9
+                    # Hallway special case
+                    - type: conditional
+                      conditions:
+                        - entity: input_select.room_selector
+                          state: hallway
+                        - condition: template
+                          value_template: "{{ states('light.hallway') != 'unavailable' }}"
+                      card:
+                        type: light
+                        entity: light.hallway
+                        name: Hallway
+                    - type: conditional
+                      conditions:
+                        - entity: input_select.room_selector
+                          state: hallway
+                        - condition: template
+                          value_template: "{{ states('light.entrance_lights') != 'unavailable' }}"
+                      card:
+                        type: light
+                        entity: light.entrance_lights
+                        name: Entrance Lights
     
-              # Bedroom Day
+              # Scene Creation Section
+              - type: markdown
+                title: Create Scene
+                content: |
+                  Adjust the lights above to your desired settings, then:
+                  1. Enter a scene name below
+                  2. Click "Create Scene" to save the current state
+    
+              # Scene Creation - dynamically discovered lights
               - type: conditional
                 conditions:
                   - entity: input_select.room_selector
-                    state: bedroom
-                  - entity: input_select.time_window_selector
-                    state: day
+                    state_not: unknown
                 card:
                   type: entities
-                  title: Bedroom Day
-                  show_header_toggle: false
+                  title: >
+                    {% set room = states('input_select.room_selector') %}
+                    {% if room and room != 'unknown' and room != 'unavailable' %}
+                      {{ room | replace('_', ' ') | title }} Scene Creation
+                    {% else %}
+                      Scene Creation
+                    {% endif %}
                   entities:
-                    - entity: input_boolean.bedroom_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.bedroom_day_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.bedroom_day_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.bedroom_s2_start
-                        name: Day Start Time
-                    - type: section
-                    - entity: input_select.bedroom_day_scene
-                      name: Scene
-                    - entity: input_boolean.bedroom_day_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.bedroom_day_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_bedroom_day
-                      name: Motion Auto-Off (min)
-    
-              # Bedroom Evening
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: bedroom
-                  - entity: input_select.time_window_selector
-                    state: evening
-                card:
-                  type: entities
-                  title: Bedroom Evening
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.bedroom_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.bedroom_evening_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.bedroom_evening_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.bedroom_s3_start
-                        name: Evening Start Time
-                    - type: section
-                    - entity: input_select.bedroom_evening_scene
-                      name: Scene
-                    - entity: input_boolean.bedroom_evening_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.bedroom_evening_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_bedroom_evening
-                      name: Motion Auto-Off (min)
-    
-              # Bedroom Night
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: bedroom
-                  - entity: input_select.time_window_selector
-                    state: night
-                card:
-                  type: entities
-                  title: Bedroom Night
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.bedroom_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.bedroom_night_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.bedroom_night_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.bedroom_s4_start
-                        name: Night Start Time
-                    - type: section
-                    - entity: input_select.bedroom_night_scene
-                      name: Scene
-                    - entity: input_boolean.bedroom_night_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.bedroom_night_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_bedroom_night
-                      name: Motion Auto-Off (min)
-    
-              # ------------------------------------------------------
-              # BATHROOM CONFIGURATION
-              # ------------------------------------------------------
-    
-              # Bathroom Morning
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: bathroom
-                  - entity: input_select.time_window_selector
-                    state: morning
-                card:
-                  type: entities
-                  title: Bathroom Morning
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.bathroom_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.bathroom_morning_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.bathroom_morning_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.bathroom_s1_start
-                        name: Morning Start Time
-                    - type: section
-                    - entity: input_select.bathroom_morning_scene
-                      name: Scene
-                    - entity: input_boolean.bathroom_morning_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.bathroom_morning_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_bathroom_morning
-                      name: Motion Auto-Off (min)
-    
-              # Bathroom Day
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: bathroom
-                  - entity: input_select.time_window_selector
-                    state: day
-                card:
-                  type: entities
-                  title: Bathroom Day
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.bathroom_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.bathroom_day_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.bathroom_day_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.bathroom_s2_start
-                        name: Day Start Time
-                    - type: section
-                    - entity: input_select.bathroom_day_scene
-                      name: Scene
-                    - entity: input_boolean.bathroom_day_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.bathroom_day_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_bathroom_day
-                      name: Motion Auto-Off (min)
-    
-              # Bathroom Evening
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: bathroom
-                  - entity: input_select.time_window_selector
-                    state: evening
-                card:
-                  type: entities
-                  title: Bathroom Evening
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.bathroom_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.bathroom_evening_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.bathroom_evening_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.bathroom_s3_start
-                        name: Evening Start Time
-                    - type: section
-                    - entity: input_select.bathroom_evening_scene
-                      name: Scene
-                    - entity: input_boolean.bathroom_evening_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.bathroom_evening_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_bathroom_evening
-                      name: Motion Auto-Off (min)
-    
-              # Bathroom Night
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: bathroom
-                  - entity: input_select.time_window_selector
-                    state: night
-                card:
-                  type: entities
-                  title: Bathroom Night
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.bathroom_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.bathroom_night_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.bathroom_night_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.bathroom_s4_start
-                        name: Night Start Time
-                    - type: section
-                    - entity: input_select.bathroom_night_scene
-                      name: Scene
-                    - entity: input_boolean.bathroom_night_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.bathroom_night_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_bathroom_night
-                      name: Motion Auto-Off (min)
-    
-              # ------------------------------------------------------
-              # LIVING ROOM CONFIGURATION
-              # ------------------------------------------------------
-    
-              # Living Room Morning
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: living_room
-                  - entity: input_select.time_window_selector
-                    state: morning
-                card:
-                  type: entities
-                  title: Living Room Morning
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.living_room_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.living_room_morning_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.living_room_morning_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.living_room_s1_start
-                        name: Morning Start Time
-                    - type: section
-                    - entity: input_select.living_room_morning_scene
-                      name: Scene
-                    - entity: input_boolean.living_room_morning_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.living_room_morning_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_living_room_morning
-                      name: Motion Auto-Off (min)
-    
-              # Living Room Day
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: living_room
-                  - entity: input_select.time_window_selector
-                    state: day
-                card:
-                  type: entities
-                  title: Living Room Day
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.living_room_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.living_room_day_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.living_room_day_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.living_room_s2_start
-                        name: Day Start Time
-                    - type: section
-                    - entity: input_select.living_room_day_scene
-                      name: Scene
-                    - entity: input_boolean.living_room_day_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.living_room_day_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_living_room_day
-                      name: Motion Auto-Off (min)
-    
-              # Living Room Evening
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: living_room
-                  - entity: input_select.time_window_selector
-                    state: evening
-                card:
-                  type: entities
-                  title: Living Room Evening
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.living_room_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.living_room_evening_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.living_room_evening_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.living_room_s3_start
-                        name: Evening Start Time
-                    - type: section
-                    - entity: input_select.living_room_evening_scene
-                      name: Scene
-                    - entity: input_boolean.living_room_evening_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.living_room_evening_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_living_room_evening
-                      name: Motion Auto-Off (min)
-    
-              # Living Room Night
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: living_room
-                  - entity: input_select.time_window_selector
-                    state: night
-                card:
-                  type: entities
-                  title: Living Room Night
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.living_room_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.living_room_night_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.living_room_night_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.living_room_s4_start
-                        name: Night Start Time
-                    - type: section
-                    - entity: input_select.living_room_night_scene
-                      name: Scene
-                    - entity: input_boolean.living_room_night_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.living_room_night_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_living_room_night
-                      name: Motion Auto-Off (min)
-    
-              # ------------------------------------------------------
-              # KITCHEN CONFIGURATION
-              # ------------------------------------------------------
-    
-              # Kitchen Morning
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: kitchen
-                  - entity: input_select.time_window_selector
-                    state: morning
-                card:
-                  type: entities
-                  title: Kitchen Morning
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.kitchen_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.kitchen_morning_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.kitchen_morning_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.kitchen_s1_start
-                        name: Morning Start Time
-                    - type: section
-                    - entity: input_select.kitchen_morning_scene
-                      name: Scene
-                    - entity: input_boolean.kitchen_morning_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.kitchen_morning_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_kitchen_morning
-                      name: Motion Auto-Off (min)
-    
-              # Kitchen Day
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: kitchen
-                  - entity: input_select.time_window_selector
-                    state: day
-                card:
-                  type: entities
-                  title: Kitchen Day
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.kitchen_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.kitchen_day_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.kitchen_day_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.kitchen_s2_start
-                        name: Day Start Time
-                    - type: section
-                    - entity: input_select.kitchen_day_scene
-                      name: Scene
-                    - entity: input_boolean.kitchen_day_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.kitchen_day_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_kitchen_day
-                      name: Motion Auto-Off (min)
-    
-              # Kitchen Evening
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: kitchen
-                  - entity: input_select.time_window_selector
-                    state: evening
-                card:
-                  type: entities
-                  title: Kitchen Evening
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.kitchen_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.kitchen_evening_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.kitchen_evening_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.kitchen_s3_start
-                        name: Evening Start Time
-                    - type: section
-                    - entity: input_select.kitchen_evening_scene
-                      name: Scene
-                    - entity: input_boolean.kitchen_evening_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.kitchen_evening_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_kitchen_evening
-                      name: Motion Auto-Off (min)
-    
-              # Kitchen Night
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: kitchen
-                  - entity: input_select.time_window_selector
-                    state: night
-                card:
-                  type: entities
-                  title: Kitchen Night
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.kitchen_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.kitchen_night_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.kitchen_night_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.kitchen_s4_start
-                        name: Night Start Time
-                    - type: section
-                    - entity: input_select.kitchen_night_scene
-                      name: Scene
-                    - entity: input_boolean.kitchen_night_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.kitchen_night_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_kitchen_night
-                      name: Motion Auto-Off (min)
-    
-              # ------------------------------------------------------
-              # HALLWAY CONFIGURATION
-              # ------------------------------------------------------
-    
-              # Hallway Morning
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: hallway
-                  - entity: input_select.time_window_selector
-                    state: morning
-                card:
-                  type: entities
-                  title: Hallway Morning
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.hallway_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.hallway_morning_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.hallway_morning_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.hallway_s1_start
-                        name: Morning Start Time
-                    - type: section
-                    - entity: input_select.hallway_morning_scene
-                      name: Scene
-                    - entity: input_boolean.hallway_morning_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.hallway_morning_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_hallway_morning
-                      name: Motion Auto-Off (min)
-    
-              # Hallway Day
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: hallway
-                  - entity: input_select.time_window_selector
-                    state: day
-                card:
-                  type: entities
-                  title: Hallway Day
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.hallway_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.hallway_day_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.hallway_day_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.hallway_s2_start
-                        name: Day Start Time
-                    - type: section
-                    - entity: input_select.hallway_day_scene
-                      name: Scene
-                    - entity: input_boolean.hallway_day_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.hallway_day_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_hallway_day
-                      name: Motion Auto-Off (min)
-    
-              # Hallway Evening
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: hallway
-                  - entity: input_select.time_window_selector
-                    state: evening
-                card:
-                  type: entities
-                  title: Hallway Evening
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.hallway_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.hallway_evening_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.hallway_evening_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.hallway_s3_start
-                        name: Evening Start Time
-                    - type: section
-                    - entity: input_select.hallway_evening_scene
-                      name: Scene
-                    - entity: input_boolean.hallway_evening_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.hallway_evening_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_hallway_evening
-                      name: Motion Auto-Off (min)
-    
-              # Hallway Night
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state: hallway
-                  - entity: input_select.time_window_selector
-                    state: night
-                card:
-                  type: entities
-                  title: Hallway Night
-                  show_header_toggle: false
-                  entities:
-                    - entity: input_boolean.hallway_custom_schedule
-                      name: Use Custom Schedule (Room Master)
-                    - entity: input_boolean.hallway_night_custom_time
-                      name: Override Global Time
-                    - type: conditional
-                      conditions:
-                        - entity: input_boolean.hallway_night_custom_time
-                          state: "on"
-                      row:
-                        entity: input_datetime.hallway_s4_start
-                        name: Night Start Time
-                    - type: section
-                    - entity: input_select.hallway_night_scene
-                      name: Scene
-                    - entity: input_boolean.hallway_night_motion_enabled
-                      name: Motion Activated
-                    - entity: input_boolean.hallway_night_auto_on_enabled
-                      name: Auto-On
-                    - entity: input_number.motion_auto_off_hallway_night
-                      name: Motion Auto-Off (min)
+                    - entity: >
+                        {% set room = states('input_select.room_selector') %}
+                        {% if room and room != 'unknown' and room != 'unavailable' %}
+                          input_text.scene_name_{{ room }}
+                        {% else %}
+                          input_text.scene_name_bedroom
+                        {% endif %}
+                      name: Scene Name
+                    - type: button
+                      name: Create Scene from Current Lights
+                      icon: mdi:content-save
+                      tap_action:
+                        action: call-service
+                        service: script.create_scene_from_lights
+                        service_data:
+                          scene_name: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' %}
+                              {{ states('input_text.scene_name_' ~ room) }}
+                            {% else %}
+                              {{ states('input_text.scene_name_bedroom') }}
+                            {% endif %}
+                          scene_id: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' %}
+                              {{ room }}_{{ states('input_text.scene_name_' ~ room) | lower | replace(' ', '_') }}
+                            {% else %}
+                              bedroom_{{ states('input_text.scene_name_bedroom') | lower | replace(' ', '_') }}
+                            {% endif %}
+                          light_entities: >
+                            {% set room = states('input_select.room_selector') %}
+                            {% if room and room != 'unknown' and room != 'unavailable' %}
+                              {% set room_key = room %}
+                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
+                              {% set room_lights = [] %}
+                              {% if room_key == 'hallway' %}
+                                {% for light_id in ['light.hallway', 'light.entrance_lights'] %}
+                                  {% if light_id in all_lights %}
+                                    {% set _ = room_lights.append(light_id) %}
+                                  {% endif %}
+                                {% endfor %}
+                              {% else %}
+                                {% set main_light = 'light.' ~ room_key %}
+                                {% set numbered_lights = [] %}
+                                {% for i in range(1, 10) %}
+                                  {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
+                                  {% if numbered_light in all_lights %}
+                                    {% set _ = numbered_lights.append(numbered_light) %}
+                                  {% endif %}
+                                {% endfor %}
+                                {% if numbered_lights | length == 1 and main_light in all_lights %}
+                                  {% set _ = room_lights.append(numbered_lights[0]) %}
+                                {% elif numbered_lights | length > 1 %}
+                                  {% for light_id in numbered_lights %}
+                                    {% set _ = room_lights.append(light_id) %}
+                                  {% endfor %}
+                                {% elif main_light in all_lights %}
+                                  {% set _ = room_lights.append(main_light) %}
+                                {% else %}
+                                  {% for light_id in numbered_lights %}
+                                    {% set _ = room_lights.append(light_id) %}
+                                  {% endfor %}
+                                {% endif %}
+                              {% endif %}
+                              {{ room_lights }}
+                            {% else %}
+                              []
+                            {% endif %}
   dean.yaml: |
     strategy:
       type: custom:mushroom-strategy
@@ -1666,723 +1676,713 @@ data:
               sort:
                 method: state
                 numeric: true
-  light_control.yaml: |
+  room_schedule_configuration.yaml: |
     views:
-      - title: Light Control
-        path: light-control
+      - title: Room Schedule Configuration
+        path: room-schedule-configuration
         cards:
+          # Global Schedule Section
+          - type: entities
+            title: Global Schedule Defaults
+            show_header_toggle: false
+            entities:
+              - entity: input_datetime.global_morning_start
+                name: Morning Start
+              - entity: input_datetime.global_day_start
+                name: Day Start
+              - entity: input_datetime.global_evening_start
+                name: Evening Start
+              - entity: input_datetime.global_night_start
+                name: Night Start
+    
+          # Configuration Selectors
           - type: vertical-stack
             cards:
-              # Room selector
               - type: entities
-                title: Select Room
+                title: Select Room & Slot
+                show_header_toggle: false
                 entities:
                   - entity: input_select.room_selector
                     name: Room
+                  - entity: input_select.time_window_selector
+                    name: Time Slot
     
-              # Dynamic Room Info
-              - type: markdown
-                title: Room Lighting Control
-                content: |
-                  {% set room = states('input_select.room_selector') %}
-                  {% if room and room != 'unknown' and room != 'unavailable' %}
-                    ### {{ room|replace('_',' ')|title }} Lighting
-                    
-                    Use the controls below to:
-                    - Turn all room lights on/off
-                    - Adjust individual lights
-                    - Create a scene from current light states
-                  {% else %}
-                    Please select a room above.
-                  {% endif %}
-    
-              # Room Group Control Buttons - dynamically discover lights per room
-              - type: entities
-                title: Room Controls
-                entities:
-                  - type: button
-                    name: >
-                      {% set room = states('input_select.room_selector') %}
-                      {% if room and room != 'unknown' and room != 'unavailable' %}
-                        All {{ room | replace('_', ' ') | title }} Lights On
-                      {% else %}
-                        All Lights On
-                      {% endif %}
-                    icon: mdi:lightbulb-group
-                    tap_action:
-                      action: call-service
-                      service: light.turn_on
-                      service_data:
-                        entity_id: >
-                          {% set room = states('input_select.room_selector') %}
-                          {% if room and room != 'unknown' and room != 'unavailable' %}
-                            {% set room_key = room %}
-                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                            {% set room_lights = [] %}
-                            {% if room_key == 'hallway' %}
-                              {% for light_id in ['light.hallway', 'light.entrance_lights'] %}
-                                {% if light_id in all_lights %}
-                                  {% set _ = room_lights.append(light_id) %}
-                                {% endif %}
-                              {% endfor %}
-                            {% else %}
-                              {% set main_light = 'light.' ~ room_key %}
-                              {% set numbered_lights = [] %}
-                              {% for i in range(1, 10) %}
-                                {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
-                                {% if numbered_light in all_lights %}
-                                  {% set _ = numbered_lights.append(numbered_light) %}
-                                {% endif %}
-                              {% endfor %}
-                              {% if numbered_lights | length == 1 and main_light in all_lights %}
-                                {% set _ = room_lights.append(numbered_lights[0]) %}
-                              {% elif numbered_lights | length > 1 %}
-                                {% for light_id in numbered_lights %}
-                                  {% set _ = room_lights.append(light_id) %}
-                                {% endfor %}
-                              {% elif main_light in all_lights %}
-                                {% set _ = room_lights.append(main_light) %}
-                              {% else %}
-                                {% for light_id in numbered_lights %}
-                                  {% set _ = room_lights.append(light_id) %}
-                                {% endfor %}
-                              {% endif %}
-                            {% endif %}
-                            {{ room_lights }}
-                          {% else %}
-                            []
-                          {% endif %}
-                  - type: button
-                    name: >
-                      {% set room = states('input_select.room_selector') %}
-                      {% if room and room != 'unknown' and room != 'unavailable' %}
-                        All {{ room | replace('_', ' ') | title }} Lights Off
-                      {% else %}
-                        All Lights Off
-                      {% endif %}
-                    icon: mdi:lightbulb-group-off
-                    tap_action:
-                      action: call-service
-                      service: light.turn_off
-                      service_data:
-                        entity_id: >
-                          {% set room = states('input_select.room_selector') %}
-                          {% if room and room != 'unknown' and room != 'unavailable' %}
-                            {% set room_key = room %}
-                            {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                            {% set room_lights = [] %}
-                            {% if room_key == 'hallway' %}
-                              {% for light_id in ['light.hallway', 'light.entrance_lights'] %}
-                                {% if light_id in all_lights %}
-                                  {% set _ = room_lights.append(light_id) %}
-                                {% endif %}
-                              {% endfor %}
-                            {% else %}
-                              {% set main_light = 'light.' ~ room_key %}
-                              {% set numbered_lights = [] %}
-                              {% for i in range(1, 10) %}
-                                {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
-                                {% if numbered_light in all_lights %}
-                                  {% set _ = numbered_lights.append(numbered_light) %}
-                                {% endif %}
-                              {% endfor %}
-                              {% if numbered_lights | length == 1 and main_light in all_lights %}
-                                {% set _ = room_lights.append(numbered_lights[0]) %}
-                              {% elif numbered_lights | length > 1 %}
-                                {% for light_id in numbered_lights %}
-                                  {% set _ = room_lights.append(light_id) %}
-                                {% endfor %}
-                              {% elif main_light in all_lights %}
-                                {% set _ = room_lights.append(main_light) %}
-                              {% else %}
-                                {% for light_id in numbered_lights %}
-                                  {% set _ = room_lights.append(light_id) %}
-                                {% endfor %}
-                              {% endif %}
-                            {% endif %}
-                            {{ room_lights }}
-                          {% else %}
-                            []
-                          {% endif %}
-    
-              # Individual Lights - dynamically discovered based on selected room
+              # ------------------------------------------------------
+              # BEDROOM CONFIGURATION
+              # ------------------------------------------------------
+              
+              # Bedroom Morning
               - type: conditional
                 conditions:
                   - entity: input_select.room_selector
-                    state_not: unknown
-                card:
-                  type: grid
-                  square: false
-                  columns: 2
-                  cards:
-                    # Show individual light if room group contains only one light (e.g., light.living_room with only light.fixture)
-                    # Check if the group entity has entity_id attribute (which contains members) with only one member
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' %}
-                              {% set room_key = room %}
-                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                              {% set main_light = 'light.' ~ room_key %}
-                              {% if room_key == 'hallway' %}
-                                {{ false }}
-                              {% elif main_light in all_lights %}
-                                {% set main_light_attr = state_attr(main_light, 'entity_id') | default([]) %}
-                                {% if main_light_attr is iterable and main_light_attr is not string %}
-                                  {# Check if it's a list/array with exactly one item #}
-                                  {{ main_light_attr | list | length == 1 }}
-                                {% else %}
-                                  {{ false }}
-                                {% endif %}
-                              {% else %}
-                                {{ false }}
-                              {% endif %}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                      card:
-                        type: light
-                        entity: >
-                          {% set room = states('input_select.room_selector') %}
-                          {% if room and room != 'unknown' and room != 'unavailable' %}
-                            {% set room_key = room %}
-                            {% set main_light = 'light.' ~ room_key %}
-                            {% set main_light_attr = state_attr(main_light, 'entity_id') | default([]) %}
-                            {% if main_light_attr is iterable and main_light_attr is not string %}
-                              {% set attr_list = main_light_attr | list %}
-                              {{ attr_list[0] if attr_list | length == 1 else main_light }}
-                            {% else %}
-                              {{ main_light }}
-                            {% endif %}
-                          {% else %}
-                            light.bedroom
-                          {% endif %}
-                        name: >
-                          {% set room = states('input_select.room_selector') %}
-                          {{ room | replace('_', ' ') | title }}
-                    # Smart logic: if only one numbered light exists with main, show numbered only
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' %}
-                              {% set room_key = room %}
-                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                              {% set main_light = 'light.' ~ room_key %}
-                              {% if room_key == 'hallway' %}
-                                {{ false }}
-                              {% else %}
-                                {% set main_light_entities = state_attr(main_light, 'entity_id') | default([]) %}
-                                {% set numbered_lights = [] %}
-                                {% for i in range(1, 10) %}
-                                  {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
-                                  {% if numbered_light in all_lights %}
-                                    {% set _ = numbered_lights.append(numbered_light) %}
-                                  {% endif %}
-                                {% endfor %}
-                                {{ numbered_lights | length == 1 and main_light in all_lights and (main_light_entities | length != 1) }}
-                              {% endif %}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                      card:
-                        type: light
-                        entity: >
-                          {% set room = states('input_select.room_selector') %}
-                          {% set room_key = room %}
-                          {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                          {% set numbered_lights = [] %}
-                          {% for i in range(1, 10) %}
-                            {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
-                            {% if numbered_light in all_lights %}
-                              {% set _ = numbered_lights.append(numbered_light) %}
-                            {% endif %}
-                          {% endfor %}
-                          {{ numbered_lights[0] if numbered_lights | length == 1 else 'light.' ~ room_key }}
-                        name: >
-                          {% set room = states('input_select.room_selector') %}
-                          {{ room | replace('_', ' ') | title }}
-                    # Show main light if it exists, has multiple entities (not a single-member group), and (no numbered or multiple numbered)
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' %}
-                              {% set room_key = room %}
-                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                              {% if room_key == 'hallway' %}
-                                {{ false }}
-                              {% else %}
-                                {% set main_light = 'light.' ~ room_key %}
-                                {% if main_light in all_lights %}
-                                  {# Check if main_light is a group with only one member #}
-                                  {% set main_light_entities = state_attr(main_light, 'entity_id') | default([]) %}
-                                  {% if main_light_entities is iterable and main_light_entities is not string %}
-                                    {% set entity_list = main_light_entities | list %}
-                                    {% if entity_list | length == 1 %}
-                                      {{ false }}  {# Hide group if it only contains one light #}
-                                    {% else %}
-                                      {% set numbered_lights = [] %}
-                                      {% for i in range(1, 10) %}
-                                        {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
-                                        {% if numbered_light in all_lights %}
-                                          {% set _ = numbered_lights.append(numbered_light) %}
-                                        {% endif %}
-                                      {% endfor %}
-                                      {{ numbered_lights | length == 0 or numbered_lights | length > 1 }}
-                                    {% endif %}
-                                  {% else %}
-                                    {# Not a group or can't determine members, show the group normally #}
-                                    {% set numbered_lights = [] %}
-                                    {% for i in range(1, 10) %}
-                                      {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
-                                      {% if numbered_light in all_lights %}
-                                        {% set _ = numbered_lights.append(numbered_light) %}
-                                      {% endif %}
-                                    {% endfor %}
-                                    {{ numbered_lights | length == 0 or numbered_lights | length > 1 }}
-                                  {% endif %}
-                                {% else %}
-                                  {{ false }}
-                                {% endif %}
-                              {% endif %}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                      card:
-                        type: light
-                        entity: >
-                          {% set room = states('input_select.room_selector') %}
-                          {% if room and room != 'unknown' and room != 'unavailable' %}
-                            light.{{ room }}
-                          {% else %}
-                            light.bedroom
-                          {% endif %}
-                        name: >
-                          {% set room = states('input_select.room_selector') %}
-                          {{ room | replace('_', ' ') | title }}
-                    # Show numbered lights if they exist (for multiple numbered lights case)
-                    # Dynamically check numbered lights 1-9 based on selected room
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
-                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                              {% set numbered_lights = [] %}
-                              {% for i in range(1, 10) %}
-                                {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
-                                {% if numbered_light in all_lights %}
-                                  {% set _ = numbered_lights.append(numbered_light) %}
-                                {% endif %}
-                              {% endfor %}
-                              {{ numbered_lights | length > 1 }}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
-                              {{ states('light.' ~ room ~ '_1') != 'unavailable' }}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                      card:
-                        type: light
-                        entity: >
-                          {% set room = states('input_select.room_selector') %}
-                          light.{{ room }}_1
-                        name: >
-                          {% set room = states('input_select.room_selector') %}
-                          {{ room | replace('_', ' ') | title }} Light 1
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
-                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                              {% set numbered_lights = [] %}
-                              {% for i in range(1, 10) %}
-                                {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
-                                {% if numbered_light in all_lights %}
-                                  {% set _ = numbered_lights.append(numbered_light) %}
-                                {% endif %}
-                              {% endfor %}
-                              {{ numbered_lights | length > 1 }}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
-                              {{ states('light.' ~ room ~ '_2') != 'unavailable' }}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                      card:
-                        type: light
-                        entity: >
-                          {% set room = states('input_select.room_selector') %}
-                          light.{{ room }}_2
-                        name: >
-                          {% set room = states('input_select.room_selector') %}
-                          {{ room | replace('_', ' ') | title }} Light 2
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
-                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                              {% set numbered_lights = [] %}
-                              {% for i in range(1, 10) %}
-                                {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
-                                {% if numbered_light in all_lights %}
-                                  {% set _ = numbered_lights.append(numbered_light) %}
-                                {% endif %}
-                              {% endfor %}
-                              {{ numbered_lights | length > 1 }}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
-                              {{ states('light.' ~ room ~ '_3') != 'unavailable' }}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                      card:
-                        type: light
-                        entity: >
-                          {% set room = states('input_select.room_selector') %}
-                          light.{{ room }}_3
-                        name: >
-                          {% set room = states('input_select.room_selector') %}
-                          {{ room | replace('_', ' ') | title }} Light 3
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
-                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                              {% set numbered_lights = [] %}
-                              {% for i in range(1, 10) %}
-                                {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
-                                {% if numbered_light in all_lights %}
-                                  {% set _ = numbered_lights.append(numbered_light) %}
-                                {% endif %}
-                              {% endfor %}
-                              {{ numbered_lights | length > 1 }}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
-                              {{ states('light.' ~ room ~ '_4') != 'unavailable' }}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                      card:
-                        type: light
-                        entity: >
-                          {% set room = states('input_select.room_selector') %}
-                          light.{{ room }}_4
-                        name: >
-                          {% set room = states('input_select.room_selector') %}
-                          {{ room | replace('_', ' ') | title }} Light 4
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
-                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                              {% set numbered_lights = [] %}
-                              {% for i in range(1, 10) %}
-                                {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
-                                {% if numbered_light in all_lights %}
-                                  {% set _ = numbered_lights.append(numbered_light) %}
-                                {% endif %}
-                              {% endfor %}
-                              {{ numbered_lights | length > 1 }}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
-                              {{ states('light.' ~ room ~ '_5') != 'unavailable' }}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                      card:
-                        type: light
-                        entity: >
-                          {% set room = states('input_select.room_selector') %}
-                          light.{{ room }}_5
-                        name: >
-                          {% set room = states('input_select.room_selector') %}
-                          {{ room | replace('_', ' ') | title }} Light 5
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
-                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                              {% set numbered_lights = [] %}
-                              {% for i in range(1, 10) %}
-                                {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
-                                {% if numbered_light in all_lights %}
-                                  {% set _ = numbered_lights.append(numbered_light) %}
-                                {% endif %}
-                              {% endfor %}
-                              {{ numbered_lights | length > 1 }}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
-                              {{ states('light.' ~ room ~ '_6') != 'unavailable' }}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                      card:
-                        type: light
-                        entity: >
-                          {% set room = states('input_select.room_selector') %}
-                          light.{{ room }}_6
-                        name: >
-                          {% set room = states('input_select.room_selector') %}
-                          {{ room | replace('_', ' ') | title }} Light 6
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
-                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                              {% set numbered_lights = [] %}
-                              {% for i in range(1, 10) %}
-                                {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
-                                {% if numbered_light in all_lights %}
-                                  {% set _ = numbered_lights.append(numbered_light) %}
-                                {% endif %}
-                              {% endfor %}
-                              {{ numbered_lights | length > 1 }}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
-                              {{ states('light.' ~ room ~ '_7') != 'unavailable' }}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                      card:
-                        type: light
-                        entity: >
-                          {% set room = states('input_select.room_selector') %}
-                          light.{{ room }}_7
-                        name: >
-                          {% set room = states('input_select.room_selector') %}
-                          {{ room | replace('_', ' ') | title }} Light 7
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
-                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                              {% set numbered_lights = [] %}
-                              {% for i in range(1, 10) %}
-                                {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
-                                {% if numbered_light in all_lights %}
-                                  {% set _ = numbered_lights.append(numbered_light) %}
-                                {% endif %}
-                              {% endfor %}
-                              {{ numbered_lights | length > 1 }}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
-                              {{ states('light.' ~ room ~ '_8') != 'unavailable' }}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                      card:
-                        type: light
-                        entity: >
-                          {% set room = states('input_select.room_selector') %}
-                          light.{{ room }}_8
-                        name: >
-                          {% set room = states('input_select.room_selector') %}
-                          {{ room | replace('_', ' ') | title }} Light 8
-                    - type: conditional
-                      conditions:
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
-                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                              {% set numbered_lights = [] %}
-                              {% for i in range(1, 10) %}
-                                {% set numbered_light = 'light.' ~ room ~ '_' ~ i %}
-                                {% if numbered_light in all_lights %}
-                                  {% set _ = numbered_lights.append(numbered_light) %}
-                                {% endif %}
-                              {% endfor %}
-                              {{ numbered_lights | length > 1 }}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                        - condition: template
-                          value_template: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' and room != 'hallway' %}
-                              {{ states('light.' ~ room ~ '_9') != 'unavailable' }}
-                            {% else %}
-                              {{ false }}
-                            {% endif %}
-                      card:
-                        type: light
-                        entity: >
-                          {% set room = states('input_select.room_selector') %}
-                          light.{{ room }}_9
-                        name: >
-                          {% set room = states('input_select.room_selector') %}
-                          {{ room | replace('_', ' ') | title }} Light 9
-                    # Hallway special case
-                    - type: conditional
-                      conditions:
-                        - entity: input_select.room_selector
-                          state: hallway
-                        - condition: template
-                          value_template: "{{ states('light.hallway') != 'unavailable' }}"
-                      card:
-                        type: light
-                        entity: light.hallway
-                        name: Hallway
-                    - type: conditional
-                      conditions:
-                        - entity: input_select.room_selector
-                          state: hallway
-                        - condition: template
-                          value_template: "{{ states('light.entrance_lights') != 'unavailable' }}"
-                      card:
-                        type: light
-                        entity: light.entrance_lights
-                        name: Entrance Lights
-    
-              # Scene Creation Section
-              - type: markdown
-                title: Create Scene
-                content: |
-                  Adjust the lights above to your desired settings, then:
-                  1. Enter a scene name below
-                  2. Click "Create Scene" to save the current state
-    
-              # Scene Creation - dynamically discovered lights
-              - type: conditional
-                conditions:
-                  - entity: input_select.room_selector
-                    state_not: unknown
+                    state: bedroom
+                  - entity: input_select.time_window_selector
+                    state: morning
                 card:
                   type: entities
-                  title: >
-                    {% set room = states('input_select.room_selector') %}
-                    {% if room and room != 'unknown' and room != 'unavailable' %}
-                      {{ room | replace('_', ' ') | title }} Scene Creation
-                    {% else %}
-                      Scene Creation
-                    {% endif %}
+                  title: Bedroom Morning
+                  show_header_toggle: false
                   entities:
-                    - entity: >
-                        {% set room = states('input_select.room_selector') %}
-                        {% if room and room != 'unknown' and room != 'unavailable' %}
-                          input_text.scene_name_{{ room }}
-                        {% else %}
-                          input_text.scene_name_bedroom
-                        {% endif %}
-                      name: Scene Name
-                    - type: button
-                      name: Create Scene from Current Lights
-                      icon: mdi:content-save
-                      tap_action:
-                        action: call-service
-                        service: script.create_scene_from_lights
-                        service_data:
-                          scene_name: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' %}
-                              {{ states('input_text.scene_name_' ~ room) }}
-                            {% else %}
-                              {{ states('input_text.scene_name_bedroom') }}
-                            {% endif %}
-                          scene_id: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' %}
-                              {{ room }}_{{ states('input_text.scene_name_' ~ room) | lower | replace(' ', '_') }}
-                            {% else %}
-                              bedroom_{{ states('input_text.scene_name_bedroom') | lower | replace(' ', '_') }}
-                            {% endif %}
-                          light_entities: >
-                            {% set room = states('input_select.room_selector') %}
-                            {% if room and room != 'unknown' and room != 'unavailable' %}
-                              {% set room_key = room %}
-                              {% set all_lights = states.light | map(attribute='entity_id') | list %}
-                              {% set room_lights = [] %}
-                              {% if room_key == 'hallway' %}
-                                {% for light_id in ['light.hallway', 'light.entrance_lights'] %}
-                                  {% if light_id in all_lights %}
-                                    {% set _ = room_lights.append(light_id) %}
-                                  {% endif %}
-                                {% endfor %}
-                              {% else %}
-                                {% set main_light = 'light.' ~ room_key %}
-                                {% set numbered_lights = [] %}
-                                {% for i in range(1, 10) %}
-                                  {% set numbered_light = 'light.' ~ room_key ~ '_' ~ i %}
-                                  {% if numbered_light in all_lights %}
-                                    {% set _ = numbered_lights.append(numbered_light) %}
-                                  {% endif %}
-                                {% endfor %}
-                                {% if numbered_lights | length == 1 and main_light in all_lights %}
-                                  {% set _ = room_lights.append(numbered_lights[0]) %}
-                                {% elif numbered_lights | length > 1 %}
-                                  {% for light_id in numbered_lights %}
-                                    {% set _ = room_lights.append(light_id) %}
-                                  {% endfor %}
-                                {% elif main_light in all_lights %}
-                                  {% set _ = room_lights.append(main_light) %}
-                                {% else %}
-                                  {% for light_id in numbered_lights %}
-                                    {% set _ = room_lights.append(light_id) %}
-                                  {% endfor %}
-                                {% endif %}
-                              {% endif %}
-                              {{ room_lights }}
-                            {% else %}
-                              []
-                            {% endif %}
+                    - entity: input_boolean.bedroom_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.bedroom_morning_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.bedroom_morning_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.bedroom_s1_start
+                        name: Morning Start Time
+                    - type: section
+                    - entity: input_select.bedroom_morning_scene
+                      name: Scene
+                    - entity: input_boolean.bedroom_morning_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.bedroom_morning_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_bedroom_morning
+                      name: Motion Auto-Off (min)
+    
+              # Bedroom Day
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: bedroom
+                  - entity: input_select.time_window_selector
+                    state: day
+                card:
+                  type: entities
+                  title: Bedroom Day
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.bedroom_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.bedroom_day_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.bedroom_day_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.bedroom_s2_start
+                        name: Day Start Time
+                    - type: section
+                    - entity: input_select.bedroom_day_scene
+                      name: Scene
+                    - entity: input_boolean.bedroom_day_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.bedroom_day_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_bedroom_day
+                      name: Motion Auto-Off (min)
+    
+              # Bedroom Evening
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: bedroom
+                  - entity: input_select.time_window_selector
+                    state: evening
+                card:
+                  type: entities
+                  title: Bedroom Evening
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.bedroom_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.bedroom_evening_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.bedroom_evening_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.bedroom_s3_start
+                        name: Evening Start Time
+                    - type: section
+                    - entity: input_select.bedroom_evening_scene
+                      name: Scene
+                    - entity: input_boolean.bedroom_evening_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.bedroom_evening_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_bedroom_evening
+                      name: Motion Auto-Off (min)
+    
+              # Bedroom Night
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: bedroom
+                  - entity: input_select.time_window_selector
+                    state: night
+                card:
+                  type: entities
+                  title: Bedroom Night
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.bedroom_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.bedroom_night_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.bedroom_night_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.bedroom_s4_start
+                        name: Night Start Time
+                    - type: section
+                    - entity: input_select.bedroom_night_scene
+                      name: Scene
+                    - entity: input_boolean.bedroom_night_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.bedroom_night_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_bedroom_night
+                      name: Motion Auto-Off (min)
+    
+              # ------------------------------------------------------
+              # BATHROOM CONFIGURATION
+              # ------------------------------------------------------
+    
+              # Bathroom Morning
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: bathroom
+                  - entity: input_select.time_window_selector
+                    state: morning
+                card:
+                  type: entities
+                  title: Bathroom Morning
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.bathroom_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.bathroom_morning_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.bathroom_morning_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.bathroom_s1_start
+                        name: Morning Start Time
+                    - type: section
+                    - entity: input_select.bathroom_morning_scene
+                      name: Scene
+                    - entity: input_boolean.bathroom_morning_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.bathroom_morning_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_bathroom_morning
+                      name: Motion Auto-Off (min)
+    
+              # Bathroom Day
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: bathroom
+                  - entity: input_select.time_window_selector
+                    state: day
+                card:
+                  type: entities
+                  title: Bathroom Day
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.bathroom_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.bathroom_day_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.bathroom_day_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.bathroom_s2_start
+                        name: Day Start Time
+                    - type: section
+                    - entity: input_select.bathroom_day_scene
+                      name: Scene
+                    - entity: input_boolean.bathroom_day_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.bathroom_day_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_bathroom_day
+                      name: Motion Auto-Off (min)
+    
+              # Bathroom Evening
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: bathroom
+                  - entity: input_select.time_window_selector
+                    state: evening
+                card:
+                  type: entities
+                  title: Bathroom Evening
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.bathroom_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.bathroom_evening_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.bathroom_evening_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.bathroom_s3_start
+                        name: Evening Start Time
+                    - type: section
+                    - entity: input_select.bathroom_evening_scene
+                      name: Scene
+                    - entity: input_boolean.bathroom_evening_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.bathroom_evening_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_bathroom_evening
+                      name: Motion Auto-Off (min)
+    
+              # Bathroom Night
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: bathroom
+                  - entity: input_select.time_window_selector
+                    state: night
+                card:
+                  type: entities
+                  title: Bathroom Night
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.bathroom_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.bathroom_night_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.bathroom_night_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.bathroom_s4_start
+                        name: Night Start Time
+                    - type: section
+                    - entity: input_select.bathroom_night_scene
+                      name: Scene
+                    - entity: input_boolean.bathroom_night_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.bathroom_night_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_bathroom_night
+                      name: Motion Auto-Off (min)
+    
+              # ------------------------------------------------------
+              # LIVING ROOM CONFIGURATION
+              # ------------------------------------------------------
+    
+              # Living Room Morning
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: living_room
+                  - entity: input_select.time_window_selector
+                    state: morning
+                card:
+                  type: entities
+                  title: Living Room Morning
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.living_room_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.living_room_morning_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.living_room_morning_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.living_room_s1_start
+                        name: Morning Start Time
+                    - type: section
+                    - entity: input_select.living_room_morning_scene
+                      name: Scene
+                    - entity: input_boolean.living_room_morning_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.living_room_morning_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_living_room_morning
+                      name: Motion Auto-Off (min)
+    
+              # Living Room Day
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: living_room
+                  - entity: input_select.time_window_selector
+                    state: day
+                card:
+                  type: entities
+                  title: Living Room Day
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.living_room_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.living_room_day_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.living_room_day_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.living_room_s2_start
+                        name: Day Start Time
+                    - type: section
+                    - entity: input_select.living_room_day_scene
+                      name: Scene
+                    - entity: input_boolean.living_room_day_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.living_room_day_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_living_room_day
+                      name: Motion Auto-Off (min)
+    
+              # Living Room Evening
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: living_room
+                  - entity: input_select.time_window_selector
+                    state: evening
+                card:
+                  type: entities
+                  title: Living Room Evening
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.living_room_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.living_room_evening_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.living_room_evening_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.living_room_s3_start
+                        name: Evening Start Time
+                    - type: section
+                    - entity: input_select.living_room_evening_scene
+                      name: Scene
+                    - entity: input_boolean.living_room_evening_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.living_room_evening_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_living_room_evening
+                      name: Motion Auto-Off (min)
+    
+              # Living Room Night
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: living_room
+                  - entity: input_select.time_window_selector
+                    state: night
+                card:
+                  type: entities
+                  title: Living Room Night
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.living_room_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.living_room_night_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.living_room_night_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.living_room_s4_start
+                        name: Night Start Time
+                    - type: section
+                    - entity: input_select.living_room_night_scene
+                      name: Scene
+                    - entity: input_boolean.living_room_night_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.living_room_night_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_living_room_night
+                      name: Motion Auto-Off (min)
+    
+              # ------------------------------------------------------
+              # KITCHEN CONFIGURATION
+              # ------------------------------------------------------
+    
+              # Kitchen Morning
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: kitchen
+                  - entity: input_select.time_window_selector
+                    state: morning
+                card:
+                  type: entities
+                  title: Kitchen Morning
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.kitchen_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.kitchen_morning_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.kitchen_morning_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.kitchen_s1_start
+                        name: Morning Start Time
+                    - type: section
+                    - entity: input_select.kitchen_morning_scene
+                      name: Scene
+                    - entity: input_boolean.kitchen_morning_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.kitchen_morning_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_kitchen_morning
+                      name: Motion Auto-Off (min)
+    
+              # Kitchen Day
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: kitchen
+                  - entity: input_select.time_window_selector
+                    state: day
+                card:
+                  type: entities
+                  title: Kitchen Day
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.kitchen_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.kitchen_day_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.kitchen_day_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.kitchen_s2_start
+                        name: Day Start Time
+                    - type: section
+                    - entity: input_select.kitchen_day_scene
+                      name: Scene
+                    - entity: input_boolean.kitchen_day_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.kitchen_day_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_kitchen_day
+                      name: Motion Auto-Off (min)
+    
+              # Kitchen Evening
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: kitchen
+                  - entity: input_select.time_window_selector
+                    state: evening
+                card:
+                  type: entities
+                  title: Kitchen Evening
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.kitchen_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.kitchen_evening_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.kitchen_evening_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.kitchen_s3_start
+                        name: Evening Start Time
+                    - type: section
+                    - entity: input_select.kitchen_evening_scene
+                      name: Scene
+                    - entity: input_boolean.kitchen_evening_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.kitchen_evening_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_kitchen_evening
+                      name: Motion Auto-Off (min)
+    
+              # Kitchen Night
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: kitchen
+                  - entity: input_select.time_window_selector
+                    state: night
+                card:
+                  type: entities
+                  title: Kitchen Night
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.kitchen_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.kitchen_night_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.kitchen_night_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.kitchen_s4_start
+                        name: Night Start Time
+                    - type: section
+                    - entity: input_select.kitchen_night_scene
+                      name: Scene
+                    - entity: input_boolean.kitchen_night_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.kitchen_night_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_kitchen_night
+                      name: Motion Auto-Off (min)
+    
+              # ------------------------------------------------------
+              # HALLWAY CONFIGURATION
+              # ------------------------------------------------------
+    
+              # Hallway Morning
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: hallway
+                  - entity: input_select.time_window_selector
+                    state: morning
+                card:
+                  type: entities
+                  title: Hallway Morning
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.hallway_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.hallway_morning_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.hallway_morning_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.hallway_s1_start
+                        name: Morning Start Time
+                    - type: section
+                    - entity: input_select.hallway_morning_scene
+                      name: Scene
+                    - entity: input_boolean.hallway_morning_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.hallway_morning_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_hallway_morning
+                      name: Motion Auto-Off (min)
+    
+              # Hallway Day
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: hallway
+                  - entity: input_select.time_window_selector
+                    state: day
+                card:
+                  type: entities
+                  title: Hallway Day
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.hallway_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.hallway_day_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.hallway_day_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.hallway_s2_start
+                        name: Day Start Time
+                    - type: section
+                    - entity: input_select.hallway_day_scene
+                      name: Scene
+                    - entity: input_boolean.hallway_day_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.hallway_day_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_hallway_day
+                      name: Motion Auto-Off (min)
+    
+              # Hallway Evening
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: hallway
+                  - entity: input_select.time_window_selector
+                    state: evening
+                card:
+                  type: entities
+                  title: Hallway Evening
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.hallway_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.hallway_evening_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.hallway_evening_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.hallway_s3_start
+                        name: Evening Start Time
+                    - type: section
+                    - entity: input_select.hallway_evening_scene
+                      name: Scene
+                    - entity: input_boolean.hallway_evening_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.hallway_evening_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_hallway_evening
+                      name: Motion Auto-Off (min)
+    
+              # Hallway Night
+              - type: conditional
+                conditions:
+                  - entity: input_select.room_selector
+                    state: hallway
+                  - entity: input_select.time_window_selector
+                    state: night
+                card:
+                  type: entities
+                  title: Hallway Night
+                  show_header_toggle: false
+                  entities:
+                    - entity: input_boolean.hallway_custom_schedule
+                      name: Use Custom Schedule (Room Master)
+                    - entity: input_boolean.hallway_night_custom_time
+                      name: Override Global Time
+                    - type: conditional
+                      conditions:
+                        - entity: input_boolean.hallway_night_custom_time
+                          state: "on"
+                      row:
+                        entity: input_datetime.hallway_s4_start
+                        name: Night Start Time
+                    - type: section
+                    - entity: input_select.hallway_night_scene
+                      name: Scene
+                    - entity: input_boolean.hallway_night_motion_enabled
+                      name: Motion Activated
+                    - entity: input_boolean.hallway_night_auto_on_enabled
+                      name: Auto-On
+                    - entity: input_number.motion_auto_off_hallway_night
+                      name: Motion Auto-Off (min)
