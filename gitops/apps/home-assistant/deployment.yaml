@@ -214,15 +214,6 @@ spec:
                   - 10.43.0.0/16
                   - 10.42.0.0/16
 
-              # Calendar Configuration (Local Cache)
-              calendar:
-                - platform: ics_calendar
-                  calendars:
-                    - name: "Work"
-                      url: "http://localhost:8123/local/calendar_cache/local_calendar.work.ics"
-                      include_resource: true
-                      summary_default: "Work"
-
               # Media sources - expose local media folders to Media dashboard
               media_source: {}
         
