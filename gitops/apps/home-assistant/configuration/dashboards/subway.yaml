@@ -12,22 +12,22 @@ views:
               show_header_toggle: false
             filter:
               template: |
-                {% for state in states.sensor -%}
-                  {%- if state.attributes.friendly_name is defined and 'Atlantic Av' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
-                    {%- set route = state.attributes.route_id | default('?') -%}
-                    {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                    {{
+                [
+                  {% for state in states.sensor -%}
+                    {%- if state.attributes.friendly_name is defined and ('Atlantic Av' in state.attributes.friendly_name or 'Barclays' in state.attributes.friendly_name) and state.state not in ['unavailable', 'unknown'] -%}
+                      {%- set route = state.attributes.route_id | default('?') -%}
+                      {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                      {%- set dir = 'North' if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') else 'South' -%}
                       {
-                        'entity': state.entity_id,
-                        'name': route ~ " -> " ~ headsign,
-                        'secondary_info': 'last-updated'
-                      } 
-                    }},
-                  {%- endif -%}
-                {%- endfor %}
+                        "entity": "{{ state.entity_id }}",
+                        "name": "{{ dir }}: {{ route }} to {{ headsign }}",
+                        "secondary_info": "last-updated"
+                      },
+                    {%- endif -%}
+                  {%- endfor %}
+                ]
             sort:
-              method: attribute
-              attribute: route_id
+              method: name
 
           # --- BERGEN ST ---
           - type: custom:auto-entities
@@ -37,22 +37,22 @@ views:
               show_header_toggle: false
             filter:
               template: |
-                {% for state in states.sensor -%}
-                  {%- if state.attributes.friendly_name is defined and 'Bergen St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
-                    {%- set route = state.attributes.route_id | default('?') -%}
-                    {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                    {{
+                [
+                  {% for state in states.sensor -%}
+                    {%- if state.attributes.friendly_name is defined and 'Bergen St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
+                      {%- set route = state.attributes.route_id | default('?') -%}
+                      {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                      {%- set dir = 'North' if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Court Sq') else 'South' -%}
                       {
-                        'entity': state.entity_id,
-                        'name': route ~ " -> " ~ headsign,
-                        'secondary_info': 'last-updated'
-                      } 
-                    }},
-                  {%- endif -%}
-                {%- endfor %}
+                        "entity": "{{ state.entity_id }}",
+                        "name": "{{ dir }}: {{ route }} to {{ headsign }}",
+                        "secondary_info": "last-updated"
+                      },
+                    {%- endif -%}
+                  {%- endfor %}
+                ]
             sort:
-              method: attribute
-              attribute: route_id
+              method: name
 
           # --- FULTON ST ---
           - type: custom:auto-entities
@@ -62,22 +62,22 @@ views:
               show_header_toggle: false
             filter:
               template: |
-                {% for state in states.sensor -%}
-                  {%- if state.attributes.friendly_name is defined and 'Fulton St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
-                    {%- set route = state.attributes.route_id | default('?') -%}
-                    {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                    {{
+                [
+                  {% for state in states.sensor -%}
+                    {%- if state.attributes.friendly_name is defined and 'Fulton St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
+                      {%- set route = state.attributes.route_id | default('?') -%}
+                      {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                      {%- set dir = 'North' if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Court Sq') else 'South' -%}
                       {
-                        'entity': state.entity_id,
-                        'name': route ~ " -> " ~ headsign,
-                        'secondary_info': 'last-updated'
-                      } 
-                    }},
-                  {%- endif -%}
-                {%- endfor %}
+                        "entity": "{{ state.entity_id }}",
+                        "name": "{{ dir }}: {{ route }} to {{ headsign }}",
+                        "secondary_info": "last-updated"
+                      },
+                    {%- endif -%}
+                  {%- endfor %}
+                ]
             sort:
-              method: attribute
-              attribute: route_id
+              method: name
 
           # --- LAFAYETTE AV ---
           - type: custom:auto-entities
@@ -87,22 +87,22 @@ views:
               show_header_toggle: false
             filter:
               template: |
-                {% for state in states.sensor -%}
-                  {%- if state.attributes.friendly_name is defined and 'Lafayette Av' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
-                    {%- set route = state.attributes.route_id | default('?') -%}
-                    {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                    {{
+                [
+                  {% for state in states.sensor -%}
+                    {%- if state.attributes.friendly_name is defined and 'Lafayette Av' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
+                      {%- set route = state.attributes.route_id | default('?') -%}
+                      {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                      {%- set dir = 'North' if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') else 'South' -%}
                       {
-                        'entity': state.entity_id,
-                        'name': route ~ " -> " ~ headsign,
-                        'secondary_info': 'last-updated'
-                      } 
-                    }},
-                  {%- endif -%}
-                {%- endfor %}
+                        "entity": "{{ state.entity_id }}",
+                        "name": "{{ dir }}: {{ route }} to {{ headsign }}",
+                        "secondary_info": "last-updated"
+                      },
+                    {%- endif -%}
+                  {%- endfor %}
+                ]
             sort:
-              method: attribute
-              attribute: route_id
+              method: name
 
           # --- 57 ST ---
           - type: custom:auto-entities
@@ -112,22 +112,22 @@ views:
               show_header_toggle: false
             filter:
               template: |
-                {% for state in states.sensor -%}
-                  {%- if state.attributes.friendly_name is defined and '57 St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
-                    {%- set route = state.attributes.route_id | default('?') -%}
-                    {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                    {{
+                [
+                  {% for state in states.sensor -%}
+                    {%- if state.attributes.friendly_name is defined and '57 St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
+                      {%- set route = state.attributes.route_id | default('?') -%}
+                      {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                      {%- set dir = 'North' if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') else 'South' -%}
                       {
-                        'entity': state.entity_id,
-                        'name': route ~ " -> " ~ headsign,
-                        'secondary_info': 'last-updated'
-                      } 
-                    }},
-                  {%- endif -%}
-                {%- endfor %}
+                        "entity": "{{ state.entity_id }}",
+                        "name": "{{ dir }}: {{ route }} to {{ headsign }}",
+                        "secondary_info": "last-updated"
+                      },
+                    {%- endif -%}
+                  {%- endfor %}
+                ]
             sort:
-              method: attribute
-              attribute: route_id
+              method: name
 
   - title: Morning Commute
     icon: mdi:weather-sunset-up
@@ -135,19 +135,24 @@ views:
       - type: custom:auto-entities
         card:
           type: entities
-          title: Morning Commute (All Atlantic Av Trains)
+          title: Morning Commute (Atlantic Av - N/Q/D)
           show_header_toggle: false
         filter:
-          include:
-            - domain: sensor
-              attributes:
-                friendly_name: "/Atlantic Av|Barclays/"
-                route_id: ["N", "Q", "D"]
-              options:
-                 secondary_info: last-updated
-          exclude:
-            - state: "unavailable"
-            - state: "unknown"
+          template: |
+            [
+              {% for state in states.sensor -%}
+                {%- if state.attributes.friendly_name is defined and ('Atlantic Av' in state.attributes.friendly_name or 'Barclays' in state.attributes.friendly_name) and state.attributes.route_id in ['N', 'Q', 'D'] and state.state not in ['unavailable', 'unknown'] -%}
+                  {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                  {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
+                  {
+                    "entity": "{{ state.entity_id }}",
+                    "name": "{{ state.attributes.route_id }} to {{ headsign }}",
+                    "secondary_info": "last-updated"
+                  },
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endfor %}
+            ]
         sort:
           method: state
           numeric: true
@@ -158,19 +163,24 @@ views:
       - type: custom:auto-entities
         card:
           type: entities
-          title: Evening Commute (All 57 St Trains)
+          title: Evening Commute (57 St - N/Q/R/W)
           show_header_toggle: false
         filter:
-          include:
-            - domain: sensor
-              attributes:
-                friendly_name: "/57 St/"
-                route_id: ["N", "Q", "R", "W"]
-              options:
-                 secondary_info: last-updated
-          exclude:
-            - state: "unavailable"
-            - state: "unknown"
+          template: |
+            [
+              {% for state in states.sensor -%}
+                {%- if state.attributes.friendly_name is defined and '57 St' in state.attributes.friendly_name and state.attributes.route_id in ['N', 'Q', 'R', 'W'] and state.state not in ['unavailable', 'unknown'] -%}
+                  {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                  {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
+                  {
+                    "entity": "{{ state.entity_id }}",
+                    "name": "{{ state.attributes.route_id }} to {{ headsign }}",
+                    "secondary_info": "last-updated"
+                  },
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endfor %}
+            ]
         sort:
           method: state
           numeric: true
@@ -186,20 +196,25 @@ views:
           type: custom:auto-entities
           card:
             type: entities
-            title: To Work (All Atlantic Av Trains)
+            title: To Work (Atlantic Av - N/Q/D)
             icon: mdi:briefcase
             show_header_toggle: false
           filter:
-            include:
-              - domain: sensor
-                attributes:
-                  friendly_name: "/Atlantic Av|Barclays/"
-                  route_id: ["N", "Q", "D"]
-                options:
-                   secondary_info: last-updated
-            exclude:
-              - state: "unavailable"
-              - state: "unknown"
+            template: |
+              [
+                {% for state in states.sensor -%}
+                  {%- if state.attributes.friendly_name is defined and ('Atlantic Av' in state.attributes.friendly_name or 'Barclays' in state.attributes.friendly_name) and state.attributes.route_id in ['N', 'Q', 'D'] and state.state not in ['unavailable', 'unknown'] -%}
+                    {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                    {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
+                    {
+                      "entity": "{{ state.entity_id }}",
+                      "name": "{{ state.attributes.route_id }} to {{ headsign }}",
+                      "secondary_info": "last-updated"
+                    },
+                    {%- endif -%}
+                  {%- endif -%}
+                {%- endfor %}
+              ]
           sort:
             method: state
             numeric: true
@@ -212,20 +227,25 @@ views:
           type: custom:auto-entities
           card:
             type: entities
-            title: To Home (All 57 St Trains)
+            title: To Home (57 St - N/Q/R/W)
             icon: mdi:home
             show_header_toggle: false
           filter:
-            include:
-              - domain: sensor
-                attributes:
-                  friendly_name: "/57 St/"
-                  route_id: ["N", "Q", "R", "W"]
-                options:
-                   secondary_info: last-updated
-            exclude:
-              - state: "unavailable"
-              - state: "unknown"
+            template: |
+              [
+                {% for state in states.sensor -%}
+                  {%- if state.attributes.friendly_name is defined and '57 St' in state.attributes.friendly_name and state.attributes.route_id in ['N', 'Q', 'R', 'W'] and state.state not in ['unavailable', 'unknown'] -%}
+                    {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                    {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
+                    {
+                      "entity": "{{ state.entity_id }}",
+                      "name": "{{ state.attributes.route_id }} to {{ headsign }}",
+                      "secondary_info": "last-updated"
+                    },
+                    {%- endif -%}
+                  {%- endif -%}
+                {%- endfor %}
+              ]
           sort:
             method: state
             numeric: true
