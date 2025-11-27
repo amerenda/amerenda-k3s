@@ -15,83 +15,89 @@ views:
             filter:
               template: |
                 [
+                  {% set ns = namespace(rows=[]) %}
                   # --- ATLANTIC AV ---
-                  { "type": "section", "label": "Atlantic Av-Barclays Ctr" },
+                  {% set ns.rows = ns.rows + [{ "type": "section", "label": "Atlantic Av-Barclays Ctr" }] %}
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and ('Atlantic Av' in state.attributes.friendly_name or 'Barclays' in state.attributes.friendly_name) and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
                       {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
-                        {
-                          "entity": "{{ state.entity_id }}",
-                          "name": "{{ state.attributes.route_id }} to {{ headsign }}",
+                        {% set ns.rows = ns.rows + [{
+                          "entity": state.entity_id,
+                          "name": state.attributes.route_id ~ " to " ~ headsign,
                           "secondary_info": "last-updated"
-                        },
+                        }] %}
                       {%- endif -%}
                     {%- endif -%}
                   {%- endfor %}
 
                   # --- BERGEN ST ---
-                  { "type": "section", "label": "Bergen St" },
+                  {% set ns.rows = ns.rows + [{ "type": "section", "label": "Bergen St" }] %}
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and 'Bergen St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
                       {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Court Sq') -%}
-                        {
-                          "entity": "{{ state.entity_id }}",
-                          "name": "{{ state.attributes.route_id }} to {{ headsign }}",
+                        {% set ns.rows = ns.rows + [{
+                          "entity": state.entity_id,
+                          "name": state.attributes.route_id ~ " to " ~ headsign,
                           "secondary_info": "last-updated"
-                        },
+                        }] %}
                       {%- endif -%}
                     {%- endif -%}
                   {%- endfor %}
 
                   # --- FULTON ST ---
-                  { "type": "section", "label": "Fulton St" },
+                  {% set ns.rows = ns.rows + [{ "type": "section", "label": "Fulton St" }] %}
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and 'Fulton St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
                       {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Court Sq') -%}
-                        {
-                          "entity": "{{ state.entity_id }}",
-                          "name": "{{ state.attributes.route_id }} to {{ headsign }}",
+                        {% set ns.rows = ns.rows + [{
+                          "entity": state.entity_id,
+                          "name": state.attributes.route_id ~ " to " ~ headsign,
                           "secondary_info": "last-updated"
-                        },
+                        }] %}
                       {%- endif -%}
                     {%- endif -%}
                   {%- endfor %}
 
                   # --- LAFAYETTE AV ---
-                  { "type": "section", "label": "Lafayette Av" },
+                  {% set ns.rows = ns.rows + [{ "type": "section", "label": "Lafayette Av" }] %}
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and 'Lafayette Av' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
                       {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
-                        {
-                          "entity": "{{ state.entity_id }}",
-                          "name": "{{ state.attributes.route_id }} to {{ headsign }}",
+                        {% set ns.rows = ns.rows + [{
+                          "entity": state.entity_id,
+                          "name": state.attributes.route_id ~ " to " ~ headsign,
                           "secondary_info": "last-updated"
-                        },
+                        }] %}
                       {%- endif -%}
                     {%- endif -%}
                   {%- endfor %}
 
                   # --- 57 ST ---
-                  { "type": "section", "label": "57 St-7 Av" },
+                  {% set ns.rows = ns.rows + [{ "type": "section", "label": "57 St-7 Av" }] %}
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and '57 St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
                       {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
-                        {
-                          "entity": "{{ state.entity_id }}",
-                          "name": "{{ state.attributes.route_id }} to {{ headsign }}",
+                        {% set ns.rows = ns.rows + [{
+                          "entity": state.entity_id,
+                          "name": state.attributes.route_id ~ " to " ~ headsign,
                           "secondary_info": "last-updated"
-                        },
+                        }] %}
                       {%- endif -%}
                     {%- endif -%}
                   {%- endfor %}
+                  
+                  {% for row in ns.rows %}
+                    {{ row }},
+                  {% endfor %}
                 ]
+            # NO SORTING - keep the order we defined above (Station by Station)
             sort:
-              method: name
+              method: none
 
           # -----------------------------------
           #      SOUTHBOUND (Brooklyn)
@@ -104,83 +110,89 @@ views:
             filter:
               template: |
                 [
+                  {% set ns = namespace(rows=[]) %}
                   # --- ATLANTIC AV ---
-                  { "type": "section", "label": "Atlantic Av-Barclays Ctr" },
+                  {% set ns.rows = ns.rows + [{ "type": "section", "label": "Atlantic Av-Barclays Ctr" }] %}
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and ('Atlantic Av' in state.attributes.friendly_name or 'Barclays' in state.attributes.friendly_name) and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
                       {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
-                        {
-                          "entity": "{{ state.entity_id }}",
-                          "name": "{{ state.attributes.route_id }} to {{ headsign }}",
+                        {% set ns.rows = ns.rows + [{
+                          "entity": state.entity_id,
+                          "name": state.attributes.route_id ~ " to " ~ headsign,
                           "secondary_info": "last-updated"
-                        },
+                        }] %}
                       {%- endif -%}
                     {%- endif -%}
                   {%- endfor %}
 
                   # --- BERGEN ST ---
-                  { "type": "section", "label": "Bergen St" },
+                  {% set ns.rows = ns.rows + [{ "type": "section", "label": "Bergen St" }] %}
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and 'Bergen St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
                       {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Court Sq') -%}
-                        {
-                          "entity": "{{ state.entity_id }}",
-                          "name": "{{ state.attributes.route_id }} to {{ headsign }}",
+                        {% set ns.rows = ns.rows + [{
+                          "entity": state.entity_id,
+                          "name": state.attributes.route_id ~ " to " ~ headsign,
                           "secondary_info": "last-updated"
-                        },
+                        }] %}
                       {%- endif -%}
                     {%- endif -%}
                   {%- endfor %}
 
                   # --- FULTON ST ---
-                  { "type": "section", "label": "Fulton St" },
+                  {% set ns.rows = ns.rows + [{ "type": "section", "label": "Fulton St" }] %}
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and 'Fulton St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
                       {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Court Sq') -%}
-                        {
-                          "entity": "{{ state.entity_id }}",
-                          "name": "{{ state.attributes.route_id }} to {{ headsign }}",
+                        {% set ns.rows = ns.rows + [{
+                          "entity": state.entity_id,
+                          "name": state.attributes.route_id ~ " to " ~ headsign,
                           "secondary_info": "last-updated"
-                        },
+                        }] %}
                       {%- endif -%}
                     {%- endif -%}
                   {%- endfor %}
 
                   # --- LAFAYETTE AV ---
-                  { "type": "section", "label": "Lafayette Av" },
+                  {% set ns.rows = ns.rows + [{ "type": "section", "label": "Lafayette Av" }] %}
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and 'Lafayette Av' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
                       {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
-                        {
-                          "entity": "{{ state.entity_id }}",
-                          "name": "{{ state.attributes.route_id }} to {{ headsign }}",
+                        {% set ns.rows = ns.rows + [{
+                          "entity": state.entity_id,
+                          "name": state.attributes.route_id ~ " to " ~ headsign,
                           "secondary_info": "last-updated"
-                        },
+                        }] %}
                       {%- endif -%}
                     {%- endif -%}
                   {%- endfor %}
 
                   # --- 57 ST ---
-                  { "type": "section", "label": "57 St-7 Av" },
+                  {% set ns.rows = ns.rows + [{ "type": "section", "label": "57 St-7 Av" }] %}
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and '57 St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
                       {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
-                        {
-                          "entity": "{{ state.entity_id }}",
-                          "name": "{{ state.attributes.route_id }} to {{ headsign }}",
+                        {% set ns.rows = ns.rows + [{
+                          "entity": state.entity_id,
+                          "name": state.attributes.route_id ~ " to " ~ headsign,
                           "secondary_info": "last-updated"
-                        },
+                        }] %}
                       {%- endif -%}
                     {%- endif -%}
                   {%- endfor %}
+                  
+                  {% for row in ns.rows %}
+                    {{ row }},
+                  {% endfor %}
                 ]
+            # NO SORTING - keep the order we defined above (Station by Station)
             sort:
-              method: name
+              method: none
 
   - title: Morning Commute
     icon: mdi:weather-sunset-up
