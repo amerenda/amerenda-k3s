@@ -1,0 +1,6 @@
+guests:
+  name: Guests
+  entities:
+    - device_tracker.brayan_iphone
+  all: false
+

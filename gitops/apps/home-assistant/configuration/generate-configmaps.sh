@@ -108,6 +108,24 @@ else
 fi
 echo ""
 
+# Generate groups ConfigMap
+if [ -f "$CONFIG_DIR/groups.yaml" ]; then
+  cat > "$OUTPUT_DIR/groups-configmap.yaml" << EOF
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homeassistant-groups
+data:
+  groups.yaml: |
+EOF
+  # Indent and append the file content
+  sed 's/^/    /' "$CONFIG_DIR/groups.yaml" >> "$OUTPUT_DIR/groups-configmap.yaml"
+  echo "  ✓ Groups ConfigMap generated"
+else
+  echo "  ⚠ Skipping groups (groups.yaml not found)"
+fi
+echo ""
+
 # Generate helpers ConfigMaps (requires Jinja2 generation first)
 if [ -d "$CONFIG_DIR/helpers" ]; then
   echo "Generating helpers (requires jinja2-cli)..."
