@@ -1341,7 +1341,7 @@ data:
     
   subway.yaml: |
     views:
-      - title: Overview
+      - title: Overview (Friendly Name Regex)
         icon: mdi:train
         cards:
           - type: vertical-stack
@@ -1353,7 +1353,9 @@ data:
                   show_header_toggle: false
                 filter:
                   include:
-                    - entity_id: "sensor.*atlantic_av*"
+                    - domain: sensor
+                      attributes:
+                        friendly_name: "/Atlantic Av|Barclays/"
                       options:
                         secondary_info: last-updated
                   exclude:
@@ -1370,7 +1372,9 @@ data:
                   show_header_toggle: false
                 filter:
                   include:
-                    - entity_id: "sensor.*bergen_st*"
+                    - domain: sensor
+                      attributes:
+                        friendly_name: "/Bergen St/"
                       options:
                         secondary_info: last-updated
                   exclude:
@@ -1387,7 +1391,9 @@ data:
                   show_header_toggle: false
                 filter:
                   include:
-                    - entity_id: "sensor.*fulton_st*"
+                    - domain: sensor
+                      attributes:
+                        friendly_name: "/Fulton St/"
                       options:
                         secondary_info: last-updated
                   exclude:
@@ -1404,7 +1410,9 @@ data:
                   show_header_toggle: false
                 filter:
                   include:
-                    - entity_id: "sensor.*lafayette_av*"
+                    - domain: sensor
+                      attributes:
+                        friendly_name: "/Lafayette Av/"
                       options:
                         secondary_info: last-updated
                   exclude:
@@ -1421,7 +1429,9 @@ data:
                   show_header_toggle: false
                 filter:
                   include:
-                    - entity_id: "sensor.*57_st*"
+                    - domain: sensor
+                      attributes:
+                        friendly_name: "/57 St/"
                       options:
                         secondary_info: last-updated
                   exclude:
@@ -1431,21 +1441,20 @@ data:
                   method: attribute
                   attribute: route_id
     
-      - title: Morning Commute
+      - title: Morning Commute (Wildcard Entity)
         icon: mdi:weather-sunset-up
         cards:
           - type: custom:auto-entities
             card:
               type: entities
-              title: Morning Commute (Northbound)
+              title: N/Q/D Trains (Anywhere)
               show_header_toggle: false
             filter:
               include:
                 - domain: sensor
-                  entity_id: "*atlantic_av*"
+                  entity_id: "sensor.*"
                   attributes:
                     route_id: ["N", "Q", "D"]
-                    headsign: ["Astoria*", "96 St*", "Manhattan*", "Midtown*", "205 St*", "Bedford*", "168 St*", "Jamaica*", "57 St*", "Forest Hills*", "Ditmars*"]
                   options:
                     secondary_info: "[[ attribute.headsign ]]"
               exclude:
@@ -1455,22 +1464,24 @@ data:
               method: state
               numeric: true
     
-      - title: Evening Commute
-        icon: mdi:weather-night
+      - title: Debug (Show All GTFS)
+        icon: mdi:bug
         cards:
+          - type: markdown
+            content: "## All Active GTFS Sensors\nIf this list is empty, the integration is not sending data."
           - type: custom:auto-entities
             card:
               type: entities
-              title: Evening Commute (Southbound)
+              title: All GTFS Realtime Sensors
               show_header_toggle: false
             filter:
               template: |
                 [
                   {% for state in states.sensor -%}
-                    {%- if '57_st' in state.entity_id and state.attributes.route_id in ['N', 'Q', 'R', 'W'] and state.state not in ['unavailable', 'unknown'] -%}
+                    {%- if state.attributes.route_id is defined -%}
                       {
                         "entity": "{{ state.entity_id }}",
-                        "secondary_info": "{{ state.attributes.headsign }}"
+                        "secondary_info": "Route: {{ state.attributes.route_id }} | {{ state.attributes.friendly_name }}"
                       },
                     {%- endif -%}
                   {%- endfor %}
@@ -1479,60 +1490,26 @@ data:
               method: state
               numeric: true
     
-      - title: Dynamic
+      - title: Dynamic (Hardcoded)
         icon: mdi:map-marker-radius
         cards:
-          - type: conditional
-            conditions:
-              - entity: device_tracker.pixel_9_pro_xl
-                state_not: "work"
-            card:
-              type: custom:auto-entities
-              card:
-                type: entities
-                title: To Work (Atlantic Av -> Manhattan)
-                icon: mdi:briefcase
-                show_header_toggle: false
-              filter:
-                include:
-                  - entity_id: "sensor.*atlantic_av*"
-                    attributes:
-                      route_id: ["N", "Q", "D"]
-                      headsign: ["Astoria*", "96 St*", "Manhattan*", "Midtown*", "205 St*", "Bedford*", "168 St*", "Jamaica*", "57 St*", "Forest Hills*", "Ditmars*"]
-                    options:
-                      secondary_info: "[[ attribute.headsign ]]"
-                exclude:
-                  - state: "unavailable"
-                  - state: "unknown"
-              sort:
-                method: state
-                numeric: true
-    
-          - type: conditional
-            conditions:
-              - entity: device_tracker.pixel_9_pro_xl
-                state: "work"
-            card:
-              type: custom:auto-entities
-              card:
-                type: entities
-                title: To Home (57 St -> Brooklyn)
-                icon: mdi:home
-                show_header_toggle: false
-              filter:
-                include:
-                  - entity_id: "sensor.*57_st*"
-                    attributes:
-                      route_id: ["N", "Q", "R", "W"]
-                      headsign: ["Coney Island*", "Brighton Beach*", "Sea Beach*", "Bay Ridge*", "Whitehall*", "95 St*", "Stillwell*", "Church*", "Kings Hwy*"]
-                    options:
-                      secondary_info: "[[ attribute.headsign ]]"
-                exclude:
-                  - state: "unavailable"
-                  - state: "unknown"
-              sort:
-                method: state
-                numeric: true
+          - type: entities
+            title: Known Sensors (Hardcoded)
+            entities:
+              - entity: sensor.1_atlantic_av_barclays_ctr
+              - entity: sensor.1_atlantic_av_barclays_ctr_2
+              - entity: sensor.1_atlantic_av_barclays_ctr_3
+              - entity: sensor.1_atlantic_av_barclays_ctr_4
+              - entity: sensor.4_57_st_7_av
+              - entity: sensor.4_57_st_7_av_2
+              - entity: sensor.4_57_st_7_av_3
+              - entity: sensor.4_57_st_7_av_4
+              - entity: sensor.4_bergen_st
+              - entity: sensor.4_bergen_st_2
+              - entity: sensor.4_fulton_st
+              - entity: sensor.4_fulton_st_2
+              - entity: sensor.4_lafayette_av
+              - entity: sensor.4_lafayette_av_2
   light_control.yaml: |
     views:
       - title: Light Control
