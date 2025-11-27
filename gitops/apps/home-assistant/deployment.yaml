@@ -199,6 +199,12 @@ spec:
                     icon: mdi:calendar-edit
                     show_in_sidebar: true
                     filename: dashboards/views/room_schedule_configuration.yaml
+                  subway:
+                    mode: yaml
+                    title: Subway
+                    icon: mdi:subway-variant
+                    show_in_sidebar: true
+                    filename: dashboards/views/subway.yaml
                   light-control:
                     mode: yaml
                     title: Light Control
