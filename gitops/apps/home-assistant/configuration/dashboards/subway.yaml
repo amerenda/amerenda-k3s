@@ -1,9 +1,10 @@
 views:
-  - title: Overview (Friendly Name Regex)
+  - title: Overview
     icon: mdi:train
     cards:
       - type: vertical-stack
         cards:
+          # --- ATLANTIC AV ---
           - type: custom:auto-entities
             card:
               type: entities
@@ -14,7 +15,22 @@ views:
                 - domain: sensor
                   attributes:
                     friendly_name: "/Atlantic Av|Barclays/"
+                    headsign: "/Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St/"
                   options:
+                    name: "Northbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
+                    secondary_info: last-updated
+                - domain: sensor
+                  attributes:
+                    friendly_name: "/Atlantic Av|Barclays/"
+                    headsign: "/Brooklyn|Coney Island|Brighton|Bay Ridge|Utica|New Lots|Flatbush|Far Rockaway|Stillwell|Church|Kings Hwy|Whitehall|95 St/"
+                  options:
+                    name: "Southbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
+                    secondary_info: last-updated
+                - domain: sensor
+                  attributes:
+                    friendly_name: "/Atlantic Av|Barclays/"
+                  options:
+                    name: "Other: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
                     secondary_info: last-updated
               exclude:
                 - state: "unavailable"
@@ -23,6 +39,7 @@ views:
               method: attribute
               attribute: route_id
 
+          # --- BERGEN ST ---
           - type: custom:auto-entities
             card:
               type: entities
@@ -33,7 +50,16 @@ views:
                 - domain: sensor
                   attributes:
                     friendly_name: "/Bergen St/"
+                    headsign: "/Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Court Sq/"
                   options:
+                    name: "Northbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
+                    secondary_info: last-updated
+                - domain: sensor
+                  attributes:
+                    friendly_name: "/Bergen St/"
+                    headsign: "/Brooklyn|Coney Island|Brighton|Bay Ridge|Utica|New Lots|Flatbush|Far Rockaway|Stillwell|Church|Kings Hwy|Whitehall|95 St|Church/"
+                  options:
+                    name: "Southbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
                     secondary_info: last-updated
               exclude:
                 - state: "unavailable"
@@ -42,6 +68,7 @@ views:
               method: attribute
               attribute: route_id
 
+          # --- FULTON ST ---
           - type: custom:auto-entities
             card:
               type: entities
@@ -52,7 +79,16 @@ views:
                 - domain: sensor
                   attributes:
                     friendly_name: "/Fulton St/"
+                    headsign: "/Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Court Sq/"
                   options:
+                    name: "Northbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
+                    secondary_info: last-updated
+                - domain: sensor
+                  attributes:
+                    friendly_name: "/Fulton St/"
+                    headsign: "/Brooklyn|Coney Island|Brighton|Bay Ridge|Utica|New Lots|Flatbush|Far Rockaway|Stillwell|Church|Kings Hwy|Whitehall|95 St|Church/"
+                  options:
+                    name: "Southbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
                     secondary_info: last-updated
               exclude:
                 - state: "unavailable"
@@ -61,6 +97,7 @@ views:
               method: attribute
               attribute: route_id
 
+          # --- LAFAYETTE AV ---
           - type: custom:auto-entities
             card:
               type: entities
@@ -71,7 +108,16 @@ views:
                 - domain: sensor
                   attributes:
                     friendly_name: "/Lafayette Av/"
+                    headsign: "/Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St/"
                   options:
+                    name: "Northbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
+                    secondary_info: last-updated
+                - domain: sensor
+                  attributes:
+                    friendly_name: "/Lafayette Av/"
+                    headsign: "/Brooklyn|Coney Island|Brighton|Bay Ridge|Utica|New Lots|Flatbush|Far Rockaway|Stillwell|Church|Kings Hwy|Whitehall|95 St|Euclid/"
+                  options:
+                    name: "Southbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
                     secondary_info: last-updated
               exclude:
                 - state: "unavailable"
@@ -80,6 +126,7 @@ views:
               method: attribute
               attribute: route_id
 
+          # --- 57 ST ---
           - type: custom:auto-entities
             card:
               type: entities
@@ -90,7 +137,16 @@ views:
                 - domain: sensor
                   attributes:
                     friendly_name: "/57 St/"
+                    headsign: "/Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St/"
                   options:
+                    name: "Northbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
+                    secondary_info: last-updated
+                - domain: sensor
+                  attributes:
+                    friendly_name: "/57 St/"
+                    headsign: "/Brooklyn|Coney Island|Brighton|Bay Ridge|Utica|New Lots|Flatbush|Far Rockaway|Stillwell|Church|Kings Hwy|Whitehall|95 St/"
+                  options:
+                    name: "Southbound: [[ attribute.route_id ]] to [[ attribute.headsign ]]"
                     secondary_info: last-updated
               exclude:
                 - state: "unavailable"
@@ -99,20 +155,24 @@ views:
               method: attribute
               attribute: route_id
 
-  - title: Morning Commute (Wildcard Entity)
+  - title: Morning Commute
     icon: mdi:weather-sunset-up
     cards:
       - type: custom:auto-entities
         card:
           type: entities
-          title: N/Q/D Trains (Anywhere)
+          title: Morning Commute (Atlantic Av Northbound)
           show_header_toggle: false
         filter:
           include:
             - domain: sensor
-              entity_id: "sensor.*"
               attributes:
+                # Regex friendly_name for Atlantic Av
+                friendly_name: "/Atlantic Av|Barclays/"
+                # Only N, Q, D lines
                 route_id: ["N", "Q", "D"]
+                # Northbound destinations
+                headsign: "/Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St/"
               options:
                 secondary_info: "[[ attribute.headsign ]]"
           exclude:
@@ -122,49 +182,86 @@ views:
           method: state
           numeric: true
 
-  - title: Debug (Show All GTFS)
-    icon: mdi:bug
+  - title: Evening Commute
+    icon: mdi:weather-night
     cards:
-      - type: markdown
-        content: "## All Active GTFS Sensors\nIf this list is empty, the integration is not sending data."
       - type: custom:auto-entities
         card:
           type: entities
-          title: All GTFS Realtime Sensors
+          title: Evening Commute (57 St Southbound)
           show_header_toggle: false
         filter:
-          template: |
-            [
-              {% for state in states.sensor -%}
-                {%- if state.attributes.route_id is defined -%}
-                  {
-                    "entity": "{{ state.entity_id }}",
-                    "secondary_info": "Route: {{ state.attributes.route_id }} | {{ state.attributes.friendly_name }}"
-                  },
-                {%- endif -%}
-              {%- endfor %}
-            ]
+          include:
+            - domain: sensor
+              attributes:
+                # Regex friendly_name for 57 St
+                friendly_name: "/57 St/"
+                # Only N, Q, R, W lines
+                route_id: ["N", "Q", "R", "W"]
+                # Southbound destinations
+                headsign: "/Brooklyn|Coney Island|Brighton|Bay Ridge|Utica|New Lots|Flatbush|Far Rockaway|Stillwell|Church|Kings Hwy|Whitehall|95 St/"
+              options:
+                secondary_info: "[[ attribute.headsign ]]"
+          exclude:
+            - state: "unavailable"
+            - state: "unknown"
         sort:
           method: state
           numeric: true
 
-  - title: Dynamic (Hardcoded)
+  - title: Dynamic
     icon: mdi:map-marker-radius
     cards:
-      - type: entities
-        title: Known Sensors (Hardcoded)
-        entities:
-          - entity: sensor.1_atlantic_av_barclays_ctr
-          - entity: sensor.1_atlantic_av_barclays_ctr_2
-          - entity: sensor.1_atlantic_av_barclays_ctr_3
-          - entity: sensor.1_atlantic_av_barclays_ctr_4
-          - entity: sensor.4_57_st_7_av
-          - entity: sensor.4_57_st_7_av_2
-          - entity: sensor.4_57_st_7_av_3
-          - entity: sensor.4_57_st_7_av_4
-          - entity: sensor.4_bergen_st
-          - entity: sensor.4_bergen_st_2
-          - entity: sensor.4_fulton_st
-          - entity: sensor.4_fulton_st_2
-          - entity: sensor.4_lafayette_av
-          - entity: sensor.4_lafayette_av_2
+      - type: conditional
+        conditions:
+          - entity: device_tracker.pixel_9_pro_xl
+            state_not: "work"
+        card:
+          type: custom:auto-entities
+          card:
+            type: entities
+            title: To Work (Atlantic Av -> Manhattan)
+            icon: mdi:briefcase
+            show_header_toggle: false
+          filter:
+            include:
+              - domain: sensor
+                attributes:
+                  friendly_name: "/Atlantic Av|Barclays/"
+                  route_id: ["N", "Q", "D"]
+                  headsign: "/Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St/"
+                options:
+                  secondary_info: "[[ attribute.headsign ]]"
+            exclude:
+              - state: "unavailable"
+              - state: "unknown"
+          sort:
+            method: state
+            numeric: true
+
+      - type: conditional
+        conditions:
+          - entity: device_tracker.pixel_9_pro_xl
+            state: "work"
+        card:
+          type: custom:auto-entities
+          card:
+            type: entities
+            title: To Home (57 St -> Brooklyn)
+            icon: mdi:home
+            show_header_toggle: false
+          filter:
+            include:
+              - domain: sensor
+                attributes:
+                  friendly_name: "/57 St/"
+                  route_id: ["N", "Q", "R", "W"]
+                  headsign: "/Brooklyn|Coney Island|Brighton|Bay Ridge|Utica|New Lots|Flatbush|Far Rockaway|Stillwell|Church|Kings Hwy|Whitehall|95 St/"
+                options:
+                  secondary_info: "[[ attribute.headsign ]]"
+            exclude:
+              - state: "unavailable"
+              - state: "unknown"
+          sort:
+            method: state
+            numeric: true
