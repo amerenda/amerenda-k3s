@@ -117,13 +117,13 @@ views:
                 tap_action:
                   action: toggle
 
-      - type: entities
-        title: Advanced Settings
-        show_header_toggle: false
-        entities:
-          - entity: select.eversweet_solo_2_light_brightness
-            name: LED Brightness
-          - entity: select.eversweet_solo_2_mode
-            name: Operating Mode
-          - entity: switch.eversweet_solo_2_power
-            name: Power Switch
+#      - type: entities
+#        title: Advanced Settings
+#        show_header_toggle: false
+#        entities:
+#          - entity: select.eversweet_solo_2_light_brightness
+#            name: LED Brightness
+#          - entity: select.eversweet_solo_2_mode
+#            name: Operating Mode
+#          - entity: switch.eversweet_solo_2_power
+#            name: Power Switch
