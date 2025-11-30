@@ -43,36 +43,26 @@ views:
               {% endif %}
 
           # Latest Picture
-          - type: conditional
-            conditions:
-              - entity: input_text.event_image_location
-                state_not: ""
-              - entity: input_text.event_image_location
-                state_not: "unknown"
-            card:
-              type: markdown
-              content: >
-                {% set loc = states('input_text.event_image_location') %}
-                {% set ts = states('input_text.event_image_timestamp') %}
+          - type: markdown
+            content: >
+              {% set loc = states('input_text.event_image_location') %}
+              {% set ts = states('input_text.event_image_timestamp') %}
+              {% if loc and loc not in ['unknown', 'unavailable', ''] %}
                 ![Pet](/local/pets/{{ loc }}_{{ ts }}.jpg)
+              {% else %}
+                No pet detected recently.
+              {% endif %}
 
           # Activity Graph
-          - type: conditional
-            conditions:
+          - type: history-graph
+            title: "Activity (Last 24h)"
+            hours_to_show: 24
+            refresh_interval: 60
+            entities:
               - entity: binary_sensor.bedroom_animal
-                state_not: "unavailable"
+                name: Bedroom
               - entity: binary_sensor.living_room_animal
-                state_not: "unavailable"
-            card:
-              type: history-graph
-              title: "Activity (Last 24h)"
-              hours_to_show: 24
-              refresh_interval: 60
-              entities:
-                - entity: binary_sensor.bedroom_animal
-                  name: Bedroom
-                - entity: binary_sensor.living_room_animal
-                  name: Living Room
+                name: Living Room
 
           - type: custom:mushroom-title-card
             title: Water Fountain

@@ -1489,36 +1489,26 @@ data:
                   {% endif %}
     
               # Latest Picture
-              - type: conditional
-                conditions:
-                  - entity: input_text.event_image_location
-                    state_not: ""
-                  - entity: input_text.event_image_location
-                    state_not: "unknown"
-                card:
-                  type: markdown
-                  content: >
-                    {% set loc = states('input_text.event_image_location') %}
-                    {% set ts = states('input_text.event_image_timestamp') %}
+              - type: markdown
+                content: >
+                  {% set loc = states('input_text.event_image_location') %}
+                  {% set ts = states('input_text.event_image_timestamp') %}
+                  {% if loc and loc not in ['unknown', 'unavailable', ''] %}
                     ![Pet](/local/pets/{{ loc }}_{{ ts }}.jpg)
+                  {% else %}
+                    No pet detected recently.
+                  {% endif %}
     
               # Activity Graph
-              - type: conditional
-                conditions:
+              - type: history-graph
+                title: "Activity (Last 24h)"
+                hours_to_show: 24
+                refresh_interval: 60
+                entities:
                   - entity: binary_sensor.bedroom_animal
-                    state_not: "unavailable"
+                    name: Bedroom
                   - entity: binary_sensor.living_room_animal
-                    state_not: "unavailable"
-                card:
-                  type: history-graph
-                  title: "Activity (Last 24h)"
-                  hours_to_show: 24
-                  refresh_interval: 60
-                  entities:
-                    - entity: binary_sensor.bedroom_animal
-                      name: Bedroom
-                    - entity: binary_sensor.living_room_animal
-                      name: Living Room
+                    name: Living Room
     
               - type: custom:mushroom-title-card
                 title: Water Fountain
@@ -1936,49 +1926,33 @@ data:
                 heading: Latest Human Detection
                 heading_style: title
                 icon: mdi:account-alert
-              - type: conditional
-                conditions:
-                  - entity: input_text.intruder_image_location
-                    state_not: ""
-                  - entity: input_text.intruder_image_location
-                    state_not: "unknown"
-                card:
-                  type: markdown
-                  content: >
-                    {% set loc = states('input_text.intruder_image_location') %}
-                    {% set ts = states('input_text.intruder_image_timestamp') %}
+              - type: markdown
+                content: >
+                  {% set loc = states('input_text.intruder_image_location') %}
+                  {% set ts = states('input_text.intruder_image_timestamp') %}
+                  {% if loc and loc not in ['unknown', 'unavailable', ''] %}
                     ![Intruder](/local/intruders/{{ loc }}_{{ ts }}.jpg)
                     
                     **Location:** {{ loc | replace('_', ' ') | title }}
                     **Time:** {{ strptime(ts, '%Y%m%d_%H%M%S').strftime('%-I:%M %p on %b %d') if ts and ts not in ['unknown', 'unavailable'] else 'Unknown' }}
+                  {% else %}
+                    No intruder detected.
+                  {% endif %}
     
-          - type: conditional
-            conditions:
-              - condition: or
-                conditions:
-                  - entity: binary_sensor.bedroom_animal
-                    state_not: "unavailable"
-                  - entity: binary_sensor.living_room_animal
-                    state_not: "unavailable"
-                  - entity: binary_sensor.bedroom_person
-                    state_not: "unavailable"
-                  - entity: binary_sensor.living_room_person
-                    state_not: "unavailable"
-            card:
-              type: grid
-              cards:
-                - type: heading
-                  heading: Events
-                  heading_style: title
-                  icon: mdi:walk
-                - type: entities
-                  entities:
-                    - binary_sensor.bedroom_animal
-                    - binary_sensor.living_room_animal
-                - type: entities
-                  entities:
-                    - binary_sensor.bedroom_person
-                    - binary_sensor.living_room_person
+          - type: grid
+            cards:
+              - type: heading
+                heading: Events
+                heading_style: title
+                icon: mdi:walk
+              - type: entities
+                entities:
+                  - binary_sensor.bedroom_animal
+                  - binary_sensor.living_room_animal
+              - type: entities
+                entities:
+                  - binary_sensor.bedroom_person
+                  - binary_sensor.living_room_person
         header:
           card:
             type: markdown
