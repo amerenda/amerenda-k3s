@@ -34,6 +34,12 @@ actions:
     target: { entity_id: "{{ cam }}" }
     data:
       filename: "{{ path }}"
+  - action: "input_text.set_value"
+    target: { entity_id: "input_text.intruder_image_location" }
+    data: { value: "{{ slug }}" }
+  - action: "input_text.set_value"
+    target: { entity_id: "input_text.intruder_image_timestamp" }
+    data: { value: "{{ timestamp }}" }
   - action: "notify.mobile_app_pixel_9_pro_xl"
     data:
       title: "Human detected - {{ room }}"

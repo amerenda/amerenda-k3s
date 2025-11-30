@@ -27,6 +27,20 @@ data:
       name: Event Image Timestamp Text
       initial: ""
       max: 20
+  intruder_image_location.yaml: |
+    # Global input_text helper for intruder detection event location
+    intruder_image_location:
+      name: "Intruder Image Location"
+      initial: ""
+      max: 50
+    
+  intruder_image_timestamp.yaml: |
+    # Global input_text helper for intruder detection event timestamp
+    intruder_image_timestamp:
+      name: "Intruder Image Timestamp"
+      initial: ""
+      max: 20
+    
   scene_name_bathroom.yaml: |
     scene_name_bathroom:
       name: "Bathroom Scene Name"
