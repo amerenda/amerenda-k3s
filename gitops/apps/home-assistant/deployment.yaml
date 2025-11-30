@@ -187,6 +187,12 @@ spec:
               lovelace:
                 mode: storage
                 dashboards:
+                  dean-dashboard:
+                    mode: yaml
+                    title: Dean
+                    icon: mdi:home
+                    show_in_sidebar: true
+                    filename: dashboards/views/dean.yaml
                   room-schedule-viewer:
                     mode: yaml
                     title: Room Schedule Viewer
@@ -211,6 +217,12 @@ spec:
                     icon: mdi:lightbulb-group
                     show_in_sidebar: true
                     filename: dashboards/views/light_control.yaml
+                  uni-dashboard:
+                    mode: yaml
+                    title: Uni
+                    icon: mdi:cat
+                    show_in_sidebar: true
+                    filename: dashboards/views/uni.yaml
         
               # HTTP reverse proxy
               http:
