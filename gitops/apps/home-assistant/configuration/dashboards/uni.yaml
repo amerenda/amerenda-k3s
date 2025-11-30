@@ -56,15 +56,24 @@ views:
                 ![Pet](/local/pets/{{ loc }}_{{ ts }}.jpg)
 
           # Activity Graph
-          - type: history-graph
-            title: "Activity (Last 24h)"
-            hours_to_show: 24
-            refresh_interval: 60
-            entities:
-              - entity: binary_sensor.bedroom_animal
-                name: Bedroom
-              - entity: binary_sensor.living_room_animal
-                name: Living Room
+          - type: conditional
+            conditions:
+              - condition: or
+                conditions:
+                  - entity: binary_sensor.bedroom_animal
+                    state_not: "unavailable"
+                  - entity: binary_sensor.living_room_animal
+                    state_not: "unavailable"
+            card:
+              type: history-graph
+              title: "Activity (Last 24h)"
+              hours_to_show: 24
+              refresh_interval: 60
+              entities:
+                - entity: binary_sensor.bedroom_animal
+                  name: Bedroom
+                - entity: binary_sensor.living_room_animal
+                  name: Living Room
 
           - type: custom:mushroom-title-card
             title: Water Fountain
