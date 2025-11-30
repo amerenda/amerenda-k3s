@@ -1917,6 +1917,8 @@ data:
                 ]
             sort:
               method: name
+      - title: Dynamic
+        icon: mdi:map-marker-radius
         cards:
           - type: conditional
             conditions:
