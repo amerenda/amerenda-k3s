@@ -217,12 +217,6 @@ spec:
                     icon: mdi:cctv
                     show_in_sidebar: true
                     filename: dashboards/views/security.yaml
-                  light-control:
-                    mode: yaml
-                    title: Light Control
-                    icon: mdi:lightbulb-group
-                    show_in_sidebar: true
-                    filename: dashboards/views/light_control.yaml
                   uni-dashboard:
                     mode: yaml
                     title: Uni
