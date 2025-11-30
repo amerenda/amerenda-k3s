@@ -211,6 +211,12 @@ spec:
                     icon: mdi:subway-variant
                     show_in_sidebar: true
                     filename: dashboards/views/subway.yaml
+                  security-dashboard:
+                    mode: yaml
+                    title: Security
+                    icon: mdi:cctv
+                    show_in_sidebar: true
+                    filename: dashboards/views/security.yaml
                   light-control:
                     mode: yaml
                     title: Light Control
