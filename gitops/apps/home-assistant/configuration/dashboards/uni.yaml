@@ -59,12 +59,10 @@ views:
           # Activity Graph
           - type: conditional
             conditions:
-              - condition: or
-                conditions:
-                  - entity: binary_sensor.bedroom_animal
-                    state_not: "unavailable"
-                  - entity: binary_sensor.living_room_animal
-                    state_not: "unavailable"
+              - entity: binary_sensor.bedroom_animal
+                state_not: "unavailable"
+              - entity: binary_sensor.living_room_animal
+                state_not: "unavailable"
             card:
               type: history-graph
               title: "Activity (Last 24h)"

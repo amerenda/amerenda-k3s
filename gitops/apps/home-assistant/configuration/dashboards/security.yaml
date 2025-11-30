@@ -48,20 +48,33 @@ views:
                 **Location:** {{ loc | replace('_', ' ') | title }}
                 **Time:** {{ strptime(ts, '%Y%m%d_%H%M%S').strftime('%-I:%M %p on %b %d') if ts and ts not in ['unknown', 'unavailable'] else 'Unknown' }}
 
-      - type: grid
-        cards:
-          - type: heading
-            heading: Events
-            heading_style: title
-            icon: mdi:walk
-          - type: entities
-            entities:
-              - binary_sensor.bedroom_animal
-              - binary_sensor.living_room_animal
-          - type: entities
-            entities:
-              - binary_sensor.bedroom_person
-              - binary_sensor.living_room_person
+      - type: conditional
+        conditions:
+          - condition: or
+            conditions:
+              - entity: binary_sensor.bedroom_animal
+                state_not: "unavailable"
+              - entity: binary_sensor.living_room_animal
+                state_not: "unavailable"
+              - entity: binary_sensor.bedroom_person
+                state_not: "unavailable"
+              - entity: binary_sensor.living_room_person
+                state_not: "unavailable"
+        card:
+          type: grid
+          cards:
+            - type: heading
+              heading: Events
+              heading_style: title
+              icon: mdi:walk
+            - type: entities
+              entities:
+                - binary_sensor.bedroom_animal
+                - binary_sensor.living_room_animal
+            - type: entities
+              entities:
+                - binary_sensor.bedroom_person
+                - binary_sensor.living_room_person
     header:
       card:
         type: markdown
