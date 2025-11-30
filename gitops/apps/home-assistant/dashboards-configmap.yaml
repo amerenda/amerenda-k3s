@@ -1468,11 +1468,12 @@ data:
                 secondary: >
                    {% set ts = states('input_text.event_image_timestamp') %}
                    {% if ts not in ['unknown', 'unavailable', ''] %}
-                     {% try %}
-                       Last seen: {{ strptime(ts, '%Y%m%d_%H%M%S').strftime('%-I:%M %p') }}
-                     {% except %}
+                     {% set dt = strptime(ts, '%Y%m%d_%H%M%S') %}
+                     {% if dt %}
+                       Last seen: {{ dt.strftime('%-I:%M %p') }}
+                     {% else %}
                        Last seen: {{ ts }}
-                     {% endtry %}
+                     {% endif %}
                    {% else %}
                      Last seen: Unknown
                    {% endif %}
