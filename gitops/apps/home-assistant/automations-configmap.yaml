@@ -185,3 +185,42 @@ data:
           entity_id:
             - "switch.bedroom_privacy_mode"
             - "switch.living_room_privacy_mode"
+  pet_water_fountain_alert.yaml: |
+    alias: "Pet - Water Fountain Alert"
+    mode: single
+    triggers:
+      - trigger: state
+        entity_id: binary_sensor.eversweet_solo_2_water_level
+        to: "off"
+        for:
+          minutes: 5
+      - trigger: state
+        entity_id: switch.eversweet_solo_2_power
+        to: "off"
+        for:
+          minutes: 5
+    actions:
+      - action: notify.mobile_app_pixel_9_pro_xl
+        data:
+          title: "Water Fountain Alert"
+          message: >
+            {% if trigger.entity_id == 'binary_sensor.eversweet_solo_2_water_level' %}
+              Water level is low! Refill needed.
+            {% else %}
+              Fountain power is OFF! Check connection.
+            {% endif %}
+          data:
+            tag: "water-fountain-alert"
+            importance: "high"
+            sticky: true
+      - action: persistent_notification.create
+        data:
+          title: "Water Fountain Alert"
+          message: >
+            {% if trigger.entity_id == 'binary_sensor.eversweet_solo_2_water_level' %}
+              Water level is low! Refill needed.
+            {% else %}
+              Fountain power is OFF! Check connection.
+            {% endif %}
+          notification_id: "water_fountain_alert"
+    

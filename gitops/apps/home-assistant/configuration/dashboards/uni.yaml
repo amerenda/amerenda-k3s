@@ -65,3 +65,68 @@ views:
                 name: Bedroom
               - entity: binary_sensor.living_room_animal
                 name: Living Room
+
+          - type: custom:mushroom-title-card
+            title: Water Fountain
+            subtitle: "Status & Controls"
+
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.eversweet_solo_2_filter
+                name: Filter Status
+                icon: mdi:filter
+                primary_info: state
+                secondary_info: name
+                icon_color: blue
+
+              - type: custom:mushroom-entity-card
+                entity: sensor.eversweet_solo_2_purified_water_today
+                name: Filtered Today
+                icon: mdi:water-check
+                primary_info: state
+                secondary_info: name
+                icon_color: cyan
+
+              - type: custom:mushroom-template-card
+                entity: binary_sensor.eversweet_solo_2_water_level
+                primary: Water Level
+                secondary: >
+                  {% if is_state('binary_sensor.eversweet_solo_2_water_level', 'on') %}
+                    Normal
+                  {% else %}
+                    Low
+                  {% endif %}
+                icon: >
+                  {% if is_state('binary_sensor.eversweet_solo_2_water_level', 'on') %}
+                    mdi:water
+                  {% else %}
+                    mdi:water-alert
+                  {% endif %}
+                icon_color: >
+                  {% if is_state('binary_sensor.eversweet_solo_2_water_level', 'on') %}
+                    blue
+                  {% else %}
+                    red
+                  {% endif %}
+
+              - type: custom:mushroom-entity-card
+                entity: switch.eversweet_solo_2_power
+                name: Power
+                layout: horizontal
+                tap_action:
+                  action: toggle
+
+      - type: expander
+        title: Advanced Settings
+        cards:
+          - type: entities
+            entities:
+              - entity: select.eversweet_solo_2_light_brightness
+                name: LED Brightness
+              - entity: select.eversweet_solo_2_mode
+                name: Operating Mode
+              - entity: switch.eversweet_solo_2_power
+                name: Power Switch
