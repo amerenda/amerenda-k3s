@@ -21,7 +21,7 @@ views:
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and ('Atlantic Av' in state.attributes.friendly_name or 'Barclays' in state.attributes.friendly_name) and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                      {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
+                      {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Woodlawn|Eastchester|Dyre|Nereid|145 St|148 St|Court Sq') -%}
                         {% set ns.rows = ns.rows + [{
                           "entity": state.entity_id,
                           "name": state.attributes.route_id ~ " to " ~ headsign,
@@ -36,7 +36,7 @@ views:
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and 'Bergen St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                      {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Court Sq') -%}
+                      {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Woodlawn|Eastchester|Dyre|Nereid|145 St|148 St|Court Sq') -%}
                         {% set ns.rows = ns.rows + [{
                           "entity": state.entity_id,
                           "name": state.attributes.route_id ~ " to " ~ headsign,
@@ -51,7 +51,7 @@ views:
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and 'Fulton St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                      {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Court Sq') -%}
+                      {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Woodlawn|Eastchester|Dyre|Nereid|145 St|148 St|Court Sq') -%}
                         {% set ns.rows = ns.rows + [{
                           "entity": state.entity_id,
                           "name": state.attributes.route_id ~ " to " ~ headsign,
@@ -66,7 +66,7 @@ views:
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and 'Lafayette Av' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                      {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
+                      {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Woodlawn|Eastchester|Dyre|Nereid|145 St|148 St|Court Sq') -%}
                         {% set ns.rows = ns.rows + [{
                           "entity": state.entity_id,
                           "name": state.attributes.route_id ~ " to " ~ headsign,
@@ -81,7 +81,7 @@ views:
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and '57 St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                      {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
+                      {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Woodlawn|Eastchester|Dyre|Nereid|145 St|148 St|Court Sq') -%}
                         {% set ns.rows = ns.rows + [{
                           "entity": state.entity_id,
                           "name": state.attributes.route_id ~ " to " ~ headsign,
@@ -116,7 +116,7 @@ views:
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and ('Atlantic Av' in state.attributes.friendly_name or 'Barclays' in state.attributes.friendly_name) and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                      {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
+                      {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Woodlawn|Eastchester|Dyre|Nereid|145 St|148 St|Court Sq') -%}
                         {% set ns.rows = ns.rows + [{
                           "entity": state.entity_id,
                           "name": state.attributes.route_id ~ " to " ~ headsign,
@@ -131,7 +131,7 @@ views:
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and 'Bergen St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                      {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Court Sq') -%}
+                      {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Woodlawn|Eastchester|Dyre|Nereid|145 St|148 St|Court Sq') -%}
                         {% set ns.rows = ns.rows + [{
                           "entity": state.entity_id,
                           "name": state.attributes.route_id ~ " to " ~ headsign,
@@ -146,7 +146,7 @@ views:
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and 'Fulton St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                      {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Court Sq') -%}
+                      {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Woodlawn|Eastchester|Dyre|Nereid|145 St|148 St|Court Sq') -%}
                         {% set ns.rows = ns.rows + [{
                           "entity": state.entity_id,
                           "name": state.attributes.route_id ~ " to " ~ headsign,
@@ -161,7 +161,7 @@ views:
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and 'Lafayette Av' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                      {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
+                      {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Woodlawn|Eastchester|Dyre|Nereid|145 St|148 St|Court Sq') -%}
                         {% set ns.rows = ns.rows + [{
                           "entity": state.entity_id,
                           "name": state.attributes.route_id ~ " to " ~ headsign,
@@ -176,7 +176,7 @@ views:
                   {% for state in states.sensor -%}
                     {%- if state.attributes.friendly_name is defined and '57 St' in state.attributes.friendly_name and state.state not in ['unavailable', 'unknown'] -%}
                       {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                      {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
+                      {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Woodlawn|Eastchester|Dyre|Nereid|145 St|148 St|Court Sq') -%}
                         {% set ns.rows = ns.rows + [{
                           "entity": state.entity_id,
                           "name": state.attributes.route_id ~ " to " ~ headsign,
@@ -208,7 +208,7 @@ views:
               {% for state in states.sensor -%}
                 {%- if state.attributes.friendly_name is defined and ('Atlantic Av' in state.attributes.friendly_name or 'Barclays' in state.attributes.friendly_name) and state.attributes.route_id in ['N', 'Q', 'D'] and state.state not in ['unavailable', 'unknown'] -%}
                   {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                  {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
+                  {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Woodlawn|Eastchester|Dyre|Nereid|145 St|148 St|Court Sq') -%}
                   {
                     "entity": "{{ state.entity_id }}",
                     "name": "{{ state.attributes.route_id }} to {{ headsign }}",
@@ -236,7 +236,7 @@ views:
               {% for state in states.sensor -%}
                 {%- if state.attributes.friendly_name is defined and '57 St' in state.attributes.friendly_name and state.attributes.route_id in ['N', 'Q', 'R', 'W'] and state.state not in ['unavailable', 'unknown'] -%}
                   {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                  {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
+                  {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Woodlawn|Eastchester|Dyre|Nereid|145 St|148 St|Court Sq') -%}
                   {
                     "entity": "{{ state.entity_id }}",
                     "name": "{{ state.attributes.route_id }} to {{ headsign }}",
@@ -270,7 +270,7 @@ views:
                 {% for state in states.sensor -%}
                   {%- if state.attributes.friendly_name is defined and ('Atlantic Av' in state.attributes.friendly_name or 'Barclays' in state.attributes.friendly_name) and state.attributes.route_id in ['N', 'Q', 'D'] and state.state not in ['unavailable', 'unknown'] -%}
                     {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                    {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
+                    {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Woodlawn|Eastchester|Dyre|Nereid|145 St|148 St|Court Sq') -%}
                     {
                       "entity": "{{ state.entity_id }}",
                       "name": "{{ state.attributes.route_id }} to {{ headsign }}",
@@ -301,7 +301,7 @@ views:
                 {% for state in states.sensor -%}
                   {%- if state.attributes.friendly_name is defined and '57 St' in state.attributes.friendly_name and state.attributes.route_id in ['N', 'Q', 'R', 'W'] and state.state not in ['unavailable', 'unknown'] -%}
                     {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                    {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
+                    {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Woodlawn|Eastchester|Dyre|Nereid|145 St|148 St|Court Sq') -%}
                     {
                       "entity": "{{ state.entity_id }}",
                       "name": "{{ state.attributes.route_id }} to {{ headsign }}",
