@@ -250,8 +250,30 @@ views:
           method: state
           numeric: true
 
-  - title: Dynamic
-    icon: mdi:map-marker-radius
+  - title: Debug
+    icon: mdi:bug
+    cards:
+      - type: markdown
+        content: "## Debug Info: All Atlantic/57 St Sensors"
+      - type: custom:auto-entities
+        card:
+          type: entities
+          show_header_toggle: false
+        filter:
+          template: |
+            [
+              {% for state in states.sensor -%}
+                {%- if state.attributes.friendly_name is defined and ('Atlantic Av' in state.attributes.friendly_name or 'Barclays' in state.attributes.friendly_name or '57 St' in state.attributes.friendly_name) and state.state not in ['unavailable', 'unknown'] -%}
+                  {
+                    "entity": "{{ state.entity_id }}",
+                    "name": "{{ state.attributes.friendly_name }}",
+                    "secondary_info": "Headsign: {{ state.attributes.headsign | default('None') }} | Route: {{ state.attributes.route_id | default('None') }}"
+                  },
+                {%- endif -%}
+              {%- endfor %}
+            ]
+        sort:
+          method: name
     cards:
       - type: conditional
         conditions:
