@@ -2,7 +2,9 @@ alias: "Guest - Camera Privacy (WiFi Disconnected)"
 mode: "restart"
 triggers:
   - trigger: "state"
-    entity_id: "device_tracker.brayan_iphone"
+    entity_id:
+      - "device_tracker.brayan_iphone"
+      - "device_tracker.eirill_iphone"
     from: "home"
 actions:
   - action: "light.turn_on"

@@ -2,7 +2,9 @@ alias: "Guest - Camera Privacy Home (WiFi Connected)"
 mode: "restart"
 triggers:
   - trigger: "state"
-    entity_id: "device_tracker.brayan_iphone"
+    entity_id:
+      - "device_tracker.brayan_iphone"
+      - "device_tracker.eirill_iphone"
     to: "home"
 actions:
   - action: "light.turn_off"
