@@ -493,19 +493,17 @@ data:
     
         # Quick access cards (between greeting and area cards)
         quick_access_cards:
-          - type: conditional
-            conditions:
-              - entity: device_tracker.pixel_9_pro_xl
-                state_not: "work"
+          - type: custom:auto-entities
             card:
-              type: custom:auto-entities
-              card:
-                type: entities
-                title: To Work (Atlantic Av - N/Q/D)
-                icon: mdi:briefcase
-                show_header_toggle: false
-              filter:
-                template: |
+              type: entities
+              title: To Work (Atlantic Av - N/Q/D)
+              icon: mdi:briefcase
+              show_header_toggle: false
+            filter:
+              template: |
+                {% set current = states('device_tracker.pixel_9_pro_xl') %}
+                {% set last = states('input_text.alex_last_significant_zone') %}
+                {% if (current == 'home') or (current != 'work' and last == 'home') %}
                   {% if now().weekday() < 5 %}
                   [
                     {% for state in states.sensor -%}
@@ -524,30 +522,31 @@ data:
                   {% else %}
                   []
                   {% endif %}
-              show_empty: false
-              sort:
-                method: state
-                numeric: true
+                {% else %}
+                  []
+                {% endif %}
+            show_empty: false
+            sort:
+              method: state
+              numeric: true
     
-          - type: conditional
-            conditions:
-              - entity: device_tracker.pixel_9_pro_xl
-                state: "work"
+          - type: custom:auto-entities
             card:
-              type: custom:auto-entities
-              card:
-                type: entities
-                title: To Home (57 St - N/Q/R/W)
-                icon: mdi:home
-                show_header_toggle: false
-              filter:
-                template: |
+              type: entities
+              title: To Home (57 St - N/Q/R/W)
+              icon: mdi:home
+              show_header_toggle: false
+            filter:
+              template: |
+                {% set current = states('device_tracker.pixel_9_pro_xl') %}
+                {% set last = states('input_text.alex_last_significant_zone') %}
+                {% if (current == 'work') or (current != 'home' and last == 'work') %}
                   {% if now().weekday() < 5 %}
                   [
                     {% for state in states.sensor -%}
                       {%- if state.attributes.friendly_name is defined and '57 St' in state.attributes.friendly_name and state.attributes.route_id in ['N', 'Q', 'R', 'W'] and state.state not in ['unavailable', 'unknown'] -%}
                         {%- set headsign = state.attributes.headsign | default('Unknown') -%}
-                        {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
+                        {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Woodlawn|Eastchester|Dyre|Nereid|145 St|148 St|Court Sq') -%}
                         {
                           "entity": "{{ state.entity_id }}",
                           "name": "{{ state.attributes.route_id }} to {{ headsign }}",
@@ -560,10 +559,13 @@ data:
                   {% else %}
                   []
                   {% endif %}
-              show_empty: false
-              sort:
-                method: state
-                numeric: true
+                {% else %}
+                  []
+                {% endif %}
+            show_empty: false
+            sort:
+              method: state
+              numeric: true
     
     
         # Extra cards (below area cards)
@@ -1853,19 +1855,17 @@ data:
       - title: Dynamic
         icon: mdi:map-marker-radius
         cards:
-          - type: conditional
-            conditions:
-              - entity: device_tracker.pixel_9_pro_xl
-                state_not: "work"
+          - type: custom:auto-entities
             card:
-              type: custom:auto-entities
-              card:
-                type: entities
-                title: To Work (Atlantic Av - N/Q/D)
-                icon: mdi:briefcase
-                show_header_toggle: false
-              filter:
-                template: |
+              type: entities
+              title: To Work (Atlantic Av - N/Q/D)
+              icon: mdi:briefcase
+              show_header_toggle: false
+            filter:
+              template: |
+                {% set current = states('device_tracker.pixel_9_pro_xl') %}
+                {% set last = states('input_text.alex_last_significant_zone') %}
+                {% if (current == 'home') or (current != 'work' and last == 'home') %}
                   [
                     {% for state in states.sensor -%}
                       {%- if state.attributes.friendly_name is defined and ('Atlantic Av' in state.attributes.friendly_name or 'Barclays' in state.attributes.friendly_name) and state.attributes.route_id in ['N', 'Q', 'D'] and state.state not in ['unavailable', 'unknown'] -%}
@@ -1880,23 +1880,25 @@ data:
                       {%- endif -%}
                     {%- endfor %}
                   ]
-              sort:
-                method: state
-                numeric: true
+                {% else %}
+                  []
+                {% endif %}
+            show_empty: false
+            sort:
+              method: state
+              numeric: true
     
-          - type: conditional
-            conditions:
-              - entity: device_tracker.pixel_9_pro_xl
-                state: "work"
+          - type: custom:auto-entities
             card:
-              type: custom:auto-entities
-              card:
-                type: entities
-                title: To Home (57 St - N/Q/R/W)
-                icon: mdi:home
-                show_header_toggle: false
-              filter:
-                template: |
+              type: entities
+              title: To Home (57 St - N/Q/R/W)
+              icon: mdi:home
+              show_header_toggle: false
+            filter:
+              template: |
+                {% set current = states('device_tracker.pixel_9_pro_xl') %}
+                {% set last = states('input_text.alex_last_significant_zone') %}
+                {% if (current == 'work') or (current != 'home' and last == 'work') %}
                   [
                     {% for state in states.sensor -%}
                       {%- if state.attributes.friendly_name is defined and '57 St' in state.attributes.friendly_name and state.attributes.route_id in ['N', 'Q', 'R', 'W'] and state.state not in ['unavailable', 'unknown'] -%}
@@ -1911,9 +1913,13 @@ data:
                       {%- endif -%}
                     {%- endfor %}
                   ]
-              sort:
-                method: state
-                numeric: true
+                {% else %}
+                  []
+                {% endif %}
+            show_empty: false
+            sort:
+              method: state
+              numeric: true
   security.yaml: |
     views:
       - title: Home

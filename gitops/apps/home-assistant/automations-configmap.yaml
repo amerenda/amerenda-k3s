@@ -155,6 +155,26 @@ data:
             tag: "pet-{{ slug }}"
             importance: "low"
             sticky: true
+  alex_update_last_zone.yaml: |
+    alias: "Alex - Update Last Significant Zone"
+    mode: single
+    triggers:
+      - trigger: state
+        entity_id: device_tracker.pixel_9_pro_xl
+        to: "home"
+        id: "home"
+      - trigger: state
+        entity_id: device_tracker.pixel_9_pro_xl
+        to: "work"
+        id: "work"
+    conditions: []
+    actions:
+      - action: input_text.set_value
+        target:
+          entity_id: input_text.alex_last_significant_zone
+        data:
+          value: "{{ trigger.id }}"
+    
   guest_camera_privacy_wifi_away.yaml: |
     alias: "Guest - Camera Privacy (WiFi Disconnected)"
     mode: "restart"
