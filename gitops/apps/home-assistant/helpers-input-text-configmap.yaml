@@ -3,28 +3,28 @@ kind: ConfigMap
 metadata:
   name: homeassistant-helpers-input-text
 data:
-  event_image_location_text.yaml: |
-    # Global input_text helper for pet detection event location
-    event_image_location:
-      name: Event Image Location Text
-      initial: ""
-      max: 50
   event_image_location.yaml: |
     # Global input_text helper for pet detection event location
     event_image_location:
       name: "Event Image Location Text"
       initial: ""
       max: 50
-  event_image_timestamp_text.yaml: |
-    # Global input_text helper for pet detection event timestamp
-    event_image_timestamp:
-      name: Event Image Timestamp Text
+  event_image_location_text.yaml: |
+    # Global input_text helper for pet detection event location
+    event_image_location:
+      name: Event Image Location Text
       initial: ""
-      max: 20
+      max: 50
   event_image_timestamp.yaml: |
     # Global input_text helper for pet detection event timestamp
     event_image_timestamp:
       name: "Event Image Timestamp Text"
+      initial: ""
+      max: 20
+  event_image_timestamp_text.yaml: |
+    # Global input_text helper for pet detection event timestamp
+    event_image_timestamp:
+      name: Event Image Timestamp Text
       initial: ""
       max: 20
   intruder_image_location.yaml: |
