@@ -92,19 +92,19 @@ views:
                 entity: binary_sensor.eversweet_solo_2_water_level
                 primary: Water Level
                 secondary: >
-                  {% if is_state('binary_sensor.eversweet_solo_2_water_level', 'on') %}
+                  {% if is_state('binary_sensor.eversweet_solo_2_water_level', 'off') %}
                     Normal
                   {% else %}
                     Low
                   {% endif %}
                 icon: >
-                  {% if is_state('binary_sensor.eversweet_solo_2_water_level', 'on') %}
+                  {% if is_state('binary_sensor.eversweet_solo_2_water_level', 'off') %}
                     mdi:water
                   {% else %}
                     mdi:water-alert
                   {% endif %}
                 icon_color: >
-                  {% if is_state('binary_sensor.eversweet_solo_2_water_level', 'on') %}
+                  {% if is_state('binary_sensor.eversweet_solo_2_water_level', 'off') %}
                     blue
                   {% else %}
                     red

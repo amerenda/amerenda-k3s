@@ -197,6 +197,7 @@ data:
     triggers:
       - trigger: state
         entity_id: binary_sensor.eversweet_solo_2_water_level
+        from: "on"
         to: "off"
         for:
           minutes: 5
