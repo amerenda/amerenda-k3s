@@ -189,21 +189,6 @@ data:
                 data:
                   name: "Alex Last Zone Update"
                   message: "Updated last significant zone to: {{ current_zone }}"
-  debug_zone_states.yaml: |
-    alias: "Debug - Device Tracker States"
-    mode: parallel
-    triggers:
-      - trigger: state
-        entity_id: device_tracker.pixel_9_pro_xl
-    actions:
-      - service: logbook.log
-        data:
-          name: "Debug Zone"
-          message: >-
-            State: {{ trigger.to_state.state }} |
-            From: {{ trigger.from_state.state }} |
-            Attributes: {{ trigger.to_state.attributes }}
-    
   guest_camera_privacy_wifi_away.yaml: |
     alias: "Guest - Camera Privacy (WiFi Disconnected)"
     mode: "restart"
