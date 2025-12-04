@@ -1,0 +1,14 @@
+alias: "Debug - Device Tracker States"
+mode: parallel
+triggers:
+  - trigger: state
+    entity_id: device_tracker.pixel_9_pro_xl
+actions:
+  - service: logbook.log
+    data:
+      name: "Debug Zone"
+      message: >-
+        State: {{ trigger.to_state.state }} |
+        From: {{ trigger.from_state.state }} |
+        Attributes: {{ trigger.to_state.attributes }}
+

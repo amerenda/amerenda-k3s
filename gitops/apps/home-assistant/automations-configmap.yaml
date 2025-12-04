@@ -161,28 +161,49 @@ data:
     triggers:
       - trigger: state
         entity_id: device_tracker.pixel_9_pro_xl
-        to: "home"
-      - trigger: state
-        entity_id: device_tracker.pixel_9_pro_xl
-        to: "work"
       - trigger: homeassistant
         event: start
     variables:
       current_zone: >-
         {% if trigger.platform == 'state' %}
-          {{ trigger.to_state.state }}
+          {{ trigger.to_state.state | lower }}
         {% else %}
-          {{ states('device_tracker.pixel_9_pro_xl') }}
+          {{ states('device_tracker.pixel_9_pro_xl') | lower }}
         {% endif %}
-    conditions:
-      - condition: template
-        value_template: "{{ current_zone in ['home', 'work'] }}"
     actions:
-      - action: input_text.set_value
-        target:
-          entity_id: input_text.alex_last_significant_zone
+      - service: logbook.log
         data:
-          value: "{{ current_zone }}"
+          name: "Alex Last Zone Debug"
+          message: "Detected zone change to: {{ current_zone }}"
+      - choose:
+          - conditions:
+              - condition: template
+                value_template: "{{ current_zone in ['home', 'work'] }}"
+            sequence:
+              - action: input_text.set_value
+                target:
+                  entity_id: input_text.alex_last_significant_zone
+                data:
+                  value: "{{ current_zone }}"
+              - service: logbook.log
+                data:
+                  name: "Alex Last Zone Update"
+                  message: "Updated last significant zone to: {{ current_zone }}"
+  debug_zone_states.yaml: |
+    alias: "Debug - Device Tracker States"
+    mode: parallel
+    triggers:
+      - trigger: state
+        entity_id: device_tracker.pixel_9_pro_xl
+    actions:
+      - service: logbook.log
+        data:
+          name: "Debug Zone"
+          message: >-
+            State: {{ trigger.to_state.state }} |
+            From: {{ trigger.from_state.state }} |
+            Attributes: {{ trigger.to_state.attributes }}
+    
   guest_camera_privacy_wifi_away.yaml: |
     alias: "Guest - Camera Privacy (WiFi Disconnected)"
     mode: "restart"
