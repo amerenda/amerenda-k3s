@@ -9,12 +9,19 @@ triggers:
     to: "work"
   - trigger: homeassistant
     event: start
+variables:
+  current_zone: >-
+    {% if trigger.platform == 'state' %}
+      {{ trigger.to_state.state }}
+    {% else %}
+      {{ states('device_tracker.pixel_9_pro_xl') }}
+    {% endif %}
 conditions:
   - condition: template
-    value_template: "{{ states('device_tracker.pixel_9_pro_xl') in ['home', 'work'] }}"
+    value_template: "{{ current_zone in ['home', 'work'] }}"
 actions:
   - action: input_text.set_value
     target:
       entity_id: input_text.alex_last_significant_zone
     data:
-      value: "{{ states('device_tracker.pixel_9_pro_xl') }}"
+      value: "{{ current_zone }}"
