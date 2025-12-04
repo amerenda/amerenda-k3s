@@ -1,19 +1,20 @@
 alias: "Alex - Update Last Significant Zone"
-mode: single
+mode: queued
 triggers:
   - trigger: state
     entity_id: device_tracker.pixel_9_pro_xl
     to: "home"
-    id: "home"
   - trigger: state
     entity_id: device_tracker.pixel_9_pro_xl
     to: "work"
-    id: "work"
-conditions: []
+  - trigger: homeassistant
+    event: start
+conditions:
+  - condition: template
+    value_template: "{{ states('device_tracker.pixel_9_pro_xl') in ['home', 'work'] }}"
 actions:
   - action: input_text.set_value
     target:
       entity_id: input_text.alex_last_significant_zone
     data:
-      value: "{{ trigger.id }}"
-
+      value: "{{ states('device_tracker.pixel_9_pro_xl') }}"
