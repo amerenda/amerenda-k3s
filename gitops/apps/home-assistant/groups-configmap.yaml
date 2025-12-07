@@ -12,3 +12,8 @@ data:
         - device_tracker.pixel_9_pro_xl_2 # alex phone for testing
       all: false
     
+    members:
+      name: Members
+      entities:
+        - person.alex_merenda
+      all: false

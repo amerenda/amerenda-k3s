@@ -137,7 +137,7 @@ data:
             - condition: or
               conditions:
                 - condition: state
-                  entity_id: person.alex_merenda
+                  entity_id: group.members
                   state: "home"
                 - condition: state
                   entity_id: group.guests

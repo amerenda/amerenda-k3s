@@ -1,4 +1,5 @@
 alias: "Pet - Water Fountain Alert"
+icon: mdi:water-alert
 mode: single
 triggers:
   - trigger: state
@@ -52,4 +53,3 @@ actions:
           Fountain power is OFF! Check connection.
         {% endif %}
       notification_id: "water_fountain_alert"
-

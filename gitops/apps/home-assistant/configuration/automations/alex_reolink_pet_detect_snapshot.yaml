@@ -1,4 +1,5 @@
 alias: "Alex - Reolink Pet Snapshot (Away)"
+icon: mdi:paw
 mode: "queued"
 triggers:
   - trigger: "state"

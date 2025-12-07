@@ -3,38 +3,9 @@ kind: ConfigMap
 metadata:
   name: homeassistant-automations
 data:
-  alex_camera_privacy_away.yaml: |
-    alias: "Alex - Camera Privacy (Away)"
-    mode: "restart"
-    triggers:
-      - trigger: "zone"
-        entity_id: "person.alex_merenda"
-        zone: "zone.home"
-        event: "leave"
-    actions:
-      - action: script.manage_camera_privacy
-  alex_camera_privacy_home.yaml: |
-    alias: "Alex - Camera Privacy (Home)"
-    mode: "restart"
-    triggers:
-      - trigger: "zone"
-        entity_id: "person.alex_merenda"
-        zone: "zone.home"
-        event: "enter"
-    actions:
-      - action: script.manage_camera_privacy
-  alex_cleanup_old_photos.yaml: |
-    alias: "Alex - Cleanup Old Photos (30+ days)"
-    mode: "single"
-    triggers:
-      - platform: "time"
-        at: "02:00:00"
-    conditions: []
-    actions:
-      - service: "shell_command.cleanup_old_photos"
-        data: {}
   alex_reolink_human_detect_alert.yaml: |
     alias: "Alex - Reolink Human Alert (Away)"
+    icon: mdi:account-alert
     mode: "queued"
     triggers:
       - trigger: "state"
@@ -87,6 +58,7 @@ data:
             sticky: true
   alex_reolink_pet_detect_snapshot.yaml: |
     alias: "Alex - Reolink Pet Snapshot (Away)"
+    icon: mdi:paw
     mode: "queued"
     triggers:
       - trigger: "state"
@@ -139,6 +111,7 @@ data:
             sticky: true
   alex_update_last_zone.yaml: |
     alias: "Alex - Update Last Significant Zone"
+    icon: mdi:map-marker-path
     mode: queued
     triggers:
       - trigger: state
@@ -171,8 +144,20 @@ data:
                 data:
                   name: "Alex Last Zone Update"
                   message: "Updated last significant zone to: {{ current_zone }}"
+  cleanup_old_photos.yaml: |
+    alias: "System - Cleanup Old Photos (30+ days)"
+    icon: mdi:image-remove
+    mode: "single"
+    triggers:
+      - platform: "time"
+        at: "02:00:00"
+    conditions: []
+    actions:
+      - service: "shell_command.cleanup_old_photos"
+        data: {}
   guest_camera_privacy_wifi_away.yaml: |
     alias: "Guest - Camera Privacy (WiFi Disconnected)"
+    icon: mdi:cctv
     mode: "restart"
     triggers:
       - trigger: "state"
@@ -183,6 +168,7 @@ data:
       - action: script.manage_camera_privacy
   guest_camera_privacy_wifi_home.yaml: |
     alias: "Guest - Camera Privacy Home (WiFi Connected)"
+    icon: mdi:cctv-off
     mode: "restart"
     triggers:
       - trigger: "state"
@@ -191,8 +177,33 @@ data:
         to: "home"
     actions:
       - action: script.manage_camera_privacy
+  members_camera_privacy_away.yaml: |
+    alias: "Members - Camera Privacy (Away)"
+    icon: mdi:cctv
+    mode: "restart"
+    triggers:
+      - trigger: "state"
+        entity_id: "group.members"
+        to: "not_home"
+        from: "home"
+    actions:
+      - action: script.manage_camera_privacy
+    
+  members_camera_privacy_home.yaml: |
+    alias: "Members - Camera Privacy (Home)"
+    icon: mdi:cctv-off
+    mode: "restart"
+    triggers:
+      - trigger: "state"
+        entity_id: "group.members"
+        to: "home"
+        from: "not_home"
+    actions:
+      - action: script.manage_camera_privacy
+    
   pet_water_fountain_alert.yaml: |
     alias: "Pet - Water Fountain Alert"
+    icon: mdi:water-alert
     mode: single
     triggers:
       - trigger: state
@@ -246,4 +257,3 @@ data:
               Fountain power is OFF! Check connection.
             {% endif %}
           notification_id: "water_fountain_alert"
-    

@@ -1,9 +1,0 @@
-alias: "Alex - Camera Privacy (Away)"
-mode: "restart"
-triggers:
-  - trigger: "zone"
-    entity_id: "person.alex_merenda"
-    zone: "zone.home"
-    event: "leave"
-actions:
-  - action: script.manage_camera_privacy
