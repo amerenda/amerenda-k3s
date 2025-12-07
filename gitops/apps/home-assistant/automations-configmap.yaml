@@ -191,6 +191,15 @@ data:
         from: "not_home"
     actions:
       - action: script.manage_camera_privacy
+  monitor_camera_privacy.yaml: |
+    alias: "System - Monitor Camera Privacy"
+    mode: "single"
+    triggers:
+      - trigger: "time_pattern"
+        minutes: "/1"
+    actions:
+      - action: script.manage_camera_privacy
+    
   pet_water_fountain_alert.yaml: |
     alias: "Pet - Water Fountain Alert"
     mode: single
