@@ -1,8 +1,4 @@
 alias: "Members - Camera Privacy (Home)"
-labels:
-  - Security
-  - Privacy
-  - Members
 mode: "restart"
 triggers:
   - trigger: "state"

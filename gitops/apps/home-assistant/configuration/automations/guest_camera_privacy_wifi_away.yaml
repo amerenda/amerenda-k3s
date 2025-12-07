@@ -1,8 +1,4 @@
 alias: "Guest - Camera Privacy (WiFi Disconnected)"
-labels:
-  - Security
-  - Privacy
-  - Guests
 mode: "restart"
 triggers:
   - trigger: "state"

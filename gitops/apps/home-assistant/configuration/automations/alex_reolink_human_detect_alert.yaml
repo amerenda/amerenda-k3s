@@ -1,8 +1,4 @@
 alias: "Alex - Reolink Human Alert (Away)"
-labels:
-  - Security
-  - Notifications
-  - Camera
 mode: "queued"
 triggers:
   - trigger: "state"

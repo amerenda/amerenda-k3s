@@ -1,8 +1,4 @@
 alias: "Alex - Reolink Pet Snapshot (Away)"
-labels:
-  - Security
-  - Pets
-  - Camera
 mode: "queued"
 triggers:
   - trigger: "state"

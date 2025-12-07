@@ -1,8 +1,4 @@
 alias: "Pet - Water Fountain Alert"
-labels:
-  - Pets
-  - Maintenance
-  - Notifications
 mode: single
 triggers:
   - trigger: state

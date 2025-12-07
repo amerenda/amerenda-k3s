@@ -1,7 +1,4 @@
 alias: "System - Cleanup Old Photos (30+ days)"
-labels:
-  - Maintenance
-  - System
 mode: "single"
 triggers:
   - platform: "time"

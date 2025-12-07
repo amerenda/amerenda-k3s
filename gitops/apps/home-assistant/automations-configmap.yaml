@@ -5,10 +5,6 @@ metadata:
 data:
   alex_reolink_human_detect_alert.yaml: |
     alias: "Alex - Reolink Human Alert (Away)"
-    labels:
-      - Security
-      - Notifications
-      - Camera
     mode: "queued"
     triggers:
       - trigger: "state"
@@ -61,10 +57,6 @@ data:
             sticky: true
   alex_reolink_pet_detect_snapshot.yaml: |
     alias: "Alex - Reolink Pet Snapshot (Away)"
-    labels:
-      - Security
-      - Pets
-      - Camera
     mode: "queued"
     triggers:
       - trigger: "state"
@@ -117,9 +109,6 @@ data:
             sticky: true
   alex_update_last_zone.yaml: |
     alias: "Alex - Update Last Significant Zone"
-    labels:
-      - Presence
-      - Location
     mode: queued
     triggers:
       - trigger: state
@@ -154,9 +143,6 @@ data:
                   message: "Updated last significant zone to: {{ current_zone }}"
   cleanup_old_photos.yaml: |
     alias: "System - Cleanup Old Photos (30+ days)"
-    labels:
-      - Maintenance
-      - System
     mode: "single"
     triggers:
       - platform: "time"
@@ -167,10 +153,6 @@ data:
         data: {}
   guest_camera_privacy_wifi_away.yaml: |
     alias: "Guest - Camera Privacy (WiFi Disconnected)"
-    labels:
-      - Security
-      - Privacy
-      - Guests
     mode: "restart"
     triggers:
       - trigger: "state"
@@ -181,10 +163,6 @@ data:
       - action: script.manage_camera_privacy
   guest_camera_privacy_wifi_home.yaml: |
     alias: "Guest - Camera Privacy Home (WiFi Connected)"
-    labels:
-      - Security
-      - Privacy
-      - Guests
     mode: "restart"
     triggers:
       - trigger: "state"
@@ -195,10 +173,6 @@ data:
       - action: script.manage_camera_privacy
   members_camera_privacy_away.yaml: |
     alias: "Members - Camera Privacy (Away)"
-    labels:
-      - Security
-      - Privacy
-      - Members
     mode: "restart"
     triggers:
       - trigger: "state"
@@ -209,10 +183,6 @@ data:
       - action: script.manage_camera_privacy
   members_camera_privacy_home.yaml: |
     alias: "Members - Camera Privacy (Home)"
-    labels:
-      - Security
-      - Privacy
-      - Members
     mode: "restart"
     triggers:
       - trigger: "state"
@@ -223,10 +193,6 @@ data:
       - action: script.manage_camera_privacy
   pet_water_fountain_alert.yaml: |
     alias: "Pet - Water Fountain Alert"
-    labels:
-      - Pets
-      - Maintenance
-      - Notifications
     mode: single
     triggers:
       - trigger: state

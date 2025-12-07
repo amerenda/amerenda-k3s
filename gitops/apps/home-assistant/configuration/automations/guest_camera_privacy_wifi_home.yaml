@@ -1,8 +1,4 @@
 alias: "Guest - Camera Privacy Home (WiFi Connected)"
-labels:
-  - Security
-  - Privacy
-  - Guests
 mode: "restart"
 triggers:
   - trigger: "state"

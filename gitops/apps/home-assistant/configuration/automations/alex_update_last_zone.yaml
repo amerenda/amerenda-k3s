@@ -1,7 +1,4 @@
 alias: "Alex - Update Last Significant Zone"
-labels:
-  - Presence
-  - Location
 mode: queued
 triggers:
   - trigger: state
