@@ -5,4 +5,3 @@ triggers:
     minutes: "/1"
 actions:
   - action: script.manage_camera_privacy
-
