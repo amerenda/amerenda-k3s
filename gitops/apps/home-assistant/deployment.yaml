@@ -278,6 +278,36 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
+            - name: automations
+              mountPath: /config/automations
+            - name: blueprints
+              mountPath: /config/blueprints/automation/_defaults
+              readOnly: true
+            - name: helpers-input-boolean
+              mountPath: /config/helpers/input_boolean
+              readOnly: true
+            - name: helpers-input-datetime
+              mountPath: /config/helpers/input_datetime
+              readOnly: true
+            - name: helpers-input-select
+              mountPath: /config/helpers/input_select
+              readOnly: true
+            - name: helpers-input-number
+              mountPath: /config/helpers/input_number
+              readOnly: true
+            - name: helpers-input-text
+              mountPath: /config/helpers/input_text
+              readOnly: true
+            - name: dashboards
+              mountPath: /config/dashboards/views
+              readOnly: true
+            - name: scripts
+              mountPath: /config/scripts
+              readOnly: true
+            - name: groups
+              mountPath: /config/groups.yaml
+              subPath: groups.yaml
+              readOnly: true
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
