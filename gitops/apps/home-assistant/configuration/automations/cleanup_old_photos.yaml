@@ -1,5 +1,7 @@
 alias: "System - Cleanup Old Photos (30+ days)"
-icon: mdi:image-remove
+labels:
+  - Maintenance
+  - System
 mode: "single"
 triggers:
   - platform: "time"

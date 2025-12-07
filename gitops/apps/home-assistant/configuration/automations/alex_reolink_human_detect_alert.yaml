@@ -1,5 +1,8 @@
 alias: "Alex - Reolink Human Alert (Away)"
-icon: mdi:account-alert
+labels:
+  - Security
+  - Notifications
+  - Camera
 mode: "queued"
 triggers:
   - trigger: "state"

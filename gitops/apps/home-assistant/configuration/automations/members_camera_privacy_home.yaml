@@ -1,5 +1,8 @@
 alias: "Members - Camera Privacy (Home)"
-icon: mdi:cctv-off
+labels:
+  - Security
+  - Privacy
+  - Members
 mode: "restart"
 triggers:
   - trigger: "state"
@@ -8,4 +11,3 @@ triggers:
     from: "not_home"
 actions:
   - action: script.manage_camera_privacy
-

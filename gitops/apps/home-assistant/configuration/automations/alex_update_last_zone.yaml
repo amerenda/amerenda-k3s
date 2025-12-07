@@ -1,5 +1,7 @@
 alias: "Alex - Update Last Significant Zone"
-icon: mdi:map-marker-path
+labels:
+  - Presence
+  - Location
 mode: queued
 triggers:
   - trigger: state

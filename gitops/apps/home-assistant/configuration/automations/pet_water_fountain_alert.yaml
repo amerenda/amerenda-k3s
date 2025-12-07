@@ -1,5 +1,8 @@
 alias: "Pet - Water Fountain Alert"
-icon: mdi:water-alert
+labels:
+  - Pets
+  - Maintenance
+  - Notifications
 mode: single
 triggers:
   - trigger: state

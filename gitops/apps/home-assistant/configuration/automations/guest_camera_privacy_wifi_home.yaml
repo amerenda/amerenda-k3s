@@ -1,5 +1,8 @@
 alias: "Guest - Camera Privacy Home (WiFi Connected)"
-icon: mdi:cctv-off
+labels:
+  - Security
+  - Privacy
+  - Guests
 mode: "restart"
 triggers:
   - trigger: "state"
