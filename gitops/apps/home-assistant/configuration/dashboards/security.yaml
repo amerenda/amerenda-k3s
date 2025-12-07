@@ -77,19 +77,24 @@ views:
             heading: Guests Present
             heading_style: title
             icon: mdi:account-check
-          - type: entity-filter
-            entities:
-              - device_tracker.brayan_iphone
-            state_filter:
-              - home
+          - type: custom:auto-entities
             card:
               type: entities
               show_header_toggle: false
               state_color: true
+            filter:
+              include:
+                - group: group.guests
+                  state: home
+            show_empty: false
           - type: heading
             heading: All Guests
             heading_style: title
             icon: mdi:account-group
-          - type: entities
-            entities:
-              - device_tracker.brayan_iphone
+          - type: custom:auto-entities
+            card:
+              type: entities
+              show_header_toggle: false
+            filter:
+              include:
+                - group: group.guests
