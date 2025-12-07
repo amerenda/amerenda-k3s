@@ -1898,7 +1898,9 @@ data:
               numeric: true
   security.yaml: |
     views:
-      - title: Home
+      - title: Cameras
+        path: cameras
+        icon: mdi:cctv
         sections:
           - type: grid
             cards:
@@ -1963,3 +1965,30 @@ data:
             type: markdown
             text_only: true
             content: '# Security'
+    
+      - title: Guests
+        path: guests
+        icon: mdi:account-group
+        sections:
+          - type: grid
+            cards:
+              - type: heading
+                heading: Guests Present
+                heading_style: title
+                icon: mdi:account-check
+              - type: entity-filter
+                entities:
+                  - device_tracker.brayan_iphone
+                state_filter:
+                  - home
+                card:
+                  type: entities
+                  show_header_toggle: false
+                  state_color: true
+              - type: heading
+                heading: All Guests
+                heading_style: title
+                icon: mdi:account-group
+              - type: entities
+                entities:
+                  - device_tracker.brayan_iphone

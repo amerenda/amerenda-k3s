@@ -8,5 +8,6 @@ data:
       name: Guests
       entities:
         - device_tracker.brayan_iphone
+        - device_tracker.eirill_iphone
       all: false
     
