@@ -138,9 +138,10 @@ spec:
               set -e
               CONFIG_DIR="/config"
         
-              # Directories
               mkdir -p "${CONFIG_DIR}/themes"
-              mkdir -p "${CONFIG_DIR}/www/pets" "${CONFIG_DIR}/www/intruders"
+              mkdir -p "${CONFIG_DIR}/www/pets"
+              mkdir -p "${CONFIG_DIR}/www/intruders"
+              mkdir -p "${CONFIG_DIR}/www/calendar_cache"
               mkdir -p "${CONFIG_DIR}/scripts"                     # dir-based scripts
               mkdir -p "${CONFIG_DIR}/automations"                 # optional manual files (not auto-included)
               mkdir -p "${CONFIG_DIR}/scenes"                      # optional manual files (not auto-included)
@@ -187,6 +188,12 @@ spec:
               lovelace:
                 mode: storage
                 dashboards:
+                  dean-dashboard:
+                    mode: yaml
+                    title: Dean
+                    icon: mdi:home
+                    show_in_sidebar: true
+                    filename: dashboards/views/dean.yaml
                   room-schedule-viewer:
                     mode: yaml
                     title: Room Schedule Viewer
@@ -199,12 +206,24 @@ spec:
                     icon: mdi:calendar-edit
                     show_in_sidebar: true
                     filename: dashboards/views/room_schedule_configuration.yaml
-                  light-control:
+                  subway-dashboard:
                     mode: yaml
-                    title: Light Control
-                    icon: mdi:lightbulb-group
+                    title: Subway
+                    icon: mdi:subway-variant
                     show_in_sidebar: true
-                    filename: dashboards/views/light_control.yaml
+                    filename: dashboards/views/subway.yaml
+                  security-dashboard:
+                    mode: yaml
+                    title: Security
+                    icon: mdi:cctv
+                    show_in_sidebar: true
+                    filename: dashboards/views/security.yaml
+                  uni-dashboard:
+                    mode: yaml
+                    title: Uni
+                    icon: mdi:cat
+                    show_in_sidebar: true
+                    filename: dashboards/views/uni.yaml
         
               # HTTP reverse proxy
               http:
@@ -213,7 +232,7 @@ spec:
                   - 10.100.20.0/24
                   - 10.43.0.0/16
                   - 10.42.0.0/16
-        
+
               # Media sources - expose local media folders to Media dashboard
               media_source: {}
         
@@ -221,7 +240,7 @@ spec:
               shell_command:
                 cleanup_old_photos: 'find /config/www/pets -name "*.jpg" -mtime +30 -delete && find /config/www/intruders -name "*.jpg" -mtime +30 -delete'
               EOF
-        
+
               # Seed UI files if missing/empty (correct types!)
               # scripts.yaml is a DICT; scenes/automations are LISTS
               if [ ! -f "${CONFIG_DIR}/scripts.yaml" ] || [ ! -s "${CONFIG_DIR}/scripts.yaml" ]; then
@@ -233,15 +252,16 @@ spec:
               if [ ! -f "${CONFIG_DIR}/automations.yaml" ] || [ ! -s "${CONFIG_DIR}/automations.yaml" ]; then
                 echo "[]" > "${CONFIG_DIR}/automations.yaml"
               fi
-        
+
               # Perms
               chmod 755 "${CONFIG_DIR}/www/pets" "${CONFIG_DIR}/www/intruders"
-        
+
               echo "Default configuration and directories created"
 
           volumeMounts:
             - name: config
               mountPath: /config
+
         - name: validate-config
           image: ghcr.io/home-assistant/home-assistant:stable
           imagePullPolicy: IfNotPresent

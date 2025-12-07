@@ -18,46 +18,51 @@ strategy:
       # Hide PTZ and guard buttons, sirens, and motion/animal sensors for bedroom and living room when unavailable
       # Bedroom entities
       button.bedroom_guard_go_to:
-        hidden: "{{ is_state('button.bedroom_guard_go_to', 'unavailable') }}"
+        hidden: true
       button.bedroom_ptz_down:
-        hidden: "{{ is_state('button.bedroom_ptz_down', 'unavailable') }}"
+        hidden: true
       button.bedroom_ptz_left:
-        hidden: "{{ is_state('button.bedroom_ptz_left', 'unavailable') }}"
+        hidden: true
       button.bedroom_ptz_right:
-        hidden: "{{ is_state('button.bedroom_ptz_right', 'unavailable') }}"
+        hidden: true
       button.bedroom_ptz_up:
-        hidden: "{{ is_state('button.bedroom_ptz_up', 'unavailable') }}"
+        hidden: true
       button.bedroom_ptz_stop:
-        hidden: "{{ is_state('button.bedroom_ptz_stop', 'unavailable') }}"
+        hidden: true
       siren.bedroom_siren:
-        hidden: "{{ is_state('siren.bedroom_siren', 'unavailable') }}"
+        hidden: true
       binary_sensor.bedroom_animal:
-        hidden: "{{ is_state('binary_sensor.bedroom_animal', 'unavailable') }}"
+        hidden: true
       binary_sensor.bedroom_motion:
-        hidden: "{{ is_state('binary_sensor.bedroom_motion', 'unavailable') }}"
+        hidden: true
       binary_sensor.bedroom_baby_crying:
-        hidden: "{{ is_state('binary_sensor.bedroom_baby_crying', 'unavailable') }}"
+        hidden: true
+      binary_sensor.bedroom_person:
+        hidden: true
+
       # Living room entities
       button.living_room_guard_go_to:
-        hidden: "{{ is_state('button.living_room_guard_go_to', 'unavailable') }}"
+        hidden: true
       button.living_room_ptz_down:
-        hidden: "{{ is_state('button.living_room_ptz_down', 'unavailable') }}"
+        hidden: true
       button.living_room_ptz_left:
-        hidden: "{{ is_state('button.living_room_ptz_left', 'unavailable') }}"
+        hidden: true
       button.living_room_ptz_right:
-        hidden: "{{ is_state('button.living_room_ptz_right', 'unavailable') }}"
+        hidden: true
       button.living_room_ptz_up:
-        hidden: "{{ is_state('button.living_room_ptz_up', 'unavailable') }}"
+        hidden: true
       button.living_room_ptz_stop:
-        hidden: "{{ is_state('button.living_room_ptz_stop', 'unavailable') }}"
+        hidden: true
       siren.living_room_siren:
-        hidden: "{{ is_state('siren.living_room_siren', 'unavailable') }}"
+        hidden: true
       binary_sensor.living_room_animal:
-        hidden: "{{ is_state('binary_sensor.living_room_animal', 'unavailable') }}"
+        hidden: true
       binary_sensor.living_room_motion:
-        hidden: "{{ is_state('binary_sensor.living_room_motion', 'unavailable') }}"
+        hidden: true
       binary_sensor.living_room_baby_crying:
-        hidden: "{{ is_state('binary_sensor.living_room_baby_crying', 'unavailable') }}"
+        hidden: true
+      binary_sensor.living_room_person:
+        hidden: true
 
     # Hide unavailable entities using card_options templates
     # Note: mushroom-strategy doesn't support domain-level filtering by state
@@ -66,75 +71,80 @@ strategy:
 
     # Quick access cards (between greeting and area cards)
     quick_access_cards:
-      - type: custom:mushroom-title-card
-        title: Quick Access
-      - type: conditional
-        conditions:
-          - condition: state
-            entity: weather.home
-            state: available
+      - type: custom:auto-entities
         card:
-          type: custom:mushroom-weather-card
-          entity: weather.home
-          show_temperature: true
-          show_conditions: true
-          primary_info: state
-          secondary_info: temperature
-      # System Status - commented out as it requires System Health integration
-      # - type: entities
-      #   title: System Status
-      #   entities:
-      #     - entity: sensor.home_assistant_version
-      #       name: Home Assistant
-      #       secondary_info: state
-      #     - entity: binary_sensor.ha_system_health
-      #       name: System Health
-      #       secondary_info: state
-
-    # Custom chips on home view
-    chips:
-      extra_chips:
-          # System Health chip - commented out as it requires System Health integration
-          # - type: entity
-          #   entity: binary_sensor.ha_system_health
-          #   icon: mdi:heart-pulse
-          #   icon_color: |
-          #     {% if is_state('binary_sensor.ha_system_health', 'on') %}
-          #       green
-          #     {% else %}
-          #       red
-          #     {% endif %}
-          #   content_info: none
-          #   tap_action:
-          #     action: navigate
-          #     navigation_path: /config/info
-        - type: entity
-          entity: sun.sun
-          icon: mdi:weather-sunset
-          content_info: elevation
-          tap_action:
-            action: navigate
-            navigation_path: /config/energy
-        - type: conditional
-          conditions:
-            - condition: state
-              entity: alarm_control_panel.home_alarm
-              state: available
-          chip:
-            type: entity
-            entity: alarm_control_panel.home_alarm
-            icon: mdi:shield-home
-            icon_color: |
-              {% if is_state('alarm_control_panel.home_alarm', 'armed_away') %}
-                red
-              {% elif is_state('alarm_control_panel.home_alarm', 'armed_home') %}
-                orange
+          type: entities
+          title: To Work (Atlantic Av - N/Q/D)
+          icon: mdi:briefcase
+          show_header_toggle: false
+        filter:
+          template: |
+            {% set current = states('device_tracker.pixel_9_pro_xl') %}
+            {% set last = states('input_text.alex_last_significant_zone') %}
+            {% if (current == 'home') or (current != 'work' and last == 'home') %}
+              {% if now().weekday() < 5 %}
+              [
+                {% for state in states.sensor -%}
+                  {%- if state.attributes.friendly_name is defined and ('Atlantic Av' in state.attributes.friendly_name or 'Barclays' in state.attributes.friendly_name) and state.attributes.route_id in ['N', 'Q', 'D'] and state.state not in ['unavailable', 'unknown'] -%}
+                    {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                    {%- if headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St') -%}
+                    {
+                      "entity": "{{ state.entity_id }}",
+                      "name": "{{ state.attributes.route_id }} to {{ headsign }}",
+                      "secondary_info": "last-updated"
+                    },
+                    {%- endif -%}
+                  {%- endif -%}
+                {%- endfor %}
+              ]
               {% else %}
-                green
+              []
               {% endif %}
-            content_info: none
-            tap_action:
-              action: toggle
+            {% else %}
+              []
+            {% endif %}
+        show_empty: false
+        sort:
+          method: state
+          numeric: true
+
+      - type: custom:auto-entities
+        card:
+          type: entities
+          title: To Home (57 St - N/Q/R/W)
+          icon: mdi:home
+          show_header_toggle: false
+        filter:
+          template: |
+            {% set current = states('device_tracker.pixel_9_pro_xl') %}
+            {% set last = states('input_text.alex_last_significant_zone') %}
+            {% if (current == 'work') or (current != 'home' and last == 'work') %}
+              {% if now().weekday() < 5 %}
+              [
+                {% for state in states.sensor -%}
+                  {%- if state.attributes.friendly_name is defined and '57 St' in state.attributes.friendly_name and state.attributes.route_id in ['N', 'Q', 'R', 'W'] and state.state not in ['unavailable', 'unknown'] -%}
+                    {%- set headsign = state.attributes.headsign | default('Unknown') -%}
+                    {%- if not headsign is search('Manhattan|Astoria|Forest Hills|Jamaica|96 St|205 St|Wakefield|Harlem|Ditmars|Midtown|Bedford|168 St|57 St|Woodlawn|Eastchester|Dyre|Nereid|145 St|148 St|Court Sq') -%}
+                    {
+                      "entity": "{{ state.entity_id }}",
+                      "name": "{{ state.attributes.route_id }} to {{ headsign }}",
+                      "secondary_info": "last-updated"
+                    },
+                    {%- endif -%}
+                  {%- endif -%}
+                {%- endfor %}
+              ]
+              {% else %}
+              []
+              {% endif %}
+            {% else %}
+              []
+            {% endif %}
+        show_empty: false
+        sort:
+          method: state
+          numeric: true
+
 
     # Extra cards (below area cards)
     extra_cards:
@@ -196,14 +206,110 @@ strategy:
             tap_action:
               action: call-service
               service: scene.turn_on
-              target:
-                entity_id: scene.home_movie
+            target:
+              entity_id: scene.home_movie
+
+      - type: custom:mushroom-title-card
+        title: Latest Pet Detection
+      - type: conditional
+        conditions:
+          - entity: input_text.event_image_location
+            state_not: ""
+          - entity: input_text.event_image_location
+            state_not: "unknown"
+        card:
+          type: markdown
+          content: >
+            {% set loc = states('input_text.event_image_location') %}
+            {% set ts = states('input_text.event_image_timestamp') %}
+            ![Pet](/local/pets/{{ loc }}_{{ ts }}.jpg)
+
+    # Area configuration
+    areas:
+      living_room:
+        name: Living Room
+        icon: mdi:sofa
+        icon_color: blue
+        order: 1
+        extra_cards:
+          - type: custom:auto-entities
+            show_empty: false
+            card:
+              type: entities
+              title: Camera Controls
+              show_header_toggle: false
+            filter:
+              include:
+                - entity_id: button.living_room_guard_go_to
+                - entity_id: button.living_room_ptz_down
+                - entity_id: button.living_room_ptz_left
+                - entity_id: button.living_room_ptz_right
+                - entity_id: button.living_room_ptz_up
+                - entity_id: button.living_room_ptz_stop
+                - entity_id: siren.living_room_siren
+                - entity_id: binary_sensor.living_room_animal
+                - entity_id: binary_sensor.living_room_motion
+                - entity_id: binary_sensor.living_room_baby_crying
+                - entity_id: binary_sensor.living_room_person
+              exclude:
+                - state: "unavailable"
+                - state: "unknown"
+      kitchen:
+        name: Kitchen
+        icon: mdi:silverware-fork-knife
+        icon_color: orange
+        order: 2
+      bathroom:
+        name: Bathroom
+        icon: mdi:shower
+        icon_color: cyan
+        order: 3
+      bedroom:
+        name: Bedroom
+        icon: mdi:bed
+        icon_color: purple
+        order: 4
+        extra_cards:
+          - type: custom:auto-entities
+            show_empty: false
+            card:
+              type: entities
+              title: Camera Controls
+              show_header_toggle: false
+            filter:
+              include:
+                - entity_id: button.bedroom_guard_go_to
+                - entity_id: button.bedroom_ptz_down
+                - entity_id: button.bedroom_ptz_left
+                - entity_id: button.bedroom_ptz_right
+                - entity_id: button.bedroom_ptz_up
+                - entity_id: button.bedroom_ptz_stop
+                - entity_id: siren.bedroom_siren
+                - entity_id: binary_sensor.bedroom_animal
+                - entity_id: binary_sensor.bedroom_motion
+                - entity_id: binary_sensor.bedroom_baby_crying
+                - entity_id: binary_sensor.bedroom_person
+              exclude:
+                - state: "unavailable"
+                - state: "unknown"
+      hallway:
+        name: Hallway
+        icon: mdi:door-open
+        icon_color: amber
+        order: 5
+      # Hide the 'home' area card, but keep the main dashboard view
+      home:
+        hidden: true
 
     # View customizations
     views:
       # Customize default view
-      default:
+      home:
         title: Home
         icon: mdi:home
         path: home
+      # Ensure switch view is visible
+      switch:
+        hidden: false
+
 
