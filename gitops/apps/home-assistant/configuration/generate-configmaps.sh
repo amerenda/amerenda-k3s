@@ -177,3 +177,90 @@ echo "=========================================="
 echo "All ConfigMaps written to: $OUTPUT_DIR"
 echo ""
 
+# Function to validate configuration using Home Assistant Docker image
+validate_config() {
+  echo "=========================================="
+  echo "Validating Home Assistant Configuration"
+  echo "=========================================="
+  
+  if ! command -v docker &> /dev/null; then
+    echo "  ⚠ Docker not found, skipping validation."
+    return 0
+  fi
+
+  echo "  Setting up temporary validation environment..."
+  VDIR=$(mktemp -d)
+  
+  # 1. Create HA directory structure
+  mkdir -p "$VDIR/automations"
+  mkdir -p "$VDIR/scripts"
+  mkdir -p "$VDIR/blueprints/automation/_defaults"
+  mkdir -p "$VDIR/dashboards/views"
+  mkdir -p "$VDIR/helpers/input_boolean"
+  mkdir -p "$VDIR/helpers/input_datetime"
+  mkdir -p "$VDIR/helpers/input_select"
+  mkdir -p "$VDIR/helpers/input_number"
+  mkdir -p "$VDIR/helpers/input_text"
+  mkdir -p "$VDIR/packages"
+  mkdir -p "$VDIR/themes"
+
+  # 2. Copy source files into HA structure
+  [ -d "$CONFIG_DIR/automations" ] && cp -r "$CONFIG_DIR/automations"/* "$VDIR/automations/" 2>/dev/null || true
+  [ -d "$CONFIG_DIR/scripts" ] && cp -r "$CONFIG_DIR/scripts"/* "$VDIR/scripts/" 2>/dev/null || true
+  [ -d "$CONFIG_DIR/blueprints/automation" ] && cp -r "$CONFIG_DIR/blueprints/automation"/* "$VDIR/blueprints/automation/_defaults/" 2>/dev/null || true
+  [ -d "$CONFIG_DIR/dashboards" ] && cp -r "$CONFIG_DIR/dashboards"/* "$VDIR/dashboards/views/" 2>/dev/null || true
+  
+  HELPERS_GENERATED="$CONFIG_DIR/helpers/generated"
+  if [ -d "$HELPERS_GENERATED" ]; then
+    [ -d "$HELPERS_GENERATED/input_boolean" ] && cp -r "$HELPERS_GENERATED/input_boolean"/* "$VDIR/helpers/input_boolean/" 2>/dev/null || true
+    [ -d "$HELPERS_GENERATED/input_datetime" ] && cp -r "$HELPERS_GENERATED/input_datetime"/* "$VDIR/helpers/input_datetime/" 2>/dev/null || true
+    [ -d "$HELPERS_GENERATED/input_select" ] && cp -r "$HELPERS_GENERATED/input_select"/* "$VDIR/helpers/input_select/" 2>/dev/null || true
+    [ -d "$HELPERS_GENERATED/input_number" ] && cp -r "$HELPERS_GENERATED/input_number"/* "$VDIR/helpers/input_number/" 2>/dev/null || true
+    [ -d "$HELPERS_GENERATED/input_text" ] && cp -r "$HELPERS_GENERATED/input_text"/* "$VDIR/helpers/input_text/" 2>/dev/null || true
+  fi
+
+  # 3. Seed required UI files
+  echo "[]" > "$VDIR/automations.yaml"
+  echo "[]" > "$VDIR/scenes.yaml"
+  echo "{}" > "$VDIR/scripts.yaml"
+  [ -f "$CONFIG_DIR/groups.yaml" ] && cp "$CONFIG_DIR/groups.yaml" "$VDIR/groups.yaml" || echo "{}" > "$VDIR/groups.yaml"
+
+  # 4. Generate configuration.yaml (matches deployment.yaml logic)
+  cat > "$VDIR/configuration.yaml" << 'EOF'
+default_config: {}
+frontend:
+  themes: !include_dir_merge_named themes
+automation: !include automations.yaml
+automation manual: !include_dir_list automations
+scene: !include scenes.yaml
+group: !include groups.yaml
+script: !include_dir_merge_named scripts
+input_boolean:  !include_dir_merge_named helpers/input_boolean/
+input_datetime: !include_dir_merge_named helpers/input_datetime/
+input_select:   !include_dir_merge_named helpers/input_select/
+input_number:   !include_dir_merge_named helpers/input_number/
+input_text:     !include_dir_merge_named helpers/input_text/
+homeassistant:
+  packages: !include_dir_named packages
+scheduler: {}
+EOF
+
+  # 5. Run HA config check via Docker
+  echo "  Running Home Assistant config check..."
+  if docker run --rm -v "$VDIR:/config" ghcr.io/home-assistant/home-assistant:stable python3 -m homeassistant --script check_config --config /config; then
+    echo ""
+    echo "  ✓ Configuration validation passed!"
+    echo ""
+    rm -rf "$VDIR"
+    return 0
+  else
+    echo ""
+    echo "  ✖ Configuration validation failed!"
+    echo ""
+    rm -rf "$VDIR"
+    exit 1
+  fi
+}
+
+# Run validation
+validate_config
