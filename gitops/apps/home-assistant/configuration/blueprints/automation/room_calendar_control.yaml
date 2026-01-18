@@ -1,0 +1,35 @@
+blueprint:
+  name: "Room - Calendar Control (Trigger scenes via calendar events)"
+  description: >
+    Triggers lighting scenes based on Local Calendar events. 
+    The event summary should be the slot name (morning, day, evening, night).
+    The event description can contain YAML flags:
+      smooth: true/false
+      auto_on: true/false
+      motion: true/false
+  domain: automation
+  input:
+    room_key:
+      name: Room Key
+      description: "Room name used for calendar entity: calendar.<room_key>_lighting"
+      selector:
+        text: {}
+    target_lights:
+      name: Target Lights
+      description: "Lights to control in this room"
+      selector:
+        target:
+          entity:
+            domain: light
+
+trigger:
+  - platform: calendar
+    event: start
+    entity_id: "calendar.{{ room_key }}_lighting"
+
+action:
+  - service: script.apply_lighting_schedule
+    data:
+      room: !input room_key
+      target_lights: !input target_lights
+      # The script will automatically pick up the active calendar event and its description

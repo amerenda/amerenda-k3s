@@ -3,6 +3,42 @@ kind: ConfigMap
 metadata:
   name: homeassistant-blueprints
 data:
+  room_calendar_control.yaml: |
+    blueprint:
+      name: "Room - Calendar Control (Trigger scenes via calendar events)"
+      description: >
+        Triggers lighting scenes based on Local Calendar events. 
+        The event summary should be the slot name (morning, day, evening, night).
+        The event description can contain YAML flags:
+          smooth: true/false
+          auto_on: true/false
+          motion: true/false
+      domain: automation
+      input:
+        room_key:
+          name: Room Key
+          description: "Room name used for calendar entity: calendar.<room_key>_lighting"
+          selector:
+            text: {}
+        target_lights:
+          name: Target Lights
+          description: "Lights to control in this room"
+          selector:
+            target:
+              entity:
+                domain: light
+    
+    trigger:
+      - platform: calendar
+        event: start
+        entity_id: "calendar.{{ room_key }}_lighting"
+    
+    action:
+      - service: script.apply_lighting_schedule
+        data:
+          room: !input room_key
+          target_lights: !input target_lights
+          # The script will automatically pick up the active calendar event and its description
   room_motion_control.yaml: |
     blueprint:
       name: "Room - Motion Control (scheduled scene, per-window options)"
@@ -615,7 +651,11 @@ data:
       s4: "{{ as_timestamp(today_at(s4_str)) }}"
     
       current_slot: >-
-        {% if now_ts >= s1 and now_ts < s2 %}morning
+        {% set cal_entity = 'calendar.' ~ entity_name ~ '_lighting' %}
+        {% set cal_summary = state_attr(cal_entity, 'message') | lower if is_state(cal_entity, 'on') else '' %}
+        {% if cal_summary in ['morning', 'day', 'evening', 'night'] %}
+          {{ cal_summary }}
+        {% elif now_ts >= s1 and now_ts < s2 %}morning
         {% elif now_ts >= s2 and now_ts < s3 %}day
         {% elif now_ts >= s3 and now_ts < s4 %}evening
         {% else %}night{% endif %}
@@ -719,6 +759,7 @@ data:
                 data:
                   target_lights: >-
                     {{ target_lights_input.entity_id if target_lights_input.entity_id is defined else target_lights_input }}
+                  forced_slot: "{{ current_slot }}"
                   custom_schedule_enabled: "{{ custom_schedule_enabled }}"
                   custom_s1_start: "{{ custom_s1_start }}"
                   custom_s2_start: "{{ custom_s2_start }}"
@@ -730,6 +771,7 @@ data:
             sequence:
               - service: "script.scheduled_light_on"
                 data:
+                  forced_slot: "{{ current_slot }}"
                   custom_schedule_enabled: "{{ custom_schedule_enabled_input }}"
                   custom_s1_start: "{{ custom_s1_start_input }}"
                   custom_s2_start: "{{ custom_s2_start_input }}"
