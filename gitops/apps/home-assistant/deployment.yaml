@@ -157,6 +157,9 @@ spec:
               # Loads default set of integrations. Do not remove.
               default_config: {}
         
+              # HACS Scheduler Component
+              scheduler: {}
+
               # Load frontend themes from the themes folder
               frontend:
                 themes: !include_dir_merge_named themes
@@ -322,7 +325,7 @@ spec:
               topologyKey: kubernetes.io/hostname
       containers:
         - name: homeassistant
-          image: ghcr.io/home-assistant/home-assistant:stable
+          image: ghcr.io/home-assistant/home-assistant:2026.1.2
           imagePullPolicy: IfNotPresent
           securityContext:
             capabilities:

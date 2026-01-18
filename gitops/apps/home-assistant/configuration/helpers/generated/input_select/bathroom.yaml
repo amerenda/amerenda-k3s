@@ -43,3 +43,12 @@ bathroom_scene_cycle:
     - evening
     - night
   initial: morning
+
+bathroom_active_slot:
+  name: Bathroom Active Slot
+  options:
+    - morning
+    - day
+    - evening
+    - night
+  initial: morning

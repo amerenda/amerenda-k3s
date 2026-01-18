@@ -43,3 +43,12 @@
     - evening
     - night
   initial: morning
+
+{{ room }}_active_slot:
+  name: {{ room|replace('_',' ')|title }} Active Slot
+  options:
+    - morning
+    - day
+    - evening
+    - night
+  initial: morning

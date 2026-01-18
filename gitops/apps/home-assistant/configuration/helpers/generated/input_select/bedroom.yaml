@@ -43,3 +43,12 @@ bedroom_scene_cycle:
     - evening
     - night
   initial: morning
+
+bedroom_active_slot:
+  name: Bedroom Active Slot
+  options:
+    - morning
+    - day
+    - evening
+    - night
+  initial: morning

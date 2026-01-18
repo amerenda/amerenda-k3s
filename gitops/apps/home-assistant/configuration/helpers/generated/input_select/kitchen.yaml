@@ -43,3 +43,12 @@ kitchen_scene_cycle:
     - evening
     - night
   initial: morning
+
+kitchen_active_slot:
+  name: Kitchen Active Slot
+  options:
+    - morning
+    - day
+    - evening
+    - night
+  initial: morning

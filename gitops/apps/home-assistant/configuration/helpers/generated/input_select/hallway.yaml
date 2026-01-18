@@ -43,3 +43,12 @@ hallway_scene_cycle:
     - evening
     - night
   initial: morning
+
+hallway_active_slot:
+  name: Hallway Active Slot
+  options:
+    - morning
+    - day
+    - evening
+    - night
+  initial: morning

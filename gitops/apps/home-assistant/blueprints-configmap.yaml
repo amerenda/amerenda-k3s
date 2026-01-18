@@ -615,7 +615,11 @@ data:
       s4: "{{ as_timestamp(today_at(s4_str)) }}"
     
       current_slot: >-
-        {% if now_ts >= s1 and now_ts < s2 %}morning
+        {% set active_slot_helper = 'input_select.' ~ entity_name ~ '_active_slot' %}
+        {% set active_slot = states(active_slot_helper) %}
+        {% if active_slot in ['morning', 'day', 'evening', 'night'] %}
+          {{ active_slot }}
+        {% elif now_ts >= s1 and now_ts < s2 %}morning
         {% elif now_ts >= s2 and now_ts < s3 %}day
         {% elif now_ts >= s3 and now_ts < s4 %}evening
         {% else %}night{% endif %}
@@ -719,6 +723,7 @@ data:
                 data:
                   target_lights: >-
                     {{ target_lights_input.entity_id if target_lights_input.entity_id is defined else target_lights_input }}
+                  forced_slot: "{{ current_slot }}"
                   custom_schedule_enabled: "{{ custom_schedule_enabled }}"
                   custom_s1_start: "{{ custom_s1_start }}"
                   custom_s2_start: "{{ custom_s2_start }}"
@@ -730,6 +735,7 @@ data:
             sequence:
               - service: "script.scheduled_light_on"
                 data:
+                  forced_slot: "{{ current_slot }}"
                   custom_schedule_enabled: "{{ custom_schedule_enabled_input }}"
                   custom_s1_start: "{{ custom_s1_start_input }}"
                   custom_s2_start: "{{ custom_s2_start_input }}"
@@ -1127,14 +1133,9 @@ data:
             {% else %}false{% endif %}
     
       # Call the script which handles: turn on lights if off (if auto_on), apply scene to lights that are on
-      - service: "script.scheduled_light_on"
+      - service: "script.set_lighting_slot"
         data_template:
-          fallback_lights: "{{ _fb_var }}"
-          timer_mode: true
-          auto_on: "{{ slot_auto_on }}"
-          custom_schedule_enabled: "{{ custom_schedule_enabled_input if custom_schedule_enabled_input and custom_schedule_enabled_input != '' and custom_schedule_enabled_input is not none else '' }}"
-          custom_s1_start: "{{ custom_s1_start_input if custom_s1_start_input and custom_s1_start_input != '' and custom_s1_start_input is not none else '' }}"
-          custom_s2_start: "{{ custom_s2_start_input if custom_s2_start_input and custom_s2_start_input != '' and custom_s2_start_input is not none else '' }}"
-          custom_s3_start: "{{ custom_s3_start_input if custom_s3_start_input and custom_s3_start_input != '' and custom_s3_start_input is not none else '' }}"
-          custom_s4_start: "{{ custom_s4_start_input if custom_s4_start_input and custom_s4_start_input != '' and custom_s4_start_input is not none else '' }}"
+          room: "{{ room_key_var }}"
+          slot: "{{ fired_slot }}"
+          apply: true
     

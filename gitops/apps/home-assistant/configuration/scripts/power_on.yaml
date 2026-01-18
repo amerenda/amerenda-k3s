@@ -11,6 +11,7 @@ scheduled_light_on:
     fallback_lights: { required: false }
     timer_mode: { required: false, default: false }
     auto_on: { required: false, default: false }
+    forced_slot: { required: false }
   sequence:
     - variables:
         default_s1: "06:00:00"
@@ -41,7 +42,9 @@ scheduled_light_on:
         s4: "{{ as_timestamp(today_at(s4_str)) }}"
 
         slot: >-
-          {% if now_ts >= s1 and now_ts < s2 %}morning
+          {% if forced_slot is defined and forced_slot in ['morning', 'day', 'evening', 'night'] %}
+            {{ forced_slot }}
+          {% elif now_ts >= s1 and now_ts < s2 %}morning
           {% elif now_ts >= s2 and now_ts < s3 %}day
           {% elif now_ts >= s3 and now_ts < s4 %}evening
           {% else %}night{% endif %}

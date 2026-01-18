@@ -4,6 +4,9 @@ room_toggle:
   fields:
     target_lights:
       description: "Entity or group to control (entity_id, list, or target)"
+    forced_slot:
+      description: "Optional forced slot"
+      required: false
   sequence:
     - variables:
         _ids: >-
@@ -72,3 +75,4 @@ room_toggle:
         - service: "script.scheduled_light_on"
           data:
             fallback_lights: "{{ id_list[0] if id_list|length>0 else '' }}"
+            forced_slot: "{{ forced_slot if forced_slot is defined else '' }}"

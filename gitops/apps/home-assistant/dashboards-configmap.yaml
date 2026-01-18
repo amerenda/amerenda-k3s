@@ -53,27 +53,15 @@ data:
                   {% set next_transition = s1[:5] %}
                   {% set next_slot = 'morning' %}
                 {% endif %}
-                {% set scene_cycle_helper = 'input_select.' ~ room ~ '_scene_cycle' %}
-                {% set scene_cycle = states(scene_cycle_helper) %}
-                {% if scene_cycle and scene_cycle != 'unknown' and scene_cycle != 'unavailable' and scene_cycle in ['morning', 'day', 'evening', 'night'] %}
-                  {% if scene_cycle != scheduled_slot %}
-                    {% set current_slot = scene_cycle %}
-                    {% set is_manual_override = true %}
-                  {% else %}
-                    {% set current_slot = scheduled_slot %}
-                    {% set is_manual_override = false %}
-                  {% endif %}
-                {% else %}
-                  {% set current_slot = scheduled_slot %}
-                  {% set is_manual_override = false %}
-                {% endif %}
+                {% set active_slot_helper = 'input_select.' ~ room ~ '_active_slot' %}
+                {% set active_slot = states(active_slot_helper) %}
                 
-                ### **{{ current_slot|title }} Scene Active**
+                ### **{{ (active_slot if active_slot in valid_slots else scheduled_slot)|title }} Scene Active**
                 
-                {% if is_manual_override %}
-                  *Manual override active*
+                {% if active_slot in valid_slots and active_slot != scheduled_slot %}
+                  *Manual or Scheduler override active*
                 {% else %}
-                  *Scheduled scene*
+                  *Scheduled scene (via fixed times)*
                 {% endif %}
                 
                 Next transition: **{{ next_transition }}** → {{ next_slot|title }}

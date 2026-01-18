@@ -43,3 +43,12 @@ living_room_scene_cycle:
     - evening
     - night
   initial: morning
+
+living_room_active_slot:
+  name: Living Room Active Slot
+  options:
+    - morning
+    - day
+    - evening
+    - night
+  initial: morning

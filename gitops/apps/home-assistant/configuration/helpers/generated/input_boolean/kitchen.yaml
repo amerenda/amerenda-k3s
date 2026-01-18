@@ -43,3 +43,12 @@ motion_activated_kitchen_evening:
   name: Kitchen - Motion Evening Activated
 motion_activated_kitchen_night:
   name: Kitchen - Motion Night Activated
+
+kitchen_morning_smooth:
+  name: Kitchen - Morning Smooth Transition
+kitchen_day_smooth:
+  name: Kitchen - Day Smooth Transition
+kitchen_evening_smooth:
+  name: Kitchen - Evening Smooth Transition
+kitchen_night_smooth:
+  name: Kitchen - Night Smooth Transition

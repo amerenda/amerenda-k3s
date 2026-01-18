@@ -43,3 +43,12 @@ motion_activated_bathroom_evening:
   name: Bathroom - Motion Evening Activated
 motion_activated_bathroom_night:
   name: Bathroom - Motion Night Activated
+
+bathroom_morning_smooth:
+  name: Bathroom - Morning Smooth Transition
+bathroom_day_smooth:
+  name: Bathroom - Day Smooth Transition
+bathroom_evening_smooth:
+  name: Bathroom - Evening Smooth Transition
+bathroom_night_smooth:
+  name: Bathroom - Night Smooth Transition

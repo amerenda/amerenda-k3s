@@ -1,0 +1,117 @@
+apply_lighting_schedule:
+  alias: "Apply Lighting Schedule (Calendar Aware)"
+  description: "Routes lighting requests to the correct script based on calendar event settings or manual overrides"
+  mode: "restart"
+  fields:
+    room:
+      description: "Room key (e.g., bedroom, living_room)"
+      required: true
+      selector:
+        text: {}
+    target_lights:
+      description: "Optional target lights (entity or group). Defaults to light.<room>"
+      required: false
+      selector:
+        target:
+          entity:
+            domain: light
+    forced_slot:
+      description: "Optional forced slot (morning/day/evening/night). If not provided, uses calendar or calculated slot."
+      required: false
+      selector:
+        select:
+          options:
+            - morning
+            - day
+            - evening
+            - night
+    smooth_override:
+      description: "Force smooth transition on/off"
+      required: false
+      selector:
+        boolean: {}
+    auto_on_override:
+      description: "Force auto-on on/off"
+      required: false
+      selector:
+        boolean: {}
+
+  sequence:
+    - variables:
+        # 1. Active Slot Helper
+        active_slot_entity: "input_select.{{ room }}_active_slot"
+        
+        # 2. Parse Description / Settings (For Scheduler, we can pass these as fields or use per-room booleans)
+        # Since Scheduler Card can call services with data, we will favor fields.
+        # But we still want some persistent per-slot settings.
+        
+        # 3. Resolve the Slot
+        # Priority: forced_slot > active_slot helper > calculated fallback
+        active_slot_val: "{{ states(active_slot_entity) }}"
+        valid_slots: ['morning', 'day', 'evening', 'night']
+        
+        resolved_slot: >-
+          {% if forced_slot is defined and forced_slot in valid_slots %}
+            {{ forced_slot }}
+          {% elif active_slot_val in valid_slots %}
+            {{ active_slot_val }}
+          {% else %}
+            {# Fallback to old-style time calculation if no helper state #}
+            {% set s1 = as_timestamp(today_at(states('input_datetime.' ~ room ~ '_s1_start') | default('06:00:00'))) %}
+            {% set s2 = as_timestamp(today_at(states('input_datetime.' ~ room ~ '_s2_start') | default('09:00:00'))) %}
+            {% set s3 = as_timestamp(today_at(states('input_datetime.' ~ room ~ '_s3_start') | default('17:00:00'))) %}
+            {% set s4 = as_timestamp(today_at(states('input_datetime.' ~ room ~ '_s4_start') | default('22:00:00'))) %}
+            {% set now_ts = as_timestamp(now()) %}
+            {% if now_ts >= s1 and now_ts < s2 %}morning
+            {% elif now_ts >= s2 and now_ts < s3 %}day
+            {% elif now_ts >= s3 and now_ts < s4 %}evening
+            {% else %}night{% endif %}
+          {% endif %}
+
+        # 4. Resolve Flags
+        # For Scheduler, we'll use per-room/per-slot helpers for these flags if not provided
+        is_smooth: >-
+          {% if smooth_override is defined %}
+            {{ smooth_override }}
+          {% else %}
+            {{ is_state('input_boolean.' ~ room ~ '_' ~ resolved_slot ~ '_smooth', 'on') }}
+          {% endif %}
+        
+        is_auto_on: >-
+          {% if auto_on_override is defined %}
+            {{ auto_on_override }}
+          {% else %}
+            {{ is_state('input_boolean.auto_on_' ~ room ~ '_' ~ resolved_slot, 'on') }}
+          {% endif %}
+        
+        # 5. Resolve Target Lights
+        final_lights: >-
+          {% if target_lights is defined and target_lights != '' %}
+            {{ target_lights }}
+          {% else %}
+            light.{{ room }}
+          {% endif %}
+
+    # 6. Debug Log
+    - service: logbook.log
+      data:
+        name: "apply_lighting_schedule"
+        message: >-
+          Room: {{ room }}, Slot: {{ resolved_slot }}, Smooth: {{ is_smooth }}, 
+          Auto-On: {{ is_auto_on }}
+
+    # 8. Execute appropriate script
+    - choose:
+        - conditions: "{{ is_smooth | bool }}"
+          sequence:
+            - service: script.smooth_transition
+              data:
+                room: "{{ room }}"
+                target_slot: "{{ resolved_slot }}"
+        - conditions: []
+          sequence:
+            - service: script.scheduled_light_on
+              data:
+                fallback_lights: "{{ final_lights }}"
+                auto_on: "{{ is_auto_on }}"
+                forced_slot: "{{ resolved_slot }}"

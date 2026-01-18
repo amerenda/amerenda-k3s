@@ -43,3 +43,12 @@ motion_activated_living_room_evening:
   name: Living Room - Motion Evening Activated
 motion_activated_living_room_night:
   name: Living Room - Motion Night Activated
+
+living_room_morning_smooth:
+  name: Living Room - Morning Smooth Transition
+living_room_day_smooth:
+  name: Living Room - Day Smooth Transition
+living_room_evening_smooth:
+  name: Living Room - Evening Smooth Transition
+living_room_night_smooth:
+  name: Living Room - Night Smooth Transition

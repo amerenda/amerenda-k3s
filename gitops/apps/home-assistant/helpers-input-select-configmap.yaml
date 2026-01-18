@@ -49,6 +49,15 @@ data:
         - evening
         - night
       initial: morning
+    
+    bathroom_active_slot:
+      name: Bathroom Active Slot
+      options:
+        - morning
+        - day
+        - evening
+        - night
+      initial: morning
   bedroom.yaml: |
     # Template for input_select helpers per room
     # Usage:
@@ -89,6 +98,15 @@ data:
     
     bedroom_scene_cycle:
       name: Bedroom Scene Cycle
+      options:
+        - morning
+        - day
+        - evening
+        - night
+      initial: morning
+    
+    bedroom_active_slot:
+      name: Bedroom Active Slot
       options:
         - morning
         - day
@@ -141,6 +159,15 @@ data:
         - evening
         - night
       initial: morning
+    
+    hallway_active_slot:
+      name: Hallway Active Slot
+      options:
+        - morning
+        - day
+        - evening
+        - night
+      initial: morning
   kitchen.yaml: |
     # Template for input_select helpers per room
     # Usage:
@@ -187,6 +214,15 @@ data:
         - evening
         - night
       initial: morning
+    
+    kitchen_active_slot:
+      name: Kitchen Active Slot
+      options:
+        - morning
+        - day
+        - evening
+        - night
+      initial: morning
   living_room.yaml: |
     # Template for input_select helpers per room
     # Usage:
@@ -227,6 +263,15 @@ data:
     
     living_room_scene_cycle:
       name: Living Room Scene Cycle
+      options:
+        - morning
+        - day
+        - evening
+        - night
+      initial: morning
+    
+    living_room_active_slot:
+      name: Living Room Active Slot
       options:
         - morning
         - day

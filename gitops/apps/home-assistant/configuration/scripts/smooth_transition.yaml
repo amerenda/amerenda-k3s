@@ -436,9 +436,10 @@ smooth_transition:
                                 entity_id: "{{ next_scene }}"
                               data:
                                 transition: "{{ transition_seconds | int }}"
-                            # Update scene cycle helper
+                            # Update scene cycle and active slot helpers
                             - variables:
                                 scene_cycle_helper: "input_select.{{ room }}_scene_cycle"
+                                active_slot_helper: "input_select.{{ room }}_active_slot"
                             - if:
                                 - condition: template
                                   value_template: "{{ scene_cycle_helper in (states.input_select | map(attribute='entity_id') | list) }}"
@@ -446,6 +447,15 @@ smooth_transition:
                                 - service: "input_select.select_option"
                                   target:
                                     entity_id: "{{ scene_cycle_helper }}"
+                                  data:
+                                    option: "{{ next_slot }}"
+                            - if:
+                                - condition: template
+                                  value_template: "{{ active_slot_helper in (states.input_select | map(attribute='entity_id') | list) }}"
+                              then:
+                                - service: "input_select.select_option"
+                                  target:
+                                    entity_id: "{{ active_slot_helper }}"
                                   data:
                                     option: "{{ next_slot }}"
                             - service: "logbook.log"
@@ -539,9 +549,10 @@ smooth_transition:
                             data:
                               brightness: "{{ repeat.item.target_brightness }}"
 
-                    # Update scene cycle helper
+                    # Update scene cycle and active slot helpers
                     - variables:
                         scene_cycle_helper: "input_select.{{ room }}_scene_cycle"
+                        active_slot_helper: "input_select.{{ room }}_active_slot"
                     - if:
                         - condition: template
                           value_template: "{{ scene_cycle_helper in (states.input_select | map(attribute='entity_id') | list) }}"
@@ -549,6 +560,15 @@ smooth_transition:
                         - service: "input_select.select_option"
                           target:
                             entity_id: "{{ scene_cycle_helper }}"
+                          data:
+                            option: "{{ next_slot }}"
+                    - if:
+                        - condition: template
+                          value_template: "{{ active_slot_helper in (states.input_select | map(attribute='entity_id') | list) }}"
+                      then:
+                        - service: "input_select.select_option"
+                          target:
+                            entity_id: "{{ active_slot_helper }}"
                           data:
                             option: "{{ next_slot }}"
 

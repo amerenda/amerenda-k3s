@@ -1,0 +1,27 @@
+set_lighting_slot:
+  alias: "Set Lighting Slot"
+  description: "Sets the active lighting slot for a room and optionally applies it"
+  fields:
+    room:
+      description: "Room key (e.g., bedroom, living_room)"
+      required: true
+    slot:
+      description: "The slot to activate (morning/day/evening/night)"
+      required: true
+    apply:
+      description: "Whether to apply the lighting scene immediately"
+      default: true
+  sequence:
+    - service: input_select.select_option
+      target:
+        entity_id: "input_select.{{ room }}_active_slot"
+      data:
+        option: "{{ slot }}"
+    - if:
+        - condition: template
+          value_template: "{{ apply | default(true) | bool }}"
+      then:
+        - service: script.apply_lighting_schedule
+          data:
+            room: "{{ room }}"
+            forced_slot: "{{ slot }}"

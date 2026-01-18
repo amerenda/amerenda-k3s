@@ -43,3 +43,12 @@ motion_activated_bedroom_evening:
   name: Bedroom - Motion Evening Activated
 motion_activated_bedroom_night:
   name: Bedroom - Motion Night Activated
+
+bedroom_morning_smooth:
+  name: Bedroom - Morning Smooth Transition
+bedroom_day_smooth:
+  name: Bedroom - Day Smooth Transition
+bedroom_evening_smooth:
+  name: Bedroom - Evening Smooth Transition
+bedroom_night_smooth:
+  name: Bedroom - Night Smooth Transition

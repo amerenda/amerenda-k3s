@@ -43,3 +43,12 @@ motion_activated_hallway_evening:
   name: Hallway - Motion Evening Activated
 motion_activated_hallway_night:
   name: Hallway - Motion Night Activated
+
+hallway_morning_smooth:
+  name: Hallway - Morning Smooth Transition
+hallway_day_smooth:
+  name: Hallway - Day Smooth Transition
+hallway_evening_smooth:
+  name: Hallway - Evening Smooth Transition
+hallway_night_smooth:
+  name: Hallway - Night Smooth Transition

@@ -49,6 +49,15 @@ data:
       name: Bathroom - Motion Evening Activated
     motion_activated_bathroom_night:
       name: Bathroom - Motion Night Activated
+    
+    bathroom_morning_smooth:
+      name: Bathroom - Morning Smooth Transition
+    bathroom_day_smooth:
+      name: Bathroom - Day Smooth Transition
+    bathroom_evening_smooth:
+      name: Bathroom - Evening Smooth Transition
+    bathroom_night_smooth:
+      name: Bathroom - Night Smooth Transition
   bedroom.yaml: |
     # Template for input_boolean helpers per room
     # Usage:
@@ -95,6 +104,15 @@ data:
       name: Bedroom - Motion Evening Activated
     motion_activated_bedroom_night:
       name: Bedroom - Motion Night Activated
+    
+    bedroom_morning_smooth:
+      name: Bedroom - Morning Smooth Transition
+    bedroom_day_smooth:
+      name: Bedroom - Day Smooth Transition
+    bedroom_evening_smooth:
+      name: Bedroom - Evening Smooth Transition
+    bedroom_night_smooth:
+      name: Bedroom - Night Smooth Transition
   hallway.yaml: |
     # Template for input_boolean helpers per room
     # Usage:
@@ -141,6 +159,15 @@ data:
       name: Hallway - Motion Evening Activated
     motion_activated_hallway_night:
       name: Hallway - Motion Night Activated
+    
+    hallway_morning_smooth:
+      name: Hallway - Morning Smooth Transition
+    hallway_day_smooth:
+      name: Hallway - Day Smooth Transition
+    hallway_evening_smooth:
+      name: Hallway - Evening Smooth Transition
+    hallway_night_smooth:
+      name: Hallway - Night Smooth Transition
   kitchen.yaml: |
     # Template for input_boolean helpers per room
     # Usage:
@@ -187,6 +214,15 @@ data:
       name: Kitchen - Motion Evening Activated
     motion_activated_kitchen_night:
       name: Kitchen - Motion Night Activated
+    
+    kitchen_morning_smooth:
+      name: Kitchen - Morning Smooth Transition
+    kitchen_day_smooth:
+      name: Kitchen - Day Smooth Transition
+    kitchen_evening_smooth:
+      name: Kitchen - Evening Smooth Transition
+    kitchen_night_smooth:
+      name: Kitchen - Night Smooth Transition
   living_room.yaml: |
     # Template for input_boolean helpers per room
     # Usage:
@@ -233,3 +269,12 @@ data:
       name: Living Room - Motion Evening Activated
     motion_activated_living_room_night:
       name: Living Room - Motion Night Activated
+    
+    living_room_morning_smooth:
+      name: Living Room - Morning Smooth Transition
+    living_room_day_smooth:
+      name: Living Room - Day Smooth Transition
+    living_room_evening_smooth:
+      name: Living Room - Evening Smooth Transition
+    living_room_night_smooth:
+      name: Living Room - Night Smooth Transition
