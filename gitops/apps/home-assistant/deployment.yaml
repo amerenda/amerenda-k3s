@@ -322,7 +322,7 @@ spec:
               topologyKey: kubernetes.io/hostname
       containers:
         - name: homeassistant
-          image: ghcr.io/home-assistant/home-assistant:stable
+          image: ghcr.io/home-assistant/home-assistant:2026.1.2
           imagePullPolicy: IfNotPresent
           securityContext:
             capabilities:
