@@ -23,9 +23,9 @@ spec:
       dnsPolicy: "None"
       dnsConfig:
         nameservers:
+          - "10.100.20.240"
           - "10.100.20.241"
           - "8.8.8.8"
-          - "1.1.1.1"
         searches:
           - "amer.home"
           - "merenda.home.arpa"

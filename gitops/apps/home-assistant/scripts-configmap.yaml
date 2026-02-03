@@ -286,7 +286,8 @@ data:
           data:
             name: "scheduled_light_on"
             message: >-
-              Script called: timer_mode={{ timer_mode | default('NOT_SET') }}, 
+              SCRIPT_START: timestamp={{ now().isoformat() }},
+              timer_mode={{ timer_mode | default('NOT_SET') }}, 
               fallback_lights={{ fallback_lights | default('NOT_SET') }}, 
               scene={{ scene_to_activate }}, scene_exists={{ scene_exists }}, 
               lights_on_check={{ lights_on_check }}

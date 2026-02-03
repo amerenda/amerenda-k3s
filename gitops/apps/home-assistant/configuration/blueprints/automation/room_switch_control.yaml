@@ -354,8 +354,9 @@ action:
     data:
       name: "room_switch_control"
       message: >-
-        Trigger {{ trigger.id }} mapped for lights {{ target_lights_input }}.
-        Entity name: {{ entity_name }}.
+        TRIGGER_RECEIVED: id={{ trigger.id }} for {{ target_lights_input }}.
+        timestamp={{ now().isoformat() }}
+        entity_name: {{ entity_name }}.
 
   # Resolve which logical action to run for this trigger
   - variables:
