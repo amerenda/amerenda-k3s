@@ -26,7 +26,7 @@ serviceWeb:
 persistentVolumeClaim:
   enabled: true
   storageClass: longhorn
-  accessModes: [ReadWriteMany]
+  accessModes: [ReadWriteOnce]
   size: 10Gi
 
 # DNS Configuration

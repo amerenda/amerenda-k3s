@@ -55,7 +55,6 @@ extraArgs:
   - --rfc2136-port=53
   - --rfc2136-zone=amer.home
   - --rfc2136-tsig-secret-alg=hmac-sha256
-  - --rfc2136-tsig-axfr
 
 # Environment variables for TSIG secret
 env:
@@ -85,7 +84,7 @@ sources:
 policy: sync
 
 # Additional optimization settings
-minEventSyncInterval: 1m
+minEventSyncInterval: 5m
 
 # TXT record configuration
 txtOwnerId: "external-dns"
