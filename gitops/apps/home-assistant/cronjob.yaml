@@ -67,6 +67,13 @@ spec:
     spec:
       template:
         spec:
+          affinity:
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchLabels:
+                      app: homeassistant
+                  topologyKey: kubernetes.io/hostname
           dnsPolicy: "None"
           dnsConfig:
             nameservers:
