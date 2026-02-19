@@ -5,7 +5,8 @@ metadata:
   namespace: home-assistant
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
+  volumeName: pvc-ae3f90ab-68e9-46f9-9c3f-afcf3b01d34e
   resources:
     requests:
       storage: 10Gi
