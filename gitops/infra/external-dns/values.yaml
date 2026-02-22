@@ -84,7 +84,8 @@ sources:
 # sync: Creates, updates, and deletes DNS records to match Kubernetes resources
 policy: sync
 
-# Additional optimization settings
+# Sync intervals
+interval: 5m
 minEventSyncInterval: 5m
 
 # TXT record configuration
