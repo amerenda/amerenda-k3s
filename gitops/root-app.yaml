@@ -178,8 +178,7 @@ spec:
         maxDuration: 3m
 
 ---
-# Infrastructure: Monitoring Stack
-# TODO: Update path if your monitoring manifests are in a different location
+# Infrastructure: Monitoring Stack (Prometheus + Grafana)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -191,10 +190,16 @@ metadata:
     - resources-finalizer.argocd.argoproj.io/background
 spec:
   project: infra
-  source:
-    repoURL: https://github.com/amerenda/amerenda-k3s.git
-    targetRevision: main
-    path: gitops/infra/monitoring
+  sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: "82.1.0"
+      helm:
+        valueFiles:
+          - $values/gitops/infra/monitoring/values.yaml
+    - repoURL: https://github.com/amerenda/amerenda-k3s.git
+      targetRevision: main
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
@@ -203,7 +208,9 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
+      - CreateNamespace=true
       - PrunePropagationPolicy=foreground
+      - ServerSideApply=true
     retry:
       limit: 5
       backoff:
