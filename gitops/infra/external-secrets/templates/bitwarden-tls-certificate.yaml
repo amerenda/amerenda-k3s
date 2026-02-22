@@ -9,6 +9,9 @@ metadata:
     argocd.argoproj.io/sync-wave: "1"
 spec:
   secretName: bitwarden-tls-certs
+  secretTemplate:
+    annotations:
+      reloader.stakater.com/match: "true"
   issuerRef:
     name: selfsigned-issuer
     kind: ClusterIssuer

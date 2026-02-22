@@ -1,6 +1,18 @@
 # External Secrets Operator Helm Chart Values
 # This file contains the configuration for the External Secrets Operator with Bitwarden SecretStore
 
+# Reloader: restart ESO when bitwarden-tls-certs secret changes (e.g. cert renewal)
+deploymentAnnotations:
+  reloader.stakater.com/search: "true"
+extraVolumes:
+  - name: bitwarden-tls-certs
+    secret:
+      secretName: bitwarden-tls-certs
+extraVolumeMounts:
+  - name: bitwarden-tls-certs
+    mountPath: /etc/bitwarden-ca
+    readOnly: true
+
 # Bitwarden SecretStore configuration
 remoteRef:
   accessToken: "bitwarden-access-token"
@@ -9,6 +21,9 @@ remoteRef:
 # Enable Bitwarden SDK Server
 bitwarden-sdk-server:
   enabled: true
+  # Reloader: restart SDK server when bitwarden-tls-certs secret changes (e.g. cert renewal)
+  deploymentAnnotations:
+    secret.reloader.stakater.com/reload: "bitwarden-tls-certs"
   # Enable TLS for secure communication
   tls:
     enabled: true
