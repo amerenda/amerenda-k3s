@@ -25,14 +25,10 @@ prometheus:
             requests:
               storage: 10Gi
 
-# --- Grafana ---
+# --- Grafana (ClusterIP; exposed via Ingress with TLS below) ---
 grafana:
   service:
-    type: LoadBalancer
-    annotations:
-      external-dns.alpha.kubernetes.io/hostname: grafana.amer.home
-      external-dns.alpha.kubernetes.io/ttl: "1"
-      metallb.universe.tf/loadBalancerIPs: "10.100.20.205"
+    type: ClusterIP
   persistence:
     enabled: true
     storageClassName: longhorn
@@ -60,6 +56,11 @@ prometheusOperator:
 
 # --- node-exporter ---
 prometheus-node-exporter:
+  tolerations:
+    - key: "longhorn"
+      operator: "Equal"
+      value: "true"
+      effect: "NoSchedule"
   resources:
     requests:
       cpu: 50m

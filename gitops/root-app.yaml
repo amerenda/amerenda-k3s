@@ -200,6 +200,9 @@ spec:
     - repoURL: https://github.com/amerenda/amerenda-k3s.git
       targetRevision: main
       ref: values
+    - repoURL: https://github.com/amerenda/amerenda-k3s.git
+      targetRevision: main
+      path: gitops/infra/monitoring/ingress
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring

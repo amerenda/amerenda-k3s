@@ -16,5 +16,5 @@ AlertManager is disabled.
 
 | Service | Address |
 |---------|---------|
-| Grafana | `http://grafana.amer.home` (10.100.20.205) |
+| Grafana | `https://grafana.amer.home` (via Traefik Ingress, TLS) |
 | Prometheus | ClusterIP only (internal) |
