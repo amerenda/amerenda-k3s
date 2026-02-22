@@ -55,6 +55,7 @@ service:
   annotations:
     external-dns.alpha.kubernetes.io/hostname: traefik.amer.home
     external-dns.alpha.kubernetes.io/ttl: "3600"
+    metallb.universe.tf/loadBalancerIPs: "10.100.20.203"
 
 # Pod disruption budget for high availability
 podDisruptionBudget:
