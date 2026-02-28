@@ -36,6 +36,9 @@ grafana:
   sidecar:
     datasources:
       url: http://prometheus-infra-monitoring-kube-prom-prometheus.monitoring:9090/
+  # Recreate strategy so only one pod uses the RWO PVC at a time (avoids Multi-Attach)
+  deploymentStrategy:
+    type: Recreate
   service:
     type: ClusterIP
   persistence:
