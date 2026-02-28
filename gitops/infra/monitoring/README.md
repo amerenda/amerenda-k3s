@@ -19,6 +19,8 @@ AlertManager is disabled.
 | Grafana | `https://grafana.amer.home` (via Traefik Ingress, TLS) |
 | Prometheus | ClusterIP only (internal) |
 
+Grafana’s Prometheus datasource is set to `http://prometheus-infra-monitoring-kube-prom-prometheus.monitoring:9090/`. If dashboards show no data, check in Grafana: Configuration → Data sources → Prometheus that the URL is correct and “Save & test” succeeds.
+
 ### Grafana login
 
 - **Username:** `admin`

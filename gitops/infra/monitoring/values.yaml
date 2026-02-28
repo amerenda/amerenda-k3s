@@ -32,6 +32,10 @@ grafana:
     server:
       root_url: https://grafana.amer.home
       domain: grafana.amer.home
+  # Explicit Prometheus URL so Grafana can reach Prometheus (chart default can be wrong)
+  sidecar:
+    datasources:
+      url: http://prometheus-infra-monitoring-kube-prom-prometheus.monitoring:9090/
   service:
     type: ClusterIP
   persistence:
