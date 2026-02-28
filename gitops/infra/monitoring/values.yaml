@@ -35,7 +35,7 @@ grafana:
   # Explicit Prometheus URL so Grafana can reach Prometheus (chart default can be wrong)
   sidecar:
     datasources:
-      url: http://prometheus-infra-monitoring-kube-prom-prometheus.monitoring:9090/
+      url: http://prometheus-infra-monitoring-kube-prom-prometheus.monitoring.svc.cluster.local:9090/
   # Recreate strategy so only one pod uses the RWO PVC at a time (avoids Multi-Attach)
   deploymentStrategy:
     type: Recreate
@@ -92,6 +92,7 @@ kube-state-metrics:
       memory: 128Mi
 
 # --- Disabled K3s-inaccessible components ---
+# K3s binds these to localhost; Prometheus cannot scrape them from the cluster.
 kubeProxy:
   enabled: false
 kubeEtcd:
@@ -100,3 +101,11 @@ kubeScheduler:
   enabled: false
 kubeControllerManager:
   enabled: false
+# Kubelet metrics (port 10250) are not reachable from pods on K3s; use node-exporter for node metrics.
+kubelet:
+  enabled: true
+  serviceMonitor:
+    enabled: false
+defaultRules:
+  rules:
+    kubelet: false

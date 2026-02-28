@@ -6,7 +6,7 @@ Cluster monitoring via [kube-prometheus-stack](https://github.com/prometheus-com
 
 - **Prometheus** -- metrics collection and storage (7-day retention, 10Gi Longhorn PVC)
 - **Grafana** -- dashboards and visualization at `http://grafana.amer.home`
-- **node-exporter** -- host-level metrics (CPU, memory, disk, network) per node
+- **node-exporter** -- host-level metrics (CPU, memory, disk, network) per node (kubelet scrape disabled on K3s; use this for node metrics)
 - **kube-state-metrics** -- Kubernetes object metrics (pods, deployments, nodes)
 - **Prometheus Operator** -- manages Prometheus and ServiceMonitor CRDs
 
@@ -21,7 +21,7 @@ AlertManager is disabled.
 
 Grafana uses a **Recreate** deployment strategy (not RollingUpdate) so only one pod uses the RWO PVC at a time, avoiding “Multi-Attach” errors. If a rollout is stuck with that error, delete the old Grafana pod so the new one can attach the volume.
 
-Grafana’s Prometheus datasource is set to `http://prometheus-infra-monitoring-kube-prom-prometheus.monitoring:9090/`. If dashboards show no data, check in Grafana: Configuration → Data sources → Prometheus that the URL is correct and “Save & test” succeeds.
+Grafana’s Prometheus datasource is set to `http://prometheus-infra-monitoring-kube-prom-prometheus.monitoring.svc.cluster.local:9090/`. If dashboards show no data, check in Grafana: Configuration → Data sources → Prometheus that the URL is correct and “Save & test” succeeds.
 
 ### Grafana login
 
