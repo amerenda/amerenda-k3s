@@ -27,6 +27,11 @@ prometheus:
 
 # --- Grafana (ClusterIP; exposed via Ingress with TLS below) ---
 grafana:
+  # Required for browser login when accessed via Ingress (cookies/redirects)
+  grafana.ini:
+    server:
+      root_url: https://grafana.amer.home
+      domain: grafana.amer.home
   service:
     type: ClusterIP
   persistence:
