@@ -21,7 +21,7 @@ AlertManager is disabled.
 
 Grafana uses a **Recreate** deployment strategy (not RollingUpdate) so only one pod uses the RWO PVC at a time, avoiding “Multi-Attach” errors. If a rollout is stuck with that error, delete the old Grafana pod so the new one can attach the volume.
 
-Grafana’s Prometheus datasource is set to `http://prometheus-infra-monitoring-kube-prom-prometheus:9090` (same namespace, short name). If dashboards show no data, check in Grafana: Configuration → Data sources → Prometheus that the URL is correct and “Save & test” succeeds.
+Grafana’s Prometheus datasource is set to `http://infra-monitoring-kube-prom-prometheus:9090` (Prometheus service in same namespace). If dashboards show no data, check in Grafana: Configuration → Data sources → Prometheus that the URL is correct and “Save & test” succeeds.
 
 ### Grafana login
 
