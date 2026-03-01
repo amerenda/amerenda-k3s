@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-app-unifi-network-application
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+  annotations:
+    grafana_folder: Apps
+data:
+  app-unifi-network-application.json: |
+    {"annotations":{"list":[]},"editable":true,"fiscalYearStartMonth":0,"graphTooltip":0,"id":null,"links":[],"liveNow":false,"panels":[{"datasource":{"type":"grafana","uid":"-- Grafana --"},"gridPos":{"h":4,"w":24,"x":0,"y":0},"id":1,"options":{"content":"# UniFi Network Application\n\nUniFi controller. Add panels for UniFi/pod metrics for the unifi namespace.","mode":"markdown"},"title":"Overview","type":"text"}],"refresh":"30s","schemaVersion":38,"style":"dark","tags":["app"],"templating":{"list":[]},"time":{"from":"now-1h","to":"now"},"timepicker":{},"timezone":"","title":"App: UniFi Network Application","uid":"app-unifi-network-application","version":1}

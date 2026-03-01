@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-infra-cert-manager
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+  annotations:
+    grafana_folder: Infra
+data:
+  infra-cert-manager.json: |
+    {"annotations":{"list":[]},"editable":true,"fiscalYearStartMonth":0,"graphTooltip":0,"id":null,"links":[],"liveNow":false,"panels":[{"datasource":{"type":"grafana","uid":"-- Grafana --"},"gridPos":{"h":4,"w":24,"x":0,"y":0},"id":1,"options":{"content":"# cert-manager\n\nCertificate management (e.g. Let's Encrypt). Add panels for cert-manager controller metrics if ServiceMonitor is configured.","mode":"markdown"},"title":"Overview","type":"text"}],"refresh":"30s","schemaVersion":38,"style":"dark","tags":["infra"],"templating":{"list":[]},"time":{"from":"now-1h","to":"now"},"timepicker":{},"timezone":"","title":"Infra: cert-manager","uid":"infra-cert-manager","version":1}

@@ -35,7 +35,6 @@ grafana:
   # Explicit Prometheus URL so Grafana can reach Prometheus (chart default can be wrong)
   sidecar:
     datasources:
-      # Prometheus service name (from kubectl get svc -n monitoring)
       url: "http://infra-monitoring-kube-prom-prometheus:9090"
   # Recreate strategy so only one pod uses the RWO PVC at a time (avoids Multi-Attach)
   deploymentStrategy:

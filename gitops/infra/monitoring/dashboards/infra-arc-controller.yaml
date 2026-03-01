@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-infra-arc-controller
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+  annotations:
+    grafana_folder: Infra
+data:
+  infra-arc-controller.json: |
+    {"annotations":{"list":[]},"editable":true,"fiscalYearStartMonth":0,"graphTooltip":0,"id":null,"links":[],"liveNow":false,"panels":[{"datasource":{"type":"grafana","uid":"-- Grafana --"},"gridPos":{"h":4,"w":24,"x":0,"y":0},"id":1,"options":{"content":"# ARC (Actions Runner Controller)\n\nGitHub Actions runner scale sets. Add panels for controller/runner metrics if exposed.","mode":"markdown"},"title":"Overview","type":"text"}],"refresh":"30s","schemaVersion":38,"style":"dark","tags":["infra"],"templating":{"list":[]},"time":{"from":"now-1h","to":"now"},"timepicker":{},"timezone":"","title":"Infra: ARC Controller","uid":"infra-arc-controller","version":1}

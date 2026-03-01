@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-infra-external-dns
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+  annotations:
+    grafana_folder: Infra
+data:
+  infra-external-dns.json: |
+    {"annotations":{"list":[]},"editable":true,"fiscalYearStartMonth":0,"graphTooltip":0,"id":null,"links":[],"liveNow":false,"panels":[{"datasource":{"type":"grafana","uid":"-- Grafana --"},"gridPos":{"h":4,"w":24,"x":0,"y":0},"id":1,"options":{"content":"# External DNS\n\nSyncs Ingress/Service DNS to BIND9 (TSIG). Add panels for external-dns metrics if ServiceMonitor is configured.","mode":"markdown"},"title":"Overview","type":"text"}],"refresh":"30s","schemaVersion":38,"style":"dark","tags":["infra"],"templating":{"list":[]},"time":{"from":"now-1h","to":"now"},"timepicker":{},"timezone":"","title":"Infra: External DNS","uid":"infra-external-dns","version":1}
