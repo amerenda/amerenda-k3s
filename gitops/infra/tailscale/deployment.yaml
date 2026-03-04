@@ -60,6 +60,16 @@ spec:
         app: tailscale
     spec:
       serviceAccountName: tailscale
+      # Use Pi-hole for DNS so .amer.home names resolve correctly through the exit node.
+      # Pi-hole forwards .amer.home to BIND9 (10.100.20.241) internally.
+      dnsPolicy: None
+      dnsConfig:
+        nameservers:
+          - 10.100.20.240  # Pi-hole
+        searches:
+          - default.svc.cluster.local
+          - svc.cluster.local
+          - cluster.local
       # Prefer spreading replicas across nodes, but allow scheduling to proceed during updates
       affinity:
         podAntiAffinity:
@@ -90,8 +100,6 @@ spec:
           value: "false"
         - name: TS_STATE_DIR
           value: "/var/lib/tailscale"
-        - name: TS_USERSPACE
-          value: "true"
         - name: TS_ACCEPT_DNS
           value: "true"
         - name: TS_EXTRA_ARGS
@@ -117,7 +125,7 @@ spec:
           # Enable IP forwarding for exit node
           sysctl -w net.ipv4.ip_forward=1
           sysctl -w net.ipv6.conf.all.forwarding=1
-          tailscaled --state=/var/lib/tailscale/tailscaled.state --statedir=/var/lib/tailscale --tun=userspace-networking &
+          tailscaled --state=/var/lib/tailscale/tailscaled.state --statedir=/var/lib/tailscale &
           PID=$!
           sleep 5
           if ! tailscale up --authkey="${TS_AUTHKEY}" --hostname="${TS_HOSTNAME}" --advertise-routes=10.100.20.0/24 --advertise-exit-node --accept-dns=true --reset=false; then
