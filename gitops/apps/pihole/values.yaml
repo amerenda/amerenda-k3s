@@ -76,4 +76,42 @@ resources:
 
 
 
+# Allowlist — domains Pi-hole should never block
+whitelist:
+  # Paramount+ - Core streaming / auth
+  - paramountplus.com
+  - cbsinteractive.com
+  - cbsivideo.com
+  - cbsi.com
+  # Paramount+ - CDN / video delivery
+  - airspace-cdn.cbsivideo.com
+  - airspace-f.cbsivideo.com
+  # Paramount+ - Analytics (required for playback)
+  - cbsinteractive.hb.omtrdc.net
+  - cbsi.com.ssl.sc.omtrdc.net
+  - doppler-client-events.cbsivideo.com
+  - doppler-tasks.cbsivideo.com
+  # Paramount+ - Ad infrastructure (required to unblock video)
+  - pubads.g.doubleclick.net
+  - s0.2mdn.net
+  - imasdk.googleapis.com
+  # Paramount+ - Measurement / metrics
+  - scorecardresearch.com
+  - conviva.com
+  - bam.nr-data.net
+  # Google Home / Chromecast - Connectivity and casting
+  - connectivitycheck.gstatic.com
+  - gstatic.com
+  - googleapis.com
+  - clients1.google.com
+  - clients2.google.com
+  - clients3.google.com
+  - clients4.google.com
+  - accounts.google.com
+  # Google Home / Chromecast - Device setup / discovery
+  - cloudconfig.googleapis.com
+  - notifications.google.com
+  - gcm.googleapis.com
+  - gcm-http.googleapis.com
+
 # Cloudflare for everything else
