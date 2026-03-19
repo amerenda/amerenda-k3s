@@ -79,6 +79,7 @@ sources:
   - node
   - pod
   - ingress
+  - crd
 
 # Policy for DNS record management
 # sync: Creates, updates, and deletes DNS records to match Kubernetes resources
