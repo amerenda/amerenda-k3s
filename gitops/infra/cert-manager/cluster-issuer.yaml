@@ -16,11 +16,3 @@ spec:
           tokenSecretRef:
             name: do-dns-api-key
             key: api-key
-      selector:
-        dnsNames:
-        - "*.alexmerenda.dev"
-        - "*.amer.dev"
-        - "*.amerenda.dev"
-        - "alexmerenda.dev"
-        - "amer.dev"
-        - "amerenda.dev"
