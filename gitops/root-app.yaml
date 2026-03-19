@@ -660,6 +660,39 @@ spec:
         maxDuration: 3m
 
 ---
+# Infrastructure: amer.dev Ingresses (ArgoCD + Longhorn, both in default namespace)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra-ingresses
+  namespace: default
+  annotations:
+    argocd.argoproj.io/sync-wave: "21"  # After cert-manager-external (needs letsencrypt-prod ClusterIssuer)
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: infra
+  source:
+    repoURL: https://github.com/amerenda/amerenda-k3s.git
+    targetRevision: main
+    path: gitops/infra/ingresses
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+---
 # Infrastructure: Reloader
 apiVersion: argoproj.io/v1alpha1
 kind: Application
