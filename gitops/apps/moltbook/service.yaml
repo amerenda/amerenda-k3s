@@ -1,0 +1,27 @@
+---
+# Headless service — no selector, routes to explicit Endpoints below
+apiVersion: v1
+kind: Service
+metadata:
+  name: moltbook
+  namespace: moltbook
+spec:
+  ports:
+    - name: http
+      port: 3002
+      targetPort: 3002
+  type: ClusterIP
+
+---
+# Endpoints pointing at murderbot (10.100.20.19:3002) on the same LAN
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: moltbook
+  namespace: moltbook
+subsets:
+  - addresses:
+      - ip: 10.100.20.19
+    ports:
+      - name: http
+        port: 3002
