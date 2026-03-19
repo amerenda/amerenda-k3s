@@ -48,6 +48,7 @@ globalArguments:
 additionalArguments:
   - "--serversTransport.insecureSkipVerify=true"
   - "--providers.kubernetesingress.ingressClass=infra-traefik"
+  - "--providers.kubernetesingress.allowExternalNameServices=true"
 
 # Service configuration
 service:
