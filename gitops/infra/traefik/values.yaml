@@ -60,8 +60,7 @@ service:
 
 # Pod disruption budget for high availability
 podDisruptionBudget:
-  enabled: true
-  minAvailable: 1
+  enabled: false
 
 # Node selector for Raspberry Pi nodes
 nodeSelector:
