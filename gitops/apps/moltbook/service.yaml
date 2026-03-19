@@ -1,34 +1,16 @@
 ---
-# Headless service — no selector, routes to explicit EndpointSlice below
+# ExternalName service — Kubernetes returns a CNAME to murderbot.amer.home,
+# which BIND9 resolves to 10.100.20.19. No Endpoints or EndpointSlice needed.
 apiVersion: v1
 kind: Service
 metadata:
   name: moltbook
   namespace: moltbook
 spec:
+  type: ExternalName
+  externalName: murderbot.amer.home
   ports:
     - name: http
       port: 3002
       targetPort: 3002
       protocol: TCP
-  type: ClusterIP
-
----
-# EndpointSlice pointing at murderbot (10.100.20.19:3002) on the LAN.
-# Using EndpointSlice instead of Endpoints because ArgoCD excludes the
-# legacy Endpoints resource from management by default.
-apiVersion: discovery.k8s.io/v1
-kind: EndpointSlice
-metadata:
-  name: moltbook
-  namespace: moltbook
-  labels:
-    kubernetes.io/service-name: moltbook
-addressType: IPv4
-endpoints:
-  - addresses:
-      - "10.100.20.19"
-ports:
-  - name: http
-    port: 3002
-    protocol: TCP
