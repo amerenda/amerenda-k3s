@@ -56,13 +56,23 @@ containerMode:
 # Template specification for runner pods
 template:
   spec:
-    # Security context for runner pods
-    # Note: Init containers need root access for volume setup
-    # The chart will set appropriate security contexts for dind containers
-    # We only set fsGroup to ensure volumes have correct permissions
-    # Init containers will run as root (default), runner container will inherit from chart defaults
     securityContext:
       fsGroup: 1000
+    containers:
+      - name: runner
+        env:
+          - name: DOCKERHUB_USERNAME
+            value: "amerenda"
+          - name: DOCKERHUB_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: runner-ci-credentials
+                key: DOCKERHUB_TOKEN
+          - name: GITHUB_DEPLOY_PAT
+            valueFrom:
+              secretKeyRef:
+                name: runner-ci-credentials
+                key: GITHUB_DEPLOY_PAT
 
 # Namespace override
 namespaceOverride: arc-runners
