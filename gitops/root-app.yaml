@@ -299,6 +299,16 @@ spec:
         duration: 5s
         factor: 2
         maxDuration: 3m
+  # The mojo2600/pihole chart hardcodes kubernetes.io/arch: arm64 in nodeSelector.
+  # We override it to {} in values.yaml but Helm's `with` block treats empty as falsy,
+  # so the chart's default wins. Ignore the field so our manual patch (no nodeSelector)
+  # is not overwritten by ArgoCD selfHeal.
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    name: app-pihole
+    jsonPointers:
+    - /spec/template/spec/nodeSelector
 
 ---
 # Application: Home Assistant
