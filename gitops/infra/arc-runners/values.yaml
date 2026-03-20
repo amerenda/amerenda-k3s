@@ -2,8 +2,8 @@
 # Deploy ARC runner scale set to arc-runners namespace
 # Based on: https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/quickstart
 
-# GitHub configuration - repository-level (required for personal accounts)
-githubConfigUrl: "https://github.com/amerenda/amerenda-k3s"
+# GitHub configuration - user-level so all amerenda/* repos can use this runner
+githubConfigUrl: "https://github.com/amerenda"
 
 # Runner scale set name (used as runs-on in workflows)
 # This must match the runs-on label in GitHub Actions workflows
