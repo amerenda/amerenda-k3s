@@ -8,7 +8,7 @@ metadata:
   namespace: moltbook
 spec:
   type: ExternalName
-  externalName: murderbot.amer.home
+  externalName: murderbot.amer.dev
   ports:
     - name: http
       port: 3002
