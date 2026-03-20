@@ -1,16 +1,29 @@
 ---
-# ExternalName service — Kubernetes returns a CNAME to murderbot.amer.home,
-# which BIND9 resolves to 10.100.20.19. No Endpoints or EndpointSlice needed.
+# ClusterIP service with explicit Endpoints — routes directly to murderbot at 10.100.20.19:3002.
+# Avoids DNS-based ExternalName which was intermittently failing because cluster nodes forward
+# to both 1.1.1.1 and 8.8.8.8 and the latter had a 30-min negative cache for murderbot.amer.dev.
 apiVersion: v1
 kind: Service
 metadata:
   name: moltbook
   namespace: moltbook
 spec:
-  type: ExternalName
-  externalName: murderbot.amer.dev
+  type: ClusterIP
   ports:
     - name: http
       port: 3002
       targetPort: 3002
       protocol: TCP
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: moltbook
+  namespace: moltbook
+subsets:
+  - addresses:
+      - ip: "10.100.20.19"
+    ports:
+      - name: http
+        port: 3002
+        protocol: TCP
