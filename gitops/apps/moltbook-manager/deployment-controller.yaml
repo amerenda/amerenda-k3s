@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moltbook-controller
+  namespace: moltbook-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moltbook-controller
+  template:
+    metadata:
+      labels:
+        app: moltbook-controller
+    spec:
+      # Must run on murderbot to reach localhost:8081 and docker socket
+      nodeSelector:
+        kubernetes.io/hostname: murderbot
+
+      # Share host network so the pod can reach localhost:8081 (backend)
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+
+      containers:
+        - name: controller
+          image: amerenda/k3s-images:moltbook-controller-PLACEHOLDER
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8082
+              hostPort: 8082
+          env:
+            - name: BACKEND_URL
+              value: "http://localhost:8081"
+            - name: COMPOSE_FILE
+              value: "/moltbook/docker-compose.yml"
+            - name: COMPOSE_PROJECT
+              value: "moltbook"
+          volumeMounts:
+            - name: docker-socket
+              mountPath: /var/run/docker.sock
+            - name: moltbook-project
+              mountPath: /moltbook
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8082
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /readyz
+              port: 8082
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+
+      volumes:
+        - name: docker-socket
+          hostPath:
+            path: /var/run/docker.sock
+            type: Socket
+        - name: moltbook-project
+          hostPath:
+            path: /home/alex/claude/projects/moltbook
+            type: Directory

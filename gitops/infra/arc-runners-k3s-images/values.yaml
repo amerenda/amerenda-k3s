@@ -1,0 +1,44 @@
+# GitHub Actions Runner Scale Set — k3s-images repo
+# Mirrors arc-runners/values.yaml but registered to amerenda/k3s-images
+
+githubConfigUrl: "https://github.com/amerenda/k3s-images"
+
+runnerScaleSetName: arc-runner-set-k3s-images
+
+# Reuse same GitHub App secret (must also exist in this namespace via ExternalSecret)
+githubConfigSecret: controller-manager
+
+controllerServiceAccount:
+  name: infra-arc-controller
+  namespace: arc-systems
+
+autoscalingRunnerSet:
+  runnerLabels:
+    - self-hosted
+    - linux
+    - arc-runner-set-k3s-images
+
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+
+  dockerdWithinRunnerContainer: true
+  dockerEnabled: true
+
+# Scale to zero when idle — build jobs are infrequent
+minRunners: 0
+maxRunners: 3
+
+containerMode:
+  type: dind
+
+template:
+  spec:
+    securityContext:
+      fsGroup: 1000
+
+namespaceOverride: arc-runners-k3s-images
