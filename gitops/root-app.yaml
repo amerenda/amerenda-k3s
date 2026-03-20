@@ -1025,6 +1025,8 @@ spec:
     repoURL: https://github.com/amerenda/llm-manager.git
     targetRevision: main
     path: gitops
+    directory:
+      recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: llm-manager
