@@ -62,6 +62,10 @@ service:
 podDisruptionBudget:
   enabled: false
 
+deployment:
+  strategy:
+    type: Recreate
+
 # Node selector for Raspberry Pi nodes
 nodeSelector:
   kubernetes.io/arch: arm64
