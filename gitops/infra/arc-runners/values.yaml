@@ -2,8 +2,8 @@
 # Deploy ARC runner scale set to arc-runners namespace
 # Based on: https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/quickstart
 
-# GitHub configuration - repo-level (personal account, org-level not supported)
-githubConfigUrl: "https://github.com/amerenda/amerenda-k3s"
+# GitHub configuration - account-level (serves all amerenda repos)
+githubConfigUrl: "https://github.com/amerenda"
 
 # Runner scale set name (used as runs-on in workflows)
 # This must match the runs-on label in GitHub Actions workflows
@@ -68,11 +68,11 @@ template:
               secretKeyRef:
                 name: runner-ci-credentials
                 key: DOCKERHUB_TOKEN
-          - name: GITHUB_DEPLOY_PAT
+          - name: GITOPS_PAT
             valueFrom:
               secretKeyRef:
                 name: runner-ci-credentials
-                key: GITHUB_DEPLOY_PAT
+                key: GITOPS_PAT
 
 # Namespace override
 namespaceOverride: arc-runners
