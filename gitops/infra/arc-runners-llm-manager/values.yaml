@@ -12,6 +12,16 @@ template:
   spec:
     securityContext:
       fsGroup: 1000
+    initContainers:
+      - name: dind
+        image: docker:dind
+        startupProbe:
+          exec:
+            command: ["docker", "info"]
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 10
+          failureThreshold: 24
     containers:
       - name: runner
         image: ghcr.io/actions/actions-runner:latest
