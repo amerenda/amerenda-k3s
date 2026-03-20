@@ -53,6 +53,11 @@ providers:
 # Service configuration
 service:
   type: LoadBalancer
+  # externalTrafficPolicy: Local preserves real source IPs through kube-proxy so
+  # Traefik middleware (e.g. ipAllowList) sees the actual client IP rather than a
+  # random node IP after SNAT. Required for Tailscale-based IP filtering.
+  spec:
+    externalTrafficPolicy: Local
   annotations:
     external-dns.alpha.kubernetes.io/hostname: traefik.amer.home
     external-dns.alpha.kubernetes.io/ttl: "3600"
