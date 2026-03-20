@@ -63,15 +63,36 @@ doh:
   pullPolicy: Always
   envVars:
     DOH_UPSTREAM: "https://1.1.1.1/dns-query"
+  # cloudflared was OOMKilling at 128Mi (59 restarts in logs). Bumped to 256Mi.
+  resources:
+    requests:
+      memory: 64Mi
+    limits:
+      memory: 256Mi
 
-# Optional: small resource bounds
+# Prefer murderbot (x86, 12 cores, 16GB) — critical DNS service needs headroom.
+# Falls back to any arm64 Pi node automatically if murderbot is unavailable.
+# Pi-hole was logging "load avg 6-7 > 4 cores" and database lock errors on rpi5-1.
+affinity:
+  nodeAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        preference:
+          matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - murderbot
+    # No requiredDuringSchedulingIgnoredDuringExecution — allows fallback to Pi nodes.
+
+# Pi-hole resources — bumped from 384Mi limit to handle real-world load on rpi5-1.
 resources:
   requests:
     cpu: 100m
-    memory: 128Mi
+    memory: 256Mi
   limits:
-    cpu: 300m
-    memory: 384Mi
+    cpu: 500m
+    memory: 512Mi
 
 
 
