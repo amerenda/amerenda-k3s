@@ -47,8 +47,12 @@ globalArguments:
 # Additional arguments for k3s optimization
 additionalArguments:
   - "--serversTransport.insecureSkipVerify=true"
-  - "--providers.kubernetesingress.ingressClass=infra-traefik"
-  - "--providers.kubernetesingress.allowExternalNameServices=true"
+
+# Provider configuration via Helm values (takes precedence over globalArguments flags)
+providers:
+  kubernetesIngress:
+    ingressClass: "infra-traefik"
+    allowExternalNameServices: true
 
 # Service configuration
 service:
