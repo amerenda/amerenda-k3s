@@ -27,6 +27,10 @@ addressType: IPv4
 endpoints:
   - addresses:
       - "10.100.20.19"
+    conditions:
+      ready: true
+      serving: true
+      terminating: false
 ports:
   - name: http
     port: 3002
