@@ -27,7 +27,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8082
-              hostPort: 8082
+              # No hostPort needed — hostNetwork: true already exposes on host
           env:
             - name: BACKEND_URL
               value: "http://localhost:8081"
