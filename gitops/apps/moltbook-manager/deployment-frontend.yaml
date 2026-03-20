@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: amerenda/k3s-images:moltbook-manager-aa68ae259b36923d7a5423bb07c35fcc5a88e2ce
+          image: amerenda/k3s-images:moltbook-manager-3fffc8c4defd97aa4ae0b3b8574695ab71a37922
           imagePullPolicy: Always
           ports:
             - containerPort: 80
