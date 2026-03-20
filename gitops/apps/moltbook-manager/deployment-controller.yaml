@@ -5,6 +5,9 @@ metadata:
   namespace: moltbook-manager
 spec:
   replicas: 1
+  # Recreate required: hostNetwork pod holds port 8082 exclusively on murderbot
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: moltbook-controller
