@@ -1,3 +1,6 @@
+# Local environment / credentials — never commit
+.env
+
 # Bootstrap secrets - NEVER commit these
 bootstrap/*.secret
 bootstrap/*.key
