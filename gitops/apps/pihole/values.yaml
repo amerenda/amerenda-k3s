@@ -70,8 +70,12 @@ doh:
     limits:
       memory: 256Mi
 
+# The chart defaults to nodeSelector: {kubernetes.io/arch: arm64} which blocks x86 nodes.
+# Clear it so murderbot (x86) is a valid scheduling target.
+nodeSelector: {}
+
 # Prefer murderbot (x86, 12 cores, 16GB) — critical DNS service needs headroom.
-# Falls back to any arm64 Pi node automatically if murderbot is unavailable.
+# Falls back to any node (Pi or x86) automatically if murderbot is unavailable.
 # Pi-hole was logging "load avg 6-7 > 4 cores" and database lock errors on rpi5-1.
 affinity:
   nodeAffinity:
