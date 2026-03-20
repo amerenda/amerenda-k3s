@@ -1,8 +1,8 @@
 # GitHub Actions Runner Scale Set Helm Chart Values
 # Deploy ARC runner scale set to arc-runners namespace
 
-# GitHub configuration - account-level (serves all amerenda repos)
-githubConfigUrl: "https://github.com/amerenda"
+# GitHub configuration - repo-level (personal accounts don't support org-level runners)
+githubConfigUrl: "https://github.com/amerenda/amerenda-k3s"
 
 # Runner scale set name (used as runs-on in workflows)
 runnerScaleSetName: arc-runner-set
