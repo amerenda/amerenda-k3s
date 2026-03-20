@@ -23,7 +23,7 @@ spec:
 
       containers:
         - name: controller
-          image: amerenda/k3s-images:moltbook-controller-PLACEHOLDER
+          image: amerenda/k3s-images:moltbook-controller-9a9810a7ab4f2a3a735a9d6de1ebe9a0bd109037
           imagePullPolicy: Always
           ports:
             - containerPort: 8082
