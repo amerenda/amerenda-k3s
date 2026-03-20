@@ -25,6 +25,7 @@ domainFilters:
 sources:
   - ingress
   - service
+  - crd
 
 policy: sync
 interval: 5m
