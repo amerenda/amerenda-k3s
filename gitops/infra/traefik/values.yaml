@@ -39,10 +39,6 @@ globalArguments:
   - "--providers.kubernetescrd=true"
   - "--entrypoints.web.address=:80"
   - "--entrypoints.websecure.address=:443"
-  - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
-  - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-  - "--certificatesresolvers.letsencrypt.acme.email=alex@amer.dev"
-  - "--certificatesresolvers.letsencrypt.acme.storage=/data/acme.json"
 
 # Additional arguments for k3s optimization
 additionalArguments:
@@ -100,9 +96,7 @@ securityContext:
   runAsNonRoot: true
   runAsUser: 65532
 
-# Persistence for ACME certificates
+# Persistence disabled — all TLS is managed by cert-manager, not Traefik's built-in ACME.
+# This also prevents Longhorn RWO PVC deadlocks during rolling updates.
 persistence:
-  enabled: true
-  storageClass: "longhorn"
-  accessMode: ReadWriteOnce
-  size: 5Gi
+  enabled: false
