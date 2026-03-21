@@ -52,6 +52,7 @@ template:
     containers:
       - name: runner
         image: ghcr.io/actions/actions-runner:latest
+        command: ["/home/runner/run.sh"]
         env:
           - name: DOCKER_HOST
             value: "unix:///var/run/docker.sock"
